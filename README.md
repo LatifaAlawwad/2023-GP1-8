@@ -1,1 +1,2 @@
-# S'hail![image](https://github.com/LatifaAlawwad/2023-GP1-8/assets/122611839/69400b9a-5932-4ba2-b335-2cdbf8f67633)
+# S'hail
+<img width="370" alt="image" src="https://github.com/LatifaAlawwad/2023-GP1-8/assets/122611839/602905b4-5788-4c73-8a77-3bebbc67e273">
