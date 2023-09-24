@@ -27,3 +27,33 @@ S'hail is a user-friendly app designed to make exploring Saudi Arabia's attracti
 - Planning Calendar Integration
 - User Profile Management (Update/Delete)
 
+---
+
+### Technology Used
+<p align="center">
+  <img src="https://skillicons.dev/files/logos/flutter.svg" alt="Flutter" width="50"/> <img src="https://skillicons.dev/files/logos/firebase.svg" alt="Firebase" width="50"/>
+</p>
+
+S'hail is built using Flutter and Firebase technologies.
+
+---
+
+### Launch Instructions
+
+To run the S'hail application, follow these steps:
+
+1. Open the 2023-GP1-8 repository on GitHub.
+2. Click on the "Code" button.
+3. Download the .zip file.
+4. Unzip the file.
+5. Open Android Studio or Visual Studio Code.
+6. Click on File > Open > Navigate to the location of the saved unzipped file and click "Ok."
+7. Turn on an Android Emulator or connect an Android mobile device to your computer using USB.
+8. Run the S'hail application.
+
+
+
+- ---
+
+
+
