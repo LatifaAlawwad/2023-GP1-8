@@ -14,7 +14,7 @@ S'hail is a user-friendly app designed to make exploring Saudi Arabia's attracti
 
 ### S'hail Supported Features
 - User Registration and Login
-- User-Generated Data for Attractions and Restaurants
+- User-generated data for Attractions and Restaurants
 - Admin Approval System
 - Search Functionality
 - Interactive Map Integration
@@ -30,11 +30,9 @@ S'hail is a user-friendly app designed to make exploring Saudi Arabia's attracti
 ---
 
 ### Technology Used
-<p align="center">
-  <img src="https://skillicons.dev/files/logos/flutter.svg" alt="Flutter" width="50"/> <img src="https://skillicons.dev/files/logos/firebase.svg" alt="Firebase" width="50"/>
-</p>
+[![My Skills](https://skillicons.dev/icons?i=flutter,firebase)](https://skillicons.dev)
 
-S'hail is built using Flutter and Firebase technologies.
+
 
 ---
 
