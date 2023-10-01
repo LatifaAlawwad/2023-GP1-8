@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "652061667089",
+    "project_id": "fir-hail-ec5a7",
+    "storage_bucket": "fir-hail-ec5a7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:652061667089:android:17d13e96638e72061c26b0",
+        "android_client_info": {
+          "package_name": "com.example.gp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDror2apOXVOmcr7O3bswc-KhZpBFnmuiw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
