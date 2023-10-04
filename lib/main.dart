@@ -5,6 +5,7 @@ import 'package:gp/Registration/First.dart';
 import 'package:gp/Registration/Welcome.dart';
 import 'package:gp/Registration/SignUp.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:gp/Registration/logIn.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +23,14 @@ class MyApp extends StatelessWidget {
         '/first': (context) => First(),
         '/welcome': (context) => Welcome(),
         '/signup': (context) => SignUp(),
- },
+
+        '/login': (context) => LogIn(),
+
+
+
+
+      },
+
     );
   }
 }
