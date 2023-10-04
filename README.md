@@ -5,6 +5,7 @@
   <img width="370" alt="S'hail Logo" src="https://github.com/LatifaAlawwad/2023-GP1-8/assets/images/logo.png">
 </div>
 
+</div>
 
 ---
 
