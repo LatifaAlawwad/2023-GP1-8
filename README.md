@@ -2,7 +2,7 @@
 
 <div align="center">
 <div align="center">
-  <img width="370" alt="S'hail Logo" src="assets/images/logo.png">
+  <img width="300" hight ="250" alt="S'hail Logo" src="assets/images/logo.png">
 </div>
 
 </div>
