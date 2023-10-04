@@ -2,7 +2,7 @@
 
 <div align="center">
 <div align="center">
-  <img width="370" alt="S'hail Logo" src="https://github.com/LatifaAlawwad/2023-GP1-8/assets/images/logo.png">
+  <img width="370" alt="S'hail Logo" src="assets/images/logo.png">
 </div>
 
 </div>
