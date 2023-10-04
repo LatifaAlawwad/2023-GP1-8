@@ -151,7 +151,7 @@ class _SignUpState extends State<SignUp> {
                                   if (value!.isEmpty || _emailController.text.trim() == "") {
                                     return "البريد الألكتروني مطلوب ";
                                   } else if (!RegExp(
-                                      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+                                      r'^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+.)+[a-zA-Z]{2,}))$')
                                       .hasMatch(value)) {
                                     return '  أدخل البريد الأكلتروني بالشكل الصحيح \n(exampel@exampel.com)';
                                   }
@@ -192,7 +192,7 @@ class _SignUpState extends State<SignUp> {
                                   RegExp uper = RegExp(r"(?=.*[A-Z])");
                                   RegExp numb = RegExp(r"[0-9]");
                                   RegExp small = RegExp(r"(?=.*[a-z])");
-                                  RegExp special = RegExp(r"(?=.*[!@#\$%^&*(),.?\\:{}|<>])");
+                                  RegExp special = RegExp(r"(?=.*[!@#%^&*(),.?\\:{}|<>])");
 
                                   if (value!.isEmpty || _passwordController.text.trim() == "") {
                                     return "كلمة السر مطلوبة";
@@ -272,7 +272,7 @@ class _SignUpState extends State<SignUp> {
                                     email: _emailController.text.trim(),
                                     password: _passwordController.text.trim())
                                     .then((value) {
-                                  final suser = Suser(
+                                  final suser = user(
                                     name: _usernameController.text,
                                     email: _emailController.text,
                                   ); //creat user in database
@@ -285,7 +285,7 @@ class _SignUpState extends State<SignUp> {
                                     textColor: Color.fromARGB(255, 248, 249, 250),
                                     fontSize: 18.0,
                                   );
-                                  createSuser(suser);
+                                  createSuhailuser(suser);
                                /*   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) => NavigationBarPage()));*/
                                 });
@@ -378,27 +378,26 @@ class _SignUpState extends State<SignUp> {
   }
 }
 
-Future createSuser(Suser suser) async {
+
+Future createSuhailuser(user suser) async {
   final FirebaseAuth auth = FirebaseAuth.instance;
   final User? user = auth.currentUser;
   final Uid = user!.uid;
   suser.userid = Uid;
-
   final json = suser.toJson();
-  final docSuser = FirebaseFirestore.instance.collection('Standard_user').doc(Uid);
-  await docSuser.set(json);
+  final docsuser = FirebaseFirestore.instance.collection('users').doc(Uid);
+  await docsuser.set(json);
 }
 
-class Suser {
+
+class user {
   late String userid;
   late final String name;
-
   late final String email;
 
-  Suser({
+  user({
     this.userid = '',
     required this.name,
-
     required this.email,
   });
 
@@ -406,15 +405,13 @@ class Suser {
       {
         'userId': userid,
         'name': name,
-
         'Email': email,
       };
 
-  static Suser fromJson(Map<String, dynamic> json) =>
-      Suser(
+  static user fromJson(Map<String, dynamic> json) =>
+      user(
         userid: json['userId'],
         name: json['name'],
-
         email: json['Email'],
       );
 }

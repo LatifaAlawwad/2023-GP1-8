@@ -22,11 +22,7 @@ class MyApp extends StatelessWidget {
         '/first': (context) => First(),
         '/welcome': (context) => Welcome(),
         '/signup': (context) => SignUp(),
-
-
-
-
-      },
+ },
     );
   }
 }
