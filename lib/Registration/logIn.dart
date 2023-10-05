@@ -148,7 +148,7 @@ class _LogInState extends State<LogIn> {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                Navigator.pushNamed(context, "/resetPassword");
+                                Navigator.pushNamed(context, "/RessetPassword");
                               },
                               child: Text(
                                 "نسيت كلمة المرور؟",
