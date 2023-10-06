@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gp/Registration/Welcome.dart';
-
+import 'package:gp/pages/NavigationBarPage.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -286,8 +286,8 @@ class _SignUpState extends State<SignUp> {
                                     fontSize: 18.0,
                                   );
                                   createSuhailuser(suser);
-                               /*   Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) => NavigationBarPage()));*/
+                                 Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) => NavigationBarPage()));
                                 });
                               }
                             } on FirebaseAuthException catch (error) {

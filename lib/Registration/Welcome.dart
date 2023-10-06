@@ -46,7 +46,7 @@ class Welcome extends StatelessWidget {
                         },
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
-                              Color(0xFFc5e8c7)),
+                              Color(0xFF6db881)),
                           padding: MaterialStateProperty.all(
                               EdgeInsets.symmetric(
                                   horizontal: 40, vertical: 9)),
@@ -94,7 +94,7 @@ class Welcome extends StatelessWidget {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, "/NavigationBar");
+                          Navigator.pushNamed(context, "/NavigationBarPage");
                         },
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(

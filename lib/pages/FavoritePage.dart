@@ -2,14 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../Registration/logIn.dart';
 
-class addpage extends StatelessWidget {
+class FavoritePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentUser = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('addpage'),
+        title: Text('Favorite'),
         backgroundColor: Color(0xFF6db881),
         centerTitle: true,
 
@@ -20,11 +20,11 @@ class addpage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(height: 40),
-            if (currentUser != null)//here add the content of registered
+            if (currentUser != null)
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 50),
                 child: Text(
-                  "addpage",
+                  "FavoritePage",
                   style: TextStyle(
                     fontSize: 18,
                     fontFamily: "Tajawal-b",
