@@ -16,24 +16,15 @@ class NavigationBarPage extends StatefulWidget {
 class _NavigationBarPageState extends State<NavigationBarPage> {
   int currentIndex = 0;
 
-  final List<Widget> _pages = [
-    HomePage(),
-    UserProfilePage(),
-    FavoritePage(),
-
-     addpage(),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-      body: _pages[currentIndex],
+      body: _getPage(currentIndex),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          setState(() {
-            currentIndex = 3;
-          });
+          // Handle the circular "Add" button click here.
+          // For example, navigate to the "AddPage" when clicked.
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => addpage()));
         },
         child: Icon(Icons.add),
         backgroundColor: Color(0xFF6db881),
@@ -49,24 +40,39 @@ class _NavigationBarPageState extends State<NavigationBarPage> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'الرئيسية',
+            label: 'الرئيسة',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'حسابي',
+            icon: Icon(Icons.map),
+            label: 'الخريطة',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite),
             label: 'المفضلة',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add),
-            label: 'إضافة',
+            icon: Icon(Icons.person),
+            label: 'حسابي',
           ),
         ],
         selectedItemColor: Color(0xFF6db881),
         unselectedItemColor: Colors.grey,
       ),
     );
+  }
+
+  Widget _getPage(int index) {
+    switch (index) {
+      case 0:
+        return HomePage();
+      case 1:
+        return Container(); // Replace with your actual map page.
+      case 2:
+        return FavoritePage();
+      case 3:
+        return UserProfilePage();
+      default:
+        return HomePage();
+    }
   }
 }
