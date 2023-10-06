@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gp/pages/NavigationBarPage.dart';
-import 'package:gp/pages/homepage.dart';
+import 'package:gp/pages/AdminNavigator.dart';
+
 
 class LogIn extends StatefulWidget {
   const LogIn({Key? key});
@@ -168,15 +169,23 @@ class _LogInState extends State<LogIn> {
                           onPressed: () async {
                             if (loginformkey.currentState!.validate()) {
                               try {
-                                await FirebaseAuth.instance.signInWithEmailAndPassword(
+                                final userCredential = await FirebaseAuth.instance
+                                    .signInWithEmailAndPassword(
                                   email: email.text,
                                   password: password.text,
                                 );
 
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                      return NavigationBarPage();
-                                    }));
+                                if (userCredential.user?.email == "admin@sohail.com") {
+                                  Navigator.pushReplacement(context,
+                                      MaterialPageRoute(builder: (context) {
+                                        return AdminNavigator();
+                                      }));
+                                } else {
+                                  Navigator.pushReplacement(context,
+                                      MaterialPageRoute(builder: (context) {
+                                        return NavigationBarPage();
+                                      }));
+                                }
                               } catch (e) {
                                 Fluttertoast.showToast(
                                   msg: "البريد الإلكتروني أو كلمة المرور غير صحيحة",
@@ -239,4 +248,3 @@ class _LogInState extends State<LogIn> {
     );
   }
 }
-

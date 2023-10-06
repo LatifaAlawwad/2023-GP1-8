@@ -7,6 +7,7 @@ import 'package:gp/Registration/SignUp.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:gp/Registration/logIn.dart';
 import 'package:gp/pages/NavigationBarPage.dart';
+import 'package:gp/pages/AdminNavigator.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +28,8 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LogIn(),
         '/RessetPassword': (context) => RessetPassword(),
         '/NavigationBarPage': (context) =>  NavigationBarPage(),
+        '/AdminNavigator': (context) => AdminNavigator(),
+
 
 
 
