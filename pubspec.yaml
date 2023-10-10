@@ -34,7 +34,8 @@ dependencies:
   cloud_firestore: ^4.0.1
   firebase_auth: ^4.10.0
   fluttertoast: ^8.2.2
-
+  photo_view: ^0.14.0
+  url_launcher: ^6.0.12
 
 dev_dependencies:
   flutter_test:
@@ -91,5 +92,7 @@ flutter:
     - family: Tajawal-m
       fonts:
         - asset: assets/font/Tajawal-Medium.ttf
+
+
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
