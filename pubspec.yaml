@@ -35,7 +35,7 @@ dependencies:
   firebase_core: ^2.16.0
   cloud_firestore: ^4.0.1
   firebase_auth: ^4.10.0
-  flutter-toast: ^8.2.2
+  fluttertoast: ^8.2.2
   image_picker: ^0.8.4+3
   csc_picker: ^0.2.6
   firebase_storage: ^11.2.7
