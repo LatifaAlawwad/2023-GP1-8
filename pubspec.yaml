@@ -28,12 +28,17 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  uuid: ^3.0.4
+
   flutter:
     sdk: flutter
   firebase_core: ^2.16.0
   cloud_firestore: ^4.0.1
   firebase_auth: ^4.10.0
-  fluttertoast: ^8.2.2
+  flutter-toast: ^8.2.2
+  image_picker: ^0.8.4+3
+  csc_picker: ^0.2.6
+  firebase_storage: ^11.2.7
 
 
 dev_dependencies:

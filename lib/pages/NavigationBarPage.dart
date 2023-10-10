@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'FavoritePage.dart';
 import 'HomePage.dart';
-import 'addpage.dart';
+import 'AddPage.dart';
 import 'UserProfilePage.dart';
 import '../Registration/logIn.dart';
 class NavigationBarPage extends StatefulWidget {
@@ -24,7 +24,7 @@ class _NavigationBarPageState extends State<NavigationBarPage> {
         onPressed: () {
           // Handle the circular "Add" button click here.
           // For example, navigate to the "AddPage" when clicked.
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => addpage()));
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddPage()));
         },
         child: Icon(Icons.add),
         backgroundColor: Color(0xFF6db881),
