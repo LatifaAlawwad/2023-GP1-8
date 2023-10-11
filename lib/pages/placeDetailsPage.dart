@@ -14,16 +14,16 @@ import 'dart:convert';
 
 
 
-class placeDetailesPage extends StatefulWidget {
+class placeDetailsPage extends StatefulWidget {
   final placePage place;
 
-  placeDetailesPage({required this.place});
+  placeDetailsPage({required this.place});
 
   @override
-  State<placeDetailesPage> createState() => _placeDetailsState();
+  State<placeDetailsPage> createState() => _placeDetailsState();
 }
 
-class _placeDetailsState extends State<placeDetailesPage> {
+class _placeDetailsState extends State<placeDetailsPage> {
 
   String url = '';
   var data;
@@ -116,13 +116,13 @@ class _placeDetailsState extends State<placeDetailesPage> {
                             height: 40,
                             width: 40,
                             decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 226, 237, 255),
+                              color: Color.fromARGB(255, 228, 255, 226),
                               shape: BoxShape.circle,
                             ),
                             child: Center(
                               child: Icon(
                                 Icons.arrow_forward_ios,
-                                color: const Color.fromARGB(255, 127, 166, 233),
+                                color: const Color.fromARGB(255, 109, 184, 129),
                                 size: 28,
                               ),
                             ),
@@ -140,7 +140,7 @@ class _placeDetailsState extends State<placeDetailesPage> {
                       horizontal: 24,
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.end,// it was MainAxisAlignment.spaceBetween
                       children: [
 
                         Text(
@@ -210,8 +210,19 @@ class _placeDetailsState extends State<placeDetailesPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-
                         Padding(
+                          padding: EdgeInsets.only(left:280,top:24,bottom: 16),
+                          child: Text(
+                            "التفاصيل",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: "Tajawal-m",
+                            ),
+                          ),
+                        ),
+                        Padding(
+
                           padding: const EdgeInsets.only(right: 30, left: 27, bottom: 16),
                           child: Column(
                             children: [
@@ -230,7 +241,7 @@ class _placeDetailsState extends State<placeDetailesPage> {
                         ),
 
                         Padding(
-                          padding: EdgeInsets.only(right: 15, left: 310, bottom: 16),
+                          padding: EdgeInsets.only(left: 225, bottom: 16),
                           child: Text(
                             "المزيد من الصور",
                             style: TextStyle(
@@ -240,6 +251,7 @@ class _placeDetailsState extends State<placeDetailesPage> {
                             ),
                           ),
                         ),
+
                         '${widget.place.images.length}' == '0'
                             ? Container(
                           height: 50,
@@ -286,7 +298,7 @@ class _placeDetailsState extends State<placeDetailesPage> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Padding(
-                              padding: EdgeInsets.only(right: 25, bottom: 16),
+                              padding: EdgeInsets.only(left: 300, bottom: 16),
                               child: Text(
                                 'الموقع',
                                 style: TextStyle(

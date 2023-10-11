@@ -10,7 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:csc_picker/csc_picker.dart';
 import 'neighbourhood.dart';
 import 'cities.dart';
-import 'HomePage.dart';
+import 'homepage.dart';
 
 class AddPage extends StatefulWidget {
   const AddPage({Key? key}) : super(key: key);
@@ -20,46 +20,43 @@ class AddPage extends StatefulWidget {
 }
 
 class _AddPageState extends State<AddPage> {
-  GlobalKey<CSCPickerState> _cscPickerKey = GlobalKey();
-
-  static const appTitle = 'إضافة مكان';
-
   @override
   Widget build(BuildContext context) {
+
+    const appTitle = 'إضافة مكان';
     return Scaffold(
       body: FirebaseAuth.instance.currentUser == null
           ? Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(height: 90),
-          Padding(
+          const SizedBox(height: 90),
+          const Padding(
             padding: EdgeInsets.symmetric(horizontal: 79),
             child: Text(
               "عذراً لابد من تسجيل الدخول ",
               style: TextStyle(
-                fontSize: 18,
-                fontFamily: "Tajawal-b",
-                color: Color(0xFF6db881),
-              ),
+                  fontSize: 18,
+                  fontFamily: "Tajawal-b",
+                  color: Color(0xFF6db881)),
               textAlign: TextAlign.center,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => LogIn()));
+                  context, MaterialPageRoute(builder: (context) => const LogIn()));
             },
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Color(0xFF6db881)),
+              backgroundColor: MaterialStateProperty.all(const Color(0xFF6db881)),
               padding: MaterialStateProperty.all(
-                  EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-              shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(27))),
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+              shape: MaterialStateProperty.all(
+                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(27))),
             ),
-            child: Text(
+            child: const Text(
               "تسجيل الدخول",
               style: TextStyle(fontSize: 20, fontFamily: "Tajawal-m"),
             ),
@@ -84,10 +81,10 @@ class CustomFormState extends State<CustomForm> {
   final _formKey = GlobalKey<FormState>();
   int type = 1;
   String type1 = 'أماكن سياحية';
-
+  void getCities() async {}
   String place_id = '';
   String city = "الرياض";
-  String? address;
+  String address = "الفلاح";
   final location = TextEditingController();
   final description = TextEditingController();
   final placeName = TextEditingController();
@@ -109,12 +106,12 @@ class CustomFormState extends State<CustomForm> {
 
   showAlertDialog(BuildContext context) {
     Widget cancelButton = TextButton(
-      child: Text(
+      child: const Text(
         "إلغاء",
         style: TextStyle(
-          fontFamily: "Tajawal-m",
-          fontSize: 17,
-          color: Color(0xFF6db881),
+            fontFamily: "Tajawal-m",
+            fontSize: 17,
+            color: Color(0xFF6db881)
         ),
       ),
       onPressed: () async {
@@ -122,7 +119,7 @@ class CustomFormState extends State<CustomForm> {
       },
     );
     Widget continueButton = TextButton(
-      child: Text(
+      child: const Text(
         "تأكيد",
         style: TextStyle(
           fontFamily: "Tajawal-m",
@@ -144,9 +141,7 @@ class CustomFormState extends State<CustomForm> {
         var uuid = Uuid();
         place_id = uuid.v4();
 
-        await FirebaseFirestore.instance.collection('addedPlaces')
-            .doc(place_id)
-            .set({
+        await FirebaseFirestore.instance.collection('Pending').doc(place_id).set({
           'place_id': place_id,
           'User_id': userId,
           'placeName': placeName.text,
@@ -157,38 +152,56 @@ class CustomFormState extends State<CustomForm> {
           'description': description.text,
           'category': type1, // Add the selected category
         });
-        await FirebaseFirestore.instance.collection('users').doc(userId).update(
-            {
-              "ArrayOfPlaces": FieldValue.arrayUnion([place_id])
-            });
+        await FirebaseFirestore.instance.collection('users').doc(userId).update({
+          "ArrayOfPlaces": FieldValue.arrayUnion([place_id])
+        });
       },
     );
 
+// Define an AlertDialog with a "Continue" button
     AlertDialog alert = AlertDialog(
-      content: Text(
+      content: const Text(
         "هل أنت متأكد من أنك تريد إضافة هذا المكان؟",
         style: TextStyle(fontFamily: "Tajawal-m", fontSize: 17),
         textDirection: TextDirection.rtl,
       ),
-      actions: [cancelButton, continueButton],
+      actions: [
+        cancelButton,
+        // Move the "Continue" button code here
+        continueButton = TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(); // Close the dialog
+            // Show the toast message
+            Fluttertoast.showToast(
+              msg: "تمت إضافة المكان بنجاح",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 3,
+              backgroundColor: const Color(0xFF6db881),
+              textColor: Colors.black,
+              fontSize: 25,
+            );
+
+          },
+          child: const Text(
+            "موافق",
+            style: TextStyle(
+              fontFamily: "Tajawal-m",
+              color: Color(0xFF6db881),
+            ),
+          ),
+        ),
+      ],
     );
 
+// Show the dialog
     showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        }
     );
 
-    Fluttertoast.showToast(
-      msg: "تمت اضافة المكان بنجاح",
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.CENTER,
-      timeInSecForIosWeb: 2,
-      backgroundColor: Color(0xFF6db881),
-      textColor: Color(0xFF6db881),
-      fontSize: 18.0,
-    );
   }
 
   @override
@@ -294,12 +307,13 @@ class CustomFormState extends State<CustomForm> {
                         isDense: true,
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.only(left: 8),
+                        hintText: 'اختر التصنيف',
                       ),
                       items: const [
                         DropdownMenuItem<int>(
                           value: 1,
                           child: Text(
-                            "أماكن سياحية",
+                            "فعاليات و ترفيه",
                             style: TextStyle(
                               fontSize: 17.0,
                               fontFamily: "Tajawal-m",
@@ -322,6 +336,17 @@ class CustomFormState extends State<CustomForm> {
                           value: 3,
                           child: Text(
                             "مراكز تسوق",
+                            style: TextStyle(
+                              fontSize: 17.0,
+                              fontFamily: "Tajawal-m",
+                              color: Color(0xFF6db881),
+                            ),
+                          ),
+                        ),
+                        DropdownMenuItem<int>(
+                          value: 1,
+                          child: Text(
+                            "معالم تاريخية",
                             style: TextStyle(
                               fontSize: 17.0,
                               fontFamily: "Tajawal-m",
@@ -661,7 +686,7 @@ class CustomFormState extends State<CustomForm> {
                   onPressed: () {
                     if (placeName.text.isEmpty ||
                         city == null || city.isEmpty ||
-                        address!.isEmpty ||
+                        address.isEmpty ||
                         location.text.isEmpty ||
                         description.text.isEmpty) {
                       showInvalidFieldsDialog(context);
@@ -748,5 +773,5 @@ class CustomFormState extends State<CustomForm> {
       print(error);
       return null;
     }
-  }
+    }
 }

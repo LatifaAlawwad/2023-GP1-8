@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'NavigationBarPage.dart';
-import '../Registration/logIn.dart';
 import 'placePage.dart';
-import 'placeDetailesPage.dart';
-
+import 'placeDetailsPage.dart';
+import 'AddPage.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -12,74 +10,60 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  static int indexOfTap = 0;
-  static List<dynamic> allData = [];
-  static List<dynamic> attractions = [];
-  static List<dynamic> restaurants = [];
-  static List<dynamic> malls = [];
+  int indexOfTap = 0;
+  List<placePage> allData = [];
+  List<placePage> attractions = [];
+  List<placePage> restaurants = [];
+  List<placePage> malls = [];
+  bool isDownloadedData = false;
+  String name = '';
+  String selectedCategory = 'الكل';
 
-  static List<dynamic> searchItems = [];
-  static List<dynamic> searchAttractions = [];
-  static List<dynamic> searchRestaurants = [];
-  static List<dynamic> searchMalls = [];
-  static bool isDownloadedData = false;
+  List<placePage> searchResults = [];
 
-  static String name = '';
-  static String? placeId;
-  static String? placeName;
-  static String? userId;
-  static String? category;
-  static String? placeCity;
-  static String? placeNeighborhood;
-  static List<String>? images;
-  static String? description;
-  static String? Location;
+  @override
+  void initState() {
+    super.initState();
+    _fetchDataFromFirestore();
+  }
 
-
-
-
-  void _handleData(QuerySnapshot<Map<String, dynamic>> data) async {
+  Future<void> _fetchDataFromFirestore() async {
     try {
-      allData.clear();
-      attractions.clear();
-      restaurants.clear();
-      malls.clear();
-      data.docs.forEach((element) {
-        if (element.data()["category"] == "Attraction") {
-          placePage attraction = placePage.fromMap(element.data());
-          allData.add(attraction);
-         // handleRentAndSaleItems(attraction);
-        }
+      QuerySnapshot<Map<String, dynamic>> snapshot =
+      await FirebaseFirestore.instance.collection('addedPlaces').get();
+      if (snapshot.docs.isNotEmpty) {
+        allData.clear();
+        attractions.clear();
+        restaurants.clear();
+        malls.clear();
 
-        if (element.data()["category"] == "Restaurants") {
-          placePage restaurants = placePage.fromMap(element.data());
-          allData.add(restaurants);
-          //handleRentAndSaleItems(restaurants);
+        snapshot.docs.forEach((element) {
+          final category = element.data()["category"];
 
-        }
+          placePage place = placePage.fromMap(element.data());
 
-        if (element.data()["category"] == "Mall") {
-          placePage mall = placePage.fromMap(element.data());
-          allData.add(mall);
-         // handleRentAndSaleItems(mall);
+          if (category == "أماكن سياحية") {
+            attractions.add(place);
+          } else if (category == "مطاعم") {
+            restaurants.add(place);
+          } else if (category == "مراكز تسوق") {
+            malls.add(place);
+          }
 
-        }
+          allData.add(place);
+        });
 
-
-      });
-      Future.delayed(Duration(seconds: 1), () {
         setState(() {});
-      });
+      }
     } catch (e) {
       debugPrint(e.toString());
     }
   }
 
-  static Widget handleListItems(List<dynamic> listItem) {
-
+  Widget handleListItems(List<placePage> listItem) {
     return ListView.separated(
       itemCount: listItem.length,
-      separatorBuilder: (BuildContext context, int index) { //defines the appearance of the separators between the items
+      separatorBuilder: (BuildContext context, int index) {
         return SizedBox(height: 10);
       },
       itemBuilder: (BuildContext context, int index) {
@@ -88,249 +72,254 @@ class HomePageState extends State<HomePage> {
                 () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => placeDetailesPage(place: listItem[index] as placePage)),
+                MaterialPageRoute(
+                    builder: (context) => placeDetailsPage(place: listItem[index])),
               );
             },
             listItem[index] as placePage,
             context,
           );
         }
-
         return Container();
       },
     );
   }
 
-  Widget _handleSnapshot(AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
-      return Center(child: CircularProgressIndicator());
-    }
-    if (snapshot.hasError) {
-      return Text("حصل خطأً ما");
-    }
-    if (!snapshot.hasData) {
-      return Text("لا توجد بيانات");
-    }
-    if (snapshot.hasData) {
-      if (allData.isEmpty || !isDownloadedData) {
-        isDownloadedData = true;
-        _handleData(snapshot.data!);
-      }
-      return handleListItems(allData);
-    }
-    return Container();
-  }
-
-
-
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      top: true,
-      child: DefaultTabController(
-        length: 3,
-        child: Column(
-          children: [
-            Container(
-              height: 120,
-              width: MediaQuery.of(context).size.width,
-              child: AppBar(
-                backgroundColor: Color.fromARGB(255, 127, 166, 233),
-                title: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        textAlign: TextAlign.right,
-                        onChanged: (value) {
-                          setState(() {
-                            name = value;
-                          });
-                        },
-                        decoration: InputDecoration(
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Color.fromARGB(255, 14, 41, 99)),
-                          ),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          alignLabelWithHint: true,
-                          hintText: 'البحث',
-                          hintStyle: TextStyle(
-                            color: Color.fromARGB(143, 255, 255, 255),
-                            fontFamily: "Tajawal-m",
-                          ),
-                        ),
-                        cursorColor: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-                actions: [
-                  Padding(
-                    padding: EdgeInsets.only(right: 20.0),
-                    child: Icon(
-                      Icons.search,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-                bottom: TabBar(
-                  labelStyle: TextStyle(
-                    fontFamily: "Tajawal-b",
-                    fontWeight: FontWeight.w100,
-                  ),
-                  onTap: (index) {
-                    print("Index of tap is: $index");
-                    indexOfTap = index;
-                  },
-                  indicatorColor: Colors.white,
-                  tabs: [
-                    Tab(
-                      text: 'الكل',
-                    ),
-                    Tab(
-                      text: 'أماكن سياحية',
-                    ),
-                    Tab(
-                      text: 'مطاعم',
-                    ),
-                    Tab(
-                      text: 'مراكز التسوق',
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              child: TabBarView(
-                children: [
-               //   name.isEmpty ? _buildItem() : _buildSearchItems(),
-                  name.isEmpty ? handleListItems(attractions) : handleListItems(searchAttractions),
-                  name.isEmpty ? handleListItems(restaurants) : handleListItems(searchRestaurants),
-                  name.isEmpty ? handleListItems(malls) : handleListItems(searchMalls)
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-Widget _buildItem(void Function()? onTap,placePage place, BuildContext context) {
-  return GestureDetector(
-    onTap: onTap,
-    child: Card(
-      margin: EdgeInsets.fromLTRB(12, 12, 12, 6),
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(15),
-          )),
-      child: Container(
-        height: 210,
-        decoration: '${place.images.length}' == '0'
-            ? BoxDecoration(
-          image: DecorationImage(
-              image: NetworkImage(
-                  'https://www.guardanthealthamea.com/wp-content/uploads/2019/09/no-image.jpg'),
-              fit: BoxFit.cover),
-        )
-            : BoxDecoration(
-          image: DecorationImage(
-              image: NetworkImage('${place.images[0]}'), fit: BoxFit.cover),
-        ),
-        child: Container(
-          padding: EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              stops: [0.5, 1.0],
-              colors: [
-                Colors.transparent,
-                Colors.black.withOpacity(0.7),
-              ],
+  Widget _buildItem(void Function()? onTap, placePage place, BuildContext context) {
+    if (selectedCategory == 'الكل' || place.category == selectedCategory) {
+      return GestureDetector(
+        onTap: onTap,
+        child: Card(
+          margin: EdgeInsets.fromLTRB(12, 12, 12, 6),
+          clipBehavior: Clip.antiAlias,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(15),
             ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Container(),
+          child: Container(
+            height: 210,
+            decoration: BoxDecoration(
+              image: place.images.isEmpty
+                  ? DecorationImage(
+                image: NetworkImage(
+                    'https://www.guardanthealthamea.com/wp-content/uploads/2019/09/no-image.jpg'),
+                fit: BoxFit.cover,
+              )
+                  : DecorationImage(
+                image: NetworkImage(place.images[0]),
+                fit: BoxFit.cover,
               ),
-              Column(
+            ),
+            child: Container(
+              padding: EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: [0.5, 1.0],
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withOpacity(0.7),
+                  ],
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        ' ${place.placeName}',
-                        style: TextStyle(
-                          height: 2,
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: "Tajawal-l",
-                        ),
-                      )
-
-                    ],
+                  Expanded(
+                    child: Container(),
                   ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  Column(
                     children: [
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.location_pin,
-                            color: Colors.white,
-                            size: 16,
-                          ),
-                          SizedBox(
-                            width: 4,
-                          ),
                           Text(
-                            '${place.neighborhood} , ${place.city}',
+                            ' ${place.placeName}',
                             style: TextStyle(
+                              height: 2,
                               color: Colors.white,
-                              fontSize: 14,
+                              fontSize: 16,
                               fontWeight: FontWeight.bold,
                               fontFamily: "Tajawal-l",
                             ),
                           ),
                         ],
                       ),
+                      SizedBox(
+                        height: 4,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [],
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.location_pin,
+                                color: Colors.white,
+                                size: 16,
+                              ),
+                              SizedBox(
+                                width: 4,
+                              ),
+                              Text(
+                                '${place.neighborhood} , ${place.city}',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: "Tajawal-l",
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ],
               ),
-            ],
+            ),
           ),
         ),
-      ),
-    ),
-  );
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  void performSearch(String query) {
+    searchResults.clear();
+
+    if (query.isEmpty) {
+      setState(() {
+        name = '';
+      });
+    } else {
+      searchResults = allData
+          .where((place) => place.placeName.contains(query))
+          .toList();
+    }
+
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+        top: true,
+        child: DefaultTabController(
+            length: 4,
+            child: Column(
+              children: [
+                Container(
+                  height: 120,
+                  width: MediaQuery.of(context).size.width,
+                  child: AppBar(
+                    backgroundColor: Color(0xFF6db881),
+                    title: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            textAlign: TextAlign.right,
+                            onChanged: (value) {
+                              setState(() {
+                                name = value;
+                              });
+                              performSearch(value);
+                            },
+                            decoration: InputDecoration(
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Color.fromARGB(
+                                    255, 17, 99, 14)),
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              alignLabelWithHint: true,
+                              hintText: 'ابحث عن مطعم أو مكان سياحي',
+                              hintStyle: TextStyle(
+                                color: Color.fromARGB(143, 255, 255, 255),
+                                fontFamily: "Tajawal-m",
+                              ),
+                            ),
+                            cursorColor: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                    actions: [
+                      Padding(
+                        padding: EdgeInsets.only(right: 20.0),
+                        child: Icon(
+                          Icons.search,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                    bottom: TabBar(
+                      labelStyle: TextStyle(
+                        fontFamily: "Tajawal-b",
+                        fontWeight: FontWeight.w100,
+                      ),
+                      onTap: (index) {
+                        indexOfTap = index;
+                        setState(() {
+                          switch (index) {
+                            case 0:
+                              selectedCategory = 'الكل';
+                              break;
+                            case 1:
+                              selectedCategory = 'أماكن سياحية';
+                              break;
+                            case 2:
+                              selectedCategory = 'مطاعم';
+                              break;
+                            case 3:
+                              selectedCategory = 'مراكز تسوق';
+                              break;
+                          }
+                        });
+                      },
+                      indicatorColor: Colors.white,
+                      tabs: [
+                        Tab(
+                          text: 'الكل',
+                        ),
+                        Tab(
+                          text: 'أماكن سياحية',
+                        ),
+                        Tab(
+                          text: 'مطاعم',
+                        ),
+                        Tab(
+                          text: 'مراكز تسوق',
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+
+                  child: handleListItems(
+                    name.isEmpty
+                        ? selectedCategory == 'أماكن سياحية'
+                        ? attractions
+                        : selectedCategory == 'مطاعم'
+                        ? restaurants
+                        : selectedCategory == 'مراكز تسوق'
+                        ? malls
+                        : allData
+                        : searchResults,
+                  ),
+                ),
+              ],
+            ),
+            ),
+        );
+    }
 }
