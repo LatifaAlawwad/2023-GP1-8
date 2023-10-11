@@ -10,7 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:csc_picker/csc_picker.dart';
 import 'neighbourhood.dart';
 import 'cities.dart';
-import 'homepage.dart';
+import 'HomePage.dart';
 
 class AddPage extends StatefulWidget {
   const AddPage({Key? key}) : super(key: key);
@@ -20,11 +20,12 @@ class AddPage extends StatefulWidget {
 }
 
 class _AddPageState extends State<AddPage> {
+  GlobalKey<CSCPickerState> _cscPickerKey = GlobalKey();
+
+  static const appTitle = 'إضافة مكان';
+
   @override
   Widget build(BuildContext context) {
-    GlobalKey<CSCPickerState> _cscPickerKey = GlobalKey();
-
-    const appTitle = 'إضافة مكان';
     return Scaffold(
       body: FirebaseAuth.instance.currentUser == null
           ? Column(
@@ -36,9 +37,10 @@ class _AddPageState extends State<AddPage> {
             child: Text(
               "عذراً لابد من تسجيل الدخول ",
               style: TextStyle(
-                  fontSize: 18,
-                  fontFamily: "Tajawal-b",
-                  color: Color(0xFF6db881)),
+                fontSize: 18,
+                fontFamily: "Tajawal-b",
+                color: Color(0xFF6db881),
+              ),
               textAlign: TextAlign.center,
             ),
           ),
@@ -54,8 +56,8 @@ class _AddPageState extends State<AddPage> {
               backgroundColor: MaterialStateProperty.all(Color(0xFF6db881)),
               padding: MaterialStateProperty.all(
                   EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-              shape: MaterialStateProperty.all(
-                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(27))),
+              shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(27))),
             ),
             child: Text(
               "تسجيل الدخول",
@@ -83,7 +85,6 @@ class CustomFormState extends State<CustomForm> {
   int type = 1;
   String type1 = 'أماكن سياحية';
 
-  void getCities() async {}
   String place_id = '';
   String city = "الرياض";
   String? address;
@@ -111,9 +112,9 @@ class CustomFormState extends State<CustomForm> {
       child: Text(
         "إلغاء",
         style: TextStyle(
-            fontFamily: "Tajawal-m",
-            fontSize: 17,
-            color: Color(0xFF6db881)
+          fontFamily: "Tajawal-m",
+          fontSize: 17,
+          color: Color(0xFF6db881),
         ),
       ),
       onPressed: () async {
@@ -154,6 +155,7 @@ class CustomFormState extends State<CustomForm> {
           'images': arrImage,
           'Location': location.text,
           'description': description.text,
+          'category': type1, // Add the selected category
         });
         await FirebaseFirestore.instance.collection('users').doc(userId).update(
             {
@@ -168,17 +170,14 @@ class CustomFormState extends State<CustomForm> {
         style: TextStyle(fontFamily: "Tajawal-m", fontSize: 17),
         textDirection: TextDirection.rtl,
       ),
-      actions: [
-        cancelButton,
-        continueButton,
-      ],
+      actions: [cancelButton, continueButton],
     );
 
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return alert;
-        }
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
 
     Fluttertoast.showToast(
@@ -203,8 +202,8 @@ class CustomFormState extends State<CustomForm> {
                 textDirection: TextDirection.rtl,
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
+                    const Padding(
+                      padding: EdgeInsets.all(10.0),
                       child: SizedBox(width: double.infinity),
                     ),
                     Padding(
@@ -215,20 +214,18 @@ class CustomFormState extends State<CustomForm> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Container(margin: const EdgeInsets.all(10)),
-                            Container(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    '  تفاصيل المكان : ',
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontFamily: "Tajawal-b",
-                                    ),
-                                    textDirection: TextDirection.rtl,
+                            const Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  '  تفاصيل المكان : ',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontFamily: "Tajawal-b",
                                   ),
-                                ],
-                              ),
+                                  textDirection: TextDirection.rtl,
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -247,7 +244,7 @@ class CustomFormState extends State<CustomForm> {
                 children: <Widget>[
                   Expanded(
                     child: Padding(
-                      padding: EdgeInsets.only(left: 83, right: 25),
+                      padding: const EdgeInsets.only(left: 83, right: 25),
                       child: Directionality(
                         textDirection: TextDirection.rtl,
                         child: TextFormField(
@@ -263,7 +260,7 @@ class CustomFormState extends State<CustomForm> {
                       ),
                     ),
                   ),
-                  Align(
+                  const Align(
                     alignment: Alignment.centerRight,
                     child: Text(
                       ':اسم المكان ',
@@ -281,25 +278,26 @@ class CustomFormState extends State<CustomForm> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    padding: EdgeInsets.only(right: 8),
+                    margin: const EdgeInsets.only(top: 10, left: 10), // Adjust top and left values
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
                       color: Colors.white,
                       border: Border.all(
                         color: Colors.grey.shade300,
-                        width: 1,
+                        width: 2,
                       ),
                     ),
                     height: 50,
                     width: 150,
                     child: DropdownButtonFormField<int>(
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         isDense: true,
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.only(left: 8),
                       ),
-                      items: [
+                      items: const [
                         DropdownMenuItem<int>(
+                          value: 1,
                           child: Text(
                             "أماكن سياحية",
                             style: TextStyle(
@@ -308,9 +306,9 @@ class CustomFormState extends State<CustomForm> {
                               color: Color(0xFF6db881),
                             ),
                           ),
-                          value: 1,
                         ),
                         DropdownMenuItem<int>(
+                          value: 2,
                           child: Text(
                             "مطاعم",
                             style: TextStyle(
@@ -319,9 +317,9 @@ class CustomFormState extends State<CustomForm> {
                               color: Color(0xFF6db881),
                             ),
                           ),
-                          value: 2,
                         ),
                         DropdownMenuItem<int>(
+                          value: 3,
                           child: Text(
                             "مراكز تسوق",
                             style: TextStyle(
@@ -330,7 +328,6 @@ class CustomFormState extends State<CustomForm> {
                               color: Color(0xFF6db881),
                             ),
                           ),
-                          value: 3,
                         ),
                       ],
                       onChanged: (int? value) {
@@ -343,7 +340,7 @@ class CustomFormState extends State<CustomForm> {
                       },
                     ),
                   ),
-                  Text(
+                  const Text(
                     'تصنيف المكان: ',
                     style: TextStyle(
                       fontSize: 20.0,
@@ -400,12 +397,12 @@ class CustomFormState extends State<CustomForm> {
                             }
                           },
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16.0,
                             fontFamily: "Tajawal-m",
                             color: Color(0xFF6db881),
                           ),
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             isDense: true,
                             border: InputBorder.none,
                             contentPadding: EdgeInsets.only(right: 7),
@@ -416,8 +413,8 @@ class CustomFormState extends State<CustomForm> {
                       Container(
                         margin: const EdgeInsets.only(right: 7),
                       ),
-                      Padding(padding: EdgeInsets.only(left: 100, right: 50)),
-                      Text(
+                      const Padding(padding: EdgeInsets.only(left: 100, right: 50)),
+                      const Text(
                         'المدينة : ',
                         style: TextStyle(
                           fontSize: 20.0,
@@ -434,9 +431,9 @@ class CustomFormState extends State<CustomForm> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Container(
-                    padding: EdgeInsets.only(left: 7),
+                    margin: const EdgeInsets.only(top: 8, left: 8),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
                       color: Colors.white,
                       border: Border.all(
                           color: Colors.grey.shade300, width: 1),
@@ -463,12 +460,12 @@ class CustomFormState extends State<CustomForm> {
                         }
                       },
                       autovalidateMode: AutovalidateMode.onUserInteraction,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16.0,
                         fontFamily: "Tajawal-m",
                         color: Color(0xFF6db881),
                       ),
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         isDense: true,
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.all(7),
@@ -479,8 +476,8 @@ class CustomFormState extends State<CustomForm> {
                   Container(
                     margin: const EdgeInsets.all(21),
                   ),
-                  Padding(padding: EdgeInsets.only(left: 100, right: 50)),
-                  Text(
+                  const Padding(padding: EdgeInsets.only(left: 100, right: 50)),
+                  const Text(
                     ': الحي ',
                     style: TextStyle(
                       fontSize: 20.0,
@@ -495,7 +492,7 @@ class CustomFormState extends State<CustomForm> {
                 children: <Widget>[
                   Expanded(
                     child: Padding(
-                      padding: EdgeInsets.only(left: 83, right: 25),
+                      padding: const EdgeInsets.only(left: 83, right: 25),
                       child: Directionality(
                         textDirection: TextDirection.rtl,
                         child: TextFormField(
@@ -511,7 +508,7 @@ class CustomFormState extends State<CustomForm> {
                       ),
                     ),
                   ),
-                  Align(
+                  const Align(
                     alignment: Alignment.centerRight,
                     child: Text(
                       ': وصف المكان',
@@ -528,7 +525,7 @@ class CustomFormState extends State<CustomForm> {
                 children: <Widget>[
                   Expanded(
                     child: Padding(
-                      padding: EdgeInsets.only(left: 83, right: 25),
+                      padding: const EdgeInsets.only(left: 83, right: 25),
                       child: Directionality(
                         textDirection: TextDirection.rtl,
                         child: TextFormField(
@@ -544,10 +541,10 @@ class CustomFormState extends State<CustomForm> {
                       ),
                     ),
                   ),
-                  Align(
+                  const Align(
                     alignment: Alignment.centerRight,
                     child: Text(
-                      ': الموقع ',
+                      ': رابط الموقع ',
                       style: TextStyle(
                         fontSize: 20.0,
                         fontFamily: "Tajawal-b",
@@ -556,132 +553,134 @@ class CustomFormState extends State<CustomForm> {
                   ),
                 ],
               ),
-              Row(
-                children: <Widget>[
-                  Container(
-                    height: 50,
-                    width: 290,
-                    child: Center(
-                      child: Text(
-                        ': اختر الصور',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontFamily: "Tajawal-b",
-                        ),
-                      ),
-                    ),
+              // Upload images
+              Padding(
+                  padding: const EdgeInsets.only(top: 50.0 ), // Adjust the top padding as needed
+                  child:Container(
+                    height: 100,
+                    width: 200,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
                       border: Border.all(
-                        color: Colors.grey.shade300,
+                        color: Color(0xFF6db881),
                         width: 1,
                       ),
+                      borderRadius: BorderRadius.circular(5),
                     ),
-                  ),
-                  Padding(padding: EdgeInsets.only(left: 35)),
-                  ElevatedButton(
-                    onPressed: () async {
-                      final pickedFile = await _picker.pickImage(
-                        source: ImageSource.gallery,
-                        imageQuality: 50,
-                      );
-                      if (pickedFile != null) {
-                        setState(() {
-                          selectedFiles.add(pickedFile);
-                        });
-                      }
-                    },
-                    style: ButtonStyle(
-                      backgroundColor:
-                      MaterialStateProperty.all(Color(0xFF6db881)),
-                      shape: MaterialStateProperty.all(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
-                    ),
-                    child: Text(
-                      'اضافة صورة',
-                      style: TextStyle(
-                        fontSize: 17.0,
-                        fontFamily: "Tajawal-m",
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                height: 80,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: selectedFiles.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Stack(
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(left: 20),
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                selectedFiles.removeAt(index);
-                              });
-                            },
-                            child: Container(
-                              margin: EdgeInsets.only(top: 5),
-                              width: 70,
-                              height: 70,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  color: Colors.grey.shade300,
-                                  width: 1,
-                                ),
-                                image: DecorationImage(
-                                  image: FileImage(
-                                    File(selectedFiles[index].path),
-                                  ),
-                                  fit: BoxFit.cover,
+                    child: SizedBox(
+                      height: 95,
+                      width: MediaQuery.of(context).size.width,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        children: [
+                          selectedFiles.isEmpty
+                              ? Container(
+                            alignment: Alignment.centerLeft,
+                            width: MediaQuery.of(context).size.width / 1.1,
+                            child: TextButton(
+                              child: const Text(
+                                '+إرفق صور للمكان',
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontFamily: "Tajawal-m",
+                                  color: Color(0xFF6db881),
                                 ),
                               ),
+                              onPressed: () {
+                                selectImage();
+                              },
+                            ),
+                          )
+                              : Container(
+                            margin: EdgeInsets.only(
+                              top: MediaQuery.of(context).size.height / 100,
+                              right: MediaQuery.of(context).size.height / 100,
+                              bottom: MediaQuery.of(context).size.height / 100,
+                            ),
+                            height: 100,
+                            child: ListView(
+                              shrinkWrap: true,
+                              physics:
+                              const NeverScrollableScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              children: selectedFiles
+                                  .map(
+                                    (e) => Stack(
+                                  alignment:
+                                  AlignmentDirectional.topEnd,
+                                  children: [
+                                    Padding(
+                                      padding:
+                                      const EdgeInsets.all(3.0),
+                                      child: Container(
+                                        color: Colors.grey,
+                                        child: Image.file(
+                                          File(e.path),
+                                          fit: BoxFit.cover,
+                                          height: 100,
+                                          width: 100,
+                                        ),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          selectedFiles.remove(e);
+                                        });
+                                      },
+                                      child: const Padding(
+                                        padding: EdgeInsets.all(.02),
+                                        child: Icon(
+                                          Icons.cancel,
+                                          size: 15,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                                  .toList(),
                             ),
                           ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(left: 65),
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                selectedFiles.removeAt(index);
-                              });
-                            },
-                            child: Icon(
-                              Icons.close,
-                              color: Color(0xFF6db881),
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
+                        ],
+                      ),
+                    ),
+                  )),
+              Container(
+                margin: const EdgeInsets.all(20),
               ),
+              Container(
+                margin: const EdgeInsets.all(15),
+              ),
+
               Padding(
-                padding: const EdgeInsets.only(top: 10),
+                padding: const EdgeInsets.only(top: 5),
                 child: ElevatedButton(
                   onPressed: () {
-                    if (_formKey.currentState!.validate()) {
+                    if (placeName.text.isEmpty ||
+                        city == null || city.isEmpty ||
+                        address!.isEmpty ||
+                        location.text.isEmpty ||
+                        description.text.isEmpty) {
+                      showInvalidFieldsDialog(context);
+                    } else {
                       showAlertDialog(context);
                     }
                   },
                   style: ButtonStyle(
-                    backgroundColor:
-                    MaterialStateProperty.all(Color(0xFF6db881)),
+                    backgroundColor: MaterialStateProperty.all(const Color(0xFF6db881)),
                     padding: MaterialStateProperty.all(
-                        EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    ),
                     shape: MaterialStateProperty.all(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(27))),
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(27),
+                      ),
+                    ),
                   ),
-                  child: Text(
+                  child: const Text(
                     'إضافة المكان',
                     style: TextStyle(
                       fontSize: 20.0,
@@ -696,6 +695,42 @@ class CustomFormState extends State<CustomForm> {
       ),
     );
   }
+
+  Future<void> selectImage() async {
+    try {
+      final List<XFile>? imgs = await _picker.pickMultiImage();
+      if (imgs != null) {
+        selectedFiles.addAll(imgs);
+      }
+    } catch (e) {
+      rethrow;
+    }
+    setState(() {});
+  }
+
+  void showInvalidFieldsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: const Text(
+            "الرجاء ملء جميع التفاصيل!",
+            style: TextStyle(fontFamily: "Tajawal-m", fontSize: 17),
+            textDirection: TextDirection.rtl,
+          ),
+          actions: [
+            TextButton(
+              child: Text("موافق"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
   Future<String?> uploadFile(XFile file, String userId) async {
     try {
