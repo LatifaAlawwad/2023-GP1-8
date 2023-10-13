@@ -272,7 +272,7 @@ class _SignUpState extends State<SignUp> {
                                     email: _emailController.text.trim(),
                                     password: _passwordController.text.trim())
                                     .then((value) {
-                                  final suser = user(
+                                  final suser = SUser(
                                     name: _usernameController.text,
                                     email: _emailController.text,
                                   ); //creat user in database
@@ -379,7 +379,7 @@ class _SignUpState extends State<SignUp> {
 }
 
 
-Future createSuhailuser(user suser) async {
+Future createSuhailuser(SUser suser) async {
   final FirebaseAuth auth = FirebaseAuth.instance;
   final User? user = auth.currentUser;
   final Uid = user!.uid;
@@ -390,12 +390,12 @@ Future createSuhailuser(user suser) async {
 }
 
 
-class user {
+class SUser {
   late String userid;
   late final String name;
   late final String email;
 
-  user({
+  SUser({
     this.userid = '',
     required this.name,
     required this.email,
@@ -408,8 +408,8 @@ class user {
         'Email': email,
       };
 
-  static user fromJson(Map<String, dynamic> json) =>
-      user(
+  static SUser fromJson(Map<String, dynamic> json) =>
+      SUser(
         userid: json['userId'],
         name: json['name'],
         email: json['Email'],
