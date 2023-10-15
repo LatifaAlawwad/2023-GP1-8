@@ -3,9 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'placePage.dart';
+
 import 'placeDetailsPage.dart';
 import 'UserProfilePage.dart';
-
 
 class myPlacesPage extends StatefulWidget {
 
@@ -204,7 +204,7 @@ class _myPlacesPage extends State<myPlacesPage> {
                             child: Container(), // Add an empty container to take up the remaining space
                           ),
                           Text(
-                            '${place.placeName}',
+                            ' ${place.placeName}',
                             style: TextStyle(
                               height: 2,
                               color: Colors.white,
