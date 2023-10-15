@@ -118,9 +118,9 @@ class _myPlacesPage extends State<myPlacesPage> {
 
   Widget _buildItem(void Function()? onTap, placePage place, BuildContext context) {
 
-    if (  selectedCategory == 'تجارب معتمدة'
-        || selectedCategory == 'تجارب بانتظار الاعتماد'
-        || selectedCategory == 'تجارب مرفوضة' ) {
+    if (  selectedCategory == 'طلبات معتمدة'
+        || selectedCategory == 'طلبات بانتظار الاعتماد'
+        || selectedCategory == 'طلبات مرفوضة' ) {
       return GestureDetector(
         onTap: onTap,
         child: Card(
@@ -287,7 +287,7 @@ class _myPlacesPage extends State<myPlacesPage> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 50),
                 child: Text(
-                  "تجاربي",
+                  "طلبات الإضافة",
                   style: TextStyle(
                     fontSize: 17,
                     fontFamily: "Tajawal-b",
@@ -322,13 +322,13 @@ class _myPlacesPage extends State<myPlacesPage> {
                 setState(() {
                   switch (index) {
                     case 0:
-                      selectedCategory = 'تجارب معتمدة';
+                      selectedCategory = 'طلبات معتمدة';
                       break;
                     case 1:
-                      selectedCategory = 'تجارب بانتظار الاعتماد';
+                      selectedCategory = 'طلبات بانتظار الاعتماد';
                       break;
                     case 2:
-                      selectedCategory = 'تجارب مرفوضة';
+                      selectedCategory = 'طلبات مرفوضة';
                       break;
                   }
                 });
@@ -336,23 +336,23 @@ class _myPlacesPage extends State<myPlacesPage> {
               indicatorColor: Colors.white,
               tabs: [
                 Tab(
-                  text: 'تجارب معتمدة',
+                  text: 'طلبات معتمدة',
                 ),
                 Tab(
-                  text: 'تجارب بانتظار الاعتماد',
+                  text: 'طلبات بانتظار الاعتماد',
                 ),
                 Tab(
-                  text: 'تجارب مرفوضة',
+                  text: 'طلبات مرفوضة',
                 ),
               ],
             ),
           ),
           body: handleListItems(
-            selectedCategory == 'تجارب معتمدة'
+            selectedCategory == 'طلبات معتمدة'
                 ? accepted
-                : selectedCategory == 'تجارب بانتظار الاعتماد'
+                : selectedCategory == 'طلبات بانتظار الاعتماد'
                 ? pending
-                : selectedCategory == 'تجارب مرفوضة'
+                : selectedCategory == 'طلبات مرفوضة'
                 ? rejected
                 : [],
           ),

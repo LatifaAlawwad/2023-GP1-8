@@ -168,7 +168,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                                         builder: (context) => myPlacesPage()));
                                               },
                                               child: Text(
-                                                "تجاربي",
+                                                "طلبات الإضافة",
                                                 style: TextStyle(
                                                   fontSize: 18,
                                                   color: Color.fromARGB(
