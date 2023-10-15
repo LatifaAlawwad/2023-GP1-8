@@ -1,9 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'placePage.dart';
 import 'placeDetailsPage.dart';
 import 'UserProfilePage.dart';
+
 
 class myPlacesPage extends StatefulWidget {
 
@@ -143,6 +145,7 @@ class _myPlacesPage extends State<myPlacesPage> {
                 fit: BoxFit.cover,
               ),
             ),
+
             child: Container(
               padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -159,6 +162,35 @@ class _myPlacesPage extends State<myPlacesPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(5),
+                      ),
+                    ),
+                    width: 85,
+                    padding: EdgeInsets.symmetric(vertical: 4),
+                    child: Center(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          showDeleteConfirmationDialog(place, context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.red, // Set the button color to red
+                        ),
+                        child: Text(
+                          'Delete',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: "Tajawal-m",
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                   Expanded(
                     child: Container(),
                   ),
@@ -167,8 +199,12 @@ class _myPlacesPage extends State<myPlacesPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          Expanded(
+                            flex: 1,
+                            child: Container(), // Add an empty container to take up the remaining space
+                          ),
                           Text(
-                            ' ${place.placeName}',
+                            '${place.placeName}',
                             style: TextStyle(
                               height: 2,
                               color: Colors.white,
@@ -243,99 +279,152 @@ class _myPlacesPage extends State<myPlacesPage> {
       top: true,
       child: DefaultTabController(
         length: 3,
-        child: Column(
-          children: [
-            Container(
-              color: Colors.white,
-              height: 110,
-              width: MediaQuery.of(context).size.width,
-              child: AppBar(
-                backgroundColor: Color.fromARGB(255, 109, 184, 129),
-                automaticallyImplyLeading: false,
-                title: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 50),
-                    child: Text(
-                      "تجاربي",
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontFamily: "Tajawal-b",
-                        color: Color.fromARGB(255, 255, 255, 255),
-                      ),
-                    ),
-                  ),
-                ),
-                actions: [
-                  Padding(
-                    padding: EdgeInsets.only(right: 20.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.white,
-                        size: 28,
-                      ),
-                    ),
-                  ),
-                ],
-                bottom:  TabBar(
-                  isScrollable: true,
-                  labelStyle: TextStyle(
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Color.fromARGB(255, 109, 184, 129),
+            automaticallyImplyLeading: false,
+            title: Center(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 50),
+                child: Text(
+                  "تجاربي",
+                  style: TextStyle(
+                    fontSize: 17,
                     fontFamily: "Tajawal-b",
-                    fontWeight: FontWeight.w100,
+                    color: Color.fromARGB(255, 255, 255, 255),
                   ),
-                  onTap: (index) {
-                    indexOfTap = index;
-                    setState(() {
-                      switch (index) {
-                        case 0:
-                          selectedCategory = 'تجارب معتمدة';
-                          break;
-                        case 1:
-                          selectedCategory = 'تجارب بانتظار الاعتماد';
-                          break;
-                        case 2:
-                          selectedCategory = 'تجارب مرفوضة';
-                          break;
-                      }
-                    });
-                  },
-                  indicatorColor: Colors.white,
-                  tabs: [
-                    Tab(
-                      text: 'تجارب معتمدة',
-                    ),
-                    Tab(
-                      text: 'تجارب بانتظار الاعتماد',
-                    ),
-                    Tab(
-                      text: 'تجارب مرفوضة',
-                    ),
-                  ],
                 ),
-                toolbarHeight: 60,
               ),
             ),
-            Expanded(
-              child: handleListItems(
-                selectedCategory == 'تجارب معتمدة'
-                    ? accepted
-                    : selectedCategory == 'تجارب بانتظار الاعتماد'
-                    ? pending
-                    : selectedCategory == 'تجارب مرفوضة'
-                    ? rejected
-                    : [],
+            actions: [
+              Padding(
+                padding: EdgeInsets.only(right: 20.0),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.white,
+                    size: 28,
+                  ),
+                ),
               ),
+            ],
+            bottom: TabBar(
+              isScrollable: true,
+              labelStyle: TextStyle(
+                fontFamily: "Tajawal-b",
+                fontWeight: FontWeight.w100,
+              ),
+              onTap: (index) {
+                indexOfTap = index;
+                setState(() {
+                  switch (index) {
+                    case 0:
+                      selectedCategory = 'تجارب معتمدة';
+                      break;
+                    case 1:
+                      selectedCategory = 'تجارب بانتظار الاعتماد';
+                      break;
+                    case 2:
+                      selectedCategory = 'تجارب مرفوضة';
+                      break;
+                  }
+                });
+              },
+              indicatorColor: Colors.white,
+              tabs: [
+                Tab(
+                  text: 'تجارب معتمدة',
+                ),
+                Tab(
+                  text: 'تجارب بانتظار الاعتماد',
+                ),
+                Tab(
+                  text: 'تجارب مرفوضة',
+                ),
+              ],
             ),
-          ],
+          ),
+          body: handleListItems(
+            selectedCategory == 'تجارب معتمدة'
+                ? accepted
+                : selectedCategory == 'تجارب بانتظار الاعتماد'
+                ? pending
+                : selectedCategory == 'تجارب مرفوضة'
+                ? rejected
+                : [],
+          ),
         ),
       ),
     );
   }
 
 }
+
+void deletePlace(placePage place) async {
+  try {
+    // Remove the place from Firestore
+    await FirebaseFirestore.instance.collection("addedPlaces").doc(place.placeId).delete().then((_) {
+      // Document successfully deleted
+      showToastMessage("Deleted: ${place.placeName}");
+    })
+        .catchError((error) {
+      // Error occurred while deleting the document
+      print("Error deleting document: $error");
+    });
+
+    showToastMessage("Deleted: ${place.placeName}");
+  } catch (e) {
+    print("Error deleting place: $e");
+  }
+
+
+
+
+}
+
+void showDeleteConfirmationDialog(placePage place, BuildContext context) {
+  showDialog<bool>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("Confirm Deletion"),
+        content: Text("Do you want to delete this place?"),
+        actions: <Widget>[
+          TextButton(
+            child: Text("Cancel"),
+            onPressed: () {
+              Navigator.of(context).pop(false);
+            },
+          ),
+          TextButton(
+            child: Text("Delete"),
+            onPressed: () {
+              Navigator.of(context).pop(true);
+              deletePlace(place);
+            },
+          ),
+        ],
+      );
+    },
+  ).then((result) {
+    if (result != null && result) {
+      deletePlace(place);
+      showToastMessage("Deleted: ${place.placeName}");
+    }
+  });
+}
+
+void showToastMessage(String message) {
+  Fluttertoast.showToast(
+    msg: message,
+    toastLength: Toast.LENGTH_SHORT,
+    gravity: ToastGravity.BOTTOM,
+  );
+}
+
 String getuser() {
   late FirebaseAuth auth = FirebaseAuth.instance;
   late User? user = auth.currentUser;

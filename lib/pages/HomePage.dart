@@ -135,8 +135,12 @@ class HomePageState extends State<HomePage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          Expanded(
+                            flex: 1,
+                            child: Container(), // Add an empty container to take up the remaining space
+                          ),
                           Text(
-                            ' ${place.placeName}',
+                            '${place.placeName}',
                             style: TextStyle(
                               height: 2,
                               color: Colors.white,
@@ -266,6 +270,7 @@ class HomePageState extends State<HomePage> {
                         fontFamily: "Tajawal-b",
                         fontWeight: FontWeight.w100,
                       ),
+                      labelPadding: EdgeInsets.symmetric(horizontal: 6.0),
                       onTap: (index) {
                         indexOfTap = index;
                         setState(() {
