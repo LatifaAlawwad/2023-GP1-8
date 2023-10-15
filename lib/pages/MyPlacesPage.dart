@@ -1,20 +1,19 @@
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'placePage.dart';
 import 'placeDetailsPage.dart';
 import 'UserProfilePage.dart';
 
 class myPlacesPage extends StatefulWidget {
-
-
   const myPlacesPage({Key? key}) : super(key: key);
+
   @override
   State<myPlacesPage> createState() => _myPlacesPage();
 }
 
 class _myPlacesPage extends State<myPlacesPage> {
-
   int indexOfTap = 0;
   List<placePage> accepted = [];
   List<placePage> rejected = [];
@@ -38,8 +37,6 @@ class _myPlacesPage extends State<myPlacesPage> {
       rejected.clear();
       pending.clear();
       String userid = getuser();
-
-
 
       QuerySnapshot<Map<String, dynamic>> snapshot =
       await FirebaseFirestore.instance.collection('addedPlaces').get();
@@ -87,7 +84,93 @@ class _myPlacesPage extends State<myPlacesPage> {
     }
   }
 
-
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      top: true,
+      child: DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Color.fromARGB(255, 109, 184, 129),
+            automaticallyImplyLeading: false,
+            title: Center(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 50),
+                child: Text(
+                  "تجاربي",
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontFamily: "Tajawal-b",
+                    color: Color.fromARGB(255, 255, 255, 255),
+                  ),
+                ),
+              ),
+            ),
+            actions: [
+              Padding(
+                padding: EdgeInsets.only(right: 20.0),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.white,
+                    size: 28,
+                  ),
+                ),
+              ),
+            ],
+            bottom: TabBar(
+              isScrollable: true,
+              labelStyle: TextStyle(
+                fontFamily: "Tajawal-b",
+                fontWeight: FontWeight.w100,
+              ),
+              onTap: (index) {
+                indexOfTap = index;
+                setState(() {
+                  switch (index) {
+                    case 0:
+                      selectedCategory = 'تجارب معتمدة';
+                      break;
+                    case 1:
+                      selectedCategory = 'تجارب بانتظار الاعتماد';
+                      break;
+                    case 2:
+                      selectedCategory = 'تجارب مرفوضة';
+                      break;
+                  }
+                });
+              },
+              indicatorColor: Colors.white,
+              tabs: [
+                Tab(
+                  text: 'تجارب معتمدة',
+                ),
+                Tab(
+                  text: 'تجارب بانتظار الاعتماد',
+                ),
+                Tab(
+                  text: 'تجارب مرفوضة',
+                ),
+              ],
+            ),
+          ),
+          body: handleListItems(
+            selectedCategory == 'تجارب معتمدة'
+                ? accepted
+                : selectedCategory == 'تجارب بانتظار الاعتماد'
+                ? pending
+                : selectedCategory == 'تجارب مرفوضة'
+                ? rejected
+                : [],
+          ),
+        ),
+      ),
+    );
+  }
 
   Widget handleListItems(List<placePage> listItem) {
     return ListView.separated(
@@ -102,7 +185,9 @@ class _myPlacesPage extends State<myPlacesPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => placeDetailsPage(place: listItem[index])),
+                  builder: (context) =>
+                      placeDetailsPage(place: listItem[index]),
+                ),
               );
             },
             listItem[index] as placePage,
@@ -114,11 +199,14 @@ class _myPlacesPage extends State<myPlacesPage> {
     );
   }
 
-  Widget _buildItem(void Function()? onTap, placePage place, BuildContext context) {
-
-    if (  selectedCategory == 'تجارب معتمدة'
-        || selectedCategory == 'تجارب بانتظار الاعتماد'
-        || selectedCategory == 'تجارب مرفوضة' ) {
+  Widget _buildItem(
+      void Function()? onTap,
+      placePage place,
+      BuildContext context,
+      ) {
+    if (selectedCategory == 'تجارب معتمدة' ||
+        selectedCategory == 'تجارب بانتظار الاعتماد' ||
+        selectedCategory == 'تجارب مرفوضة') {
       return GestureDetector(
         onTap: onTap,
         child: Card(
@@ -213,6 +301,17 @@ class _myPlacesPage extends State<myPlacesPage> {
                       ),
                     ],
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          showDeleteConfirmationDialog(place);
+                        },
+                        child: Text('Delete'),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -224,121 +323,62 @@ class _myPlacesPage extends State<myPlacesPage> {
     }
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      top: true,
-      child: DefaultTabController(
-        length: 3,
-        child: Column(
-          children: [
-            Container(
-              color: Colors.white,
-              height: 110,
-              width: MediaQuery.of(context).size.width,
-              child: AppBar(
-                backgroundColor: Color.fromARGB(255, 109, 184, 129),
-                automaticallyImplyLeading: false,
-                title: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 50),
-                    child: Text(
-                      "تجاربي",
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontFamily: "Tajawal-b",
-                        color: Color.fromARGB(255, 255, 255, 255),
-                      ),
-                    ),
-                  ),
-                ),
-                actions: [
-                  Padding(
-                    padding: EdgeInsets.only(right: 20.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.white,
-                        size: 28,
-                      ),
-                    ),
-                  ),
-                ],
-                bottom:  TabBar(
-                  isScrollable: true,
-                  labelStyle: TextStyle(
-                    fontFamily: "Tajawal-b",
-                    fontWeight: FontWeight.w100,
-                  ),
-                  onTap: (index) {
-                    indexOfTap = index;
-                    setState(() {
-                      switch (index) {
-                        case 0:
-                          selectedCategory = 'تجارب معتمدة';
-                          break;
-                        case 1:
-                          selectedCategory = 'تجارب بانتظار الاعتماد';
-                          break;
-                        case 2:
-                          selectedCategory = 'تجارب مرفوضة';
-                          break;
-                      }
-                    });
-                  },
-                  indicatorColor: Colors.white,
-                  tabs: [
-                    Tab(
-                      text: 'تجارب معتمدة',
-                    ),
-                    Tab(
-                      text: 'تجارب بانتظار الاعتماد',
-                    ),
-                    Tab(
-                      text: 'تجارب مرفوضة',
-                    ),
-                  ],
-                ),
-                toolbarHeight: 60,
-              ),
+  void showDeleteConfirmationDialog(placePage place) {
+    showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Confirm Deletion"),
+          content: Text("Do you want to delete this place?"),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
             ),
-            Expanded(
-              child: handleListItems(
-                selectedCategory == 'تجارب معتمدة'
-                    ? accepted
-                    : selectedCategory == 'تجارب بانتظار الاعتماد'
-                    ? pending
-                    : selectedCategory == 'تجارب مرفوضة'
-                    ? rejected
-                    : [],
-              ),
+            TextButton(
+              child: Text("Delete"),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+                deletePlace(place);
+              },
             ),
           ],
-        ),
-      ),
+        );
+      },
+    ).then((result) {
+      if (result != null && result) {
+        deletePlace(place);
+        showToastMessage("Deleted: ${place.placeName}");
+      }
+    });
+  }
+
+  void deletePlace(placePage place) async {
+    try {
+      // Remove the place from Firestore
+      await FirebaseFirestore.instance.collection("addedPlaces").doc(place.placeId).delete();
+
+      showToastMessage("Deleted: ${place.placeName}");
+    } catch (e) {
+      print("Error deleting place: $e");
+    }
+  }
+
+
+  void showToastMessage(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
     );
   }
 
-}
-String getuser() {
-  late FirebaseAuth auth = FirebaseAuth.instance;
-  late User? user = auth.currentUser;
-  var cpuid = user!.uid;
-  return cpuid;
-}
+  String getuser() {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+    var cpuid = user!.uid;
+    return cpuid;
+  }
+  }
