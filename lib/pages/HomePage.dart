@@ -155,31 +155,24 @@ class HomePageState extends State<HomePage> {
                         height: 4,
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.end, // Align to the right
                         children: [
-                          Row(
-                            children: [],
+                          Text(
+                            '${place.neighborhood} , ${place.city}',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: "Tajawal-l",
+                            ),
                           ),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.location_pin,
-                                color: Colors.white,
-                                size: 16,
-                              ),
-                              SizedBox(
-                                width: 4,
-                              ),
-                              Text(
-                                '${place.neighborhood} , ${place.city}',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: "Tajawal-l",
-                                ),
-                              ),
-                            ],
+                          SizedBox(
+                            width: 4,
+                          ),
+                          Icon(
+                            Icons.location_pin,
+                            color: Colors.white,
+                            size: 16,
                           ),
                         ],
                       ),

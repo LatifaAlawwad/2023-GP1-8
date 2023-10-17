@@ -1,5 +1,5 @@
 class placePage {
-  String placeId;
+  String place_id;
   String placeName;
   String userId;
   String category;
@@ -11,7 +11,7 @@ class placePage {
   String Location;
 
   placePage({
-    required this.placeId,
+    required this.place_id,
     required this.placeName,
     required this.userId,
     required this.category,
@@ -25,7 +25,7 @@ class placePage {
 
   Map<String, dynamic> toMap() {
     return {
-      'placeId': placeId,
+      'place_id': place_id,
       'userId': userId,
       'placeName': placeName,
       'category': category,
@@ -40,7 +40,7 @@ class placePage {
 
   factory placePage.fromMap(Map<String, dynamic> map) {
     return placePage(
-        placeId: map['placeId'] ?? '',
+        place_id: map['place_id'] ?? '',
         userId: map['userId'] ?? '',
         placeName: map['placeName'] ?? '',
         category: map['category'] ?? '',
@@ -50,6 +50,6 @@ class placePage {
         images: List<String>.from(map['images']),
         Location: map['Location'] ?? '',
         description: map['description'] ?? '',
-        );
-    }
+       );
+   }
 }

@@ -3,20 +3,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'placePage.dart';
-
 import 'placeDetailsPage.dart';
 import 'UserProfilePage.dart';
 
 class myPlacesPage extends StatefulWidget {
-
-
   const myPlacesPage({Key? key}) : super(key: key);
+
   @override
   State<myPlacesPage> createState() => _myPlacesPage();
 }
 
 class _myPlacesPage extends State<myPlacesPage> {
-
   int indexOfTap = 0;
   List<placePage> accepted = [];
   List<placePage> rejected = [];
@@ -24,7 +21,7 @@ class _myPlacesPage extends State<myPlacesPage> {
   List<dynamic> userData = [];
   bool isDownloadedData = false;
   String name = '';
-  String selectedCategory = 'تجارب معتمدة';
+  String selectedCategory = 'طلبات معتمدة';
 
   List<placePage> searchResults = [];
 
@@ -40,8 +37,6 @@ class _myPlacesPage extends State<myPlacesPage> {
       rejected.clear();
       pending.clear();
       String userid = getuser();
-
-
 
       QuerySnapshot<Map<String, dynamic>> snapshot =
       await FirebaseFirestore.instance.collection('addedPlaces').get();
@@ -88,190 +83,6 @@ class _myPlacesPage extends State<myPlacesPage> {
       debugPrint(e.toString());
     }
   }
-
-
-
-  Widget handleListItems(List<placePage> listItem) {
-    return ListView.separated(
-      itemCount: listItem.length,
-      separatorBuilder: (BuildContext context, int index) {
-        return SizedBox(height: 10);
-      },
-      itemBuilder: (BuildContext context, int index) {
-        if (listItem[index] is placePage) {
-          return _buildItem(
-                () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => placeDetailsPage(place: listItem[index])),
-              );
-            },
-            listItem[index] as placePage,
-            context,
-          );
-        }
-        return Container();
-      },
-    );
-  }
-
-  Widget _buildItem(void Function()? onTap, placePage place, BuildContext context) {
-
-    if (  selectedCategory == 'طلبات معتمدة'
-        || selectedCategory == 'طلبات بانتظار الاعتماد'
-        || selectedCategory == 'طلبات مرفوضة' ) {
-      return GestureDetector(
-        onTap: onTap,
-        child: Card(
-          margin: EdgeInsets.fromLTRB(12, 12, 12, 6),
-          clipBehavior: Clip.antiAlias,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(15),
-            ),
-          ),
-          child: Container(
-            height: 210,
-            decoration: BoxDecoration(
-              image: place.images.isEmpty
-                  ? DecorationImage(
-                image: NetworkImage(
-                    'https://www.guardanthealthamea.com/wp-content/uploads/2019/09/no-image.jpg'),
-                fit: BoxFit.cover,
-              )
-                  : DecorationImage(
-                image: NetworkImage(place.images[0]),
-                fit: BoxFit.cover,
-              ),
-            ),
-
-            child: Container(
-              padding: EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: [0.5, 1.0],
-                  colors: [
-                    Colors.transparent,
-                    Colors.black.withOpacity(0.7),
-                  ],
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(5),
-                      ),
-                    ),
-                    width: 85,
-                    padding: EdgeInsets.symmetric(vertical: 4),
-                    child: Center(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          showDeleteConfirmationDialog(place, context);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.red, // Set the button color to red
-                        ),
-                        child: Text(
-                          'Delete',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: "Tajawal-m",
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(),
-                  ),
-                  Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Container(), // Add an empty container to take up the remaining space
-                          ),
-                          Text(
-                            ' ${place.placeName}',
-                            style: TextStyle(
-                              height: 2,
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: "Tajawal-l",
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 4,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [],
-                          ),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.location_pin,
-                                color: Colors.white,
-                                size: 16,
-                              ),
-                              SizedBox(
-                                width: 4,
-                              ),
-                              Text(
-                                '${place.neighborhood} , ${place.city}',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: "Tajawal-l",
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-    } else {
-      return Container();
-    }
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -361,73 +172,226 @@ class _myPlacesPage extends State<myPlacesPage> {
     );
   }
 
-}
-
-void deletePlace(placePage place) async {
-  try {
-    // Remove the place from Firestore
-    await FirebaseFirestore.instance.collection("addedPlaces").doc(place.placeId).delete().then((_) {
-      // Document successfully deleted
-      showToastMessage("Deleted: ${place.placeName}");
-    })
-        .catchError((error) {
-      // Error occurred while deleting the document
-      print("Error deleting document: $error");
-    });
-
-    showToastMessage("Deleted: ${place.placeName}");
-  } catch (e) {
-    print("Error deleting place: $e");
+  Widget handleListItems(List<placePage> listItem) {
+    return ListView.separated(
+      itemCount: listItem.length,
+      separatorBuilder: (BuildContext context, int index) {
+        return SizedBox(height: 10);
+      },
+      itemBuilder: (BuildContext context, int index) {
+        if (listItem[index] is placePage) {
+          return _buildItem(
+                () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      placeDetailsPage(place: listItem[index]),
+                ),
+              );
+            },
+            listItem[index] as placePage,
+            context,
+          );
+        }
+        return Container();
+      },
+    );
   }
 
-
-
-
-}
-
-void showDeleteConfirmationDialog(placePage place, BuildContext context) {
-  showDialog<bool>(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text("Confirm Deletion"),
-        content: Text("Do you want to delete this place?"),
-        actions: <Widget>[
-          TextButton(
-            child: Text("Cancel"),
-            onPressed: () {
-              Navigator.of(context).pop(false);
-            },
+  Widget _buildItem(
+      void Function()? onTap,
+      placePage place,
+      BuildContext context,
+      ) {
+    if (selectedCategory == 'طلبات معتمدة' ||
+        selectedCategory == 'طلبات بانتظار الاعتماد' ||
+        selectedCategory == 'طلبات مرفوضة') {
+      return GestureDetector(
+        onTap: onTap,
+        child: Card(
+          margin: EdgeInsets.fromLTRB(12, 12, 12, 6),
+          clipBehavior: Clip.antiAlias,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(15),
+            ),
           ),
-          TextButton(
-            child: Text("Delete"),
-            onPressed: () {
-              Navigator.of(context).pop(true);
-              deletePlace(place);
-            },
+          child: Stack(
+            children: [
+              Container(
+                height: 210,
+                decoration: BoxDecoration(
+                  image: place.images.isEmpty
+                      ? DecorationImage(
+                    image: NetworkImage(
+                        'https://www.guardanthealthamea.com/wp-content/uploads/2019/09/no-image.jpg'),
+                    fit: BoxFit.cover,
+                  )
+                      : DecorationImage(
+                    image: NetworkImage(place.images[0]),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Container(
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      stops: [0.5, 1.0],
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withOpacity(0.7),
+                      ],
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: Container()),
+                      Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  ' ${place.placeName}',
+                                  textAlign: TextAlign.right,
+                                  style: TextStyle(
+                                    height: 2,
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: "Tajawal-l",
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 4,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end, // Align to the right
+                            children: [
+                              Text(
+                                '${place.neighborhood} , ${place.city}',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: "Tajawal-l",
+                                ),
+                              ),
+                              SizedBox(
+                                width: 4,
+                              ),
+                              Icon(
+                                Icons.location_pin,
+                                color: Colors.white,
+                                size: 16,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 10,
+                left: 10,
+                child: ElevatedButton(
+                  onPressed: () {
+                    showDeleteConfirmationDialog(place);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.red,
+                  ),
+                  child: Text(
+                    'Delete',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: "Tajawal-m",
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       );
-    },
-  ).then((result) {
-    if (result != null && result) {
-      deletePlace(place);
-      showToastMessage("Deleted: ${place.placeName}");
+    } else {
+      return Container();
     }
-  });
-}
+  }
 
-void showToastMessage(String message) {
-  Fluttertoast.showToast(
-    msg: message,
-    toastLength: Toast.LENGTH_SHORT,
-    gravity: ToastGravity.BOTTOM,
-  );
-}
+  void showDeleteConfirmationDialog(placePage place) {
+    showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Confirm Deletion"),
+          content: Text("Do you want to delete this place?"),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            TextButton(
+              child: Text("Delete"),
+              onPressed: () {
+                Navigator.of(context).pop(true);
 
-String getuser() {
-  late FirebaseAuth auth = FirebaseAuth.instance;
-  late User? user = auth.currentUser;
-  var cpuid = user!.uid;
-  return cpuid;
+              },
+            ),
+          ],
+        );
+      },
+    ).then((result) {
+      if (result != null && result) {
+        deletePlace(place.place_id); // Extract the placeId from placePage
+        showToastMessage("Deleted: ${place.place_id}");
+      }
+    });
+  }
+
+  void deletePlace(String place_id) async {
+    try {
+      // Remove the place from Firestore
+      await FirebaseFirestore.instance.collection("addedPlaces").doc(place_id).delete();
+
+      setState(() {
+        // Remove the place from the local list
+        accepted.removeWhere((place) => place.place_id == place_id);
+
+      });
+
+      //showToastMessage("Deleted: $place_id");
+    } catch (e) {
+      print("Error deleting place: $e");
+    }
+  }
+
+  void showToastMessage(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+    );
+  }
+
+  String getuser() {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+    var cpuid = user!.uid;
+    return cpuid;
+    }
 }
