@@ -42,7 +42,7 @@ class HomePageState extends State<HomePage> {
 
           placePage place = placePage.fromMap(element.data());
 
-          if (category == "أماكن سياحية") {
+          if (category == "فعاليات و ترفيه") {
             attractions.add(place);
           } else if (category == "مطاعم") {
             restaurants.add(place);
@@ -263,7 +263,7 @@ class HomePageState extends State<HomePage> {
                         fontFamily: "Tajawal-b",
                         fontWeight: FontWeight.w100,
                       ),
-                      labelPadding: EdgeInsets.symmetric(horizontal: 6.0),
+                      labelPadding: EdgeInsets.symmetric(horizontal: 1.0),
                       onTap: (index) {
                         indexOfTap = index;
                         setState(() {
@@ -272,7 +272,7 @@ class HomePageState extends State<HomePage> {
                               selectedCategory = 'الكل';
                               break;
                             case 1:
-                              selectedCategory = 'أماكن سياحية';
+                              selectedCategory = 'فعاليات و ترفيه';
                               break;
                             case 2:
                               selectedCategory = 'مطاعم';
@@ -289,7 +289,7 @@ class HomePageState extends State<HomePage> {
                           text: 'الكل',
                         ),
                         Tab(
-                          text: 'أماكن سياحية',
+                          text: 'فعاليات و ترفيه',
                         ),
                         Tab(
                           text: 'مطاعم',
@@ -305,7 +305,7 @@ class HomePageState extends State<HomePage> {
 
                   child: handleListItems(
                     name.isEmpty
-                        ? selectedCategory == 'أماكن سياحية'
+                        ? selectedCategory == 'فعاليات و ترفيه'
                         ? attractions
                         : selectedCategory == 'مطاعم'
                         ? restaurants

@@ -367,25 +367,16 @@ class CustomFormState extends State<CustomForm> {
                             ),
                           ),
                         ),
-                        DropdownMenuItem<int>(
-                          value: 4,
-                          child: Text(
-                            "معالم تاريخية",
-                            style: TextStyle(
-                              fontSize: 17.0,
-                              fontFamily: "Tajawal-m",
-                              color: Color(0xFF6db881),
-                            ),
-                          ),
-                        ),
+
 
                       ],
                       onChanged: (int? value) {
                         setState(() {
                           type = value!;
-                          if (type == 1 || type == 4 ) type1 = 'أماكن سياحية';
+                          if (type == 1 ) type1 = 'فعاليات و ترفيه';
                           if (type == 2) type1 = 'مطاعم';
                           if (type == 3) type1 = 'مراكز تسوق';
+
                         });
                       },
                     ),

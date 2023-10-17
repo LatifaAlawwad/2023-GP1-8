@@ -358,21 +358,34 @@ class _myPlacesPage extends State<myPlacesPage> {
     ).then((result) {
       if (result != null && result) {
         deletePlace(place.place_id); // Extract the placeId from placePage
-        showToastMessage("Deleted: ${place.place_id}");
+        showToastMessage("Deleted: ${place.placeName}");
       }
     });
   }
 
   void deletePlace(String place_id) async {
     try {
-      // Remove the place from Firestore
+      if (selectedCategory == 'طلبات معتمدة'){
       await FirebaseFirestore.instance.collection("addedPlaces").doc(place_id).delete();
-
       setState(() {
         // Remove the place from the local list
         accepted.removeWhere((place) => place.place_id == place_id);
 
-      });
+      });}
+else if(selectedCategory == 'طلبات بانتظار الاعتماد' ){
+        await FirebaseFirestore.instance.collection("PendingPlaces").doc(place_id).delete();
+        setState(() {
+          // Remove the place from the local list
+          pending.removeWhere((place) => place.place_id == place_id);
+
+        });}
+     else if( selectedCategory == 'طلبات مرفوضة'){
+        await FirebaseFirestore.instance.collection("RejectedPlaces").doc(place_id).delete();
+      setState(() {
+        // Remove the place from the local list
+        rejected.removeWhere((place) => place.place_id == place_id);
+
+      });}
 
       //showToastMessage("Deleted: $place_id");
     } catch (e) {
