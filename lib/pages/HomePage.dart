@@ -60,29 +60,44 @@ class HomePageState extends State<HomePage> {
     }
   }
 
+// Inside your `handleListItems` method
+
   Widget handleListItems(List<placePage> listItem) {
-    return ListView.separated(
-      itemCount: listItem.length,
-      separatorBuilder: (BuildContext context, int index) {
-        return SizedBox(height: 10);
-      },
-      itemBuilder: (BuildContext context, int index) {
-        if (listItem[index] is placePage) {
-          return _buildItem(
-                () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => placeDetailsPage(place: listItem[index])),
-              );
-            },
-            listItem[index] as placePage,
-            context,
-          );
-        }
-        return Container();
-      },
-    );
+    if (listItem.isEmpty) {
+      return Center(
+        child: Text(
+          "لم يتم العثور على نتائج",
+          style: TextStyle(
+            color: Color(0xFF6db881), // Set your desired color
+            fontSize: 16,
+          ),
+        ),
+      );
+    } else {
+      return ListView.separated(
+        itemCount: listItem.length,
+        separatorBuilder: (BuildContext context, int index) {
+          return SizedBox(height: 10);
+        },
+        itemBuilder: (BuildContext context, int index) {
+          if (listItem[index] is placePage) {
+            return _buildItem(
+                  () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => placeDetailsPage(place: listItem[index]),
+                  ),
+                );
+              },
+              listItem[index] as placePage,
+              context,
+            );
+          }
+          return Container();
+        },
+      );
+    }
   }
 
   Widget _buildItem(void Function()? onTap, placePage place, BuildContext context) {

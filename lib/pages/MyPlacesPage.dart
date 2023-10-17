@@ -6,6 +6,8 @@ import 'placePage.dart';
 import 'placeDetailsPage.dart';
 import 'UserProfilePage.dart';
 
+
+
 class myPlacesPage extends StatefulWidget {
   const myPlacesPage({Key? key}) : super(key: key);
 
@@ -24,6 +26,12 @@ class _myPlacesPage extends State<myPlacesPage> {
   String selectedCategory = 'طلبات معتمدة';
 
   List<placePage> searchResults = [];
+
+  Map<String, String> collectionNames = {
+    'طلبات معتمدة': 'addedPlaces',
+    'طلبات بانتظار الاعتماد': 'PendingPlaces',
+    'طلبات مرفوضة': 'RejectedPlaces',
+  };
 
   @override
   void initState() {
@@ -150,7 +158,7 @@ class _myPlacesPage extends State<myPlacesPage> {
                   text: 'طلبات معتمدة',
                 ),
                 Tab(
-                  text: 'طلبات بانتظار الاعتماد',
+                  text: 'طلبات بانتظار الاععتماد',
                 ),
                 Tab(
                   text: 'طلبات مرفوضة',
@@ -172,8 +180,11 @@ class _myPlacesPage extends State<myPlacesPage> {
     );
   }
 
+  // Inside your `_buildItem` method
+
   Widget handleListItems(List<placePage> listItem) {
-    return ListView.separated(
+    return listItem.isNotEmpty
+        ? ListView.separated(
       itemCount: listItem.length,
       separatorBuilder: (BuildContext context, int index) {
         return SizedBox(height: 10);
@@ -196,8 +207,18 @@ class _myPlacesPage extends State<myPlacesPage> {
         }
         return Container();
       },
+    )
+        : Center(
+      child: Text(
+        "لم يتم العثور على نتائج",
+        style: TextStyle(
+          color: Color(0xFF6db881), // Set your desired color
+          fontSize: 16,
+        ),
+      ),
     );
   }
+
 
   Widget _buildItem(
       void Function()? onTap,
@@ -274,7 +295,7 @@ class _myPlacesPage extends State<myPlacesPage> {
                             height: 4,
                           ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.end, // Align to the right
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
                                 '${place.neighborhood} , ${place.city}',
@@ -304,21 +325,13 @@ class _myPlacesPage extends State<myPlacesPage> {
               Positioned(
                 top: 10,
                 left: 10,
-                child: ElevatedButton(
-                  onPressed: () {
+                child: GestureDetector(
+                  onTap: () {
                     showDeleteConfirmationDialog(place);
                   },
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.red,
-                  ),
-                  child: Text(
-                    'Delete',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: "Tajawal-m",
-                    ),
+                  child: Icon(
+                    Icons.delete,
+                    color: Colors.red,
                   ),
                 ),
               ),
@@ -336,20 +349,19 @@ class _myPlacesPage extends State<myPlacesPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Confirm Deletion"),
-          content: Text("Do you want to delete this place?"),
+          title: Text("تأكيد الحذف"),
+          content: Text("هل تريد حذف هذا المكان؟"),
           actions: <Widget>[
             TextButton(
-              child: Text("Cancel"),
+              child: Text("إلغاء"),
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
             ),
             TextButton(
-              child: Text("Delete"),
+              child: Text("حذف"),
               onPressed: () {
                 Navigator.of(context).pop(true);
-
               },
             ),
           ],
@@ -357,37 +369,26 @@ class _myPlacesPage extends State<myPlacesPage> {
       },
     ).then((result) {
       if (result != null && result) {
-        deletePlace(place.place_id); // Extract the placeId from placePage
-        showToastMessage("Deleted: ${place.placeName}");
+        deletePlace(place.place_id);
       }
     });
   }
 
+
   void deletePlace(String place_id) async {
     try {
-      if (selectedCategory == 'طلبات معتمدة'){
-      await FirebaseFirestore.instance.collection("addedPlaces").doc(place_id).delete();
+      for (String collectionName in collectionNames.values) {
+        await FirebaseFirestore.instance
+            .collection(collectionName)
+            .doc(place_id)
+            .delete();
+      }
+
       setState(() {
-        // Remove the place from the local list
         accepted.removeWhere((place) => place.place_id == place_id);
-
-      });}
-else if(selectedCategory == 'طلبات بانتظار الاعتماد' ){
-        await FirebaseFirestore.instance.collection("PendingPlaces").doc(place_id).delete();
-        setState(() {
-          // Remove the place from the local list
-          pending.removeWhere((place) => place.place_id == place_id);
-
-        });}
-     else if( selectedCategory == 'طلبات مرفوضة'){
-        await FirebaseFirestore.instance.collection("RejectedPlaces").doc(place_id).delete();
-      setState(() {
-        // Remove the place from the local list
+        pending.removeWhere((place) => place.place_id == place_id);
         rejected.removeWhere((place) => place.place_id == place_id);
-
-      });}
-
-      //showToastMessage("Deleted: $place_id");
+      });
     } catch (e) {
       print("Error deleting place: $e");
     }
@@ -406,5 +407,5 @@ else if(selectedCategory == 'طلبات بانتظار الاعتماد' ){
     User? user = auth.currentUser;
     var cpuid = user!.uid;
     return cpuid;
-    }
+  }
 }
