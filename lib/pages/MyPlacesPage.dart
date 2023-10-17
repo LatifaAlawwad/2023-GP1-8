@@ -158,7 +158,7 @@ class _myPlacesPage extends State<myPlacesPage> {
                   text: 'طلبات معتمدة',
                 ),
                 Tab(
-                  text: 'طلبات بانتظار الاععتماد',
+                  text: 'طلبات بانتظار الاعتماد',
                 ),
                 Tab(
                   text: 'طلبات مرفوضة',
@@ -343,25 +343,35 @@ class _myPlacesPage extends State<myPlacesPage> {
       return Container();
     }
   }
-
   void showDeleteConfirmationDialog(placePage place) {
+    final buttonStyle = TextButton.styleFrom(
+      primary: Color(0xFF6db881), // Change button text color
+      textStyle: TextStyle(
+        fontFamily: "Tajawal-m",
+        fontSize: 17, // Change font size
+      ),
+    );
+
     showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("تأكيد الحذف"),
-          content: Text("هل تريد حذف هذا المكان؟"),
+          content: Text("هل تريد حذف هذا المكان?"),
           actions: <Widget>[
             TextButton(
               child: Text("إلغاء"),
+              style: buttonStyle,
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
             ),
             TextButton(
               child: Text("حذف"),
+              style: buttonStyle,
               onPressed: () {
                 Navigator.of(context).pop(true);
+                deletePlace(place.place_id);
               },
             ),
           ],
