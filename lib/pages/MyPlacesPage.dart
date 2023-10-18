@@ -28,7 +28,7 @@ class _myPlacesPage extends State<myPlacesPage> {
   List<placePage> searchResults = [];
 
   Map<String, String> collectionNames = {
-    'طلبات معتمدة': 'addedPlaces',
+    'طلبات معتمدة': 'ApprovedPlaces',
     'طلبات بانتظار الاعتماد': 'PendingPlaces',
     'طلبات مرفوضة': 'RejectedPlaces',
   };
@@ -47,7 +47,7 @@ class _myPlacesPage extends State<myPlacesPage> {
       String userid = getuser();
 
       QuerySnapshot<Map<String, dynamic>> snapshot =
-      await FirebaseFirestore.instance.collection('addedPlaces').get();
+      await FirebaseFirestore.instance.collection('ApprovedPlaces').get();
       if (snapshot.docs.isNotEmpty) {
         snapshot.docs.forEach((element) {
           final id = element.data()["User_id"];

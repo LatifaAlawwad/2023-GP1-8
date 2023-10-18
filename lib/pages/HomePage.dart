@@ -30,7 +30,7 @@ class HomePageState extends State<HomePage> {
   Future<void> _fetchDataFromFirestore() async {
     try {
       QuerySnapshot<Map<String, dynamic>> snapshot =
-      await FirebaseFirestore.instance.collection('addedPlaces').get();
+      await FirebaseFirestore.instance.collection('ApprovedPlaces').get();
       if (snapshot.docs.isNotEmpty) {
         allData.clear();
         attractions.clear();

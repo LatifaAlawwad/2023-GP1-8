@@ -68,8 +68,7 @@ class _placeDetailsState extends State<placeDetailsPage> {
                     ? BoxDecoration(
                   image: DecorationImage(
                     image: NetworkImage(
-                        'https://www.guardanthealthamea.com/wp-content/uploads/2019/09/no-image.jpg'), //'${villa.images[0]}'
-                    fit: BoxFit.cover,
+                        'https://www.guardanthealthamea.com/wp-content/uploads/2019/09/no-image.jpg'),
                   ),
                 )
                     : BoxDecoration(
