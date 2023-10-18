@@ -308,19 +308,26 @@ class _placeDetailsState extends State<placeDetailsPage> {
                                 ),
                               ),
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(right: 33, left: 5, bottom: 16),
-                              child: Text(
-                                '${widget.place.Location}',
-                                textAlign: TextAlign.right,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.grey[500],
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: "Tajawal-l",
-                                ),
-                              ),
-                            ),
+                Padding(
+                  padding: EdgeInsets.only(right: 33, left: 5, bottom: 16),
+                  child: InkWell(
+                    onTap: () {
+                      String url = widget.place.Location; // Assuming `widget.place.Location` contains the link from the database
+                      launch(url);
+                    },
+                    child: Text(
+                      '${widget.place.Location}',
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: "Tajawal-l",
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ),
 
 
 
