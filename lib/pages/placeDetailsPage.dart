@@ -174,7 +174,7 @@ class _placeDetailsState extends State<placeDetailsPage> {
                                 width: 4,
                               ),
                               Text(
-                                '${widget.place.neighborhood} ، ${widget.place.city}',
+                                '${widget.place.neighbourhood} ، ${widget.place.city}',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,

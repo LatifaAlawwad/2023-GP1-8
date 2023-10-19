@@ -5,7 +5,7 @@ class placePage {
   String category;
   String type1;
   String city;
-  String neighborhood;
+  String neighbourhood;
   List<String> images;
   String description;
   String Location;
@@ -17,7 +17,7 @@ class placePage {
     required this.category,
     required this.type1,
     required this.city,
-    required this.neighborhood,
+    required this.neighbourhood,
     required this.images,
     required this.description,
     required this.Location,
@@ -31,7 +31,7 @@ class placePage {
       'category': category,
       'type1': type1,
       'city': city,
-      'neighborhood': neighborhood,
+      'neighborhood': neighbourhood,
       'images': images,
       'description': description,
       'Location': Location,
@@ -46,7 +46,7 @@ class placePage {
         category: map['category'] ?? '',
         type1: map['type1'] ?? '',
         city: map['city'] ?? '',
-        neighborhood: map['neighborhood'] ?? '',
+      neighbourhood: map['neighbourhood'] ?? '',
         images: List<String>.from(map['images']),
         Location: map['Location'] ?? '',
         description: map['description'] ?? '',

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        /* Basic CSS for styling the header and footer */
+        .header {
+            background-color: #6DB881;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        /* Logo style */
+        .logo {
+            display: block;
+            margin-right: 10px;
+            width: 100px; /* Adjust the width of the logo */
+            height: 100px; /* Adjust the height of the logo */
+            float: left;
+        }
+
+        /* Text style */
+        .header-text {
+            margin-left: 60px;
+        }
+
+        .header-text a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+        }
+
+         .header-text a:hover {
+            background-color: #f2f2f2;
+            color: #90c996;
+        }
+
+        /* Content style */
+        .content {
+            padding: 50px;
+        }
+
+        /* Footer style */
+        .footer {
+             position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #6DB881;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        /* Style for the container */
+        #placesList {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Style for the heading */
+        #listHeading {
+            font-size: 24px;
+            color: green;
+            text-align: center;
+        }
+
+        /* Style for each place container */
+        .place-container {
+            border: 1px solid #a3a3a3;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #f2f2f2;
+            text-align: right;
+        }
+
+        /* Style for buttons */
+        .button {
+            background-color: #90c996;
+            color: white;
+            padding: 6px 12px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+          body {
+            background-color: #F9FFF9;
+            margin:0;
+        }
+    </style>
+</head>
+
+<body>
+<!-- Header with navigation links -->
+<div class="header">
+    <img class="logo" src="images/logo.png" alt="Logo" width="50" height="50">
+    <div class="header-text">
+        <h1>Suhail</h1>
+        <a href="places-list.html">طلبات الإضافة</a>
+        <a href="home.html">الصفحة الرئيسية</a>
+    </div>
+</div>
+
+<!-- Content of the Places List page -->
+<div class="content">
+    <!-- Your content for the Places List page goes here -->
+    <div id="placesList">
+        <!-- Heading for the list -->
+
+        <!-- Places will be displayed here as containers -->
+    </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    &copy; 2023 Admin Dashboard
+</div>
+
+<script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-app.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+        import { getFirestore, doc, collection, getDocs, getDoc, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-auth.js";
+
+        // Function to handle the "View Details" button click
+        window.viewDetails = function (placeId) {
+
+        };
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Initialize Firebase with your configuration
+            const firebaseConfig = {
+             apiKey: "AIzaSyBKCStEljQdADcPTDJPG49jPYdj65Ld-aE",
+            appId: "1:652061667089:web:1103ef9a5c45ea6d1c26b0",
+            messagingSenderId: "652061667089",
+            projectId: "fir-hail-ec5a7"
+            };
+
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
+
+            // Reference to the "pendingPlaces" collection
+            const pendingPlacesRef = collection(db, 'PendingPlaces');
+
+            // Function to fetch and display places
+            const displayPlaces = async () => {
+                try {
+                    const querySnapshot = await getDocs(pendingPlacesRef);
+
+                    const placesList = document.getElementById('placesList');
+
+                    querySnapshot.forEach((doc) => {
+                        const placeData = doc.data();
+                        const placeName = placeData.placeName;
+                        const city = placeData.city;
+                        const neighborhood = placeData.neighborhood;
+                        const placeId = doc.id;
+
+                        // Create a container for each place
+                        const placeContainer = document.createElement('div');
+                        placeContainer.classList.add('place-container');
+                        placeContainer.setAttribute('data-place-id', placeId);
+
+                        // Populate the container with place information and buttons
+                        placeContainer.innerHTML = `
+                            <h3>${placeName}</h3>
+                            <p>المدينة: ${city}</p>
+                            <p>الحي: ${neighborhood}</p>
+
+                            <a class='button' href='placeDetails.html?placeId=${placeId}'>مشاهدة تفاصيل المكان</a>
+                            <button class='button' onclick='rejectPlace("${placeId}")'>رفض</button>
+                            <button class='button' onclick='acceptPlace("${placeId}")'>قبول</button>
+                        `;
+
+                        // Append the container to the places list
+                        placesList.appendChild(placeContainer);
+                    });
+                } catch (error) {
+                    console.error('Error getting places: ', error);
+                }
+            }
+
+            // Function to handle the "Reject" button click
+            window.rejectPlace = function (placeId) {
+                // Display a confirmation dialog
+                const confirmation = confirm("هل انت متأكد من رفض إضافة المكان ؟");
+                if (confirmation) {
+                    removeRejectedPlace(placeId);
+                }
+            };
+
+            // Function to handle the "Accept" button click
+            window.acceptPlace = function (placeId) {
+                // Display a confirmation dialog
+                const confirmation = confirm("هل انت متأكد من قبول إضافة المكان ؟");
+                if (confirmation) {
+                    acceptAndDeletePlace(placeId);
+                }
+            };
+
+            async function acceptAndDeletePlace(placeId) {
+                try {
+                    const addedPlacesRef = collection(db, 'ApprovedPlaces');
+                    const pendingPlaceRef = doc(db, 'PendingPlaces', placeId);
+
+                    // Get the place data from the "pendingPlaces" collection
+                    const placeSnapshot = await getDoc(pendingPlaceRef);
+                    if (placeSnapshot.exists()) {
+                        const placeData = placeSnapshot.data();
+
+                        // Add the place to the "ApprovedPlaces" collection
+                        await addDoc(addedPlacesRef, placeData);
+
+                        // Delete the place from the "pendingPlaces" collection
+                        await deleteDoc(pendingPlaceRef);
+
+                        // Remove the container from the page
+                        const placeContainer = document.querySelector(`[data-place-id="${placeId}"]`);
+                        if (placeContainer) {
+                            placeContainer.remove();
+                        }
+                    } else {
+                        console.error('Place not found in "pendingPlaces"');
+                    }
+                } catch (error) {
+                    console.error('Error accepting place: ', error);
+                }
+            }
+
+            async function removeRejectedPlace(placeId) {
+                try {
+                    const pendingPlaceRef = doc(db, 'PendingPlaces', placeId);
+                    // Get the place data from the "pendingPlaces" collection
+                    const placeSnapshot = await getDoc(pendingPlaceRef);
+                    if (placeSnapshot.exists()) {
+                        const placeData = placeSnapshot.data();
+                        // Create the "RejectedPlaces" collection if it doesn't exist
+                        const rejectedPlacesRef = collection(db, 'RejectedPlaces');
+                        // Add the place data to the "RejectedPlaces" collection
+                        await addDoc(rejectedPlacesRef, placeData);
+                        // Delete the place from the "pendingPlaces" collection
+                        await deleteDoc(pendingPlaceRef);
+                        // Remove the container from the page
+                        const placeContainer = document.querySelector(`[data-place-id="${placeId}"]`);
+                        if (placeContainer) {
+                            placeContainer.remove();
+                        }
+                    } else {
+                        console.error('Place not found in "pendingPlaces"');
+                    }
+                } catch (error) {
+                    console.error('Error removing rejected place: ', error);
+                }
+            }
+
+            // Call the displayPlaces function to retrieve and display places
+            displayPlaces();
+        });
+    </script>
+</body>
+</html>
