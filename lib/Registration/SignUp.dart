@@ -115,8 +115,6 @@ class _SignUpState extends State<SignUp> {
                                   }
                                   if (RegExp(r'[0-9]').hasMatch(value)) {
                                     return 'الرجاء إدخال أحرف فقط';
-                                  } else if (value.length < 2) {
-                                    return "الأسم يجب ان يكون خانتين فأكثر ";
                                   }
                                 },
                               ),
@@ -147,15 +145,22 @@ class _SignUpState extends State<SignUp> {
                                       borderSide:
                                       const BorderSide(width: 0, style: BorderStyle.none)),
                                 ),
-                                validator: (value) {
-                                  if (value!.isEmpty || _emailController.text.trim() == "") {
-                                    return "البريد الألكتروني مطلوب ";
-                                  } else if (!RegExp(
-                                      r'^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+.)+[a-zA-Z]{2,}))$')
-                                      .hasMatch(value)) {
-                                    return '  أدخل البريد الأكلتروني بالشكل الصحيح \n(exampel@exampel.com)';
+                                  validator: (value) {
+                                    if (value!.isEmpty || _emailController.text.trim() == "") {
+                                      return "البريد الإلكتروني مطلوب";
+                                    }
+
+                                    final emailPattern = RegExp(r'^[a-z0-9A-Z_.-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,3}$');
+
+                                    if (!emailPattern.hasMatch(value)) {
+                                      return 'أدخل البريد الإلكتروني بالشكل الصحيح (example@example.com)';
+                                    }
+
+                                    return null;
                                   }
-                                },
+
+
+
                               ),
                             )),
 
@@ -163,65 +168,75 @@ class _SignUpState extends State<SignUp> {
                           height: 23,
                         ),
                         Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 30),
-                            child: Directionality(
-                              textDirection: TextDirection.rtl,
-                              child: TextFormField(
-                                obscureText: true,
-                                controller: _passwordController,
-                                autovalidateMode: AutovalidateMode.onUserInteraction,
-                                decoration: InputDecoration(
-                                  prefixIcon: Icon(
-                                    Icons.lock,
-                                    color: Color(0xFF6db881),
-                                    size: 19,
-                                  ),
-                                  labelText: "كلمة المرور:",
-                                  labelStyle: TextStyle(fontFamily: "Tajawal-m"),
-                                  hintText:
-                                  "كلمة المرور يجب ان تكون من 8 خانات وتشمل على حرف كبير ورمز مميز ",
-                                  hintStyle: TextStyle(fontSize: 10),
-                                  fillColor: Color(0xFFdff1e0),
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(66.0),
-                                      borderSide:
-                                      const BorderSide(width: 0, style: BorderStyle.none)),
+                          padding: EdgeInsets.symmetric(horizontal: 30),
+                          child: Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: TextFormField(
+                              obscureText: true,
+                              controller: _passwordController,
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.lock,
+                                  color: Color(0xFF6db881),
+                                  size: 19,
                                 ),
-                                validator: (value) {
-                                  RegExp uper = RegExp(r"(?=.*[A-Z])");
-                                  RegExp numb = RegExp(r"[0-9]");
-                                  RegExp small = RegExp(r"(?=.*[a-z])");
-                                  RegExp special = RegExp(r"(?=.*[!@#%^&*(),.?\\:{}|<>])");
-
-                                  if (value!.isEmpty || _passwordController.text.trim() == "") {
-                                    return "كلمة السر مطلوبة";
-                                  } else if (value.length < 8 &&
-                                      !uper.hasMatch(value) &&
-                                      !numb.hasMatch(value) &&
-                                      !small.hasMatch(value) &&
-                                      !special.hasMatch(value)) { // Added condition for special character
-                                    return "كلمة المرور يجب ان تكون من 8 خانات وتشمل على حرف كبير ورقم وحرف صغير ورمز مميز";
-                                  } else if (value.length < 8 && !uper.hasMatch(value)) {
-                                    return "كلمة المرور يجب ان تكون من 8 خانات وتحتوي على حرف كبير";
-                                  } else if (value.length < 8 && !small.hasMatch(value)) {
-                                    return "كلمة المرور يجب ان تكون من 8 خانات تحتوي على احرف صغيرة";
-                                  } else if (!uper.hasMatch(value) && !small.hasMatch(value)) {
-                                    return "كلمة المرور يجب ان تحتوي على احرف كبيرة و صغيرة";
-                                  } else if (value.length < 8) {
-                                    return "كلمة المرور يجب ان تكون من 8 خانات فأكثر";
-                                  } else if (!uper.hasMatch(value)) {
-                                    return "كلمة المرور يجب ان تحتوي على حرف كبير";
-                                  } else if (!small.hasMatch(value)) {
-                                    return "كلمة المرور يجب ان تحتوي على احرف صغيرة";
-                                  } else if (!numb.hasMatch(value)) {
-                                    return "كلمة المرور يجب ان تحتوي على أرقام";
-                                  } else if (!special.hasMatch(value)) { // New condition for special character
-                                    return "كلمة المرور يجب ان تحتوي على رمز مميز";
-                                  }
-                                },
+                                labelText: "كلمة المرور:",
+                                labelStyle: TextStyle(fontFamily: "Tajawal-m"),
+                                hintText:
+                                "كلمة المرور يجب ان تكون من 8 خانات وتشمل على حرف كبير ورمز مميز ",
+                                hintStyle: TextStyle(fontSize: 10),
+                                fillColor: Color(0xFFdff1e0),
+                                filled: true,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(66.0),
+                                  borderSide: const BorderSide(width: 0, style: BorderStyle.none),
+                                ),
                               ),
-                            )),
+                              validator: (value) {
+                                RegExp uper = RegExp(r"(?=.*[A-Z])");
+                                RegExp numb = RegExp(r"[0-9]");
+                                RegExp small = RegExp(r"(?=.*[a-z])");
+                                RegExp special = RegExp(r"(?=.*[!@#%^&*(),.?\\:{}|<>])");
+
+                                if (value!.isEmpty || _passwordController.text.trim() == "") {
+                                  return "كلمة السر مطلوبة";
+                                }
+
+                                String errorMessage = "";
+
+                                if (value.length < 8) {
+                                  errorMessage += "كلمة المرور يجب ان تكون من 8 خانات و";
+                                }
+
+                                if (!uper.hasMatch(value)) {
+                                  errorMessage += "تحتوي على حرف كبير و";
+                                }
+
+                                if (!small.hasMatch(value)) {
+                                  errorMessage += "تحتوي على أحرف صغيرة و";
+                                }
+
+                                if (!numb.hasMatch(value)) {
+                                  errorMessage += "تحتوي على أرقام و";
+                                }
+
+                                if (!special.hasMatch(value)) {
+                                  errorMessage += "تحتوي على رمز مميز و";
+                                }
+
+                                if (errorMessage.isNotEmpty) {
+                                  errorMessage = errorMessage.substring(0, errorMessage.length - 2); // Remove the trailing "و"
+                                  return errorMessage;
+                                }
+
+                                // If none of the above conditions are met, return null (no error message).
+                                return null;
+                              },
+                            ),
+                          ),
+                        ),
+
                         SizedBox(
                           height: 23,
                         ),
