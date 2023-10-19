@@ -1317,6 +1317,13 @@ List areas = [
 "name_en": "Al Wasam Dist."
 },
 {
+    "district_id": 10100003196,
+    "city_id": 3,
+    "region_id": 1,
+    "name_ar": "طريف",
+    "name_en": "Turaif Dist."
+},
+{
 "district_id": 10200018001,
 "city_id": 18,
 "region_id": 2,
@@ -2506,4 +2513,5 @@ List areas = [
 "name_ar": "العبير",
 "name_en": "Al Abeer Dist."
 },
+
 ];

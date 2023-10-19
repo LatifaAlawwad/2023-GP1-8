@@ -184,7 +184,7 @@ class _placeDetailsState extends State<placeDetailsPage> {
                             mainAxisAlignment: MainAxisAlignment.end, // Align to the right
                             children: [
                               Text(
-                                "${widget.place.neighborhood} , ${widget.place.city}",
+                                '${widget.place.neighbourhood} ، ${widget.place.city}',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,

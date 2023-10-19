@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'placePage.dart';
 import 'placeDetailsPage.dart';
 import 'AddPage.dart';
+import 'neighbourhood.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -173,7 +174,7 @@ class HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.end, // Align to the right
                         children: [
                           Text(
-                            '${place.neighborhood } , ${place.city}',
+                            '${place.neighbourhood} , ${place.city}',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 14,

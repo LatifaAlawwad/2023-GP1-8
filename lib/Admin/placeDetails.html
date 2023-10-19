@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Admin Dashboard">
+    <title>Admin Dashboard</title>
+    <style>
+        /* Basic CSS for styling the header and footer */
+        body {
+            background-color: #F9FFF9;
+            margin:0;
+        }
+
+        .header {
+            background-color: #6DB881;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        /* Logo style */
+        .logo {
+            display: block;
+            margin-right: 10px;
+            width: 100px; /* Adjust the width of the logo */
+            height: 100px; /* Adjust the height of the logo */
+            float: left;
+        }
+
+        /* Text style */
+        .header-text {
+            margin-left: 60px;
+        }
+
+        .header-text a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+        }
+
+        .header-text a:hover {
+            background-color: #f2f2f2;
+            color: #90c996;
+        }
+
+        /* Container style */
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+            text-align: center;
+        }
+
+        .content {
+            max-width: 80%; /* Allow it to take up the full width */
+            width: 90%; /* Adjust the width to your desired value */
+            padding: 20px;
+            background: #ffffff; /* Change the background to white */
+            box-shadow: 0 0 10px rgba(141, 198, 63, 0.2); /* Light green shadow color */
+            border-radius: 10px;
+        }
+
+        /* Style for the details */
+        h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: green;
+        }
+
+        p {
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: black;
+        }
+
+        #imageContainer {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .imagee {
+            width: 60px;
+            height: 60px;
+            overflow: hidden;
+        }
+
+        .imagee img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+
+        .image-container {
+            text-align: center;
+        }
+
+        .image-container img {
+            display: inline-block;
+        }
+
+        .no-pictures-message {
+            text-align: center;
+        }
+
+        /* Footer style */
+        .footer {
+           position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #6DB881;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<!-- Header with navigation links -->
+<div class="header">
+    <img class="logo" src="images/logo.png" alt="Logo" width="50" height="50">
+    <div class="header-text">
+        <h1>Suhail</h1>
+        <a href="places-list.html">طلبات الإضافة</a>
+        <a href="home.html">الصفحة الرئيسية</a>
+    </div>
+</div>
+
+<!-- Content of the Homepage -->
+<div class="container">
+    <div class="content">
+        <div id="placeDetails">
+            <!-- Place details will be displayed here -->
+        </div>
+        <div class="image-container" id="imageContainer">
+            <!-- Images or "No pictures found" message will be displayed here -->
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    &copy; 2023 S'hail Admin
+</div>
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-app.js";
+    import { getFirestore, doc, collection, getDoc } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-firestore.js";
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        // Initialize Firebase with your configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBKCStEljQdADcPTDJPG49jPYdj65Ld-aE",
+            appId: "1:652061667089:web:1103ef9a5c45ea6d1c26b0",
+            messagingSenderId: "652061667089",
+            projectId: "fir-hail-ec5a7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Get the place ID from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const placeId = urlParams.get("placeId");
+
+        // Reference to the "ApprovedPlaces" collection and the specific place document
+        const addedPlacesRef = collection(db, 'PendingPlaces');
+        const placeDocRef = doc(addedPlacesRef, placeId);
+
+        // Function to fetch and display place details and images
+        const displayPlaceDetails = async () => {
+            try {
+                const placeDoc = await getDoc(placeDocRef);
+                if (placeDoc.exists()) {
+                    const placeData = placeDoc.data();
+                    const placeName = placeData.placeName;
+                    const location = placeData.location;
+                    const description = placeData.description;
+                    const neighbourhood = placeData.neighbourhood;
+                    const city = placeData.city;
+                    const category = placeData.category;
+                    const images = placeData.images; // Array of image URLs
+
+                    const placeDetails = document.getElementById('placeDetails');
+                    placeDetails.innerHTML = `
+                        <h2>${placeName}</h2>
+                        <p><strong>Location:</strong> ${location}</p>
+                        <p><strong>Description:</strong> ${description}</p>
+                        <p><strong>Neighbourhood:</strong> ${neighbourhood}</p>
+                        <p><strong>City:</strong> ${city}</p>
+                        <p><strong>Category:</strong> ${category}</p>
+                    `;
+
+                    const imageContainer = document.getElementById('imageContainer');
+                    imageContainer.innerHTML = ''; // Clear previous images
+
+                    if (images && images.length > 0) {
+                        // Loop through the image URLs and create image elements
+                        images.forEach((imageUrl) => {
+                            const imageElement = document.createElement('img');
+                            imageElement.src = imageUrl;
+                            imageElement.alt = 'Place Image';
+                            imageElement.style.maxWidth = '100%'; // Ensure the image fits within its container
+                            imageElement.style.height = 'auto'; // Maintain the aspect ratio
+                            imageContainer.appendChild(imageElement);
+                        });
+                    } else {
+                        // Display a message when no pictures are found
+                        const noPicturesMessage = document.createElement('div');
+                        noPicturesMessage.classList.add('no-pictures-message');
+                        noPicturesMessage.textContent = 'No pictures found.';
+                        imageContainer.appendChild(noPicturesMessage);
+                    }
+                } else {
+                    console.error('Place not found.');
+                }
+            } catch (error) {
+                console.error('Error getting place details: ', error);
+            }
+        };
+
+        // Call the displayPlaceDetails function to retrieve and display place details with images
+        displayPlaceDetails();
+    });
+</script>
+
+</body>
+</html>
+
+

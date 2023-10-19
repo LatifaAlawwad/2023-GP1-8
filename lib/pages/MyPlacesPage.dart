@@ -7,14 +7,12 @@ import 'placeDetailsPage.dart';
 import 'UserProfilePage.dart';
 
 
-
 class myPlacesPage extends StatefulWidget {
   const myPlacesPage({Key? key}) : super(key: key);
 
   @override
   State<myPlacesPage> createState() => _myPlacesPage();
 }
-
 class _myPlacesPage extends State<myPlacesPage> {
   int indexOfTap = 0;
   List<placePage> accepted = [];
@@ -182,8 +180,6 @@ class _myPlacesPage extends State<myPlacesPage> {
     );
   }
 
-  // Inside your `_buildItem` method
-
   Widget handleListItems(List<placePage> listItem) {
     return listItem.isNotEmpty
         ? ListView.separated(
@@ -214,13 +210,12 @@ class _myPlacesPage extends State<myPlacesPage> {
       child: Text(
         "لم يتم العثور على نتائج",
         style: TextStyle(
-          color: Color(0xFF6db881), // Set your desired color
+          color: Color(0xFF6db881),
           fontSize: 16,
         ),
       ),
     );
   }
-
 
   Widget _buildItem(
       void Function()? onTap,
@@ -300,7 +295,7 @@ class _myPlacesPage extends State<myPlacesPage> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
-                                '${place.neighborhood} , ${place.city}',
+                                '${place.neighbourhood} , ${place.city}',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 14,
@@ -329,7 +324,7 @@ class _myPlacesPage extends State<myPlacesPage> {
                 left: 10,
                 child: GestureDetector(
                   onTap: () {
-                    showDeleteConfirmationDialog(place);
+                    showDeleteConfirmationDialog(place, selectedCategory);
                   },
                   child: Icon(
                     Icons.delete,
@@ -345,12 +340,13 @@ class _myPlacesPage extends State<myPlacesPage> {
       return Container();
     }
   }
-  void showDeleteConfirmationDialog(placePage place) {
+
+  void showDeleteConfirmationDialog(placePage place, String selectedCategory) {
     final buttonStyle = TextButton.styleFrom(
-      primary: Color(0xFF6db881), // Change button text color
+      primary: Color(0xFF6db881),
       textStyle: TextStyle(
         fontFamily: "Tajawal-m",
-        fontSize: 17, // Change font size
+        fontSize: 17,
       ),
     );
 
@@ -359,7 +355,7 @@ class _myPlacesPage extends State<myPlacesPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("تأكيد الحذف"),
-          content: Text("هل تريد حذف هذا المكان?"),
+         // content: Text("هل تريد حذف المكان التالي؟\n\nkk: ${place.placeName}"),
           actions: <Widget>[
             TextButton(
               child: Text("إلغاء"),
@@ -373,7 +369,7 @@ class _myPlacesPage extends State<myPlacesPage> {
               style: buttonStyle,
               onPressed: () {
                 Navigator.of(context).pop(true);
-                deletePlace(place.place_id);
+                deletePlace(place.place_id, selectedCategory);
               },
             ),
           ],
@@ -381,30 +377,47 @@ class _myPlacesPage extends State<myPlacesPage> {
       },
     ).then((result) {
       if (result != null && result) {
-        deletePlace(place.place_id);
+        deletePlace(place.place_id, selectedCategory);
       }
     });
   }
 
-
-  void deletePlace(String place_id) async {
+  void deletePlace(String place_id, String selectedCategory) async {
     try {
-      for (String collectionName in collectionNames.values) {
+      final collectionName = collectionNames[selectedCategory];
+      if (collectionName != null) {
+      //  print("Deleting place_id: $place_id from collection: $collectionName");
         await FirebaseFirestore.instance
             .collection(collectionName)
             .doc(place_id)
             .delete();
-      }
+        print("Deleting place_id: $place_id from collection: $collectionName");
 
-      setState(() {
-        accepted.removeWhere((place) => place.place_id == place_id);
-        pending.removeWhere((place) => place.place_id == place_id);
-        rejected.removeWhere((place) => place.place_id == place_id);
-      });
+        setState(() {
+          switch (selectedCategory) {
+            case 'طلبات معتمدة':
+              accepted.removeWhere((place) => place.place_id == place_id);
+              break;
+            case 'طلبات بانتظار الاعتماد':
+              pending.removeWhere((place) => place.place_id == place_id);
+              break;
+            case 'طلبات مرفوضة':
+              rejected.removeWhere((place) => place.place_id == place_id);
+              break;
+          }
+        });
+        print("Deleted and updated lists.");
+      }
     } catch (e) {
       print("Error deleting place: $e");
     }
   }
+
+
+
+
+
+
 
   void showToastMessage(String message) {
     Fluttertoast.showToast(
