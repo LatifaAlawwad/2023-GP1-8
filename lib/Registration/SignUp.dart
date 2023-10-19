@@ -281,8 +281,9 @@ class _SignUpState extends State<SignUp> {
                                     toastLength: Toast.LENGTH_SHORT,
                                     gravity: ToastGravity.CENTER,
                                     timeInSecForIosWeb: 2,
-                                    backgroundColor: Color.fromARGB(255, 127, 166, 233),
-                                    textColor: Color.fromARGB(255, 248, 249, 250),
+                                    backgroundColor: Color(0xFF6db881),
+
+                                  textColor: Color.fromARGB(255, 248, 249, 250),
                                     fontSize: 18.0,
                                   );
                                   createSuhailuser(suser);
