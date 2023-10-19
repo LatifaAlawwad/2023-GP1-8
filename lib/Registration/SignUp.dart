@@ -281,7 +281,8 @@ class _SignUpState extends State<SignUp> {
                                     toastLength: Toast.LENGTH_SHORT,
                                     gravity: ToastGravity.CENTER,
                                     timeInSecForIosWeb: 2,
-                                    backgroundColor: Color.fromARGB(255, 127, 166, 233),
+                                    backgroundColor: Color.fromARGB(
+                                        255, 109, 184, 129),
                                     textColor: Color.fromARGB(255, 248, 249, 250),
                                     fontSize: 18.0,
                                   );
@@ -310,7 +311,7 @@ class _SignUpState extends State<SignUp> {
                                             style: TextStyle(
                                               fontFamily: "Tajawal-m",
                                               fontSize: 17,
-                                              color: Color.fromARGB(255, 127, 166, 233),
+                                              color: Color(0xFF6db881),
                                             ),
                                           ),
                                           onPressed: () {
@@ -339,28 +340,32 @@ class _SignUpState extends State<SignUp> {
 
 
                         SizedBox(
-                          height: 10,
+                          height: 25,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(context, "/login");
-                              },
-                              child: Text(
-                                "تسجيل الدخول ",
-                                style: TextStyle(
+                        Padding(
+                          padding: EdgeInsets.only(right: 20.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(context, "/login");
+                                },
+                                child: Text(
+                                  "تسجيل الدخول",
+                                  style: TextStyle(
                                     fontSize: 12,
                                     fontFamily: "Tajawal-b",
-                                    color: Color(0xFF6db881)),
+                                    color: Color(0xFF6db881),
+                                  ),
+                                ),
                               ),
-                            ),
-                            Text(
-                              "  لديك حساب ؟     ",
-                              style: TextStyle(fontSize: 14, fontFamily: "Tajawal-l"),
-                            ),
-                          ],
+                              Text(
+                                "  لديك حساب ؟     ",
+                                style: TextStyle(fontSize: 14, fontFamily: "Tajawal-l"),
+                              ),
+                            ],
+                          ),
                         ),
                         SizedBox(
                           height: 10,

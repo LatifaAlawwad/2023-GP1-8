@@ -173,7 +173,7 @@ class HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.end, // Align to the right
                         children: [
                           Text(
-                            '${place.neighborhood} , ${place.city}',
+                            '${place.neighborhood } , ${place.city}',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 14,

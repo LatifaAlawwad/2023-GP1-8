@@ -34,7 +34,25 @@ class _placeDetailsState extends State<placeDetailsPage> {
 
 
 
+  final ScrollController _scrollController = ScrollController();
+  double thumbWidth = 0.0;
+  double thumbPosition = 0.0;
 
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      double scrollPosition = _scrollController.position.pixels;
+      double maxScrollExtent = _scrollController.position.maxScrollExtent;
+
+      setState(() {
+        thumbWidth = (scrollPosition / maxScrollExtent) *
+            _scrollController.position.viewportDimension;
+        thumbPosition = (scrollPosition / maxScrollExtent) *
+            (_scrollController.position.viewportDimension - thumbWidth);
+      });
+    });
+  }
 
 
 
@@ -162,25 +180,25 @@ class _placeDetailsState extends State<placeDetailsPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end, // Align the content to the right
+                          child:  Row(
+                            mainAxisAlignment: MainAxisAlignment.end, // Align to the right
                             children: [
-                              Icon(
-                                Icons.location_pin,
-                                color: Colors.white,
-                                size: 18,
-                              ),
-                              SizedBox(
-                                width: 4,
-                              ),
                               Text(
-                                '${widget.place.neighborhood} ، ${widget.place.city}',
+                                "${widget.place.neighborhood} , ${widget.place.city}",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  fontFamily: "Tajawal-m",
+                                  fontFamily: "Tajawal-l",
                                 ),
+                              ),
+                              SizedBox(
+                                width: 4,
+                              ),
+                              Icon(
+                                Icons.location_pin,
+                                color: Colors.white,
+                                size: 18,
                               ),
                             ],
                           ),
@@ -269,30 +287,44 @@ class _placeDetailsState extends State<placeDetailsPage> {
                                     ),
                                   ))),
                         )
-                            : Directionality(
+                            :  Directionality(
                           textDirection: TextDirection.rtl,
                           child: Container(
                             height: 200,
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 20, bottom: 24, right: 20),
-                              child: ListView.separated(
-                                physics: BouncingScrollPhysics(),
-                                scrollDirection: Axis.horizontal,
-                                // shrinkWrap: true,
-                                separatorBuilder: (context, index) => SizedBox(width: 20),
-                                itemCount: widget.place.images.length,
-                                itemBuilder: (context, index) => InkWell(
-                                  onTap: () =>
-                                      openGallery(widget.place.images, context),
-                                  borderRadius: BorderRadius.circular(15),
-                                  child: Image.network(
-                                    widget.place.images[index],
+                            child: Stack(
+                              children: [
+                                RawScrollbar(
+                                  thumbColor: Color.fromARGB(255, 17, 99, 14),
+                                  radius: Radius.circular(20),
+                                  thickness: 5,
+                                  child: Scrollbar(
+
+                                    thumbVisibility: true, // Always show the scrollbar
+                                    controller: _scrollController,
+                                    child: ListView.builder(
+                                      controller: _scrollController,
+                                      physics: BouncingScrollPhysics(),
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: widget.place.images.length,
+                                      itemBuilder: (context, index) => InkWell(
+                                        onTap: () => openGallery(widget.place.images, context),
+                                        borderRadius: BorderRadius.circular(15),
+                                        child: Image.network(
+                                          widget.place.images[index],
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
                           ),
                         ),
+
+
+
+
+
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
@@ -356,7 +388,7 @@ Widget PropInfo(IconData iconData, String text, String label) {
     children: [
       Icon(
         iconData,
-        color: Color.fromARGB(255, 127, 166, 233),
+        color: Color.fromARGB(255, 109, 184, 129),
         size: 28,
       ),
       SizedBox(
@@ -365,7 +397,7 @@ Widget PropInfo(IconData iconData, String text, String label) {
       Text(
         label,
         style: TextStyle(
-          color: Color.fromARGB(255, 127, 166, 233),
+          color: Color.fromARGB(255, 109, 184, 129),
           fontSize: 10,
           fontWeight: FontWeight.bold,
           fontFamily: "Tajawal-l",

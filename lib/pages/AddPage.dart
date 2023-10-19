@@ -151,7 +151,7 @@ class CustomFormState extends State<CustomForm> {
             var uuid = Uuid();
             place_id = uuid.v4();
 
-            await FirebaseFirestore.instance.collection('PendingPlaces').doc(place_id).set({
+            await FirebaseFirestore.instance.collection('ApprovedPlaces').doc(place_id).set({
               'place_id': place_id,
               'User_id': userId,
               'placeName': placeName.text,

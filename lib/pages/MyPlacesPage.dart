@@ -131,11 +131,13 @@ class _myPlacesPage extends State<myPlacesPage> {
               ),
             ],
             bottom: TabBar(
-              isScrollable: true,
+
               labelStyle: TextStyle(
                 fontFamily: "Tajawal-b",
                 fontWeight: FontWeight.w100,
+                fontSize: 13,
               ),
+              labelPadding: EdgeInsets.symmetric(horizontal: 0.0),
               onTap: (index) {
                 indexOfTap = index;
                 setState(() {

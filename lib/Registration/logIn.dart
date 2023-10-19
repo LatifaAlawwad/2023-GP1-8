@@ -40,24 +40,39 @@ class _LogInState extends State<LogIn> {
                     key: loginformkey,
                     child: Column(
                       children: [
-                        SizedBox(
-                          height: 70,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(context, "/welcome");
-                              },
-                              child: Icon(
-                                Icons.arrow_forward_ios,
-                                color: Color(0xFF6db881),
-                                size: 28,
+                      SizedBox(
+                      height: 50,
+                    ),
+                           Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                "تسجيل الدخول ",
+                                style: TextStyle(
+                                  fontSize: 26,
+                                  fontFamily: "Tajawal-b",
+                                  color: Color(0xFF6db881),
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
+                              SizedBox(
+                                width: 70,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(right: 20.0),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(context, "/welcome");
+                                  },
+                                  child: Icon(
+                                    Icons.arrow_forward_ios,
+                                    color: Color(0xFF6db881),
+                                    size: 28,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+
                         SizedBox(
                           height: 40,
                         ),
@@ -144,23 +159,26 @@ class _LogInState extends State<LogIn> {
                         SizedBox(
                           height: 15,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(context, "/RessetPassword");
-                              },
-                              child: Text(
-                                "نسيت كلمة المرور؟",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontFamily: "Tajawal-b",
-                                  color: Color(0xFF6db881),
+                        Padding(
+                          padding: EdgeInsets.only(right: 40.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(context, "/RessetPassword");
+                                },
+                                child: Text(
+                                  "نسيت كلمة المرور؟",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontFamily: "Tajawal-b",
+                                    color: Color(0xFF6db881),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                         SizedBox(
                           height: 15,
@@ -214,27 +232,30 @@ class _LogInState extends State<LogIn> {
                         SizedBox(
                           height: 25,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(context, "/signup");
-                              },
-                              child: Text(
-                                "إنشاء حساب",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontFamily: "Tajawal-b",
-                                  color: Color(0xFF6db881),
+                        Padding(
+                          padding: EdgeInsets.only(right: 40.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(context, "/signup");
+                                },
+                                child: Text(
+                                  "إنشاء حساب   ",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontFamily: "Tajawal-b",
+                                    color: Color(0xFF6db881),
+                                  ),
                                 ),
                               ),
-                            ),
-                            Text(
-                              " ليس لديك حساب؟",
-                              style: TextStyle(fontSize: 14, fontFamily: "Tajawal-l"),
-                            ),
-                          ],
+                              Text(
+                                " ليس لديك حساب؟",
+                                style: TextStyle(fontSize: 14, fontFamily: "Tajawal-l"),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
