@@ -27,46 +27,83 @@ class _AddPageState extends State<AddPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FirebaseAuth.instance.currentUser == null
-          ? Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(height: 90),
+      appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 109, 184, 129),
+        automaticallyImplyLeading: false,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 150),
+          child: Text(
+            "إضافة مكان",
+            style: TextStyle(
+              fontSize: 17,
+              fontFamily: "Tajawal-b",
+            ),
+          ),
+        ),
+        toolbarHeight: 60,
+
+        actions: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 79),
-            child: Text(
-              "عذراً لابد من تسجيل الدخول ",
-              style: TextStyle(
-                fontSize: 18,
-                fontFamily: "Tajawal-b",
-                color: Color(0xFF6db881),
+            padding: EdgeInsets.only(right: 20.0),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(
+                Icons.arrow_forward_ios,
+                color: Colors.white,
+                size: 28,
               ),
-              textAlign: TextAlign.center,
             ),
           ),
-          SizedBox(
-            height: 20,
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => LogIn()));
-            },
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Color(0xFF6db881)),
-              padding: MaterialStateProperty.all(
-                  EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-              shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(27))),
-            ),
-            child: Text(
-              "تسجيل الدخول",
-              style: TextStyle(fontSize: 20, fontFamily: "Tajawal-m"),
-            ),
-          )
         ],
+      ),
+      body: FirebaseAuth.instance.currentUser == null
+          ? Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(height: 20),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 79),
+              child: Text(
+                "عذراً لابد من تسجيل الدخول",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontFamily: "Tajawal-b",
+                  color: Color(0xFF6db881),
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LogIn()),
+                );
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Color(0xFF6db881)),
+                padding: MaterialStateProperty.all(
+                  EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                ),
+                shape: MaterialStateProperty.all(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(27),
+                  ),
+                ),
+              ),
+              child: Text(
+                "تسجيل الدخول",
+                style: TextStyle(fontSize: 20, fontFamily: "Tajawal-m"),
+              ),
+            ),
+          ],
+        ),
       )
-          : const CustomForm(),
+        : const CustomForm(),
     );
   }
 }
@@ -151,7 +188,7 @@ class CustomFormState extends State<CustomForm> {
             var uuid = Uuid();
             place_id = uuid.v4();
 
-            await FirebaseFirestore.instance.collection('ApprovedPlaces').doc(place_id).set({
+            await FirebaseFirestore.instance.collection('PendingPlaces').doc(place_id).set({
               'place_id': place_id,
               'User_id': userId,
               'placeName': placeName.text,
@@ -168,7 +205,7 @@ class CustomFormState extends State<CustomForm> {
 
             // Show the toast message
             Fluttertoast.showToast(
-              msg: "تمت إضافة المكان بنجاح",
+              msg: "تم إرسال طلب الإضافة بنجاح",
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
               timeInSecForIosWeb: 3,
@@ -201,37 +238,7 @@ class CustomFormState extends State<CustomForm> {
     return SafeArea(
 
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color.fromARGB(255, 109, 184, 129),
-          automaticallyImplyLeading: false,
-          title: Padding(
-            padding: const EdgeInsets.only(left: 150),
-            child: Text(
-              "إضافة مكان",
-              style: TextStyle(
-                fontSize: 17,
-                fontFamily: "Tajawal-b",
-              ),
-            ),
-          ),
-          toolbarHeight: 60,
 
-          actions: [
-            Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.white,
-                  size: 28,
-                ),
-              ),
-            ),
-          ],
-        ),
         body: SingleChildScrollView(
           child: Column(
             children: [

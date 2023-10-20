@@ -355,7 +355,7 @@ class _myPlacesPage extends State<myPlacesPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("تأكيد الحذف"),
-         // content: Text("هل تريد حذف المكان التالي؟\n\nkk: ${place.placeName}"),
+         content: Text("هل تريد حذف المكان التالي؟\n\nkk: ${place.placeName}"),
           actions: <Widget>[
             TextButton(
               child: Text("إلغاء"),
@@ -380,38 +380,40 @@ class _myPlacesPage extends State<myPlacesPage> {
         deletePlace(place.place_id, selectedCategory);
       }
     });
-  }
+    }
 
-  void deletePlace(String place_id, String selectedCategory) async {
-    try {
-      final collectionName = collectionNames[selectedCategory];
-      if (collectionName != null) {
-      //  print("Deleting place_id: $place_id from collection: $collectionName");
-        await FirebaseFirestore.instance
-            .collection(collectionName)
-            .doc(place_id)
-            .delete();
-        print("Deleting place_id: $place_id from collection: $collectionName");
-
-        setState(() {
-          switch (selectedCategory) {
-            case 'طلبات معتمدة':
+    Future<void> deletePlace(String place_id, String selectedCategory) async {
+      try {
+        switch (selectedCategory) {
+          case 'طلبات معتمدة':
+            await FirebaseFirestore.instance.collection("ApprovedPlaces").doc(place_id).delete();
+            setState(() {
               accepted.removeWhere((place) => place.place_id == place_id);
-              break;
-            case 'طلبات بانتظار الاعتماد':
+            });
+            break;
+          case 'طلبات بانتظار الاعتماد':
+            await FirebaseFirestore.instance.collection("PendingPlaces").doc(place_id).delete();
+            setState(() {
               pending.removeWhere((place) => place.place_id == place_id);
-              break;
-            case 'طلبات مرفوضة':
+            });
+            break;
+          case 'طلبات مرفوضة':
+            await FirebaseFirestore.instance.collection("RejectedPlaces").doc(place_id).delete();
+            setState(() {
               rejected.removeWhere((place) => place.place_id == place_id);
-              break;
-          }
-        });
-        print("Deleted and updated lists.");
-      }
+            });
+            break;
+        }
+
+      print("Deleted place_id: $place_id from collection: $selectedCategory");
+      print("Updated lists.");
     } catch (e) {
       print("Error deleting place: $e");
     }
   }
+
+
+
 
 
 

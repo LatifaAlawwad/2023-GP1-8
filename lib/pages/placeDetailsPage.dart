@@ -79,7 +79,7 @@ class _placeDetailsState extends State<placeDetailsPage> {
             Hero(
               tag: '${widget.place.images.length}' == '0'
                   ? 'https://www.guardanthealthamea.com/wp-content/uploads/2019/09/no-image.jpg'
-                  : widget.place.images[0], //'${villa.images[0]}'
+                  : widget.place.images[0],
               child: Container(
                 height: size.height * 0.5,
                 decoration: '${widget.place.images.length}' == '0'
@@ -92,7 +92,7 @@ class _placeDetailsState extends State<placeDetailsPage> {
                     : BoxDecoration(
                   image: DecorationImage(
                     image: NetworkImage(
-                        '${widget.place.images[0]}'), //'${villa.images[0]}'
+                        '${widget.place.images[0]}'),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -157,7 +157,7 @@ class _placeDetailsState extends State<placeDetailsPage> {
                       horizontal: 24,
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,// it was MainAxisAlignment.spaceBetween
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
 
                         Text(

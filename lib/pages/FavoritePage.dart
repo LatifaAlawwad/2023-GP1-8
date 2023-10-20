@@ -44,41 +44,48 @@ class FavoritePage extends StatelessWidget {
               ),
 
             if (currentUser == null)
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 50),
-                child: Text(
-                  "عذراً لابد من تسجيل الدخول ",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontFamily: "Tajawal-b",
-                    color: Color(0xFF6db881),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            SizedBox(
-              height: 20,
-            ),
-            if (currentUser == null)
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LogIn()),
-                  );
-                },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Color(0xFF6db881)),
-                  padding: MaterialStateProperty.all(
-                    EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  ),
-                  shape: MaterialStateProperty.all(
-                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(27)),
-                  ),
-                ),
-                child: Text(
-                  "تسجيل الدخول",
-                  style: TextStyle(fontSize: 20, fontFamily: "Tajawal-m"),
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 20),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 79),
+                      child: Text(
+                        "عذراً لابد من تسجيل الدخول",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontFamily: "Tajawal-b",
+                          color: Color(0xFF6db881),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => LogIn()),
+                        );
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(Color(0xFF6db881)),
+                        padding: MaterialStateProperty.all(
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        ),
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(27),
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        "تسجيل الدخول",
+                        style: TextStyle(fontSize: 20, fontFamily: "Tajawal-m"),
+                      ),
+                    ),
+                  ],
                 ),
               ),
           ],

@@ -194,7 +194,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    SizedBox(height: 290),
+                                    SizedBox(height: 318),
                                     Padding(
                                       padding: EdgeInsets.symmetric(horizontal: 79),
                                       child: Text(
