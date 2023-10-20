@@ -6,6 +6,21 @@ import 'AddPage.dart';
 import 'neighbourhood.dart';
 
 class HomePage extends StatefulWidget {
+  final String cityName;
+
+  HomePage({required this.cityName});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Details for $cityName'),
+      ),
+      body: Center(
+        child: Text('Details for $cityName go here.'),
+      ),
+    );
+  }
   @override
   State<HomePage> createState() => HomePageState();
 }

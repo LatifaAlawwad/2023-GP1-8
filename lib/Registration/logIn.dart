@@ -4,6 +4,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gp/pages/NavigationBarPage.dart';
 import 'package:gp/pages/AdminNavigator.dart';
 
+import '../pages/citiesPage.dart';
+
 
 class LogIn extends StatefulWidget {
   const LogIn({Key? key});
@@ -201,7 +203,7 @@ class _LogInState extends State<LogIn> {
                                 } else {
                                   Navigator.pushReplacement(context,
                                       MaterialPageRoute(builder: (context) {
-                                        return NavigationBarPage();
+                                        return citiesPage();
                                       }));
                                 }
                               } catch (e) {
