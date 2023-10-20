@@ -8,7 +8,7 @@ import 'neighbourhood.dart';
 class HomePage extends StatefulWidget {
   final String cityName;
 
-  HomePage({required this.cityName});
+  HomePage({required this.cityName, required int cityId});
 
   @override
   Widget build(BuildContext context) {

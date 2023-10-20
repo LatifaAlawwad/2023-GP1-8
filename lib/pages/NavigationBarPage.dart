@@ -95,7 +95,7 @@ class _NavigationBarPageState extends State<NavigationBarPage> {
   Widget _getPage(int index) {
     switch (index) {
       case 0:
-        return HomePage(cityName: '',);
+        return HomePage(cityName: '', cityId: 3);
       case 1:
         return Container(); // Replace with your actual map page.
       case 2:
@@ -103,7 +103,7 @@ class _NavigationBarPageState extends State<NavigationBarPage> {
       case 3:
         return UserProfilePage();
       default:
-        return HomePage(cityName: '',);
+        return HomePage(cityName: '', cityId: 18);
     }
   }
 }
