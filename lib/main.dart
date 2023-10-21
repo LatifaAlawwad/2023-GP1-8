@@ -8,6 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:gp/Registration/logIn.dart';
 import 'package:gp/pages/NavigationBarPage.dart';
 import 'package:gp/pages/AdminNavigator.dart';
+import 'package:gp/pages/citiesPage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
         '/RessetPassword': (context) => RessetPassword(),
         '/NavigationBarPage': (context) =>  NavigationBarPage(),
         '/AdminNavigator': (context) => AdminNavigator(),
-
+        '/citiesPage': (context) => citiesPage(),
 
 
 
