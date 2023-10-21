@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="log.css">
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الخروج</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+
+<body>
+<script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-app.js";
+        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-auth.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            appId: "YOUR_APP_ID",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            projectId: "YOUR_PROJECT_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                if (user.email === 'admin@sohail.com') {
+                    // Sign out the admin user
+                    signOut(auth).then(() => {
+                        console.log('Admin signed out.');
+                    }).catch(error => {
+                        console.error("Error signing out admin:", error);
+                    });
+                }
+            }
+
+            // Add a confirmation dialog before logging out
+            const confirmLogout = confirm('هل ترغب في تسجيل الخروج؟');
+            if (confirmLogout) {
+                signOut(auth).then(() => {
+                    console.log('User signed out.');
+                    window.location.replace('index.html'); // Redirect to the index page
+                }).catch(error => {
+                    console.error("Error signing out:", error);
+                });
+            } else {
+                // User canceled logout
+                window.location.replace('index.html'); // Redirect to the index page
+            }
+        });
+    </script>
+</body>
+
+</html>

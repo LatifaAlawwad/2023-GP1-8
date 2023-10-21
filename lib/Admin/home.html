@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -5,88 +6,101 @@
     <meta name="description" content="Admin Dashboard">
     <title>Admin Dashboard</title>
     <style>
-        /* Basic CSS for styling the header and footer */
-        .header {
+        /* Reset some default margin and padding for consistency */
+        body, h1, h2, p {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Basic CSS for styling the layout */
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidenav {
+            width: 150px; /* Make the navigation wider */
             background-color: #6DB881;
             color: white;
-            padding: 10px;
-            text-align: center;
-
+            text-align: left;
         }
 
-        /* Logo style */
-        .logo {
-            display: block;
-            margin-right: 10px;
-            width: 100px; /* Adjust the width of the logo */
-            height: 100px; /* Adjust the height of the logo */
-            float: left;
-        }
-
-         .header-text {
-            margin-left: 60px;
-        }
-
-        .header-text a {
-            color: white;
+        .sidenav a {
+            color: #ffffff;
             text-decoration: none;
-            padding: 10px;
-            transition: color 0.3s; /* Add a transition for smoother color change */
+            display: block;
+            margin: 10px 0;
+            padding: 15px;
+            transition: background-color 0.3s, color 0.3s;
         }
 
-        .header-text a:hover {
-            background-color: #f2f2f2;
-            color: #90c996;
+        .sidenav a:hover {
+            background-color: #90c996;
+            color: #ffffff;
         }
 
-        /* Content style */
         .content {
-            padding: 250px;
-            text-align: center; /* Center align text */
-        }
-
-        /* Footer style */
-        .footer {
-               position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: #6DB881;
-            color: white;
-            padding: 10px;
+            flex-grow: 1;
+            padding: 20px;
             text-align: center;
         }
-         body {
-            background-color: #F9FFF9;
-             margin: 0;
+
+        .footer {
+            background-color: #6DB881;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            width: 100%; /* Full width */
+            position: absolute;
+            bottom: 0;
+        }
+
+      .logo {
+            color: white;
+            text-align: right;
+            padding: 10px;
+            width: 150px;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .logo img {
+            width: 100px;
+            height: 100px;
+        }
+        body {
+            background-color: #f9f9f9;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            position: relative;
         }
     </style>
 </head>
 <body>
-<!-- Header with navigation links -->
-<div class="header">
-    <img class="logo" src="images/logo.png" alt="Logo" width="50" height="50">
-    <div class="header-text">
-        <h1>Suhail</h1>
+<div class="container">
+    <!-- Vertical navigation bar -->
+    <div class="sidenav">
         <a href="places-list.html">طلبات الإضافة</a>
         <a href="home.html">الصفحة الرئيسية</a>
+        <a class="logout" href="logout.html">تسجيل الخروج</a>
+    </div>
+
+    <!-- Logo on the other side without background -->
+    <div class="logo">
+        <img src="images/logo.png" alt="Logo">
+    </div>
+
+    <!-- Content of the Homepage -->
+    <div class="content">
+        <!-- Add your admin dashboard content here -->
     </div>
 </div>
 
-<!-- Content of the Homepage -->
-<div class="content">
-    <!-- Add your admin dashboard content here -->
-</div>
-
-<!-- Footer -->
+<!-- Footer with space between navigation and footer -->
 <div class="footer">
-    &copy; 2023 S'hail Admin
+    &copy; 2023 Admin Dashboard
 </div>
 </body>
 </html>
-
-
-
-
-
-
