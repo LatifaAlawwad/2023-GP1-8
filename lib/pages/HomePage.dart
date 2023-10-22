@@ -97,24 +97,30 @@ class HomePageState extends State<HomePage> {
         },
         itemBuilder: (BuildContext context, int index) {
           if (listItem[index] is placePage) {
-            return _buildItem(
-                  () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => placeDetailsPage(place: listItem[index]),
-                  ),
-                );
-              },
-              listItem[index] as placePage,
-              context,
-            );
+            final place = listItem[index] as placePage;
+
+            // Filter places based on the selected city (الرياض or جدة)
+            if (place.city == widget.cityName) {
+              return _buildItem(
+                    () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => placeDetailsPage(place: listItem[index]),
+                    ),
+                  );
+                },
+                place,
+                context,
+              );
+            }
           }
           return Container();
         },
       );
     }
   }
+
 
   Widget _buildItem(void Function()? onTap, placePage place, BuildContext context) {
     if (selectedCategory == 'الكل' || place.category == selectedCategory) {

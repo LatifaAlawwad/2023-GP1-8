@@ -2,63 +2,62 @@ import 'package:flutter/material.dart';
 import 'HomePage.dart';
 import 'NavigationBarPage.dart';
 
-class citiesPage extends StatelessWidget {
+class CitiesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color.fromARGB(255, 109, 184, 129),
-          automaticallyImplyLeading: false,
-          title: Center(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 50),
-              child: Text(
-                "مدن السعودية",
-                style: TextStyle(
-                  fontSize: 17,
-                  fontFamily: "Tajawal-b",
-                  color: Color.fromARGB(255, 255, 255, 255),
-                ),
+      appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 109, 184, 129),
+        automaticallyImplyLeading: false,
+        title: Center(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 50),
+            child: Text(
+              "مدن السعودية",
+              style: TextStyle(
+                fontSize: 17,
+                fontFamily: "Tajawal-b",
+                color: Color.fromARGB(255, 255, 255, 255),
               ),
             ),
           ),
-          actions: [
-            Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.white,
-                  size: 28,
-                ),
+        ),
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(right: 20.0),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(
+                Icons.arrow_forward_ios,
+                color: Colors.white,
+                size: 28,
               ),
             ),
-          ],
-
-        ),
-    body: Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-
-    CityButton(
-    cityName: 'الرياض',
-    imageLink: 'https://content.r9cdn.net/rimg/dimg/7d/60/488863c5-city-35744-16935f1b104.jpg',
-    cityId: 3,
-    ),
-    CityButton(
-    cityName: 'جدة',
-    imageLink: 'https://www.visitsaudi.com/content/dam/general-purpose/day-at-Jeddah.png',
-    cityId: 18,
-    ),
-    ],
-    ));
+          ),
+        ],
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CityButton(
+            cityName: 'الرياض',
+            imageLink:
+            'https://content.r9cdn.net/rimg/dimg/7d/60/488863c5-city-35744-16935f1b104.jpg',
+            cityId: 3,
+          ),
+          CityButton(
+            cityName: 'جدة',
+            imageLink:
+            'https://www.visitsaudi.com/content/dam/general-purpose/day-at-Jeddah.png',
+            cityId: 18,
+          ),
+        ],
+      ),
+    );
   }
 }
-
-
 
 class CityButton extends StatelessWidget {
   final String cityName;
@@ -73,13 +72,16 @@ class CityButton extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-
           InkWell(
             onTap: () {
+              // Determine which city was selected and pass it to NavigationBarPage.
+              String selectedCity = cityName; // You can update this as needed.
               Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) {
-                  return const NavigationBarPage(); // Navigate to NavigationBarPage
-                }),
+                MaterialPageRoute(
+                  builder: (context) {
+                    return NavigationBarPage(selectedCity: selectedCity);
+                  },
+                ),
               );
             },
             child: Container(
@@ -122,7 +124,4 @@ class CityButton extends StatelessWidget {
       ),
     );
   }
-
 }
-
-

@@ -203,7 +203,7 @@ class _LogInState extends State<LogIn> {
                                 } else {
                                   Navigator.pushReplacement(context,
                                       MaterialPageRoute(builder: (context) {
-                                        return citiesPage();
+                                        return CitiesPage();
                                       }));
                                 }
                               } catch (e) {

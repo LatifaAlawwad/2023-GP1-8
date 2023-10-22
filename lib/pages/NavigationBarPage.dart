@@ -8,11 +8,14 @@ import 'UserProfilePage.dart';
 import '../Registration/logIn.dart';
 
 class NavigationBarPage extends StatefulWidget {
-  const NavigationBarPage({Key? key}) : super(key: key);
+   final String selectedCity; // Add selectedCity property
+
+  const NavigationBarPage({Key? key, required this.selectedCity}) : super(key: key);
 
   @override
   State<NavigationBarPage> createState() => _NavigationBarPageState();
 }
+
 
 class _NavigationBarPageState extends State<NavigationBarPage> {
   int currentIndex = 0;
@@ -95,7 +98,7 @@ class _NavigationBarPageState extends State<NavigationBarPage> {
   Widget _getPage(int index) {
     switch (index) {
       case 0:
-        return HomePage(cityName: '', cityId: 3);
+        return HomePage(cityName: widget.selectedCity, cityId: 3);
       case 1:
         return Container(); // Replace with your actual map page.
       case 2:
@@ -106,4 +109,5 @@ class _NavigationBarPageState extends State<NavigationBarPage> {
         return HomePage(cityName: '', cityId: 18);
     }
   }
+
 }

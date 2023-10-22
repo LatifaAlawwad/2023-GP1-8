@@ -304,7 +304,7 @@ class _SignUpState extends State<SignUp> {
                                   );
                                   createSuhailuser(suser);
                                   Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) => citiesPage()));
+                                      MaterialPageRoute(builder: (context) => CitiesPage()));
                                 });
                               }
                             } on FirebaseAuthException catch (error) {

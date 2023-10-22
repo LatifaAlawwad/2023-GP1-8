@@ -28,16 +28,15 @@ class MyApp extends StatelessWidget {
         '/signup': (context) => SignUp(),
         '/login': (context) => LogIn(),
         '/RessetPassword': (context) => RessetPassword(),
-        '/NavigationBarPage': (context) =>  NavigationBarPage(),
+        '/citiesPage': (context) => CitiesPage(),
+        // Use 'CitiesPage' here and pass 'selectedCity' as needed
         '/AdminNavigator': (context) => AdminNavigator(),
-        '/citiesPage': (context) => citiesPage(),
-
-
-
-
+        '/NavigationBarPage': (context) {
+          String selectedCity ='';
+          return NavigationBarPage(selectedCity: selectedCity);
+        },
 
       },
-
     );
   }
 }
