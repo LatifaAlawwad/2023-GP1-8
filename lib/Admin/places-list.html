@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>طلبات الاضافة</title>
     <meta charset="UTF-8">
     <style>
         /* Basic CSS for styling the layout */
@@ -9,15 +10,27 @@
             min-height: 100vh;
         }
 
-        .sidenav {
-            width: 150px; /* Make the navigation wider */
+ .sidenav-right {
+            width: 150px; /* Set the width as needed */
             background-color: #6DB881;
             color: white;
             padding: 20px;
             text-align: left;
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            top: 0;
+            right: -150px; /* Initial position outside the container */
+            bottom: 0; /* Extend to the bottom of the container */
+            transition: right 0.3s; /* Add transition animation */
         }
 
-        .sidenav a {
+        .sidenav-right.active {
+            right: 0; /* Move the sidebar to the right */
+        }
+
+ .sidenav-right a {
+           visibility: hidden;
             color: #ffffff;
             text-decoration: none;
             display: block;
@@ -26,7 +39,18 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
-        .sidenav a:hover {
+        .sidenav-right.active a {
+           visibility: visible;
+            color: #ffffff;
+            text-decoration: none;
+            display: block;
+            margin: 10px 0;
+            padding: 15px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+
+        .sidenav-right a:hover {
             background-color: #90c996;
             color: #ffffff;
         }
@@ -38,7 +62,7 @@
         }
 
         .footer {
-            background-color: #6DB881;
+            background-color: #DEDEDE;
             color: white;
             text-align: center;
             padding: 10px;
@@ -48,19 +72,18 @@
         }
 
         .logo {
-            color: white;
-            text-align: right;
-            padding: 10px;
-            width: 150px;
-            position: absolute;
-            top: 0;
-            right: 0;
-        }
+  text-align: left;
+  padding: 10px;
+  width: 150px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 
-        .logo img {
-            width: 100px;
-            height: 100px;
-        }
+.logo img {
+  width: 130px;
+  height: 130px;
+}
 
         body {
             background-color: #f9f9f9;
@@ -84,14 +107,16 @@
             text-align: center;
         }
 
-        /* Style for each place container */
-        .place-container {
-            border: 1px solid #a3a3a3;
-            padding: 10px;
-            margin: 10px 0;
-            background-color: #f2f2f2;
-            text-align: right;
-        }
+   /* Style for each place container */
+.place-container {
+    border: 1px solid #dcdcdc; /* Change the border color to a lighter shade */
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #f2f2f2;
+    text-align: right;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
 
         .place-buttons {
             text-align: center;
@@ -113,17 +138,48 @@
         #reject {
             background-color: #ff9999;
         }
+  /* Add styles for the menu icon */
+        .menu-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            z-index: 1;
+        }
 
+        .menu-icon span {
+            display: block;
+            width: 30px;
+            height: 4px;
+            background-color: white;
+            margin-bottom: 6px;
+            transition: transform 0.3s, opacity 0.3s;
+        }
+
+        .menu-icon.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .menu-icon.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-icon.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
     </style>
 </head>
 <body>
 <div class="container">
-    <!-- Vertical navigation bar -->
-    <div class="sidenav">
-        <a href="places-list.html">طلبات الإضافة</a>
-        <a href="home.html">الصفحة الرئيسية</a>
-        <a class="logout" href="logout.html">تسجيل الخروج</a>
+
+
+
+    <!-- Logo on the left side without background -->
+    <div class="logo">
+        <img src="images/logowithname.png" alt="Logo">
     </div>
+
+
 
     <!-- Content of the Places List page -->
     <div class="content">
@@ -131,18 +187,41 @@
             <!-- Places will be displayed here as containers -->
         </div>
     </div>
+
 </div>
 
-<!-- Logo on the other side without background -->
-<div class="logo">
-    <img src="images/logo.png" alt="Logo">
-</div>
+
 
 <!-- Footer with space between navigation and footer -->
 <div class="footer">
     &copy; 2023 Admin Dashboard
 </div>
 
+<!-- Menu Icon -->
+<div class="menu-icon" onclick="toggleSideNav()"> <!-- Add the onclick event -->
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+<!-- Vertical navigation bar on the right -->
+<div class="sidenav-right" id="navbar"> <!-- Add the id "navbar" -->
+    <!-- Navigation links -->
+    <span>  </span>
+    <a href="places-list.html">طلبات الإضافة</a>
+    <a href="home.html">الصفحة الرئيسية</a>
+    <a class="logout" href="logout.html">تسجيل الخروج</a>
+</div>
+
+<script >
+    // Toggle the side navigation bar
+    function toggleSideNav() {
+        const sideNav = document.getElementById('navbar'); // Change the id to "navbar"
+        sideNav.classList.toggle('active');
+
+        const menuIcon = document.querySelector('.menu-icon');
+        menuIcon.classList.toggle('active');
+    }
+</script>
 <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-app.js";

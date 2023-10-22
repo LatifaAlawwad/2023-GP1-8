@@ -13,7 +13,7 @@ class CitiesPage extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(left: 50),
             child: Text(
-              "مدن السعودية",
+              "اختر مدينة",
               style: TextStyle(
                 fontSize: 17,
                 fontFamily: "Tajawal-b",
