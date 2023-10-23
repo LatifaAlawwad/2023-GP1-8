@@ -233,22 +233,23 @@ class HomePageState extends State<HomePage> {
         name = '';
       });
     } else {
-      final lowercaseQuery = query.toLowerCase();
+      final formattedQuery = query.replaceAll(' ', '').toLowerCase();
       searchResults = allData.where((place) {
-        final lowercaseName = place.placeName.toLowerCase();
-        return lowercaseName.contains(lowercaseQuery);
+        final formattedName = place.placeName.replaceAll(' ', '').toLowerCase();
+        return formattedName.contains(formattedQuery);
       }).toList();
 
       // Sort the search results based on the order of letters.
       searchResults.sort((a, b) {
-        final lowercaseA = a.placeName.toLowerCase();
-        final lowercaseB = b.placeName.toLowerCase();
-        return lowercaseA.indexOf(lowercaseQuery) - lowercaseB.indexOf(lowercaseQuery);
+        final formattedA = a.placeName.replaceAll(' ', '').toLowerCase();
+        final formattedB = b.placeName.replaceAll(' ', '').toLowerCase();
+        return formattedA.indexOf(formattedQuery) - formattedB.indexOf(formattedQuery);
       });
-    }
 
-    setState(() {});
+      setState(() {});
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {
