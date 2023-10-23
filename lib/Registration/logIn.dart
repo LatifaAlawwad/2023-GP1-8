@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gp/pages/NavigationBarPage.dart';
-import 'package:gp/pages/AdminNavigator.dart';
+
 
 import '../pages/citiesPage.dart';
 
@@ -195,42 +195,47 @@ class _LogInState extends State<LogIn> {
                                   password: password.text,
                                 );
 
-                                if (userCredential.user?.email == "admin@sohail.com") {
-                                  Navigator.pushReplacement(context,
-                                      MaterialPageRoute(builder: (context) {
-                                        return AdminNavigator();
-                                      }));
+                                // Check if login is successful
+                                if (userCredential.user != null) {
+                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+                                    return CitiesPage();
+                                  }));
                                 } else {
-                                  Navigator.pushReplacement(context,
-                                      MaterialPageRoute(builder: (context) {
-                                        return CitiesPage();
-                                      }));
+                                  // Handle the case where userCredential.user is null (login failed)
+                                  Fluttertoast.showToast(
+                                    msg: "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.CENTER,
+                                    timeInSecForIosWeb: 5,
+                                    backgroundColor: Color(0xFF6db881),
+                                    textColor: Color(0xFFF8F9FA),
+                                    fontSize: 18.0,
+                                  );
                                 }
                               } catch (e) {
-                                Fluttertoast.showToast(
-                                  msg: "البريد الإلكتروني أو كلمة المرور غير صحيحة",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER,
-                                  timeInSecForIosWeb: 5,
-                                  backgroundColor: Color(0xFF6db881),
-                                  textColor: Color(0xFFF8F9FA),
-                                  fontSize: 18.0,
-                                );
+                                // Handle any other exceptions that may occur during login
+                                print("Error: $e");
+                                // You can add more specific error handling here if needed
                               }
                             }
                           },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(Color(0xFF6db881)),
                             padding: MaterialStateProperty.all(
-                                EdgeInsets.symmetric(horizontal: 40, vertical: 10)),
-                            shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(27))),
+                              EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                            ),
+                            shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(27),
+                              ),
+                            ),
                           ),
                           child: Text(
                             "تسجيل الدخول",
                             style: TextStyle(fontSize: 18, fontFamily: "Tajawal-m"),
                           ),
                         ),
+
                         SizedBox(
                           height: 25,
                         ),

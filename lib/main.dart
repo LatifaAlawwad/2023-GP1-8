@@ -7,7 +7,6 @@ import 'package:gp/Registration/SignUp.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:gp/Registration/logIn.dart';
 import 'package:gp/pages/NavigationBarPage.dart';
-import 'package:gp/pages/AdminNavigator.dart';
 import 'package:gp/pages/citiesPage.dart';
 
 void main() async {
@@ -30,7 +29,7 @@ class MyApp extends StatelessWidget {
         '/RessetPassword': (context) => RessetPassword(),
         '/citiesPage': (context) => CitiesPage(),
         // Use 'CitiesPage' here and pass 'selectedCity' as needed
-        '/AdminNavigator': (context) => AdminNavigator(),
+
         '/NavigationBarPage': (context) {
           String selectedCity ='';
           return NavigationBarPage(selectedCity: selectedCity);
