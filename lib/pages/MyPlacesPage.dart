@@ -222,124 +222,116 @@ class _myPlacesPage extends State<myPlacesPage> {
       placePage place,
       BuildContext context,
       ) {
-    if (selectedCategory == 'طلبات معتمدة' ||
-        selectedCategory == 'طلبات بانتظار الاعتماد' ||
-        selectedCategory == 'طلبات مرفوضة') {
-      return GestureDetector(
-        onTap: onTap,
-        child: Card(
-          margin: EdgeInsets.fromLTRB(12, 12, 12, 6),
-          clipBehavior: Clip.antiAlias,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(15),
-            ),
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        margin: EdgeInsets.fromLTRB(12, 12, 12, 6),
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(15),
           ),
-          child: Stack(
-            children: [
-              Container(
-                height: 210,
+        ),
+        child: Stack(
+          children: [
+            Container(
+              height: 210,
+              decoration: BoxDecoration(
+                image: place.images.isEmpty
+                    ? DecorationImage(
+                  image: NetworkImage(
+                      'https://www.guardanthealthamea.com/wp-content/uploads/2019/09/no-image.jpg'),
+                  fit: BoxFit.cover,
+                )
+                    : DecorationImage(
+                  image: NetworkImage(place.images[0]),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: Container(
+                padding: EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  image: place.images.isEmpty
-                      ? DecorationImage(
-                    image: NetworkImage(
-                        'https://www.guardanthealthamea.com/wp-content/uploads/2019/09/no-image.jpg'),
-                    fit: BoxFit.cover,
-                  )
-                      : DecorationImage(
-                    image: NetworkImage(place.images[0]),
-                    fit: BoxFit.cover,
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: [0.5, 1.0],
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withOpacity(0.7),
+                    ],
                   ),
                 ),
-                child: Container(
-                  padding: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      stops: [0.5, 1.0],
-                      colors: [
-                        Colors.transparent,
-                        Colors.black.withOpacity(0.7),
-                      ],
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(child: Container()),
-                      Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  ' ${place.placeName}',
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(
-                                    height: 2,
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: "Tajawal-l",
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text(
-                                '${place.neighbourhood} , ${place.city}',
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(child: Container()),
+                    Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                ' ${place.placeName}',
+                                textAlign: TextAlign.right,
                                 style: TextStyle(
+                                  height: 2,
                                   color: Colors.white,
-                                  fontSize: 14,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                   fontFamily: "Tajawal-l",
                                 ),
                               ),
-                              SizedBox(
-                                width: 4,
+                            ),
+                            if (selectedCategory == 'طلبات بانتظار الاعتماد') // Show the delete icon only in this category
+                              GestureDetector(
+                                onTap: () {
+                                  showDeleteConfirmationDialog(place, selectedCategory);
+                                },
+                                child: Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                ),
                               ),
-                              Icon(
-                                Icons.location_pin,
+                          ],
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              '${place.neighbourhood} , ${place.city}',
+                              style: TextStyle(
                                 color: Colors.white,
-                                size: 16,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: "Tajawal-l",
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                            ),
+                            SizedBox(
+                              width: 4,
+                            ),
+                            Icon(
+                              Icons.location_pin,
+                              color: Colors.white,
+                              size: 16,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              Positioned(
-                top: 10,
-                left: 10,
-                child: GestureDetector(
-                  onTap: () {
-                    showDeleteConfirmationDialog(place, selectedCategory);
-                  },
-                  child: Icon(
-                    Icons.delete,
-                    color: Colors.red,
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
-      );
-    } else {
-      return Container();
-    }
+      ),
+    );
   }
+
 
   void showDeleteConfirmationDialog(placePage place, String selectedCategory) {
     final buttonStyle = TextButton.styleFrom(
@@ -355,7 +347,8 @@ class _myPlacesPage extends State<myPlacesPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("تأكيد الحذف"),
-         content: Text("هل تريد حذف المكان التالي؟\n\nkk: ${place.placeName}"),
+          content: Text("هل تريد حذف المكان التالي؟\n\n${place.placeName}"),
+
           actions: <Widget>[
             TextButton(
               child: Text("إلغاء"),
@@ -364,62 +357,37 @@ class _myPlacesPage extends State<myPlacesPage> {
                 Navigator.of(context).pop(false);
               },
             ),
-            TextButton(
-              child: Text("حذف"),
-              style: buttonStyle,
-              onPressed: () {
-                Navigator.of(context).pop(true);
-                deletePlace(place.place_id, selectedCategory);
-              },
-            ),
+            if (selectedCategory == 'طلبات بانتظار الاعتماد')
+              TextButton(
+                child: Text("حذف"),
+                style: buttonStyle,
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                  deletePlace(place.place_id);
+                },
+              ),
           ],
         );
       },
     ).then((result) {
-      if (result != null && result) {
-        deletePlace(place.place_id, selectedCategory);
+      if (result != null && result && selectedCategory == 'طلبات بانتظار الاعتماد') {
+        deletePlace(place.place_id);
       }
     });
-    }
+  }
 
-    Future<void> deletePlace(String place_id, String selectedCategory) async {
-      try {
-        switch (selectedCategory) {
-          case 'طلبات معتمدة':
-            await FirebaseFirestore.instance.collection("ApprovedPlaces").doc(place_id).delete();
-            setState(() {
-              accepted.removeWhere((place) => place.place_id == place_id);
-            });
-            break;
-          case 'طلبات بانتظار الاعتماد':
-            await FirebaseFirestore.instance.collection("PendingPlaces").doc(place_id).delete();
-            setState(() {
-              pending.removeWhere((place) => place.place_id == place_id);
-            });
-            break;
-          case 'طلبات مرفوضة':
-            await FirebaseFirestore.instance.collection("RejectedPlaces").doc(place_id).delete();
-            setState(() {
-              rejected.removeWhere((place) => place.place_id == place_id);
-            });
-            break;
-        }
+  Future<void> deletePlace(String place_id) async {
+    try {
+      await FirebaseFirestore.instance.collection("PendingPlaces").doc(place_id).delete();
+      setState(() {
+        pending.removeWhere((place) => place.place_id == place_id);
+      });
 
-      print("Deleted place_id: $place_id from collection: $selectedCategory");
       print("Updated lists.");
     } catch (e) {
       print("Error deleting place: $e");
     }
   }
-
-
-
-
-
-
-
-
-
 
   void showToastMessage(String message) {
     Fluttertoast.showToast(
@@ -436,3 +404,4 @@ class _myPlacesPage extends State<myPlacesPage> {
     return cpuid;
   }
 }
+

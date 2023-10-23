@@ -225,7 +225,6 @@ class HomePageState extends State<HomePage> {
       return Container();
     }
   }
-
   void performSearch(String query) {
     searchResults.clear();
 
@@ -234,9 +233,18 @@ class HomePageState extends State<HomePage> {
         name = '';
       });
     } else {
-      searchResults = allData
-          .where((place) => place.placeName.contains(query))
-          .toList();
+      final lowercaseQuery = query.toLowerCase();
+      searchResults = allData.where((place) {
+        final lowercaseName = place.placeName.toLowerCase();
+        return lowercaseName.contains(lowercaseQuery);
+      }).toList();
+
+      // Sort the search results based on the order of letters.
+      searchResults.sort((a, b) {
+        final lowercaseA = a.placeName.toLowerCase();
+        final lowercaseB = b.placeName.toLowerCase();
+        return lowercaseA.indexOf(lowercaseQuery) - lowercaseB.indexOf(lowercaseQuery);
+      });
     }
 
     setState(() {});
