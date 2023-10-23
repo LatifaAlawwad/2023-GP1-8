@@ -141,7 +141,7 @@ class CustomFormState extends State<CustomForm> {
   final ImagePicker _picker = ImagePicker();
   List<XFile> selectedFiles = [];
 
-  var citiesList = ["الرياض", "جدة"];
+  var citiesList = ["الرياض", "جدة","أبها","الدمام"];
   List areasList = [];
 
 
@@ -543,15 +543,29 @@ class CustomFormState extends State<CustomForm> {
                       padding: const EdgeInsets.only(left: 83, right: 25),
                       child: Directionality(
                         textDirection: TextDirection.rtl,
-                        child: TextFormField(
-                          controller: description,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'الرجاء عدم ترك الخانة فارغة!';
-                            }
-                            return null;
-                          },
+                        child: Container(
+                          margin: const EdgeInsets.only(top: 10), // Add top margin to move the field down
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.grey,
+                              width: 1.0,
+                            ),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: TextFormField(
+                              controller: description,
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                              maxLines: null,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'الرجاء عدم ترك الخانة فارغة!';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -568,6 +582,8 @@ class CustomFormState extends State<CustomForm> {
                   ),
                 ],
               ),
+
+
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[

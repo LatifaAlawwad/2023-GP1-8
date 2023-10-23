@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'HomePage.dart';
 import 'NavigationBarPage.dart';
 
+
 class CitiesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -38,26 +39,37 @@ class CitiesPage extends StatelessWidget {
           ),
         ],
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CityButton(
-            cityName: 'الرياض',
-            imageLink:
-            'https://content.r9cdn.net/rimg/dimg/7d/60/488863c5-city-35744-16935f1b104.jpg',
-            cityId: 3,
-          ),
-          CityButton(
-            cityName: 'جدة',
-            imageLink:
-            'https://www.visitsaudi.com/content/dam/general-purpose/day-at-Jeddah.png',
-            cityId: 18,
-          ),
-        ],
+      body: SingleChildScrollView( // Wrap with SingleChildScrollView
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CityButton(
+              cityName: 'الرياض',
+              imageLink: 'https://content.r9cdn.net/rimg/dimg/7d/60/488863c5-city-35744-16935f1b104.jpg',
+              cityId: 3,
+            ),
+            CityButton(
+              cityName: 'جدة',
+              imageLink: 'https://www.visitsaudi.com/content/dam/general-purpose/day-at-Jeddah.png',
+              cityId: 18,
+            ),
+            CityButton(
+              cityName: 'أبها',
+              imageLink: 'https://www.ewaahotels.com/uploads/image-slider/03d7703488a58cec3059bc6df945fad41582891535.jpg',
+              cityId: 15,
+            ),
+            CityButton(
+              cityName: 'الدمام',
+              imageLink: 'https://www.cruisemapper.com/images/ports/10144-bc7d0d8647.jpg',
+              cityId: 13,
+            ),
+          ],
+        ),
       ),
     );
   }
 }
+
 
 class CityButton extends StatelessWidget {
   final String cityName;
@@ -108,7 +120,7 @@ class CityButton extends StatelessWidget {
                         child: Text(
                           cityName,
                           style: const TextStyle(
-                            fontSize: 23,
+                            fontSize: 25,
                             fontFamily: "Tajawal-b",
                             color: Colors.white,
                           ),
