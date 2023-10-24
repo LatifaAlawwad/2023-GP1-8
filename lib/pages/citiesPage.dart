@@ -45,23 +45,29 @@ class CitiesPage extends StatelessWidget {
           children: [
             CityButton(
               cityName: 'الرياض',
-              imageLink: 'https://content.r9cdn.net/rimg/dimg/7d/60/488863c5-city-35744-16935f1b104.jpg',
+              imageLink: 'https://omrania.com/wp-content/uploads/Kingdom-Centre-Riyadh-KSA-Bin-Mahdi-cover.jpg',
               cityId: 3,
             ),
             CityButton(
               cityName: 'جدة',
-              imageLink: 'https://www.visitsaudi.com/content/dam/general-purpose/day-at-Jeddah.png',
+              imageLink: 'https://preview.redd.it/ckmkqajqdf161.jpg?auto=webp&s=441bbb3504fb1dd698371b74b1b1e8033bdec3ec',
               cityId: 18,
             ),
             CityButton(
               cityName: 'أبها',
-              imageLink: 'https://www.ewaahotels.com/uploads/image-slider/03d7703488a58cec3059bc6df945fad41582891535.jpg',
+              imageLink: 'https://sa.aqar.fm/blog/wp-content/uploads/2023/02/%D8%B1%D8%AC%D8%A7%D9%84-%D8%A3%D9%84%D9%85%D8%B9-950x500.jpg',
               cityId: 15,
             ),
             CityButton(
-              cityName: 'الدمام',
-              imageLink: 'https://www.cruisemapper.com/images/ports/10144-bc7d0d8647.jpg',
+              cityName: 'العلا',
+              imageLink: 'https://www.vision2030.gov.sa/media/mtukxauc/elephant-rock.jpg?width=1920&format=webp',
               cityId: 13,
+            ),
+
+            CityButton(
+              cityName: 'المنطقة الشرقية',
+              imageLink: 'https://welcomesaudi.com/uploads/0000/1/2021/07/23/85-dammam-corniche-eastern-province-900.jpg',
+              cityId: 3,
             ),
           ],
         ),
@@ -136,4 +142,4 @@ class CityButton extends StatelessWidget {
       ),
     );
   }
-}
+}//https://pbs.twimg.com/media/EYbBNxuWAAAehiN.jpg
