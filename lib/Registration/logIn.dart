@@ -261,8 +261,15 @@ class _LogInState extends State<LogIn> {
                               } catch (e) {
                                 // Handle any other exceptions that may occur during login
                                 print("Error: $e");
-                                // You can add more specific error handling here if needed
-                              }
+                                Fluttertoast.showToast(
+                                  msg: "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER,
+                                  timeInSecForIosWeb: 2,
+                                  backgroundColor: Color.fromARGB(255, 109, 184, 129),
+                                  textColor: Color.fromARGB(255, 248, 249, 250),
+                                  fontSize: 18.0,
+                                );                              }
                             }
                           },
                           style: ButtonStyle(
