@@ -277,6 +277,7 @@ class HomePageState extends State<HomePage> {
                               });
                               performSearch(value);
                             },
+
                             decoration: InputDecoration(
                               focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Color.fromARGB(
