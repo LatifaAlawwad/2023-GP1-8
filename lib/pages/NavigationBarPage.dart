@@ -24,11 +24,11 @@ class _NavigationBarPageState extends State<NavigationBarPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: _getPage(currentIndex),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-
           Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => AddPage()),
           );
@@ -56,6 +56,9 @@ class _NavigationBarPageState extends State<NavigationBarPage> {
       ),
     );
   }
+
+
+
 
   Widget _buildIconButtonWithLabel(IconData icon, String label, int index) {
     return GestureDetector(
