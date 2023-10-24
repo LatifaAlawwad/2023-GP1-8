@@ -141,7 +141,7 @@ class CustomFormState extends State<CustomForm> {
   final ImagePicker _picker = ImagePicker();
   List<XFile> selectedFiles = [];
 
-  var citiesList = ["الرياض", "جدة","أبها","الدمام"];
+  var citiesList = ["الرياض", "جدة","العلا","المنطقة الشرقية"];
   List areasList = [];
 
 
