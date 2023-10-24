@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gp/pages/NavigationBarPage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 
 import '../pages/citiesPage.dart';
-
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LogIn extends StatefulWidget {
   const LogIn({Key? key});
@@ -18,6 +19,7 @@ class _LogInState extends State<LogIn> {
   final loginformkey = GlobalKey<FormState>();
   final email = TextEditingController();
   final password = TextEditingController();
+  String? errorMessage;
 
   @override
   void dispose() {
@@ -42,39 +44,38 @@ class _LogInState extends State<LogIn> {
                     key: loginformkey,
                     child: Column(
                       children: [
-                      SizedBox(
-                      height: 50,
-                    ),
-                           Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text(
-                                "تسجيل الدخول ",
-                                style: TextStyle(
-                                  fontSize: 26,
-                                  fontFamily: "Tajawal-b",
+                        SizedBox(
+                          height: 50,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              "تسجيل الدخول ",
+                              style: TextStyle(
+                                fontSize: 26,
+                                fontFamily: "Tajawal-b",
+                                color: Color(0xFF6db881),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 70,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(right: 20.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(context, "/welcome");
+                                },
+                                child: Icon(
+                                  Icons.arrow_forward_ios,
                                   color: Color(0xFF6db881),
+                                  size: 28,
                                 ),
                               ),
-                              SizedBox(
-                                width: 70,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(right: 20.0),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushNamed(context, "/welcome");
-                                  },
-                                  child: Icon(
-                                    Icons.arrow_forward_ios,
-                                    color: Color(0xFF6db881),
-                                    size: 28,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-
+                            ),
+                          ],
+                        ),
                         SizedBox(
                           height: 40,
                         ),
@@ -115,6 +116,14 @@ class _LogInState extends State<LogIn> {
                                 if (value!.isEmpty || email.text.trim() == "") {
                                   return "البريد الإلكتروني مطلوب";
                                 }
+
+                                final emailPattern = RegExp(r'^[a-z0-9A-Z_.-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,3}$');
+
+                                if (!emailPattern.hasMatch(value)) {
+                                  return 'أدخل البريد الإلكتروني بالشكل الصحيح (example@example.com)';
+                                }
+
+                                return null;
                               },
                             ),
                           ),
@@ -138,7 +147,7 @@ class _LogInState extends State<LogIn> {
                                 ),
                                 labelText: "كلمة المرور:",
                                 labelStyle: TextStyle(fontFamily: "Tajawal-m"),
-                                hintText: "أدخل كلمة مرور صالحة",
+                                hintText: "كلمة المرور يجب ان تكون من 8 خانات وتشمل على حرف كبير ورمز مميز",
                                 hintStyle: TextStyle(fontSize: 10),
                                 fillColor: Color(0xFFdff1e0),
                                 filled: true,
@@ -151,9 +160,43 @@ class _LogInState extends State<LogIn> {
                                 ),
                               ),
                               validator: (value) {
+                                RegExp uper = RegExp(r"(?=.*[A-Z])");
+                                RegExp numb = RegExp(r"[0-9]");
+                                RegExp small = RegExp(r"(?=.*[a-z])");
+                                RegExp special = RegExp(r"(?=.*[!@#%^&*(),.?\\:{}|<>])");
+
                                 if (value!.isEmpty || password.text.trim() == "") {
                                   return "كلمة السر مطلوبة";
                                 }
+
+                                String errorMessage = "";
+
+                                if (value.length < 8) {
+                                  errorMessage += "كلمة المرور يجب ان تكون من 8 خانات و";
+                                }
+
+                                if (!uper.hasMatch(value)) {
+                                  errorMessage += "تحتوي على حرف كبير و";
+                                }
+
+                                if (!small.hasMatch(value)) {
+                                  errorMessage += "تحتوي على أحرف صغيرة و";
+                                }
+
+                                if (!numb.hasMatch(value)) {
+                                  errorMessage += "تحتوي على أرقام و";
+                                }
+
+                                if (!special.hasMatch(value)) {
+                                  errorMessage += "تحتوي على رمز مميز و";
+                                }
+
+                                if (errorMessage.isNotEmpty) {
+                                  errorMessage = errorMessage.substring(0, errorMessage.length - 2); // Remove the trailing "و"
+                                  return errorMessage;
+                                }
+
+                                return null;
                               },
                             ),
                           ),
@@ -187,10 +230,13 @@ class _LogInState extends State<LogIn> {
                         ),
                         ElevatedButton(
                           onPressed: () async {
+                            setState(() {
+                              errorMessage = null; // Clear any previous error message
+                            });
+
                             if (loginformkey.currentState!.validate()) {
                               try {
-                                final userCredential = await FirebaseAuth.instance
-                                    .signInWithEmailAndPassword(
+                                final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
                                   email: email.text,
                                   password: password.text,
                                 );
@@ -201,14 +247,14 @@ class _LogInState extends State<LogIn> {
                                     return CitiesPage();
                                   }));
                                 } else {
-                                  // Handle the case where userCredential.user is null (login failed)
+                                  // Set an error message when login fails
                                   Fluttertoast.showToast(
                                     msg: "البريد الإلكتروني أو كلمة المرور غير صحيحة",
                                     toastLength: Toast.LENGTH_SHORT,
                                     gravity: ToastGravity.CENTER,
-                                    timeInSecForIosWeb: 5,
-                                    backgroundColor: Color(0xFF6db881),
-                                    textColor: Color(0xFFF8F9FA),
+                                    timeInSecForIosWeb: 2,
+                                    backgroundColor: Color.fromARGB(255, 109, 184, 129),
+                                    textColor: Color.fromARGB(255, 248, 249, 250),
                                     fontSize: 18.0,
                                   );
                                 }
@@ -235,7 +281,14 @@ class _LogInState extends State<LogIn> {
                             style: TextStyle(fontSize: 18, fontFamily: "Tajawal-m"),
                           ),
                         ),
-
+                        if (errorMessage != null)
+                          Text(
+                            errorMessage!,
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 18,
+                            ),
+                          ),
                         SizedBox(
                           height: 25,
                         ),
