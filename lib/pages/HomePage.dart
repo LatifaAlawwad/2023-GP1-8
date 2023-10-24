@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'citiesPage.dart';
 import 'placePage.dart';
 import 'placeDetailsPage.dart';
 import 'AddPage.dart';
@@ -263,6 +264,7 @@ class HomePageState extends State<HomePage> {
                   height: 120,
                   width: MediaQuery.of(context).size.width,
                   child: AppBar(
+                    automaticallyImplyLeading: false,
                     backgroundColor: Color(0xFF6db881),
                     title: Row(
                       children: [
@@ -296,11 +298,28 @@ class HomePageState extends State<HomePage> {
                       ],
                     ),
                     actions: [
+
                       Padding(
                         padding: EdgeInsets.only(right: 20.0),
                         child: Icon(
                           Icons.search,
                           color: Colors.white,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(right: 20.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => CitiesPage()),
+                            );
+                          },
+                          child: Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.white,
+                            size: 28,
+                          ),
                         ),
                       ),
                     ],
