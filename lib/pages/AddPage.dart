@@ -129,6 +129,11 @@ class CustomFormState extends State<CustomForm> {
   final description = TextEditingController();
   final placeName = TextEditingController();
   final GlobalKey<FormFieldState> _AddressKey = GlobalKey<FormFieldState>();
+  bool hasValetServiced = false;
+  String weekdaysWorkingHr = '';
+  String weekendsWorkingHr = '';
+  String longitude = '';
+  String latitude = '';
 
   @override
   void dispose() {
@@ -197,7 +202,26 @@ class CustomFormState extends State<CustomForm> {
               'images': arrImage,
               'Location': location.text,
               'description': description.text,
-              'category': type1, // Add the selected category
+              'category': type1,
+              /*'hasValetServiced': hasValetServiced,
+              'WeekdaysWorkingHr': weekdaysWorkingHr,
+              'WeekendsWorkingHr': weekendsWorkingHr,
+              'longitude': longitude,
+              'latitude': latitude,
+              'cuisine': cuisine, // Add attributes specific to restaurants
+              'priceRange': priceRange,
+              'serves': serves,
+              'atmosphere': atmosphere,
+              'hasReservation': hasReservation,
+              'allowChildren': allowChildren,
+              'hasCinema': hasCinema, // Add attributes specific to malls
+              'hasIndoorAmusementPark': hasIndoorAmusementPark,
+              'hasFoodCourt': hasFoodCourt,
+              'isOutdoor': isOutdoor,*/
+
+
+
+
             });
             await FirebaseFirestore.instance.collection('users').doc(userId).update({
               "ArrayOfPlaces": FieldValue.arrayUnion([place_id])

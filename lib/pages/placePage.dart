@@ -9,6 +9,11 @@ class placePage {
   List<String> images;
   String description;
   String Location;
+ /* bool hasValetServiced;
+  String WeekdaysWorkingHr;
+  String WeekendsWorkingHr;
+  String longitude;
+  String latitude;*/
 
   placePage({
     required this.place_id,
@@ -20,7 +25,12 @@ class placePage {
     required this.neighbourhood,
     required this.images,
     required this.description,
-    required this.Location,
+    required this.Location,/*
+    required this.hasValetServiced,
+    required this.WeekdaysWorkingHr,
+    required this.WeekendsWorkingHr,
+    required this.longitude,
+    required this.latitude,*/
   });
 
   Map<String, dynamic> toMap() {
@@ -34,7 +44,13 @@ class placePage {
       'neighborhood': neighbourhood,
       'images': images,
       'description': description,
-      'Location': Location,
+      'Location': Location,/*
+      'ValetServiced':hasValetServiced,
+      'WeekdaysWorkingHr':WeekdaysWorkingHr,
+      'WeekendsWorkingHr':WeekendsWorkingHr,
+      'longitude':longitude,
+      'latitude':latitude,*/
+
     };
   }
 
@@ -49,7 +65,12 @@ class placePage {
       neighbourhood: map['neighbourhood'] ?? '',
         images: List<String>.from(map['images']),
         Location: map['Location'] ?? '',
-        description: map['description'] ?? '',
+        description: map['description'] ?? '',/*
+      hasValetServiced: map['hasValetServiced'],
+      WeekdaysWorkingHr: map['WeekdaysWorkingHr'],
+      WeekendsWorkingHr: map['WeekendsWorkingHr'],
+      longitude: map['longitude'],
+      latitude: map['latitude'],*/
        );
    }
 }
