@@ -134,6 +134,32 @@ class CustomFormState extends State<CustomForm> {
   String weekendsWorkingHr = '';
   String longitude = '';
   String latitude = '';
+  //for rest
+  List<String> cuisine = [];
+  List<String> cuisineOptions = [
+    'سعودي',
+    'إيطالي',
+    'أمريكي',
+    'آسيوي',
+    'هندي',
+    'مكسيكي',
+    'تركي',
+    ' بحري',
+    'إسباني',
+    'شرقي',
+    'يوناني',
+    'مخبوزات',
+    'عالمي',
+    'صحي',
+  ];
+
+
+  String priceRange = "غالي";
+  bool? hasReservation;
+  List<String> servesOptions = ['فطور', 'غداء', 'عشاء'];
+  List<String> atmosphereOptions = ['يوجد موسيقى', 'بدون موسيقى', 'على البحر', 'داخلي','خارجي'];
+  Set<String> serves = Set<String>();
+  Set<String> atmosphere = Set<String>();
 
   @override
   void dispose() {
@@ -192,18 +218,48 @@ class CustomFormState extends State<CustomForm> {
             _formKey.currentState!.save();
             var uuid = Uuid();
             place_id = uuid.v4();
+            if (type1 == 'فعاليات وترفيه') {
+              await FirebaseFirestore.instance.collection('PendingPlaces').doc(
+                  place_id).set({
+                'place_id': place_id,
+                'User_id': userId,
+                'placeName': placeName.text,
+                'city': city,
+                'neighbourhood': address,
+                'images': arrImage,
+                'Location': location.text,
+                'description': description.text,
+                'category': type1,
+                /*'hasValetServiced': hasValetServiced,
+              'WeekdaysWorkingHr': weekdaysWorkingHr,
+              'WeekendsWorkingHr': weekendsWorkingHr,
+              'longitude': longitude,
+              'latitude': latitude,
+            'isTemporary': isTemporary, // Add attributes specific to Entertainment
+             'startDate': startDate,
+             'finishDate': finishDate,*/
 
-            await FirebaseFirestore.instance.collection('PendingPlaces').doc(place_id).set({
-              'place_id': place_id,
-              'User_id': userId,
-              'placeName': placeName.text,
-              'city': city,
-              'neighbourhood': address,
-              'images': arrImage,
-              'Location': location.text,
-              'description': description.text,
-              'category': type1,
-              /*'hasValetServiced': hasValetServiced,
+
+              });
+              await FirebaseFirestore.instance.collection('users')
+                  .doc(userId)
+                  .update({
+                "ArrayOfPlaces": FieldValue.arrayUnion([place_id])
+              });
+            }
+            if (type1 == 'مطاعم') {
+              await FirebaseFirestore.instance.collection('PendingPlaces').doc(
+                  place_id).set({
+                'place_id': place_id,
+                'User_id': userId,
+                'placeName': placeName.text,
+                'city': city,
+                'neighbourhood': address,
+                'images': arrImage,
+                'Location': location.text,
+                'description': description.text,
+                'category': type1,
+                'hasValetServiced': hasValetServiced,
               'WeekdaysWorkingHr': weekdaysWorkingHr,
               'WeekendsWorkingHr': weekendsWorkingHr,
               'longitude': longitude,
@@ -213,20 +269,48 @@ class CustomFormState extends State<CustomForm> {
               'serves': serves,
               'atmosphere': atmosphere,
               'hasReservation': hasReservation,
-              'allowChildren': allowChildren,
+
+
+
+
+              });
+              await FirebaseFirestore.instance.collection('users')
+                  .doc(userId)
+                  .update({
+                "ArrayOfPlaces": FieldValue.arrayUnion([place_id])
+              });
+            }
+            if (type1 == 'مراكز تسوق') {
+              await FirebaseFirestore.instance.collection('PendingPlaces').doc(
+                  place_id).set({
+                'place_id': place_id,
+                'User_id': userId,
+                'placeName': placeName.text,
+                'city': city,
+                'neighbourhood': address,
+                'images': arrImage,
+                'Location': location.text,
+                'description': description.text,
+                'category': type1,
+                /*'hasValetServiced': hasValetServiced,
+              'WeekdaysWorkingHr': weekdaysWorkingHr,
+              'WeekendsWorkingHr': weekendsWorkingHr,
+              'longitude': longitude,
+              'latitude': latitude,
+
               'hasCinema': hasCinema, // Add attributes specific to malls
               'hasIndoorAmusementPark': hasIndoorAmusementPark,
               'hasFoodCourt': hasFoodCourt,
               'isOutdoor': isOutdoor,*/
 
 
-
-
-            });
-            await FirebaseFirestore.instance.collection('users').doc(userId).update({
-              "ArrayOfPlaces": FieldValue.arrayUnion([place_id])
-            });
-
+              });
+              await FirebaseFirestore.instance.collection('users')
+                  .doc(userId)
+                  .update({
+                "ArrayOfPlaces": FieldValue.arrayUnion([place_id])
+              });
+            }
             // Show the toast message
             Fluttertoast.showToast(
               msg: "تم إرسال طلب الإضافة بنجاح",
@@ -422,6 +506,11 @@ class CustomFormState extends State<CustomForm> {
                   ),
                 ],
               ),
+              SizedBox(
+                height: 30,
+              ),
+
+
 
               // City
               Container(
@@ -641,6 +730,259 @@ class CustomFormState extends State<CustomForm> {
                   ),
                 ],
               ),
+              //////////////////////////////////////////////////////rest/////////////////////////////////
+              if (type == 2) // Check if the type is for مطاعم
+                Column(
+                  children: [
+                    // Add the DropdownButtonFormField for 'cuisine'
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(top: 10, left: 10),
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.all(Radius.circular(10)),
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.grey.shade300,
+                              width: 2,
+                            ),
+                          ),
+                          height: 50,
+                          width: 150,
+                          child: DropdownButtonFormField<String>(
+                            decoration: const InputDecoration(
+                              isDense: true,
+                              border: InputBorder.none,
+                              contentPadding: EdgeInsets.only(left: 8),
+                              hintText: 'اختر نوع الطعام',
+                            ),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                cuisine.add(newValue!); // Add the selected cuisine to the list
+                              });
+                            },
+                            items: cuisineOptions.map((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(value, style: TextStyle(fontSize: 16.0, fontFamily: 'Tajawal-m')),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            ':نوع الطعام',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              fontFamily: "Tajawal-b",
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(top: 10, left: 10),
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.all(Radius.circular(10)),
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.grey.shade300,
+                              width: 2,
+                            ),
+                          ),
+                          height: 50,
+                          width: 150,
+                          child: DropdownButtonFormField<String>(
+                            decoration: const InputDecoration(
+                              isDense: true,
+                              border: InputBorder.none,
+                              contentPadding: EdgeInsets.only(left: 8),
+                              hintText: 'اختر نطاق الأسعار',
+                            ),
+                            value: priceRange,
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                priceRange = newValue!;
+                              });
+                            },
+                            items: ['غالي', 'متوسط', 'منخفض'].map((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(value, style: TextStyle(fontSize: 16.0, fontFamily: 'Tajawal-m')),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            ':نطاق الأسعار',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              fontFamily: "Tajawal-b",
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+
+
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            ':الوجبات المقدمة',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              fontFamily: "Tajawal-b",
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Column(
+                          children: servesOptions.map((serve) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 1.0), // Adjust the right padding as desired
+                                  child: Text(serve, style: TextStyle(fontSize: 16.0, fontFamily: 'Tajawal-m')),
+                                ),
+                                Checkbox(
+                                  value: serves.contains(serve),
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      if (value != null && value) {
+                                        serves.add(serve);
+                                      } else {
+                                        serves.remove(serve);
+                                      }
+                                    });
+                                  },
+                                ),
+                              ],
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+
+// Add the CheckBoxes for 'atmosphere'
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            ':الجو العام',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              fontFamily: "Tajawal-b",
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Column(
+                          children: atmosphereOptions.map((atmosphereOption) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(atmosphereOption, style: TextStyle(fontSize: 16.0, fontFamily: 'Tajawal-m')),
+                                Checkbox(
+                                  value: atmosphere.contains(atmosphereOption),
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      if (value == true) {
+                                        atmosphere.add(atmosphereOption);
+                                      } else {
+                                        atmosphere.remove(atmosphereOption);
+                                      }
+                                    });
+                                  },
+                                ),
+                              ],
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+// Add Switch for 'hasReservation'
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            'هل يتطلب حجز؟',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              fontFamily: "Tajawal-b",
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text('نعم', style: TextStyle(fontSize: 16.0, fontFamily: 'Tajawal-m')),
+                            Radio(
+                              value: true,
+                              groupValue: hasReservation,
+                              onChanged: (value) {
+                                setState(() {
+                                  hasReservation = value;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text('لا', style: TextStyle(fontSize: 16.0, fontFamily: 'Tajawal-m')),
+                            Radio(
+                              value: false,
+                              groupValue: hasReservation,
+                              onChanged: (value) {
+                                setState(() {
+                                  hasReservation = value;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    )
+
+
+
+
+                  ],
+                ),
+
+
+
+
+
               // Upload images
               Padding(
                   padding: const EdgeInsets.only(top: 50.0 ), // Adjust the top padding as needed
@@ -736,6 +1078,7 @@ class CustomFormState extends State<CustomForm> {
                       ),
                     ),
                   )),
+
               Container(
                 margin: const EdgeInsets.all(20),
               ),

@@ -1,22 +1,16 @@
-/*import 'placePage.dart';
-
 class Restaurant {
   final String cuisine;
   final String priceRange;
   final String serves;
   final String atmosphere;
-  final bool hasReservation;
-  final bool allowChildren;
-  final placePage place;
+  final bool? hasReservation; // Change to bool?
 
   Restaurant({
     required this.cuisine,
     required this.priceRange,
     required this.serves,
     required this.atmosphere,
-    required this.hasReservation,
-    required this.allowChildren,
-    required this.place,
+    this.hasReservation, // Update the parameter type
   });
 
   Map<String, dynamic> toMap() {
@@ -25,9 +19,7 @@ class Restaurant {
       'priceRange': priceRange,
       'serves': serves,
       'atmosphere': atmosphere,
-      'hasReservation': hasReservation,
-      'allowChildren': allowChildren,
-      'place': place.toMap(),
+      'hasReservation': hasReservation, // Update the property type
     };
   }
 
@@ -37,9 +29,8 @@ class Restaurant {
       priceRange: map['priceRange'] ?? '',
       serves: map['serves'] ?? '',
       atmosphere: map['atmosphere'] ?? '',
-      hasReservation: map['hasReservation'] ?? false,
-      allowChildren: map['allowChildren'] ?? false,
-      place: placePage.fromMap(map),
+      hasReservation: map['hasReservation'],
     );
   }
-}*/
+}
+
