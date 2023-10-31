@@ -1284,7 +1284,9 @@ class CustomFormState extends State<CustomForm> {
     ),
 
                   if (type == 3)
-                    SizedBox(height: 20),
+    Column(
+    children: [
+    const SizedBox(height: 20),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -1567,35 +1569,8 @@ class CustomFormState extends State<CustomForm> {
                       ),
                     ],
                   ),
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+],
+    ),
 
                   // Upload images
     Padding(
