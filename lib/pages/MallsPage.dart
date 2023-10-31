@@ -1,26 +1,29 @@
-/*import 'placePage.dart';
+import 'placePage.dart';
 
 class Mall {
   final bool hasCinema;
-  final bool hasIndoorAmusementPark;
+  final bool hasPlayArea;
   final bool hasFoodCourt;
-  final bool isOutdoor;
+  final bool hasSupermarket;
+  final bool INorOUT;
   final placePage place;
 
   Mall({
     required this.hasCinema,
-    required this.hasIndoorAmusementPark,
+    required this.hasPlayArea,
     required this.hasFoodCourt,
-    required this.isOutdoor,
+    required this.hasSupermarket,
+    required this.INorOUT,
     required this.place,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'hasCinema': hasCinema,
-      'hasIndoorAmusementPark': hasIndoorAmusementPark,
+      'hasPlayArea': hasPlayArea,
       'hasFoodCourt': hasFoodCourt,
-      'isOutdoor': isOutdoor,
+      'hasSupermarket' : hasSupermarket,
+      'INorOUT': INorOUT,
       'place': place.toMap(),
     };
   }
@@ -28,12 +31,13 @@ class Mall {
   factory Mall.fromMap(Map<String, dynamic> map) {
     return Mall(
       hasCinema: map['hasCinema'] ?? false,
-      hasIndoorAmusementPark: map['hasIndoorAmusementPark'] ?? false,
+      hasPlayArea: map['hasPlayArea'] ?? false,
       hasFoodCourt: map['hasFoodCourt'] ?? false,
-      isOutdoor: map['isOutdoor'] ?? false,
+      hasSupermarket: map['hasSupermarket'] ?? false,
+      INorOUT: map['INorOUT'] ?? false,
       place: placePage.fromMap(map),
     );
   }
 }
-*/
+
 
