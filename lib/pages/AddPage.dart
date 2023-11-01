@@ -129,11 +129,11 @@ class CustomFormState extends State<CustomForm> {
   final description = TextEditingController();
   final placeName = TextEditingController();
   final GlobalKey<FormFieldState> _AddressKey = GlobalKey<FormFieldState>();
-  bool hasValet = false;
-  String weekdaysWorkingHr = '';
-  String weekendsWorkingHr = '';
-  String longitude = '';
-  String latitude = '';
+  bool? hasValetServiced ;
+ // String weekdaysWorkingHr = '';
+  //String weekendsWorkingHr = '';
+  //String longitude = '';
+ // String latitude = '';
 
 
   //for rest
@@ -173,6 +173,91 @@ class CustomFormState extends State<CustomForm> {
   bool? hasPlayArea;
   bool? hasFoodCourt;
   bool? hasSupermarket;
+  Future<void> _showWorkingHoursDialog() async {
+    List<Map<String, String?>> workingHoursList = [
+      {
+        'الأحد': 'مغلق',
+        'الإثنين': 'مغلق',
+        'الثلاثاء': 'مغلق',
+        'الأربعاء': 'مغلق',
+        'الخميس': 'مغلق',
+        'الجمعة': 'مغلق',
+        'السبت': 'مغلق',
+      }
+    ];
+
+    List<String> hoursOptions = [
+      'مغلق',
+      'مفتوح 24 ساعة',
+      'من 5 صباحًا إلى 5 مساءً',
+      'من 8 صباحًا إلى 6 مساءً',
+      'من 10 صباحًا إلى 7 مساءً',
+    ];
+
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text('إضافة ساعات العمل'),
+              content: Container(
+                width: double.maxFinite,
+                height: 400, // Adjust the height as needed
+                child: ListView.builder(
+                  itemCount: workingHoursList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Column(
+                      children: [
+                        for (var day in workingHoursList[index].keys)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(day),
+                              DropdownButton<String>(
+                                value: workingHoursList[index][day],
+                                items: hoursOptions.map((value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    workingHoursList[index][day] = value;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        SizedBox(height: 10),
+                      ],
+                    );
+                  },
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('إلغاء'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    // Handle the selected working hours as needed
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('حفظ'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
 
 
 
@@ -287,11 +372,11 @@ class CustomFormState extends State<CustomForm> {
               'Location': location.text,
               'description': description.text,
               'category': type1,
-              'hasValet': hasValet,
-              'WeekdaysWorkingHr': weekdaysWorkingHr,
-              'WeekendsWorkingHr': weekendsWorkingHr,
-              'longitude': longitude,
-              'latitude': latitude,
+              'hasValetServiced': hasValetServiced,
+              //'WeekdaysWorkingHr': weekdaysWorkingHr,
+            //  'WeekendsWorkingHr': weekendsWorkingHr,
+              //'longitude': longitude,
+             // 'latitude': latitude,
               'isTemporary': isTemporary, // Add attributes specific to Entertainment
               'startDate': startDate,
               'finishDate': finishDate,
@@ -318,11 +403,11 @@ class CustomFormState extends State<CustomForm> {
                 'Location': location.text,
                 'description': description.text,
                 'category': type1,
-                'hasValet': hasValet,
-                'WeekdaysWorkingHr': weekdaysWorkingHr,
-                'WeekendsWorkingHr': weekendsWorkingHr,
-                'longitude': longitude,
-                'latitude': latitude,
+                'hasValetServiced': hasValetServiced,
+              //  'WeekdaysWorkingHr': weekdaysWorkingHr,
+              //  'WeekendsWorkingHr': weekendsWorkingHr,
+               // 'longitude': longitude,
+               // 'latitude': latitude,
                 'cuisine': cuisine, // Add attributes specific to restaurants
                 'priceRange': priceRange,
                 'serves': serves,
@@ -351,11 +436,11 @@ class CustomFormState extends State<CustomForm> {
                 'Location': location.text,
                 'description': description.text,
                 'category': type1,
-                'hasValet': hasValet,
-              'WeekdaysWorkingHr': weekdaysWorkingHr,
-              'WeekendsWorkingHr': weekendsWorkingHr,
-              'longitude': longitude,
-              'latitude': latitude,
+                'hasValetServiced': hasValetServiced,
+             // 'WeekdaysWorkingHr': weekdaysWorkingHr,
+              //'WeekendsWorkingHr': weekendsWorkingHr,
+             // 'longitude': longitude,
+             // 'latitude': latitude,
               'hasCinema': hasCinema,
               'INorOUT': INorOUT,
               'hasFoodCourt': hasFoodCourt,
@@ -484,6 +569,7 @@ class CustomFormState extends State<CustomForm> {
                   ),
                 ],
               ),
+
 
               // Add more widgets here
               Row(
@@ -762,9 +848,84 @@ class CustomFormState extends State<CustomForm> {
                   ),
                 ],
               ),
+              /////////////////////////////////new attr////////////////////////////////////////////////
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          'هل توجد خدمة ركن السيارات؟',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontFamily: "Tajawal-b",
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text('نعم', style: TextStyle(fontSize: 16.0, fontFamily: 'Tajawal-m')),
+                          Radio(
+                            value: true,
+                            groupValue: hasValetServiced,
+                            onChanged: (value) {
+                              setState(() {
+                                hasValetServiced = value!;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text('لا', style: TextStyle(fontSize: 16.0, fontFamily: 'Tajawal-m')),
+                          Radio(
+                            value: false,
+                            groupValue: hasValetServiced,
+                            onChanged: (value) {
+                              setState(() {
+                                hasValetServiced = value!;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          'اختر ساعات العمل ',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontFamily: "Tajawal-b",
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      ElevatedButton(
+                        onPressed: () {
+                          _showWorkingHoursDialog();
+                        },
+                        child: Text('اختيار ساعات العمل'),
+                      ),
+                      // Display selected working hours for weekdays
+                     // Text('ساعات العمل في أيام الأسبوع: $weekdaysWorkingHr'),
+
+                    ],
+                  ),
 
 
-              Row(
+
+
+
+                  Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Expanded(
@@ -862,16 +1023,7 @@ class CustomFormState extends State<CustomForm> {
       Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-      const Align(
-      alignment: Alignment.centerRight,
-      child: Text(
-      'هل الفعالية مؤقتة؟',
-      style: TextStyle(
-      fontSize: 20.0,
-      fontFamily: "Tajawal-b",
-      ),
-      ),
-      ),
+
       SizedBox(height: 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -879,96 +1031,107 @@ class CustomFormState extends State<CustomForm> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Row(
+                const Text(
+                  'هل الفعالية مؤقتة؟',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontFamily: 'Tajawal-b',
+                  ),
+                ),
+                SizedBox(height: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    const Text(
-                      'نعم',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontFamily: 'Tajawal-m',
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          'نعم',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontFamily: 'Tajawal-m',
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(left: 10),
+                          child: Radio<bool>(
+                            value: true,
+                            groupValue: isTemporary,
+                            onChanged: (value) {
+                              setState(() {
+                                isTemporary = value;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                    Container( // Add a container for the radio button with margin
-                      margin: const EdgeInsets.only(left: 10),
-                      child: Radio<bool>(
-                        value: true,
-                        groupValue: isTemporary,
-                        onChanged: (value) {
-                          setState(() {
-                            isTemporary = value;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Text(
-                      'لا',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontFamily: 'Tajawal-m',
-                      ),
-                    ),
-                    Container( // Add a container for the radio button with margin
-                      margin: const EdgeInsets.only(left: 10),
-                      child: Radio<bool>(
-                        value: false,
-                        groupValue: isTemporary,
-                        onChanged: (value) {
-                          setState(() {
-                            isTemporary = value;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                  ],
-                ),
+                    Visibility(
+                      visible: isTemporary == true,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround, // Align buttons horizontally
+                        children: [
+                          Column(
+                            children: [
+                              Text(
+                                finishDate ?? 'تاريخ النهاية غير محدد',
+                                style: TextStyle(fontSize: 16.0, fontFamily: 'Tajawal-m'),
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(primary: Color(0xFF6db881)),
+                                onPressed: () => _selectFinishDate(context),
+                                child: Text('اختر تاريخ النهاية'),
+                              ),
 
-            Visibility(
-              visible: isTemporary == true,
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            startDate ?? 'اختر تاريخ البداية',
-                            style: TextStyle(fontSize: 16.0, fontFamily: 'Tajawal-m'),
+                            ],
                           ),
-                          ElevatedButton(
-                            onPressed: () => _selectStartDate(context),
-                            child: Text('اختر تاريخ البداية'),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            finishDate ?? 'اختر تاريخ النهاية',
-                            style: TextStyle(fontSize: 16.0, fontFamily: 'Tajawal-m'),
-                          ),
-                          ElevatedButton(
-                            onPressed: () => _selectFinishDate(context),
-                            child: Text('اختر تاريخ النهاية'),
+                          SizedBox(width: 10),
+                          Column(
+                            children: [
+                              Text(
+                                startDate ?? 'تاريخ البداية غير محدد',
+                                style: TextStyle(fontSize: 16.0, fontFamily: 'Tajawal-m'),
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(primary: Color(0xFF6db881)),
+                                onPressed: () => _selectStartDate(context),
+                                child: Text('اختر تاريخ البداية'),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          'لا',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontFamily: 'Tajawal-m',
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(left: 10),
+                          child: Radio<bool>(
+                            value: false,
+                            groupValue: isTemporary,
+                            onChanged: (value) {
+                              setState(() {
+                                isTemporary = value;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            )
+
+
+
+
 
 
 
@@ -985,7 +1148,7 @@ class CustomFormState extends State<CustomForm> {
             Align(
               alignment: Alignment.centerRight,
               child: Text(
-                'هل توجد خدمة ركن السيارات؟',
+                'هل هو مكان خارجي ؟',
                 style: TextStyle(
                   fontSize: 20.0,
                   fontFamily: "Tajawal-b",
@@ -999,10 +1162,10 @@ class CustomFormState extends State<CustomForm> {
                 Text('نعم', style: TextStyle(fontSize: 16.0, fontFamily: 'Tajawal-m')),
                 Radio(
                   value: true,
-                  groupValue: hasValet,
+                  groupValue: INorOUT,
                   onChanged: (value) {
                     setState(() {
-                      hasValet = value!;
+                      hasValetServiced = INorOUT!;
                     });
                   },
                 ),
@@ -1014,10 +1177,10 @@ class CustomFormState extends State<CustomForm> {
                 Text('لا', style: TextStyle(fontSize: 16.0, fontFamily: 'Tajawal-m')),
                 Radio(
                   value: false,
-                  groupValue: hasValet,
+                  groupValue: INorOUT,
                   onChanged: (value) {
                     setState(() {
-                      hasValet = value!;
+                      INorOUT = value!;
                     });
                   },
                 ),
@@ -1523,52 +1686,7 @@ class CustomFormState extends State<CustomForm> {
                   ),
 
                   SizedBox(height: 20),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          'هل توجد خدمة ركن السيارات؟',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontFamily: "Tajawal-b",
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text('نعم', style: TextStyle(fontSize: 16.0, fontFamily: 'Tajawal-m')),
-                          Radio(
-                            value: true,
-                            groupValue: hasValet,
-                            onChanged: (value) {
-                              setState(() {
-                                hasValet = value!;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text('لا', style: TextStyle(fontSize: 16.0, fontFamily: 'Tajawal-m')),
-                          Radio(
-                            value: false,
-                            groupValue: hasValet,
-                            onChanged: (value) {
-                              setState(() {
-                                hasValet = value!;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+
 ],
     ),
 

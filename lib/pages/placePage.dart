@@ -9,7 +9,7 @@ class placePage {
   List<String> images;
   String description;
   String Location;
- /* bool hasValetServiced;
+  /*bool hasValetServiced;
   String WeekdaysWorkingHr;
   String WeekendsWorkingHr;
   String longitude;
@@ -25,8 +25,8 @@ class placePage {
     required this.neighbourhood,
     required this.images,
     required this.description,
-    required this.Location,/*
-    required this.hasValetServiced,
+    required this.Location,
+   /* required this.hasValetServiced,
     required this.WeekdaysWorkingHr,
     required this.WeekendsWorkingHr,
     required this.longitude,
@@ -44,8 +44,8 @@ class placePage {
       'neighborhood': neighbourhood,
       'images': images,
       'description': description,
-      'Location': Location,/*
-      'ValetServiced':hasValetServiced,
+      'Location': Location,
+     /* 'ValetServiced':hasValetServiced,
       'WeekdaysWorkingHr':WeekdaysWorkingHr,
       'WeekendsWorkingHr':WeekendsWorkingHr,
       'longitude':longitude,
