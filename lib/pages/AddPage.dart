@@ -123,9 +123,8 @@ class CustomForm extends StatefulWidget {
 
 class CustomFormState extends State<CustomForm> {
   final _formKey = GlobalKey<FormState>();
-  int type = 1;
-  String type1 = 'أماكن سياحية';
-
+  int type = 0;
+  String? type1;
   String place_id = '';
   String city = "الرياض";
   String? address;
@@ -440,7 +439,7 @@ class CustomFormState extends State<CustomForm> {
                 HomePageState.isDownloadedData = false;
               });
             }
-            if (type1 == 'مطاعم') {
+           else if (type1 == 'مطاعم') {
               await FirebaseFirestore.instance
                   .collection('PendingPlaces')
                   .doc(place_id)
@@ -477,7 +476,7 @@ class CustomFormState extends State<CustomForm> {
                 HomePageState.isDownloadedData = false;
               });
             }
-            if (type1 == 'مراكز تسوق') {
+            else if (type1 == 'مراكز تسوق') {
               await FirebaseFirestore.instance
                   .collection('PendingPlaces')
                   .doc(place_id)
@@ -511,6 +510,24 @@ class CustomFormState extends State<CustomForm> {
               });
               setState(() {
                 HomePageState.isDownloadedData = false;
+              });
+            }else if (type1 ==null){
+              // If no category is selected, you can set a default display attribute here
+
+              await FirebaseFirestore.instance.collection('PendingPlaces').doc(
+                  place_id).set({
+                'place_id': place_id,
+                'User_id': userId,
+                'placeName': placeName.text,
+                'city': city,
+                'neighbourhood': address,
+                'images': arrImage,
+                'Location': location.text,
+                'description': description.text,
+                'category': type1,
+                'hasValetServiced': hasValetServiced,
+                'latitude': position.latitude,
+                'longitude': position.longitude,
               });
             }
             // Show the toast message
