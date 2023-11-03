@@ -9,11 +9,7 @@ class placePage {
   List<String> images;
   String description;
   String Location;
-  /*bool hasValetServiced;
-  String WeekdaysWorkingHr;
-  String WeekendsWorkingHr;
-  String longitude;
-  String latitude;*/
+  bool? allowChildren; // New attribute
 
   placePage({
     required this.place_id,
@@ -26,11 +22,7 @@ class placePage {
     required this.images,
     required this.description,
     required this.Location,
-   /* required this.hasValetServiced,
-    required this.WeekdaysWorkingHr,
-    required this.WeekendsWorkingHr,
-    required this.longitude,
-    required this.latitude,*/
+    this.allowChildren, // Include the new attribute
   });
 
   Map<String, dynamic> toMap() {
@@ -45,32 +37,26 @@ class placePage {
       'images': images,
       'description': description,
       'Location': Location,
-     /* 'ValetServiced':hasValetServiced,
-      'WeekdaysWorkingHr':WeekdaysWorkingHr,
-      'WeekendsWorkingHr':WeekendsWorkingHr,
-      'longitude':longitude,
-      'latitude':latitude,*/
-
+      'allowChildren': allowChildren, // Include the new attribute
     };
   }
 
   factory placePage.fromMap(Map<String, dynamic> map) {
     return placePage(
-        place_id: map['place_id'] ?? '',
-        userId: map['userId'] ?? '',
-        placeName: map['placeName'] ?? '',
-        category: map['category'] ?? '',
-        type1: map['type1'] ?? '',
-        city: map['city'] ?? '',
+      place_id: map['place_id'] ?? '',
+      userId: map['userId'] ?? '',
+      placeName: map['placeName'] ?? '',
+      category: map['category'] ?? '',
+      type1: map['type1'] ?? '',
+      city: map['city'] ?? '',
       neighbourhood: map['neighbourhood'] ?? '',
-        images: List<String>.from(map['images']),
-        Location: map['Location'] ?? '',
-        description: map['description'] ?? '',/*
-      hasValetServiced: map['hasValetServiced'],
-      WeekdaysWorkingHr: map['WeekdaysWorkingHr'],
-      WeekendsWorkingHr: map['WeekendsWorkingHr'],
-      longitude: map['longitude'],
-      latitude: map['latitude'],*/
-       );
-   }
+      images: List<String>.from(map['images']),
+      Location: map['Location'] ?? '',
+      description: map['description'] ?? '',
+      allowChildren: map['allowChildren'], // Parse the new attribute
+    );
+  }
 }
+
+
+

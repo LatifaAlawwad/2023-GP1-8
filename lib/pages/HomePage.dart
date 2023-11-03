@@ -6,6 +6,7 @@ import 'placeDetailsPage.dart';
 import 'AddPage.dart';
 import 'neighbourhood.dart';
 
+
 class HomePage extends StatefulWidget {
   final String cityName;
 
@@ -32,11 +33,12 @@ class HomePageState extends State<HomePage> {
   List<placePage> attractions = [];
   List<placePage> restaurants = [];
   List<placePage> malls = [];
-  bool isDownloadedData = false;
+ static bool isDownloadedData = false;
   String name = '';
   String selectedCategory = 'الكل';
 
   List<placePage> searchResults = [];
+
 
   @override
   void initState() {

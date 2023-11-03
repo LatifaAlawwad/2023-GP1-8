@@ -3,14 +3,16 @@ class Restaurant {
   final String priceRange;
   final String serves;
   final String atmosphere;
-  final bool? hasReservation; // Change to bool?
+  final bool? hasReservation;
+  final bool? allowChildren;  // Change to bool?
 
   Restaurant({
     required this.cuisine,
     required this.priceRange,
     required this.serves,
     required this.atmosphere,
-    this.hasReservation, // Update the parameter type
+    this.hasReservation,
+    this.allowChildren// Update the parameter type
   });
 
   Map<String, dynamic> toMap() {
@@ -19,7 +21,8 @@ class Restaurant {
       'priceRange': priceRange,
       'serves': serves,
       'atmosphere': atmosphere,
-      'hasReservation': hasReservation, // Update the property type
+      'hasReservation': hasReservation,
+      'allowChildren':allowChildren,// Update the property type
     };
   }
 
@@ -30,6 +33,7 @@ class Restaurant {
       serves: map['serves'] ?? '',
       atmosphere: map['atmosphere'] ?? '',
       hasReservation: map['hasReservation'],
+        allowChildren:map['allowChildren'],
     );
   }
 }

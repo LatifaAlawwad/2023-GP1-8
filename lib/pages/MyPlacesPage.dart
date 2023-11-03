@@ -6,10 +6,9 @@ import 'placePage.dart';
 import 'placeDetailsPage.dart';
 import 'UserProfilePage.dart';
 
-
 class myPlacesPage extends StatefulWidget {
-  const myPlacesPage({Key? key}) : super(key: key);
-
+   String? selectedCategory;
+   myPlacesPage({selectedCategory,Key? key}) : super(key: key);
   @override
   State<myPlacesPage> createState() => _myPlacesPage();
 }
@@ -21,7 +20,7 @@ class _myPlacesPage extends State<myPlacesPage> {
   List<dynamic> userData = [];
   bool isDownloadedData = false;
   String name = '';
-  String selectedCategory = 'طلبات معتمدة';
+  String selectedCategory = 'طلبات بانتظار الاعتماد ';
 
   List<placePage> searchResults = [];
 
