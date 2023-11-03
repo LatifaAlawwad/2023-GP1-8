@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../Registration/logIn.dart';
 
+
 class editUserProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

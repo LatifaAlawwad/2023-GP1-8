@@ -6,8 +6,11 @@ import 'package:gp/Registration/Welcome.dart';
 import 'package:gp/Registration/SignUp.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:gp/Registration/logIn.dart';
+import 'package:gp/pages/MapPage.dart';
 import 'package:gp/pages/NavigationBarPage.dart';
 import 'package:gp/pages/citiesPage.dart';
+
+import 'MapView.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +32,7 @@ class MyApp extends StatelessWidget {
         '/RessetPassword': (context) => RessetPassword(),
         '/citiesPage': (context) => CitiesPage(),
         // Use 'CitiesPage' here and pass 'selectedCity' as needed
+        '/MapPage': (context) => MapSample(),
 
         '/NavigationBarPage': (context) {
           String selectedCity ='';

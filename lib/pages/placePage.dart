@@ -22,7 +22,7 @@ class placePage {
     required this.images,
     required this.description,
     required this.Location,
-    this.allowChildren, // Include the new attribute
+  // Include the new attribute
   });
 
   Map<String, dynamic> toMap() {
@@ -53,7 +53,7 @@ class placePage {
       images: List<String>.from(map['images']),
       Location: map['Location'] ?? '',
       description: map['description'] ?? '',
-      allowChildren: map['allowChildren'], // Parse the new attribute
+     // Parse the new attribute
     );
   }
 }

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../MapView.dart';
 import 'FavoritePage.dart';
 import 'HomePage.dart';
 import 'addpage.dart';
 import 'UserProfilePage.dart';
 import '../Registration/logIn.dart';
+import 'MapPage.dart';
 
 class NavigationBarPage extends StatefulWidget {
    final String selectedCity; // Add selectedCity property
@@ -103,7 +105,7 @@ class _NavigationBarPageState extends State<NavigationBarPage> {
       case 0:
         return HomePage(cityName: widget.selectedCity, cityId: 3);
       case 1:
-        return Container(); // Replace with your actual map page.
+        return MapSample(); // Replace with your actual map page.
       case 2:
         return FavoritePage();
       case 3:
