@@ -1,14 +1,17 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+
 import 'placePage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'HomePage.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
-
+import 'ReviewPage.dart';
 import 'dart:convert';
 
 
@@ -28,16 +31,13 @@ class _placeDetailsState extends State<placeDetailsPage> {
   String url = '';
   var data;
   List<dynamic> output = [];
-
   late String id;
-
-
-
-
   final ScrollController _scrollController = ScrollController();
   double thumbWidth = 0.0;
   double thumbPosition = 0.0;
 
+//final ReviewService _reviewService = ReviewService();
+  List<Review> reviews = [];
   @override
   void initState() {
     super.initState();
@@ -52,7 +52,11 @@ class _placeDetailsState extends State<placeDetailsPage> {
             (_scrollController.position.viewportDimension - thumbWidth);
       });
     });
+
+
   }
+
+
 
 
 
@@ -257,10 +261,13 @@ class _placeDetailsState extends State<placeDetailsPage> {
                           ),
                         ),
 
+
+
+
                         Padding(
                           padding: EdgeInsets.only(left: 225, bottom: 16),
                           child: Text(
-                            "المزيد من الصور",
+                             "المزيد من الصور",
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -325,6 +332,7 @@ class _placeDetailsState extends State<placeDetailsPage> {
 
 
 
+                        SizedBox(height: 10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
@@ -360,30 +368,366 @@ class _placeDetailsState extends State<placeDetailsPage> {
                   ),
                 ),
 
+    ],
+    ),
 
 
 
 
+
+
+
+     SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              height: 40, // Set the desired height for the button container
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  showReviewDialog(context, widget.place.place_id);
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(Colors.white),
+                                  side: MaterialStateProperty.all(
+                                    BorderSide(color: const Color(0xFF6db881), width: 1.0),
+                                  ),
+                                  padding: MaterialStateProperty.all(
+                                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5), // Smaller padding
+                                  ),
+                                  shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15), // Smaller border radius
+                                    ),
+                                  ),
+                                ),
+                                child: Text(
+                                  'قيّم وشارك تجربتك',
+                                  style: TextStyle(
+                                    fontSize: 16.0, // Smaller font size
+                                    fontFamily: "Tajawal-m",
+                                    color: const Color(0xFF6db881),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(right: 49, left: 10),
+                              height: 40, // Set the desired height for the "التعليقات" text container
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'التعليقات',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: "Tajawal-m",
+                                  ),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
 
 
+                    StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('ApprovedPlaces')
+                          .doc(widget.place.place_id)
+                          .collection('Reviews')
+                          .orderBy('timestamp', descending: true)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+
+                        return ListView(
+                          shrinkWrap: true,
+                          children: snapshot.data!.docs.map((doc) {
+                            final commentData = doc.data() as Map<String, dynamic>;
+
+                            final text = commentData["comment"] ?? ""; // Handle null comment
+                            final rating = commentData["rating"] ?? 0.0; // Handle null rating
+                            final time = formatDate(commentData["timestamp"]);
+                            final username =commentData["userName"];// Handle null username
+
+                            return Comment(
+                              text: text,
+                              rating: rating.toDouble(), // Ensure rating is double
+                              time: time,
+                              username: username,
+                            );
+                          }).toList(),
+                        );
+                      },
+                    ),
 
 
-                      ],
+                    ]
+    ),
+    )
+                )
+              )
+            )
+      ]
+        )
+    )
+    );
+  }
+
+String formatDate(Timestamp time){
+DateTime datatime = time.toDate();
+String year=datatime.year.toString();
+String month=datatime.month.toString();
+String day=datatime.day.toString();
+String formattedData= '$day/$month/$year';
+return formattedData;
+}
+
+
+  String getuserId() {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+    var cpuid = user!.uid;
+    return cpuid;
+  }
+
+
+
+
+  showReviewDialog(BuildContext context,String placeid) async {
+    double rating = 0.0; // Variable to store the user's rating
+    String reviewText = ''; // Variable to store the user's review
+    String userid = getuserId();
+    String username;
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    DocumentSnapshot documentSnapshot = await firestore.collection('users').doc(userid).get();
+    if (documentSnapshot.exists) {
+       username = documentSnapshot.get('name'); // Replace 'name' with the actual field name
+      }else username = "anonymous";
+;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(32.0)),
+          ),
+          contentPadding: EdgeInsets.only(top: 10.0),
+          content: Container(
+            width: 300.0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                // Header
+               Center(
+                 child: Text(
+                  "شارك تجربتك",
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontFamily: "Tajawal-m",
+                  ),
+                  textDirection: TextDirection.rtl,
+                // Right-to-left text direction
+                ),),
+                SizedBox(height: 20.0),
+                // Rating Bar and Text
+                Container(
+                  height: 50.0, // Set the desired height for the RatingBar and text
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      RatingBar.builder(
+                        initialRating: 0,
+                        minRating: 1,
+                        direction: Axis.horizontal,
+                        allowHalfRating: false,
+                        itemCount: 5,
+                        itemSize: 30.0,
+                        itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                        unratedColor: const Color.fromARGB(255, 109, 184, 129),
+                        itemBuilder: (context, index) {
+                          if (index < rating) {
+                            return Icon(
+                              Icons.star,
+                              color: const Color.fromARGB(255, 109, 184, 129), // Filled star
+                              size: 30.0,
+                            );
+                          } else {
+                            return Icon(
+                              Icons.star_border,
+                              color: const Color.fromARGB(255, 109, 184, 129), // Outlined star with the same color
+                              size: 30.0,
+                            );
+                          }
+                        },
+                        onRatingUpdate: (newRating) {
+                          rating = newRating;
+                        },
+                      ),
+                      SizedBox(width: 1.0), // Add spacing between the RatingBar and the text
+                      Text(
+                        "قيّم تجربتك",
+                        style: TextStyle(
+                          fontFamily: "Tajawal-m",
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Text Field with Top Border and Radius
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20.0),
+                      topRight: Radius.circular(20.0),
+                    ),color :Colors.white,
+                    boxShadow: [BoxShadow(blurRadius:5.0,
+                    offset:Offset(0,-1),
+                        color: Colors.grey,
+                    )
+                    ],
+                    border: Border.all(
+                      color:  const Color.fromARGB(255, 109, 184, 129),
+                      width: 1.0,
+                    ),
+
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 30.0, right: 30.0),
+                    child: TextField(
+                      onChanged: (text) {
+                        reviewText = text;
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'اكتب تعليقك هنا...',
+                        hintStyle: TextStyle(
+                          fontFamily: "Tajawal-m",
+                        ),
+                        border: InputBorder.none,
+                      ),
+                      maxLines: 8,
+                      textAlign: TextAlign.right,
                     ),
                   ),
                 ),
-              ),
+
+                // Submit and Cancel Buttons
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      child: InkWell(
+                        child: Container(
+                          padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 109, 184, 129),
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(32.0),
+                            ),
+                          ),
+                          child: Text(
+                            "ارسال",
+                            style: TextStyle(color: Colors.white,   fontFamily: "Tajawal-m",),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        onTap: () async {
+                          // Save the review and rating to the Firestore collection
+                          await _saveReviewToFirebase(reviewText, rating, userid,placeid, username);
+
+                          // Close the dialog
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                    // Adjust the height to change the length
+                    VerticalDivider(
+                        width: 1,  // Width of the vertical line
+                        color: Colors.white,  // Color of the vertical line
+                      ),
+
+                    Expanded(
+                      child: InkWell(
+                        child: Container(
+                          padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 109, 184, 129),
+                            borderRadius: BorderRadius.only(
+                              bottomRight: Radius.circular(32.0),
+                            ),
+                          ),
+                          child: Text(
+                            "إلغاء",
+                            style: TextStyle(color: Colors.white,   fontFamily: "Tajawal-m",),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        onTap: () {
+                          // Close the dialog without saving
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  Future<void> _saveReviewToFirebase(String reviewText,double rating,String userId,String placeid, String username) async {
+    final CollectionReference reviewsCollection = FirebaseFirestore.instance.collection('ApprovedPlaces').doc(placeid).collection('Reviews');
+
+    // Create a new review document with a timestamp
+    reviewsCollection.add({
+      'placeId': placeid,
+      'userId': userId,
+      'userName': username,
+      'text': reviewText,
+      'rating': rating,
+      'timestamp': Timestamp.now(), // Firestore server timestamp
+    }).then((value) {
+      // Review saved successfully
+    }).catchError((error) {
+      // Handle any errors that occur
+      print('Error saving review: $error');
+    });
+  }
+
+
+
 }
 
-Widget PropInfo(IconData iconData, String text, String label) {
+
+
+
+Widget PlaceInfo(IconData iconData, String text, String label) {
   return Column(
     children: [
       Icon(
@@ -476,3 +820,47 @@ class _GalleryWidgetState extends State<GalleryWidget> {
     );
   }
 }
+class Comment extends StatelessWidget {
+
+  final String text;
+  final double rating;
+  final String time;
+  final String username;
+
+  const Comment ({
+  super. key,
+  required this. text,
+  required this. rating,
+  required this. username,
+  required this. time,
+});
+
+
+
+  @override
+  Widget build (BuildContext context) {
+  return Container(
+    decoration: BoxDecoration(
+      color: Colors.grey[300],
+      borderRadius: BorderRadius.circular(4),
+    ),
+    margin:EdgeInsets.only(bottom:5),
+    padding:EdgeInsets.all(15),
+
+    child: Column(
+      crossAxisAlignment:CrossAxisAlignment.start ,
+
+      children:[
+        Text(this.text),
+
+
+      ]
+    ),
+
+
+
+
+  );
+
+
+  }}

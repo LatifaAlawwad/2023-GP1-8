@@ -119,13 +119,7 @@ class Welcome extends StatelessWidget {
                       ),
                     ],
                   )),
-              /* Positioned(
-                  left: 10,
-                  bottom: 0,
-                  child: Image.asset(
-                    "assets/images/House_searching.png",
-                    width: 375,
-                  ))*/
+
             ],
           ),
         ),
