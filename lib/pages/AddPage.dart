@@ -224,68 +224,72 @@ class CustomFormState extends State<CustomForm> {
     await showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text('إضافة ساعات العمل'),
-          content: Container(
-            width: double.maxFinite,
-            height: 400, // Adjust the height as needed
-            child: ListView.builder(
-              itemCount: workingHoursList.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Column(
-                  children: [
-                    for (var day in workingHoursList[index].keys)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(day),
-                          DropdownButton<String>(
-                            value: workingHoursList[index][day] ??
-                                null, // Handle null with a null option
-                            items: hoursOptions.map((value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value ??
-                                    'غير محدد'), // Display "غير محدد" for null values
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                workingHoursList[index][day] = value ??
-                                    'مغلق'; // Update the selected value
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                    SizedBox(height: 10),
-                  ],
-                );
-              },
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('إلغاء', style: TextStyle(color: Color(0xFF6db881))),
-            ),
-            TextButton(
-              onPressed: () {
-                // Handle the selected working hours as needed
-                Navigator.of(context).pop();
-              },
-              child: Text('حفظ', style: TextStyle(color: Colors.white)),
-              style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all<Color>(Color(0xFF6db881)),
+        return Align(
+          alignment: Alignment.centerLeft,
+          child: AlertDialog(
+            title: Text('إضافة ساعات العمل'),
+            content: Container(
+              width: double.maxFinite,
+              height: 400, // Adjust the height as needed
+              child: ListView.builder(
+                itemCount: workingHoursList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Column(
+                    children: [
+                      for (var day in workingHoursList[index].keys)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(day),
+                            DropdownButton<String>(
+                              value: workingHoursList[index][day] ??
+                                  null, // Handle null with a null option
+                              items: hoursOptions.map((value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value ??
+                                      'غير محدد'), // Display "غير محدد" for null values
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  workingHoursList[index][day] = value ??
+                                      'مغلق'; // Update the selected value
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      SizedBox(height: 10),
+                    ],
+                  );
+                },
               ),
             ),
-          ],
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('إلغاء', style: TextStyle(color: Color(0xFF6db881))),
+              ),
+              TextButton(
+                onPressed: () {
+                  // Handle the selected working hours as needed
+                  Navigator.of(context).pop();
+                },
+                child: Text('حفظ', style: TextStyle(color: Colors.white)),
+                style: ButtonStyle(
+                  backgroundColor:
+                  MaterialStateProperty.all<Color>(Color(0xFF6db881)),
+                ),
+              ),
+            ],
+          ),
         );
       },
     );
+
   }
 
   Future<void> _selectStartDate(BuildContext context) async {
@@ -431,7 +435,7 @@ class CustomFormState extends State<CustomForm> {
                 'city': city,
                 'neighbourhood': address,
                 'images': arrImage,
-                'Location': location.text,
+               // 'Location': location.text,
                 'description': description.text,
                 'category': type1,
                 'hasValetServiced': hasValetServiced,
@@ -467,7 +471,7 @@ class CustomFormState extends State<CustomForm> {
                 'city': city,
                 'neighbourhood': address,
                 'images': arrImage,
-                'Location': location.text,
+              //  'Location': location.text,
                 'description': description.text,
                 'category': type1,
                 'hasValetServiced': hasValetServiced,
@@ -504,7 +508,7 @@ class CustomFormState extends State<CustomForm> {
                 'city': city,
                 'neighbourhood': address,
                 'images': arrImage,
-                'Location': location.text,
+               // 'Location': location.text,
                 'description': description.text,
                 'category': type1,
                 'hasValetServiced': hasValetServiced,
@@ -611,19 +615,34 @@ class CustomFormState extends State<CustomForm> {
                       ),
                     ),
                   ),
-                  const Align(
+                  Align(
                     alignment: Alignment.centerRight,
-                    child: Text(
-                      ':اسم المكان ',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontFamily: "Tajawal-b",
-                      ),
+                    child: Row(
+                      children: [
+                        Text(
+                          ':اسم المكان ',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontFamily: "Tajawal-b",
+
+                          ),
+                        ),
+                        Text(
+                           '*',
+                          style: TextStyle(
+                            color: Colors.red,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
+                  )
+
+
                 ],
               ),
-
+              SizedBox(
+                height: 15,
+              ),
               // Add more widgets here
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -693,18 +712,33 @@ class CustomFormState extends State<CustomForm> {
                       },
                     ),
                   ),
-                  const Text(
-                    'تصنيف المكان: ',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontFamily: "Tajawal-b",
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Row(
+                      children: [
+                        Text(
+                          ':تصنيف المكان ',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontFamily: "Tajawal-b",
+
+                          ),
+                        ),
+                        Text(
+                          '*',
+                          style: TextStyle(
+                            color: Colors.red,
+                          ),
+                        ),
+                      ],
                     ),
-                    textDirection: TextDirection.rtl,
-                  ),
+                  )
+
+
                 ],
               ),
               SizedBox(
-                height: 15,
+                height: 10,
               ),
 
               // City
@@ -770,15 +804,28 @@ class CustomFormState extends State<CustomForm> {
                         margin: const EdgeInsets.only(right: 7),
                       ),
                       const Padding(
-                          padding: EdgeInsets.only(left: 100, right: 50)),
-                      const Text(
-                        'المدينة : ',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontFamily: "Tajawal-b",
+                          padding: EdgeInsets.only(left: 80, right: 50)),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Row(
+                          children: [
+                            Text(
+                              ':المدينة ',
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontFamily: "Tajawal-b",
+
+                              ),
+                            ),
+                            Text(
+                              '*',
+                              style: TextStyle(
+                                color: Colors.red,
+                              ),
+                            ),
+                          ],
                         ),
-                        textDirection: TextDirection.rtl,
-                      ),
+                      )
                     ],
                   ),
                 ),
@@ -832,14 +879,28 @@ class CustomFormState extends State<CustomForm> {
                   Container(
                     margin: const EdgeInsets.all(21),
                   ),
-                  const Padding(padding: EdgeInsets.only(left: 100, right: 50)),
-                  const Text(
-                    ': الحي ',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontFamily: "Tajawal-b",
+                  const Padding(padding: EdgeInsets.only(left: 75, right: 50)),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Row(
+                      children: [
+                        Text(
+                          ':الحي ',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontFamily: "Tajawal-b",
+
+                          ),
+                        ),
+                        Text(
+                          '*',
+                          style: TextStyle(
+                            color: Colors.red,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
+                  )
                 ],
               ),
               SizedBox(
@@ -851,7 +912,7 @@ class CustomFormState extends State<CustomForm> {
                 children: <Widget>[
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 83, right: 25),
+                      padding: const EdgeInsets.only(left: 10, right: 94),
                       child: Directionality(
                         textDirection: TextDirection.rtl,
                         child: Container(
@@ -884,14 +945,25 @@ class CustomFormState extends State<CustomForm> {
                       ),
                     ),
                   ),
-                  const Align(
+
+                  Align(
                     alignment: Alignment.centerRight,
-                    child: Text(
-                      ': وصف المكان',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontFamily: "Tajawal-b",
-                      ),
+                    child: Row(
+                      children: [
+                        Text(
+                          ': وصف المكان ',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontFamily: "Tajawal-b",
+                          ),
+                        ),
+                        Text(
+                          '*',
+                          style: TextStyle(
+                            color: Colors.red,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -899,97 +971,69 @@ class CustomFormState extends State<CustomForm> {
               SizedBox(
                 height: 15,
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      'اختر ساعات العمل ',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontFamily: "Tajawal-b",
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    margin: const EdgeInsets.only(top: 8, left: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      color: Colors.white,
+                      border: Border.all(color: Colors.grey.shade300, width: 1),
+                    ),
+                    width: 150, // Set the width as needed
+                    height: 50,
+                   // Set the height as needed
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _showWorkingHoursDialog(context);
+                      },
+                      child: Text('أضف ساعات العمل'),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF6db881)),
                       ),
                     ),
                   ),
-                  Row(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          _showWorkingHoursDialog(context);
-                        },
-                        child: Text('أضف ساعات العمل'),
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              Color(0xFF6db881)),
+                  SizedBox(width: 85),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Row(
+                      children: [
+                        Text(
+                          ': ساعات العمل ',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontFamily: "Tajawal-b",
+                          ),
                         ),
-                      ),
-                    ],
+                        Text(
+                          '*',
+                          style: TextStyle(
+                            color: Colors.red,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  // Display selected working hours for weekdays
-                  // Text('ساعات العمل في أيام الأسبوع: $weekdaysWorkingHr'),
                 ],
-              ),
+              ), SizedBox(
+          height: 15,
+        ),
+
+
+
+
+              // Display selected working hours for weekdays
+                  // Text('ساعات العمل في أيام الأسبوع: $weekdaysWorkingHr'),
+
 
               /////////////////////////////////new attr////////////////////////////////////////////////
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      'هل توجد خدمة ركن السيارات؟',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontFamily: "Tajawal-b",
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text('نعم',
-                          style: TextStyle(
-                              fontSize: 16.0, fontFamily: 'Tajawal-m')),
-                      Radio(
-                        value: true,
-                        groupValue: hasValetServiced,
-                        onChanged: (value) {
-                          setState(() {
-                            hasValetServiced = value!;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text('لا',
-                          style: TextStyle(
-                              fontSize: 16.0, fontFamily: 'Tajawal-m')),
-                      Radio(
-                        value: false,
-                        groupValue: hasValetServiced,
-                        onChanged: (value) {
-                          setState(() {
-                            hasValetServiced = value!;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 15,
-              ),
+
 
               if (type == 1)
                 Column(
                   children: [
-                    const SizedBox(height: 20),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -1005,7 +1049,7 @@ class CustomFormState extends State<CustomForm> {
                             ),
                           ),
                           height: 50,
-                          width: 180,
+                          width: 154,
                           child: DropdownButtonFormField<String>(
                             style: const TextStyle(
                               fontSize: 16.0,
@@ -1037,15 +1081,27 @@ class CustomFormState extends State<CustomForm> {
                             }).toList(),
                           ),
                         ),
-                        const Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            ':نوع الفعالية',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontFamily: "Tajawal-b",
+
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Row(
+                              children: [
+                                Text(
+                                  ':نوع الفعالية ',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontFamily: "Tajawal-b",
+                                  ),
+                                ),
+                                Text(
+                                  '*',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
+
                         ),
                       ],
                     ),
@@ -1180,14 +1236,29 @@ class CustomFormState extends State<CustomForm> {
                           children: [
                             Align(
                               alignment: Alignment.centerRight,
-                              child: Text(
-                                'هل هو مكان خارجي ؟',
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontFamily: "Tajawal-b",
+                              child: RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: ' هل هو مكان خارجي ؟',
+                                      style: TextStyle(
+                                        fontSize: 20.0,
+                                        fontFamily: "Tajawal-b",
+                                        color: Colors.black, // Set the text color to black
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: ' *',
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
+
+
                             SizedBox(height: 10),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -1280,13 +1351,24 @@ class CustomFormState extends State<CustomForm> {
                         ),
                         Align(
                           alignment: Alignment.centerRight,
-                          child: Text(
-                            ':نوع الطعام',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontFamily: "Tajawal-b",
-                            ),
+                          child: Row(
+                            children: [
+                              Text(
+                                ':نوع الطعام ',
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontFamily: "Tajawal-b",
+                                ),
+                              ),
+                              Text(
+                                '*',
+                                style: TextStyle(
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ],
                           ),
+
                         ),
                       ],
                     ),
@@ -1337,13 +1419,24 @@ class CustomFormState extends State<CustomForm> {
                         ),
                         Align(
                           alignment: Alignment.centerRight,
-                          child: Text(
-                            ':نطاق الأسعار',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontFamily: "Tajawal-b",
-                            ),
+                          child: Row(
+                            children: [
+                              Text(
+                                ':نطاق الأسعار ',
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontFamily: "Tajawal-b",
+                                ),
+                              ),
+                              Text(
+                                '*',
+                                style: TextStyle(
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ],
                           ),
+
                         ),
                       ],
                     ),
@@ -1354,11 +1447,24 @@ class CustomFormState extends State<CustomForm> {
                       children: [
                         Align(
                           alignment: Alignment.centerRight,
-                          child: Text(
-                            ':الوجبات المقدمة',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontFamily: "Tajawal-b",
+                          child: RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: ':الوجبات المقدمة ',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontFamily: "Tajawal-b",
+                                    color: Colors.black, // Set the text color to black
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: ' * ',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -1402,11 +1508,24 @@ class CustomFormState extends State<CustomForm> {
                       children: [
                         Align(
                           alignment: Alignment.centerRight,
-                          child: Text(
-                            ':الجو العام',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontFamily: "Tajawal-b",
+                          child: RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: ':الجو العام ',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontFamily: "Tajawal-b",
+                                    color: Colors.black, // Set the text color to black
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: ' * ',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -1444,11 +1563,24 @@ class CustomFormState extends State<CustomForm> {
                       children: [
                         Align(
                           alignment: Alignment.centerRight,
-                          child: Text(
-                            'هل يتطلب حجز؟',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontFamily: "Tajawal-b",
+                          child: RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: 'هل يتطلب حجز ؟ ',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontFamily: "Tajawal-b",
+                                    color: Colors.black, // Set the text color to black
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: ' * ',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -1552,11 +1684,24 @@ class CustomFormState extends State<CustomForm> {
                       children: [
                         Align(
                           alignment: Alignment.centerRight,
-                          child: Text(
-                            'هل المركز داخلي أم خارجي؟',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontFamily: "Tajawal-b",
+                          child: RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: ':هل المركز داخلي أم خارجي ',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontFamily: "Tajawal-b",
+                                    color: Colors.black, // Set the text color to black
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: '* ',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -1804,6 +1949,59 @@ class CustomFormState extends State<CustomForm> {
                     SizedBox(height: 20),
                   ],
                 ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      'هل توجد خدمة ركن السيارات؟',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontFamily: "Tajawal-b",
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text('نعم',
+                          style: TextStyle(
+                              fontSize: 16.0, fontFamily: 'Tajawal-m')),
+                      Radio(
+                        value: true,
+                        groupValue: hasValetServiced,
+                        onChanged: (value) {
+                          setState(() {
+                            hasValetServiced = value!;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text('لا',
+                          style: TextStyle(
+                              fontSize: 16.0, fontFamily: 'Tajawal-m')),
+                      Radio(
+                        value: false,
+                        groupValue: hasValetServiced,
+                        onChanged: (value) {
+                          setState(() {
+                            hasValetServiced = value!;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 15,
+              ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
