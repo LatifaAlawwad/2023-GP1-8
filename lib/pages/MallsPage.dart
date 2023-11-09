@@ -6,6 +6,7 @@ class Mall {
   final bool hasFoodCourt;
   final bool hasSupermarket;
   final bool INorOUT;
+  final String ShopType;
   final placePage place;
 
   Mall({
@@ -14,6 +15,7 @@ class Mall {
     required this.hasFoodCourt,
     required this.hasSupermarket,
     required this.INorOUT,
+    required this.ShopType,
     required this.place,
   });
 
@@ -24,6 +26,7 @@ class Mall {
       'hasFoodCourt': hasFoodCourt,
       'hasSupermarket' : hasSupermarket,
       'INorOUT': INorOUT,
+      'ShopType': ShopType,
       'place': place.toMap(),
     };
   }
@@ -34,6 +37,7 @@ class Mall {
       hasPlayArea: map['hasPlayArea'] ?? false,
       hasFoodCourt: map['hasFoodCourt'] ?? false,
       hasSupermarket: map['hasSupermarket'] ?? false,
+      ShopType: map['ShopType'] ?? '',
       INorOUT: map['INorOUT'] ?? false,
       place: placePage.fromMap(map),
     );

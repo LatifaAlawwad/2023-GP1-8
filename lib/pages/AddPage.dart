@@ -131,7 +131,7 @@ class CustomFormState extends State<CustomForm> {
   String place_id = '';
   String city = "الرياض";
   String? address;
-  final location = TextEditingController();
+  final WebLink = TextEditingController();
   final description = TextEditingController();
   final placeName = TextEditingController();
 
@@ -328,12 +328,29 @@ class CustomFormState extends State<CustomForm> {
     'داخلي',
     'خارجي'
   ];
+
+  List<String> ShopOptions = [
+    'ملابس',
+    'أحذية',
+    'حقائب',
+    'أثاث',
+    'الكترونيات',
+    'أواني',
+    'عطور',
+    'عبايات',
+    'مجوهرات',
+    'ملابس أطفال',
+    'مستحضرات تجميل',
+    'صيدليات',
+    'أخرى'
+  ];
   Set<String> serves = Set<String>();
   Set<String> atmosphere = Set<String>();
+  Set<String> ShopType = Set<String>();
 
   @override
   void dispose() {
-    location.dispose();
+    WebLink.dispose();
     description.dispose();
     placeName.dispose();
     super.dispose();
@@ -400,7 +417,7 @@ class CustomFormState extends State<CustomForm> {
                 'city': city,
                 'neighbourhood': address,
                 'images': arrImage,
-                'Location': location.text,
+                'WebLink': WebLink.text,
                 'description': description.text,
                 'category': type1,
                 'hasValetServiced': hasValetServiced,
@@ -435,7 +452,7 @@ class CustomFormState extends State<CustomForm> {
                 'city': city,
                 'neighbourhood': address,
                 'images': arrImage,
-               // 'Location': location.text,
+                'WebLink': WebLink.text,
                 'description': description.text,
                 'category': type1,
                 'hasValetServiced': hasValetServiced,
@@ -471,7 +488,7 @@ class CustomFormState extends State<CustomForm> {
                 'city': city,
                 'neighbourhood': address,
                 'images': arrImage,
-              //  'Location': location.text,
+                'WebLink': WebLink.text,
                 'description': description.text,
                 'category': type1,
                 'hasValetServiced': hasValetServiced,
@@ -508,7 +525,7 @@ class CustomFormState extends State<CustomForm> {
                 'city': city,
                 'neighbourhood': address,
                 'images': arrImage,
-               // 'Location': location.text,
+                'WebLink': WebLink.text,
                 'description': description.text,
                 'category': type1,
                 'hasValetServiced': hasValetServiced,
@@ -907,67 +924,7 @@ class CustomFormState extends State<CustomForm> {
                 height: 10,
               ),
 
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 94),
-                      child: Directionality(
-                        textDirection: TextDirection.rtl,
-                        child: Container(
-                          margin: const EdgeInsets.only(top: 10),
-                          // Add top margin to move the field down
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.grey,
-                              width: 1.0,
-                            ),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: TextFormField(
-                              controller: description,
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              maxLines: null,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'الرجاء عدم ترك الخانة فارغة!';
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
 
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Row(
-                      children: [
-                        Text(
-                          ': وصف المكان ',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontFamily: "Tajawal-b",
-                          ),
-                        ),
-                        Text(
-                          '*',
-                          style: TextStyle(
-                            color: Colors.red,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
               SizedBox(
                 height: 15,
               ),
@@ -1297,7 +1254,87 @@ class CustomFormState extends State<CustomForm> {
                               ],
                             ),
                           ],
-                        )
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: 'هل يتطلب حجز ؟ ',
+                                      style: TextStyle(
+                                        fontSize: 20.0,
+                                        fontFamily: "Tajawal-b",
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: ' * ',
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text('نعم',
+                                    style: TextStyle(fontSize: 16.0, fontFamily: 'Tajawal-m')),
+                                Radio(
+                                  value: true,
+                                  groupValue: hasReservation,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      hasReservation = value;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                            // Conditionally show the square-shaped TextField if 'نعم' is selected
+                            if (hasReservation == true)
+                              Container(
+                                width: 500,
+                                height: 50,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 94, right: 10),
+                                  child: TextFormField(
+                                    decoration: InputDecoration(
+                                      hintText: ' تفاصيل طريقة الحجز و رقم للتواصل إن وجد',
+                                      border: OutlineInputBorder( // Set border to make it square-shaped
+                                        borderRadius: BorderRadius.circular(10.0),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text('لا',
+                                    style: TextStyle(fontSize: 16.0, fontFamily: 'Tajawal-m')),
+                                Radio(
+                                  value: false,
+                                  groupValue: hasReservation,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      hasReservation = value;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+
+
                       ],
                     ),
                   ],
@@ -1571,7 +1608,7 @@ class CustomFormState extends State<CustomForm> {
                                   style: TextStyle(
                                     fontSize: 20.0,
                                     fontFamily: "Tajawal-b",
-                                    color: Colors.black, // Set the text color to black
+                                    color: Colors.black,
                                   ),
                                 ),
                                 TextSpan(
@@ -1589,8 +1626,7 @@ class CustomFormState extends State<CustomForm> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text('نعم',
-                                style: TextStyle(
-                                    fontSize: 16.0, fontFamily: 'Tajawal-m')),
+                                style: TextStyle(fontSize: 16.0, fontFamily: 'Tajawal-m')),
                             Radio(
                               value: true,
                               groupValue: hasReservation,
@@ -1602,12 +1638,28 @@ class CustomFormState extends State<CustomForm> {
                             ),
                           ],
                         ),
+                        // Conditionally show the square-shaped TextField if 'نعم' is selected
+                        if (hasReservation == true)
+                          Container(
+                            width: 500, // Adjust the width as needed
+                            height: 50, // Adjust the height as needed
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 94, right: 10),
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  hintText: ' تفاصيل طريقة الحجز و رقم للتواصل إن وجد',
+                                  border: OutlineInputBorder( // Set border to make it square-shaped
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text('لا',
-                                style: TextStyle(
-                                    fontSize: 16.0, fontFamily: 'Tajawal-m')),
+                                style: TextStyle(fontSize: 16.0, fontFamily: 'Tajawal-m')),
                             Radio(
                               value: false,
                               groupValue: hasReservation,
@@ -1947,8 +1999,50 @@ class CustomFormState extends State<CustomForm> {
                       ],
                     ),
                     SizedBox(height: 20),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            ': أنواع المحلات',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              fontFamily: "Tajawal-b",
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Column(
+                          children: ShopOptions.map((ShopOptions) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(ShopOptions,
+                                    style: TextStyle(
+                                        fontSize: 16.0,
+                                        fontFamily: 'Tajawal-m')),
+                                Checkbox(
+                                  value: ShopType.contains(ShopOptions),
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      if (value == true) {
+                                        ShopType.add(ShopOptions);
+                                      } else {
+                                        ShopType.remove(ShopOptions);
+                                      }
+                                    });
+                                  },
+                                ),
+                              ],
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
+              SizedBox(height: 20),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -2011,7 +2105,7 @@ class CustomFormState extends State<CustomForm> {
                       child: Directionality(
                         textDirection: TextDirection.rtl,
                         child: TextFormField(
-                          controller: location,
+                          controller: WebLink,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -2026,9 +2120,9 @@ class CustomFormState extends State<CustomForm> {
                   const Align(
                     alignment: Alignment.centerRight,
                     child: Text(
-                      ': رابط الموقع ',
+                      ' :رابط الموقع الالكتروني  ',
                       style: TextStyle(
-                        fontSize: 20.0,
+                        fontSize: 19.0,
                         fontFamily: "Tajawal-b",
                       ),
                     ),
@@ -2037,6 +2131,71 @@ class CustomFormState extends State<CustomForm> {
               ),
               SizedBox(
                 height: 30,
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 94, right: 10),
+                      child: Directionality(
+                        textDirection: TextDirection.rtl,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start, // Adjusted to MainAxisAlignment.start
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start, // Adjusted to MainAxisAlignment.end
+                              children: [
+                                Text(
+                                  ' وصف المكان : ',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontFamily: "Tajawal-b",
+                                  ),
+                                ),
+                                Text(
+                                  '*',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(top: 10),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey,
+                                  width: 1.0,
+                                ),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: TextFormField(
+                                  controller: description,
+                                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                                  maxLines: null,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'الرجاء عدم ترك الخانة فارغة!';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              SizedBox(
+                height: 25,
               ),
               TextFormField(
                   controller: _startSearchFieldController,
@@ -2254,7 +2413,7 @@ class CustomFormState extends State<CustomForm> {
                         city == null ||
                         city.isEmpty ||
                         address!.isEmpty ||
-                        location.text.isEmpty ||
+                        WebLink.text.isEmpty ||
                         description.text.isEmpty) {
                       showInvalidFieldsDialog(context);
                     } else {
