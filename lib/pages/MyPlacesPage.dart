@@ -298,25 +298,90 @@ class _myPlacesPage extends State<myPlacesPage> {
                           height: 4,
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          //mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Text(
-                              '${place.neighbourhood} , ${place.city}',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: "Tajawal-l",
+                            Expanded(
+                              child:Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: StreamBuilder<QuerySnapshot>(
+                                      stream: FirebaseFirestore.instance
+                                          .collection('ApprovedPlaces')
+                                          .doc(place.place_id)
+                                          .collection('Reviews')
+                                          .snapshots(),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState == ConnectionState.waiting) {
+                                          return CircularProgressIndicator();
+                                        }
+
+                                        List<double> ratings = List<double>.from(
+                                          snapshot.data!.docs.map((doc) {
+                                            final commentData = doc.data() as Map<String, dynamic>;
+                                            return commentData["rating"].toDouble() ?? 0.0;
+                                          }),
+                                        );
+
+                                        // Calculate the average rating
+                                        double averageRating =
+                                        ratings.isNotEmpty ? ratings.reduce((a, b) => a + b) / ratings.length : 0.0;
+
+                                        return Row(
+                                          children: [
+                                            for (int index = 0; index < 5; index++)
+                                              Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                                                child: Icon(
+                                                  index < averageRating.floor()
+                                                      ? Icons.star
+                                                      : index + 0.5 == averageRating
+                                                      ? Icons.star_half
+                                                      : Icons.star_border,
+                                                  color: const Color.fromARGB(255, 109, 184, 129),
+                                                  size: 20.0,
+                                                ),
+                                              ),
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(width: 10),
+                                ],
                               ),
+
+
+
+
+
+
+
                             ),
-                            SizedBox(
-                              width: 4,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  '${place.neighbourhood} ، ${place.city}',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: "Tajawal-l",
+
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                Icon(
+                                  Icons.location_pin,
+                                  color: Colors.white,
+                                  size: 18,
+                                ),
+                              ],
                             ),
-                            Icon(
-                              Icons.location_pin,
-                              color: Colors.white,
-                              size: 16,
-                            ),
+                            // SizedBox(width: 10),
                           ],
                         ),
                       ],

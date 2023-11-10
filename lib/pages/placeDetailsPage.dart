@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:uuid/uuid.dart';
 
+import '../Registration/logIn.dart';
 import 'placePage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -11,7 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'HomePage.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
-import 'ReviewPage.dart';
+import 'Review.dart';
 import 'dart:convert';
 
 
@@ -35,7 +37,7 @@ class _placeDetailsState extends State<placeDetailsPage> {
   final ScrollController _scrollController = ScrollController();
   double thumbWidth = 0.0;
   double thumbPosition = 0.0;
-
+  final _formKey = GlobalKey<FormState>();
 //final ReviewService _reviewService = ReviewService();
   List<Review> reviews = [];
   @override
@@ -66,6 +68,7 @@ class _placeDetailsState extends State<placeDetailsPage> {
     String Category;
     String category = widget.place.category;
 
+    final currentUser = FirebaseAuth.instance.currentUser;
     if (category == 'أماكن سياحية') {
       Category = 'أماكن سياحية';
     } else if(category == 'مطاعم'){
@@ -179,37 +182,99 @@ class _placeDetailsState extends State<placeDetailsPage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 24, right: 24, top: 8, bottom: 16),
+                    padding: EdgeInsets.fromLTRB(15, 0, 15, 10), // Added bottom padding
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Expanded(
-                          child:  Row(
-                            mainAxisAlignment: MainAxisAlignment.end, // Align to the right
+                          child:Row(
                             children: [
-                              Text(
-                                '${widget.place.neighbourhood} ، ${widget.place.city}',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: "Tajawal-l",
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: StreamBuilder<QuerySnapshot>(
+                                  stream: FirebaseFirestore.instance
+                                      .collection('ApprovedPlaces')
+                                      .doc(widget.place.place_id)
+                                      .collection('Reviews')
+                                      .snapshots(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                      return CircularProgressIndicator();
+                                    }
+
+                                    List<double> ratings = List<double>.from(
+                                      snapshot.data!.docs.map((doc) {
+                                        final commentData = doc.data() as Map<String, dynamic>;
+                                        return commentData["rating"].toDouble() ?? 0.0;
+                                      }),
+                                    );
+
+                                    // Calculate the average rating
+                                    double averageRating =
+                                    ratings.isNotEmpty ? ratings.reduce((a, b) => a + b) / ratings.length : 0.0;
+
+                                    return Row(
+                                      children: [
+                                        for (int index = 0; index < 5; index++)
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                                            child: Icon(
+                                              index < averageRating.floor()
+                                                  ? Icons.star
+                                                  : index + 0.5 == averageRating
+                                                  ? Icons.star_half
+                                                  : Icons.star_border,
+                                              color: const Color.fromARGB(255, 109, 184, 129),
+                                              size: 20.0,
+                                            ),
+                                          ),
+                                      ],
+                                    );
+                                  },
                                 ),
                               ),
-                              SizedBox(
-                                width: 4,
-                              ),
-                              Icon(
-                                Icons.location_pin,
-                                color: Colors.white,
-                                size: 18,
-                              ),
+                              SizedBox(width: 10),
                             ],
                           ),
+
+
+
+
+
+
+
                         ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              '${widget.place.neighbourhood} ، ${widget.place.city}',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: "Tajawal-l",
+                              ),
+                            ),
+                            SizedBox(
+                              width: 4,
+                            ),
+                            Icon(
+                              Icons.location_pin,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                          ],
+                        ),
+                        SizedBox(width: 10),
                       ],
                     ),
-                  )
+                  ),
+
+
+
+
+
 
                 ],
               ),
@@ -379,13 +444,21 @@ class _placeDetailsState extends State<placeDetailsPage> {
 
      SizedBox(height: 10),
                         Row(
+
+
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Container(
                               height: 40, // Set the desired height for the button container
                               child: ElevatedButton(
+
+
                                 onPressed: () {
-                                  showReviewDialog(context, widget.place.place_id);
+                                  if (currentUser == null){
+                                    showguestDialog(context);
+                                  }
+                                  else {
+                                  showReviewDialog(context, widget.place.place_id);}
                                 },
                                 style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(Colors.white),
@@ -428,42 +501,55 @@ class _placeDetailsState extends State<placeDetailsPage> {
                             ),
                           ],
                         ),
+                        SizedBox(height: 10),
 
+                        StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection('ApprovedPlaces')
+                              .doc(widget.place.place_id)
+                              .collection('Reviews')
+                              .orderBy('timestamp', descending: true)
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                             return Center(
+                                child: Padding(
+                                  padding: EdgeInsets.only(top:16.0,bottom:16.0), // Adjust the padding as needed
+                                  child: Text(
+                                    'لا يوجد أي تعليق حتى الان',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontFamily: "Tajawal-m",
+                                      color: Colors.grey, // Set the color to gray
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }
 
-                    StreamBuilder<QuerySnapshot>(
-                      stream: FirebaseFirestore.instance
-                          .collection('ApprovedPlaces')
-                          .doc(widget.place.place_id)
-                          .collection('Reviews')
-                          .orderBy('timestamp', descending: true)
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-
-                        return ListView(
-                          shrinkWrap: true,
-                          children: snapshot.data!.docs.map((doc) {
+                            return ListView(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                            children: snapshot.data!.docs.map((doc) {
                             final commentData = doc.data() as Map<String, dynamic>;
 
-                            final text = commentData["comment"] ?? ""; // Handle null comment
-                            final rating = commentData["rating"] ?? 0.0; // Handle null rating
-                            final time = formatDate(commentData["timestamp"]);
-                            final username =commentData["userName"];// Handle null username
-
-                            return Comment(
-                              text: text,
-                              rating: rating.toDouble(), // Ensure rating is double
-                              time: time,
-                              username: username,
+                            return Review(
+                            id: commentData["id"] ?? "",
+                            placeId: commentData["placeId"] ?? "",
+                            userId: commentData["userId"] ?? "",
+                            userName: commentData["userName"] ?? "anonymous",
+                            rating: commentData["rating"].toDouble() ?? 0.0,
+                            text: commentData["text"] ?? "", // Ensure rating is double
+                            timestamp: formatDate(commentData["timestamp"]),
                             );
-                          }).toList(),
-                        );
-                      },
-                    ),
+                            }).toList(),
+                            );
+                          },
+                        )
 
 
                     ]
@@ -478,14 +564,31 @@ class _placeDetailsState extends State<placeDetailsPage> {
     );
   }
 
-String formatDate(Timestamp time){
-DateTime datatime = time.toDate();
-String year=datatime.year.toString();
-String month=datatime.month.toString();
-String day=datatime.day.toString();
-String formattedData= '$day/$month/$year';
-return formattedData;
-}
+
+
+
+
+
+ String formatDate(Timestamp time){
+    DateTime datatime = time.toDate();
+    String year=datatime.year.toString();
+    String month=datatime.month.toString();
+    String day=datatime.day.toString();
+    String formattedData= '$day/$month/$year';
+    return formattedData;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   String getuserId() {
@@ -498,7 +601,23 @@ return formattedData;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
   showReviewDialog(BuildContext context,String placeid) async {
+
+
+
+
+
     double rating = 0.0; // Variable to store the user's rating
     String reviewText = ''; // Variable to store the user's review
     String userid = getuserId();
@@ -508,7 +627,7 @@ return formattedData;
     if (documentSnapshot.exists) {
        username = documentSnapshot.get('name'); // Replace 'name' with the actual field name
       }else username = "anonymous";
-;
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -524,7 +643,7 @@ return formattedData;
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                // Header
+
                Center(
                  child: Text(
                   "شارك تجربتك",
@@ -641,7 +760,9 @@ return formattedData;
                         ),
                         onTap: () async {
                           // Save the review and rating to the Firestore collection
-                          await _saveReviewToFirebase(reviewText, rating, userid,placeid, username);
+                          if (reviewText==''&& rating ==0.0){// do nothing , dont save it in the collection
+                          }else{
+                          await _saveReviewToFirebase(reviewText, rating, userid,placeid, username);}
 
                           // Close the dialog
                           Navigator.of(context).pop();
@@ -690,22 +811,13 @@ return formattedData;
 
 
 
-
-
-
-
-
-
-
-
-
-
-
   Future<void> _saveReviewToFirebase(String reviewText,double rating,String userId,String placeid, String username) async {
     final CollectionReference reviewsCollection = FirebaseFirestore.instance.collection('ApprovedPlaces').doc(placeid).collection('Reviews');
-
+    var uuid = Uuid();
+    String reviewId = uuid.v4();
     // Create a new review document with a timestamp
     reviewsCollection.add({
+      'id': reviewId,
       'placeId': placeid,
       'userId': userId,
       'userName': username,
@@ -721,6 +833,97 @@ return formattedData;
   }
 
 
+
+
+
+  showguestDialog(BuildContext context) async {
+
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(32.0)),
+          ),
+          contentPadding: EdgeInsets.only(top: 10.0,bottom: 10.0),
+          content: Container(
+            width: 300.0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+
+
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 30),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 79),
+                          child: Text(
+                            "عذراً لابد من تسجيل الدخول",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontFamily: "Tajawal-b",
+                              color: Color(0xFF6db881),
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => LogIn()),
+                            );
+                          },
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(Color(0xFF6db881)),
+                            padding: MaterialStateProperty.all(
+                              EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                            ),
+                            shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(27),
+                              ),
+                            ),
+                          ),
+                          child: Text(
+                            "تسجيل الدخول",
+                            style: TextStyle(fontSize: 20, fontFamily: "Tajawal-m"),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+
+
+
+
+  double calculateAverageRating(List<Review> reviews) {
+    if (reviews.isEmpty) {
+      return 0.0; // Default rating if there are no reviews
+    }
+
+    double totalRating = 0.0;
+    for (Review review in reviews) {
+      totalRating += review.rating;
+    }
+
+    return totalRating / reviews.length;
+  }
 
 }
 
@@ -820,47 +1023,3 @@ class _GalleryWidgetState extends State<GalleryWidget> {
     );
   }
 }
-class Comment extends StatelessWidget {
-
-  final String text;
-  final double rating;
-  final String time;
-  final String username;
-
-  const Comment ({
-  super. key,
-  required this. text,
-  required this. rating,
-  required this. username,
-  required this. time,
-});
-
-
-
-  @override
-  Widget build (BuildContext context) {
-  return Container(
-    decoration: BoxDecoration(
-      color: Colors.grey[300],
-      borderRadius: BorderRadius.circular(4),
-    ),
-    margin:EdgeInsets.only(bottom:5),
-    padding:EdgeInsets.all(15),
-
-    child: Column(
-      crossAxisAlignment:CrossAxisAlignment.start ,
-
-      children:[
-        Text(this.text),
-
-
-      ]
-    ),
-
-
-
-
-  );
-
-
-  }}
