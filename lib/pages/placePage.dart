@@ -9,7 +9,8 @@ class placePage {
   List<String> images;
   String description;
   String Location;
-  bool? allowChildren; // New attribute
+
+  bool? hasValetServiced;
 
   placePage({
     required this.place_id,
@@ -22,7 +23,7 @@ class placePage {
     required this.images,
     required this.description,
     required this.Location,
-  // Include the new attribute
+    this.hasValetServiced,
   });
 
   Map<String, dynamic> toMap() {
@@ -33,11 +34,12 @@ class placePage {
       'category': category,
       'type1': type1,
       'city': city,
-      'neighborhood': neighbourhood,
+      'neighbourhood': neighbourhood,
       'images': images,
       'description': description,
       'Location': Location,
-      'allowChildren': allowChildren, // Include the new attribute
+
+      'hasValetServiced': hasValetServiced, // Include the new attribute
     };
   }
 
@@ -53,7 +55,8 @@ class placePage {
       images: List<String>.from(map['images']),
       Location: map['Location'] ?? '',
       description: map['description'] ?? '',
-     // Parse the new attribute
+
+      hasValetServiced: map['hasValetServiced'], // Parse the new attribute
     );
   }
 }
