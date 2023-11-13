@@ -9,7 +9,11 @@ import 'package:gp/Registration/logIn.dart';
 import 'package:gp/pages/NavigationBarPage.dart';
 import 'package:gp/pages/citiesPage.dart';
 
+<<<<<<< Updated upstream
 import 'pages/lib/MapView.dart';
+=======
+import 'pages/MapView.dart';
+>>>>>>> Stashed changes
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
