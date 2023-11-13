@@ -1,4 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:gp/Registration/First.dart';
 import 'package:gp/Registration/RessetPassword.dart';
@@ -9,11 +11,11 @@ import 'package:gp/Registration/logIn.dart';
 import 'package:gp/pages/NavigationBarPage.dart';
 import 'package:gp/pages/citiesPage.dart';
 
-<<<<<<< Updated upstream
+
 import 'pages/lib/MapView.dart';
-=======
-import 'pages/MapView.dart';
->>>>>>> Stashed changes
+
+
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,7 +37,7 @@ class MyApp extends StatelessWidget {
         '/RessetPassword': (context) => RessetPassword(),
         '/citiesPage': (context) => CitiesPage(),
         // Use 'CitiesPage' here and pass 'selectedCity' as needed
-        '/MapPage': (context) => MapSample(),
+        '/MapPage': (context) =>  MapSample(),
 
         '/NavigationBarPage': (context) {
           String selectedCity ='';
