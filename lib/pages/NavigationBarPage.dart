@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../MapView.dart';
+import 'lib/MapView.dart';
 import 'FavoritePage.dart';
 import 'HomePage.dart';
 import 'addpage.dart';
 import 'UserProfilePage.dart';
 import '../Registration/logIn.dart';
-import 'MapPage.dart';
 
 class NavigationBarPage extends StatefulWidget {
    final String selectedCity; // Add selectedCity property

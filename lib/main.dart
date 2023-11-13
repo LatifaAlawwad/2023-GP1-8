@@ -6,11 +6,10 @@ import 'package:gp/Registration/Welcome.dart';
 import 'package:gp/Registration/SignUp.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:gp/Registration/logIn.dart';
-import 'package:gp/pages/MapPage.dart';
 import 'package:gp/pages/NavigationBarPage.dart';
 import 'package:gp/pages/citiesPage.dart';
 
-import 'MapView.dart';
+import 'pages/lib/MapView.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
