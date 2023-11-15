@@ -459,7 +459,7 @@ class MapSampleState extends State<MapSample> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('اختر فئة المكان'),
+              Text(' تصنيف المكان', style: TextStyle(color:  Color.fromARGB(255, 109, 184, 129),)),
             ],
           ),
           content: Container(
@@ -481,7 +481,7 @@ class MapSampleState extends State<MapSample> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(value),
+                          Text(value, style: TextStyle(color:  Color.fromARGB(255, 109, 184, 129),)),
                           // Add an icon based on the category
                         ],
                       ),
@@ -514,7 +514,7 @@ class MapSampleState extends State<MapSample> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(':نوع الطعام'),
+              Text('نوع الطعام', style: TextStyle(color:  Color.fromARGB(255, 109, 184, 129),)),
             ],
           ),
           content: Container(
@@ -527,15 +527,13 @@ class MapSampleState extends State<MapSample> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(value),
-
+                      Text(value, style: TextStyle(color:  Color.fromARGB(255, 109, 184, 129),)),
                     ],
                   ),
                 );
               }).toList(),
               onChanged: (String? newValue) {
                 if (newValue != null) {
-
                   Navigator.pop(context);
                 }
               },
@@ -545,6 +543,7 @@ class MapSampleState extends State<MapSample> {
       },
     );
   }
+
 
 
   void _moveMapToPlace(placePage place) async {
