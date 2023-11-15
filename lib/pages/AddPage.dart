@@ -737,7 +737,6 @@ class CustomFormState extends State<CustomForm> {
                 'description': description.text,
                 'category': type1,
                 "WorkedDays": dayss,
-                'WebLink': WebLink.text,
                 //    'days': userChecked,
                 //  "OpenAt": openAt,
                 //"CloseAt": closeAt,
