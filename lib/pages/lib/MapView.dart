@@ -21,6 +21,8 @@ class MapSampleState extends State<MapSample> {
     print('Button Pressed');
   }
   List<String> cuisineOptions = [
+    'الكل',
+
     'سعودي',
     'إيطالي',
     'أمريكي',
