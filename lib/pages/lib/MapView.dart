@@ -20,6 +20,24 @@ class MapSampleState extends State<MapSample> {
   void onPressed() {
     print('Button Pressed');
   }
+  List<String> cuisineOptions = [
+    'سعودي',
+    'إيطالي',
+    'أمريكي',
+    'آسيوي',
+    'هندي',
+    'مكسيكي',
+    'تركي',
+    'بحري',
+    'إسباني',
+    'شرقي',
+    'يوناني',
+    'مخبوزات',
+    'عالمي',
+    'صحي',
+  ];
+
+  List<String> priceOptions = ['مرتفع', 'متوسط', 'منخفض'];
 
   Completer<GoogleMapController> _controller = Completer();
   String selectedCategory = 'الكل';
@@ -50,34 +68,6 @@ class MapSampleState extends State<MapSample> {
   List<AutocompletePrediction> predictions = [];
   Timer? _debounce;
 
-  Future<bool> _handleLocationPermission() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content:
-          Text('Location services are disabled. Please enable the services')));
-      return false;
-    }
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location permissions are denied')));
-        return false;
-      }
-    }
-    if (permission == LocationPermission.deniedForever) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text(
-              'Location permissions are permanently denied, we cannot request permissions.')));
-      return false;
-    }
-    return true;
-  }
 
   Future<void> _determinePosition() async {
     Position position = await Geolocator.getCurrentPosition();
@@ -342,74 +332,230 @@ class MapSampleState extends State<MapSample> {
       ],
     );
   }
-
   void displayFilteredPlacesList() {
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
+        return Scrollbar(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: filteredPlacesInfo.length,
+                  itemBuilder: (context, index) {
+                    final place = filteredPlacesInfo[index];
 
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: filteredPlacesInfo.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor:  Color.fromARGB(255, 109, 184, 129),
-                        child: Icon(
-                          Icons.pin_drop,
-                          color: Colors.white,
+                    return Card(
+                      margin: EdgeInsets.fromLTRB(12, 12, 12, 6),
+                      clipBehavior: Clip.antiAlias,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(15),
                         ),
                       ),
-                    title: Text(filteredPlacesInfo[index].placeName),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => placeDetailsPage(place: filteredPlacesInfo[index],)));
-                    });
-
-
-                },
+                      child: InkWell(
+                        onTap: () {
+                          _moveMapToPlace(place);
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          height: 210,
+                          decoration: BoxDecoration(
+                            image: place.images.isEmpty
+                                ? DecorationImage(
+                              image: NetworkImage(
+                                  'https://www.guardanthealthamea.com/wp-content/uploads/2019/09/no-image.jpg'),
+                              fit: BoxFit.cover,
+                            )
+                                : DecorationImage(
+                              image: NetworkImage(place.images[0]),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          child: Container(
+                            padding: EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                stops: [0.5, 1.0],
+                                colors: [
+                                  Colors.transparent,
+                                  Colors.black.withOpacity(0.7),
+                                ],
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      '${place.placeName}',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: "Tajawal-l",
+                                      ),
+                                    ),
+                                    Text(
+                                      '',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontFamily: "Tajawal-l",
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 4),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.location_pin,
+                                      color: Colors.white,
+                                      size: 18,
+                                    ),
+                                    SizedBox(width: 4),
+                                    Text(
+                                      '${place.neighbourhood}, ${place.city}',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: "Tajawal-l",
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );
   }
+
+
   void showDropdownMenu(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('اختر فئة المكان'),
-          content: DropdownButton<String>(
-            value: selectedCategory,
-            items: <String>[
-              'الكل',
-              'فعاليات و ترفيه',
-              'مطاعم',
-              'مراكز تسوق'
-            ].map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            onChanged: (String? newValue) {
-              if (newValue != null) {
-                filterPlaces(newValue);
-                Navigator.pop(context); // Close the dropdown menu
-              }
-            },
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('اختر فئة المكان'),
+            ],
+          ),
+          content: Container(
+            width: double.maxFinite,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                DropdownButton<String>(
+                  isExpanded: true,
+                  value: selectedCategory,
+                  items: <String>[
+                    'الكل',
+                    'فعاليات و ترفيه',
+                    'مطاعم',
+                    'مراكز تسوق'
+                  ].map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(value),
+                          // Add an icon based on the category
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    if (newValue != null) {
+                      filterPlaces(newValue);
+                      Navigator.pop(context); // Close the first dropdown
+                      // Show the second dropdown only when the category is 'مطاعم'
+                      if (newValue == 'مطاعم') {
+                        showCuisineDropdown(context);
+                      }
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
         );
       },
+    );
+  }
+
+  void showCuisineDropdown(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(':نوع الطعام'),
+            ],
+          ),
+          content: Container(
+            width: double.maxFinite,
+            child: DropdownButton<String>(
+              isExpanded: true,
+              items: cuisineOptions.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(value),
+
+                    ],
+                  ),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                if (newValue != null) {
+
+                  Navigator.pop(context);
+                }
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+
+  void _moveMapToPlace(placePage place) async {
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: LatLng(place.latitude, place.longitude),
+          zoom: 14,
+        ),
+      ),
     );
   }
 
