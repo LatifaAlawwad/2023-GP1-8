@@ -29,6 +29,9 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   uuid: ^3.0.4
+  http: ^0.13.4
+
+
 
 
   flutter:
@@ -50,6 +53,9 @@ dependencies:
   geolocator: ^9.0.2
   google_place: ^0.4.7
   intl: ^0.17.0
+
+
+
 
 dev_dependencies:
   flutter_test:

@@ -624,6 +624,7 @@ class CustomFormState extends State<CustomForm> {
                 'neighbourhood': address,
                 'images': arrImage,
                 'Location': WebLink.text,
+
                 'description': description.text,
                 'category': type1,
                 'hasValetServiced': hasValetServiced,
@@ -733,7 +734,7 @@ class CustomFormState extends State<CustomForm> {
                 'neighbourhood': address,
                 'images': arrImage,
                 'Location': WebLink.text,
-
+                'WebLink': WebLink.text,
                 'description': description.text,
                 'category': type1,
                 "WorkedDays": dayss,
@@ -2327,61 +2328,52 @@ class CustomFormState extends State<CustomForm> {
               SizedBox(
                 height: 30,
               ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 94, right: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start, // Adjusted to MainAxisAlignment.start
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end, // Adjusted to MainAxisAlignment.end
-                              children: [
-                                Text(
-                                  ' : وصف المكان  ',
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontFamily: "Tajawal-b",
-                                  ),
-                                ),
-                                Text(
-                                  '*',
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(top: 10),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.grey,
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: TextFormField(
-                                  controller: description,
-                                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                                  maxLines: null,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'الرجاء عدم ترك الخانة فارغة!';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        ': وصف المكان ',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontFamily: "Tajawal-b",
                         ),
-
+                      ),
+                      Text(
+                        '*',
+                        style: TextStyle(
+                          color: Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10, right: 94),
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 10),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                          width: 1.0,
+                        ),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: TextFormField(
+                          controller: description,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          maxLines: null,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'الرجاء عدم ترك الخانة فارغة!';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
                     ),
                   ),
                 ],

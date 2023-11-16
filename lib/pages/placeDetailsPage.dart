@@ -15,6 +15,8 @@ import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'Review.dart';
 import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 
@@ -564,11 +566,6 @@ class _placeDetailsState extends State<placeDetailsPage> {
     );
   }
 
-
-
-
-
-
  String formatDate(Timestamp time){
     DateTime datatime = time.toDate();
     String year=datatime.year.toString();
@@ -578,19 +575,6 @@ class _placeDetailsState extends State<placeDetailsPage> {
     return formattedData;
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
   String getuserId() {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user = auth.currentUser;
@@ -598,25 +582,7 @@ class _placeDetailsState extends State<placeDetailsPage> {
     return cpuid;
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   showReviewDialog(BuildContext context,String placeid) async {
-
-
-
-
 
     double rating = 0.0; // Variable to store the user's rating
     String reviewText = ''; // Variable to store the user's review
@@ -808,10 +774,10 @@ class _placeDetailsState extends State<placeDetailsPage> {
   }
 
 
+////////////////////////////////////////////////////////////////////////////////////
 
 
-
-  Future<void> _saveReviewToFirebase(String reviewText,double rating,String userId,String placeid, String username) async {
+ Future<void> _saveReviewToFirebase(String reviewText,double rating,String userId,String placeid, String username) async {
     final CollectionReference reviewsCollection = FirebaseFirestore.instance.collection('ApprovedPlaces').doc(placeid).collection('Reviews');
     var uuid = Uuid();
     String reviewId = uuid.v4();
@@ -832,13 +798,7 @@ class _placeDetailsState extends State<placeDetailsPage> {
     });
   }
 
-
-
-
-
   showguestDialog(BuildContext context) async {
-
-
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -926,8 +886,6 @@ class _placeDetailsState extends State<placeDetailsPage> {
   }
 
 }
-
-
 
 
 Widget PlaceInfo(IconData iconData, String text, String label) {
