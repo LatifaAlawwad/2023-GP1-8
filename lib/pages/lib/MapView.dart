@@ -20,32 +20,13 @@ class MapSampleState extends State<MapSample> {
   void onPressed() {
     print('Button Pressed');
   }
-  List<String> cuisineOptions = [
-    'الكل',
 
-    'سعودي',
-    'إيطالي',
-    'أمريكي',
-    'آسيوي',
-    'هندي',
-    'مكسيكي',
-    'تركي',
-    'بحري',
-    'إسباني',
-    'شرقي',
-    'يوناني',
-    'مخبوزات',
-    'عالمي',
-    'صحي',
-  ];
-
-  List<String> priceOptions = ['مرتفع', 'متوسط', 'منخفض'];
 
   Completer<GoogleMapController> _controller = Completer();
   String selectedCategory = 'الكل';
 
   List<placePage> allPlaces = [];
-  late LatLng currentLatLng = const LatLng(48.8566, 2.3522);
+  late LatLng currentLatLng = const LatLng(24.7136, 46.6753);
   List<placePage> filteredPlacesInfo = [];
 
   @override
@@ -179,6 +160,7 @@ class MapSampleState extends State<MapSample> {
 
                 iconSize: 30,
                 icon: Icon(Icons.layers) ,
+
                 onPressed: (){showDropdownMenu(context);} ,
 
               ),
@@ -493,10 +475,7 @@ class MapSampleState extends State<MapSample> {
                     if (newValue != null) {
                       filterPlaces(newValue);
                       Navigator.pop(context); // Close the first dropdown
-                      // Show the second dropdown only when the category is 'مطاعم'
-                      if (newValue == 'مطاعم') {
-                        showCuisineDropdown(context);
-                      }
+
                     }
                   },
                 ),
@@ -508,43 +487,6 @@ class MapSampleState extends State<MapSample> {
     );
   }
 
-  void showCuisineDropdown(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('نوع الطعام', style: TextStyle(color:  Color.fromARGB(255, 109, 184, 129),)),
-            ],
-          ),
-          content: Container(
-            width: double.maxFinite,
-            child: DropdownButton<String>(
-              isExpanded: true,
-              items: cuisineOptions.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(value, style: TextStyle(color:  Color.fromARGB(255, 109, 184, 129),)),
-                    ],
-                  ),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                if (newValue != null) {
-                  Navigator.pop(context);
-                }
-              },
-            ),
-          ),
-        );
-      },
-    );
-  }
 
 
 
