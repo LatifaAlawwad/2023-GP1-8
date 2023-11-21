@@ -809,7 +809,7 @@ class _placeDetailsState extends State<placeDetailsPage> {
     // Create a new review document with a timestamp
     reviewsCollection.add({
       'id': reviewId,
-      'placeId': placeid,
+
       'userId': userId,
       'userName': username,
       'text': reviewText,
