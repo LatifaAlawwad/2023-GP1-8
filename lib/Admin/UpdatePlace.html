@@ -1,183 +1,663 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Admin Dashboard">
-    <title>تحديث معلومات المكان</title>
+    <title>تفاصيل الطلب</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css" />
     <style>
-        /* Reset some default margin and padding for consistency */
-        body, h1, h2, p {
-            margin: 0;
-            padding: 0;
-        }
+      /* Basic CSS for styling the header and footer */
+body {
+    background-color: #F9FFF9;
+    margin: 0;
+}
 
-        /* Basic CSS for styling the layout */
-        .container {
-            display: flex;
-            min-height: 100vh;
-        }
- .sidenav-right {
-            width: 150px; /* Set the width as needed */
-            background-color: #6DB881;
-            color: white;
-            padding: 20px;
-            text-align: left;
-            display: flex;
-            flex-direction: column;
-            position: absolute;
-            top: 0;
-            right: -150px; /* Initial position outside the container */
-            bottom: 0; /* Extend to the bottom of the container */
-            transition: right 0.3s; /* Add transition animation */
-        }
+.sidenav-right {
+    width: 150px; /* Set the width as needed */
+    background-color: #6DB881;
+    color: white;
+    padding: 20px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    right: -150px; /* Initial position outside the container */
+    bottom: 0; /* Extend to the bottom of the container */
+    transition: right 0.3s; /* Add transition animation */
+}
 
-        .sidenav-right.active {
-            right: 0; /* Move the sidebar to the right */
-        }
+.sidenav-right.active {
+    right: 0; /* Move the sidebar to the right */
+}
 
- .sidenav-right a {
-           visibility: hidden;
-            color: #ffffff;
-            text-decoration: none;
-            display: block;
-            margin: 10px 0;
-            padding: 15px;
-            transition: background-color 0.3s, color 0.3s;
-        }
+.sidenav-right a {
+    visibility: hidden;
+    color: #ffffff;
+    text-decoration: none;
+    display: block;
+    margin: 10px 0;
+    padding: 15px;
+    transition: background-color 0.3s, color 0.3s;
+}
 
-        .sidenav-right.active a {
-           visibility: visible;
-            color: #ffffff;
-            text-decoration: none;
-            display: block;
-            margin: 10px 0;
-            padding: 15px;
-            transition: background-color 0.3s, color 0.3s;
-        }
+.sidenav-right.active a {
+    visibility: visible;
+    color: #ffffff;
+    text-decoration: none;
+    display: block;
+    margin: 10px 0;
+    padding: 15px;
+    transition: background-color 0.3s, color 0.3s;
+}
 
+.sidenav-right a:hover {
+    background-color: #90c996;
+    color: #ffffff;
+}
 
-        .sidenav-right a:hover {
-            background-color: #90c996;
-            color: #ffffff;
-        }
+.content {
+    flex-grow: 1;
+    padding: 20px;
+    text-align: right; /* Align content to the right */
+}
 
-        .content {
-            flex-grow: 1;
-            padding: 20px;
-            text-align: center;
-        }
+.footer {
+    background-color: #DEDEDE;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
 
-        .footer {
-            background-color: #DEDEDE;
-            color: white;
-            text-align: center;
-            padding: 10px;
-            width: 100%; /* Full width */
-            position: absolute;
-            bottom: 0;
-        }
-
-             .logo {
-  text-align: left;
-  padding: 10px;
-  width: 150px;
-  position: absolute;
-  top: 0;
-  left: 0;
+.logo {
+    text-align: left;
+    padding: 10px;
+    width: 150px;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .logo img {
-  width: 130px;
-  height:130px;
+    width: 130px;
+    height: 130px;
 }
-        body {
-            background-color: #f9f9f9;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
 
-         /* Add styles for the menu icon */
-        .menu-icon {
-            position: absolute;
-            top: 10px;
-            right: 10px;
+/* Text style */
+.header-text {
+    margin-left: 60px;
+}
+
+.header-text a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+}
+
+.header-text a:hover {
+    background-color: #f2f2f2;
+    color: #90c996;
+}
+
+/* Container style */
+.container {
+    display: flex;
+    max-width: 600px;
+    margin: 0 auto;
+    justify-content: flex-end; /* Align container to the right */
+    align-items: center;
+    min-height: 80vh;
+    text-align: right; /* Align text to the right */
+}
+
+.content {
+    max-width: 80%;
+    width: 90%;
+    padding: 20px;
+    background: #F9FFF9;
+    box-shadow: 1px 2px 6px  #124304;
+    border-radius: 10px;
+}
+
+/* Style for the details */
+label, p {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: green;
+    font-weight: bold;
+}
+
+/* Add space between label and input */
+label {
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+textarea, input {
+    margin-bottom: 10px;
+    width: 100%; /* Make form elements 100% width */
+    padding: 8px; /* Add padding for better spacing inside form elements */
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
+}
+
+/* Add space between lines */
+br {
+    margin-bottom: 20px;
+}
+
+/* Add space between name and form field */
+label {
+    margin-right: 10px;
+}
+
+/* Add space between form elements */
+form > div > * {
+    margin-bottom: 15px;
+}
+
+.textarea-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.textarea-container label {
+    margin-bottom: 0; /* Remove the margin-bottom to prevent the label from pushing the textarea */
+}
+
+.textarea-container textarea {
+    margin-bottom: 10px; /* Add some margin between the textarea and the next element */
+}
+/* Style for the images */
+.image-container {
+    width: 100%; /* Adjust the width as needed */
+    height: 150px; /* Adjust the height as needed */
+    overflow-x: auto;
+    white-space: nowrap;
+    margin: 0 auto;
+    display: flex;
+    border: 4px solid #ccc; /* Adjust the thickness as needed */
+    border-radius: 10px; /* Set border-radius to make the images container rounded */
+}
+
+.image-container img {
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    display: inline-block;
+    border-right: 1px solid #ccc;
+    border-radius: 10px; /* Set border-radius to make the images rounded */
+}
+
+/* Style for the larger image */
+.large-image {
+    max-height: 50px; /* Adjust the max-height as needed */
+    display: block;
+    margin: 0 auto;
+}
+
+/* Add styles for the menu icon */
+.menu-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.menu-icon span {
+    display: block;
+    width: 30px;
+    height: 4px;
+    background-color: white;
+    margin-bottom: 6px;
+    transition: transform 0.3s, opacity 0.3s;
+}
+
+.menu-icon.active span:nth-child(1) {
+    transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+.menu-icon.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-icon.active span:nth-child(3) {
+    transform: rotate(45deg) translate(-5px, -6px);
+}
+
+/* Style for the form */
+form {
+    text-align: right;
+}
+/* Style for buttons */
+button {
+    background-color: #90c996;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+    transition: transform 0.3s;
+}
+
+/* Apply the bounce effect on hover */
+button:hover {
+    transform: scale(1.1);
+}
+
+
+
+/* Add space between the buttons */
+#updatePlaceForm button + button {
+    margin-left: 10px;
+}
+
+
+
+
+.delete-icon {
             cursor: pointer;
-            z-index: 1;
+            color: white;
+            font-size: 24px;
+            font-weight: bold; /* Make it bolder */
+            margin-left: 5px;
+            display: inline-block;
+            border-radius: 50%; /* Make it circular */
+            width: 24px; /* Slightly smaller */
+            height: 24px; /* Slightly smaller */
+            text-align: center;
+            line-height: 24px; /* Slightly smaller */
+            background-color: #ff6666; /* Red background */
+            transition: background-color 0.3s;
         }
 
-        .menu-icon span {
-            display: block;
-            width: 30px;
-            height: 4px;
-            background-color: white;
-            margin-bottom: 6px;
-            transition: transform 0.3s, opacity 0.3s;
+        .delete-icon:hover {
+            background-color: #ff3333; /* Darker red on hover */
+            text-decoration: none;
         }
 
-        .menu-icon.active span:nth-child(1) {
-            transform: rotate(-45deg) translate(-5px, 6px);
-        }
+/* Style for the "إضافة صورة" button */
+#addImageButton {
+    white-space: nowrap; /* Prevent line breaks within the button */
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #ffffff; /* White by default */
+    color: #90c996; /* Text color */
+    border: 1px solid #90c996; /* Border color */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer;
 
-        .menu-icon.active span:nth-child(2) {
-            opacity: 0;
-        }
+}
 
-        .menu-icon.active span:nth-child(3) {
-            transform: rotate(45deg) translate(-5px, -6px);
-        }
+#addImageButton.has-file {
+    background-color: #90c996; /* Green when files are selected */
+    color: #ffffff; /* White text color when files are selected */
+}
+
     </style>
 </head>
-<body>
-<div class="container">
+
+<body> <!-- Header with navigation links -->
+<div class="header">
     <!-- Logo on the left side without background -->
     <div class="logo">
         <img src="images/logowithname.png" alt="Logo">
     </div>
 
+    <!-- Content of the updateplace -->
+    <div class="container">
+        <div class="content">
+            <form id="updatePlaceForm">
+                <div id='form'>
+                    <!-- Place Name -->
+                    <label for="placeName">:اسم المكان</label>
+                    <input type="text" id="placeName" name="placeName" value=''>
 
 
+                    <br>
 
-    <!-- Content of the Homepage -->
-    <div class="content">
-        <!-- Add your admin dashboard content here -->
+                    <!-- Description -->
+                    <label for="description">:الوصف</label>
+                    <div class="textarea-container">
+                        <textarea id="description" name="description" style="max-width: 100%; min-width: 100px; min-height: 100px; height: 100px; max-height: 200px; overflow-y: auto;"></textarea>
+                    </div>
+
+                    <br>
+
+                    <!-- Images -->
+                    <label for="imageContainer">:الصور</label>
+                    <!-- Add a delete icon to each image in the image container -->
+                    <div id="imageContainer" class="image-container"></div>
+
+
+                    <div style="display: flex; align-items: center;">
+                        <input type="file" id="imageInput" accept="image/*" multiple>
+                        <span id="addImageButton" class="add-image-link" onclick="addImages()">إضافة صورة</span>
+                    </div>
+
+                    <!-- Save and Cancel Buttons -->
+                    <button type="submit"  onclick="saveChanges()">حفظ</button>
+                    <button type="button" id="cancelButton" onclick="cancelUpdate()">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        &copy; 2023 S'hail Admin
+    </div>
+    <!-- Menu Icon -->
+    <div class="menu-icon" onclick="toggleSideNav()">
+        <!-- Add the onclick event -->
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    <!-- Vertical navigation bar on the right -->
+    <div class="sidenav-right" id="navbar">
+        <!-- Add the id "navbar" -->
+        <!-- Navigation links -->
+        <a href="home.html">الصفحة الرئيسية</a>
+        <a href="ManagePlaces.html">إدارة الأماكن</a>
+        <a href="RequestedPlaces.html">طلبات الإضافة</a>
+        <a href="AddPlace.html">إضافة مكان</a>
+        <a href="ShailAddings.html">إضافات سهيل</a>
+        <a class="UpdatePlace" href="logout.html"> تحديث المكان</a>
+        <a class="logout" href="logout.html">تسجيل الخروج</a>
     </div>
 </div>
+<script>
 
-<!-- Footer with space between navigation and footer -->
-<div class="footer">
-    &copy; 2023 Admin Dashboard
-</div>
-<!-- Menu Icon -->
-<div class="menu-icon" onclick="toggleSideNav()"> <!-- Add the onclick event -->
-    <span></span>
-    <span></span>
-    <span></span>
-</div>
-<!-- Vertical navigation bar on the right -->
-<div class="sidenav-right" id="navbar"> <!-- Add the id "navbar" -->
-    <!-- Navigation links -->
-    <span>  </span>
-    <a href="home.html">الصفحة الرئيسية</a>
-    <a href="ManagePlaces.html">إدارة الأماكن</a>
-    <a href="RequestedPlaces.html">طلبات الإضافة</a>
-    <a href="AddPlace.html">إضافة مكان</a>
-    <a href="ShailAddings.html">إضافات سهيل</a>
-    <a class="logout" href="logout.html">تسجيل الخروج</a>
-</div>
-
-<script >
-    // Toggle the side navigation bar
-    function toggleSideNav() {
+ function toggleSideNav() {
         const sideNav = document.getElementById('navbar'); // Change the id to "navbar"
         sideNav.classList.toggle('active');
 
         const menuIcon = document.querySelector('.menu-icon');
         menuIcon.classList.toggle('active');
     }
-</script>
 
+
+
+
+function cancelUpdate() {
+    window.history.back();
+}
+
+
+    </script>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
+<script type="module">
+ // Import the functions you need from the SDKs you need
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-app.js";
+import { getFirestore, doc, collection, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-firestore.js";
+
+document.addEventListener('DOMContentLoaded', async () => {
+
+
+
+
+
+
+
+    // Initialize Firebase with your configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyBKCStEljQdADcPTDJPG49jPYdj65Ld-aE",
+        appId: "1:652061667089:web:1103ef9a5c45ea6d1c26b0",
+        messagingSenderId: "652061667089",
+        projectId: "fir-hail-ec5a7"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Get the place ID from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const placeId = urlParams.get("placeId");
+
+    // Reference to the "PendingPlaces" collection and the specific place document
+    const addedPlacesRef = collection(db, 'PendingPlaces');
+    const placeDocRef = doc(addedPlacesRef, placeId);
+
+
+let images = [];
+
+
+
+
+    const updatePlaceInDatabase = async (updatedData) => {
+            try {
+                await updateDoc(placeDocRef, updatedData);
+            } catch (error) {
+                console.error('Error updating place details in the database: ', error);
+            }
+        };
+
+
+
+
+        const updateImagesInDatabase = async (updatedImages) => {
+    try {
+        await updateDoc(placeDocRef, {
+            images: updatedImages,
+        });
+    } catch (error) {
+        console.error('Error updating images in the database: ', error);
+    }
+};
+
+
+
+
+
+
+
+
+
+        const displayPlaceDetails = async () => {
+            try {
+                const placeDoc = await getDoc(placeDocRef);
+                if (placeDoc.exists()) {
+                    const placeData = placeDoc.data();
+                    const placeName = placeData.placeName;
+                    const description = placeData.description;
+                    const images = placeData.images || [];
+
+                    document.getElementById('placeName').value = placeName;
+                    document.getElementById('description').value = description;
+
+                    const imageContainer = document.getElementById('imageContainer');
+                    imageContainer.innerHTML = ''; // Clear previous images
+
+                    if (images.length > 0) {
+                        images.forEach((imageUrl, index) => {
+                            const imageContainerDiv = createImageContainerDiv(imageUrl, index);
+                            imageContainer.appendChild(imageContainerDiv);
+                        });
+                    }
+                } else {
+                    console.error('Place not found.');
+                }
+            } catch (error) {
+                console.error('Error getting place details: ', error);
+            }
+        };
+
+
+
+
+
+
+
+
+
+
+
+
+        const createImageContainerDiv = (imageUrl, index) => {
+            const imageContainerDiv = document.createElement('div');
+            imageContainerDiv.style.position = 'relative';
+
+            const deleteIcon = document.createElement('span');
+            deleteIcon.innerHTML = '×';
+            deleteIcon.className = 'delete-icon';
+            deleteIcon.style.position = 'absolute';
+            deleteIcon.style.top = '5px';
+            deleteIcon.style.right = '5px';
+            deleteIcon.style.cursor = 'pointer';
+
+            deleteIcon.onclick = () => {
+                const isConfirmed = confirm("هل أنت متأكد أنك تريد حذف هذه الصورة؟");
+                if (isConfirmed) {
+                    images.splice(index, 1);
+                    updateImagesInDatabase(images);
+                    imageContainer.removeChild(imageContainerDiv);
+                }
+            };
+
+            const image = document.createElement('img');
+            image.src = imageUrl;
+            image.alt = 'Place Image';
+
+            imageContainerDiv.appendChild(deleteIcon);
+            imageContainerDiv.appendChild(image);
+
+            return imageContainerDiv;
+        };
+
+
+
+
+
+
+
+
+
+
+
+        const updateAddImageButtonStyle = () => {
+            const addImageButton = document.getElementById('addImageButton');
+            const imageInput = document.getElementById('imageInput');
+
+            if (imageInput.files.length > 0) {
+                addImageButton.classList.add('has-file');
+            } else {
+                addImageButton.classList.remove('has-file');
+            }
+        };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        const saveChanges = async () => {
+            const updatedPlaceName = document.getElementById('placeName').value;
+            const updatedDescription = document.getElementById('description').value;
+
+            const updatedData = {
+                placeName: updatedPlaceName,
+                description: updatedDescription,
+            };
+
+            await updatePlaceInDatabase(updatedData);
+
+            const imageContainer = document.getElementById('imageContainer');
+            const images = Array.from(imageContainer.children).map((div) => div.querySelector('img').src);
+            await updateImagesInDatabase(images);
+            displayPlaceDetails();
+            showToast('Content is updated!');
+
+        };
+
+window.saveChanges = saveChanges;
+
+
+
+
+
+
+   const addImages = () => {
+        console.log('addImages function is called!');
+    const imageInput = document.getElementById('imageInput');
+    const imageContainer = document.getElementById('imageContainer');
+    const addImageButton = document.getElementById('addImageButton');
+
+    const imageFiles = imageInput.files;
+
+    if (imageFiles.length > 0) {
+        for (let i = 0; i < imageFiles.length; i++) {
+            const imageFile = imageFiles[i];
+            const imageUrl = URL.createObjectURL(imageFile);
+            const imageContainerDiv = createImageContainerDiv(imageUrl, images.length + i);
+            imageContainer.appendChild(imageContainerDiv);
+            images.push(imageUrl);
+        }
+
+        updateImagesInDatabase(images); // Update the images in the database here
+        updateAddImageButtonStyle();
+    } else {
+        alert('Please select one or more images.');
+        updateAddImageButtonStyle();
+      }
+
+    imageInput.value = null;
+};
+
+
+ window.addImages = addImages;
+
+
+
+
+
+
+
+
+
+
+
+        const updatePlaceForm = document.getElementById('updatePlaceForm');
+        updatePlaceForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await saveChanges();
+        });
+
+
+
+
+
+
+
+
+
+
+        // Call the updateAddImageButtonStyle function when the page loads and after adding or removing images
+        updateAddImageButtonStyle();
+        displayPlaceDetails();
+    });
+
+
+    </script>
 </body>
+
 </html>

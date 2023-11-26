@@ -111,20 +111,22 @@
         /* Container style */
         .container {
             display: flex;
+             max-width: 600px;
+             margin: 0 auto;
             justify-content: center;
             align-items: center;
             min-height: 80vh;
             text-align: center;
         }
 
-        .content {
-            max-width: 80%;
-            width: 90%;
-            padding: 20px;
-            background: #F9FFF9;
-            box-shadow: 0 0 10px rgba(141, 198, 63, 0.2);
-            border-radius: 10px;
-        }
+      .content {
+    max-width: 80%;
+    width: 90%;
+    padding: 20px;
+    background: #F9FFF9;
+    box-shadow: 1px 5px 10px #93c4a0;
+    border-radius: 10px;
+}
 
         /* Style for the details */
         h2 {
@@ -141,28 +143,28 @@
 
        /* Style for the images */
         .image-container {
-            width: 400px; /* Set a fixed width for the container, which is the size of one image */
-            height: 220px; /* Set a fixed height for the container */
-            overflow-x: auto; /* Add horizontal scrolling */
+            width: 400px;
+            height: 220px;
+            overflow-x: auto;
             white-space: nowrap;
-            margin: 0 auto; /* Center the container horizontally */
+            margin: 0 auto;
             display: flex;
-            border: 1px solid #ccc; /* Add borders between images */
+            border: 1px solid #ccc;
         }
 
         .image-container img {
-            height: 100%; /* Set a fixed height for the images */
-            max-width: none; /* Allow the images to determine their own width */
-            object-fit: cover; /* Maintain aspect ratio and crop images to fit the specified height */
+            height: 100%;
+            max-width: none;
+            object-fit: cover;
             display: inline-block;
-            border-right: 1px solid #ccc; /* Add vertical lines between images */
+            border-right: 1px solid #ccc;
         }
 
         /* Style for the larger image */
         .large-image {
-            max-height: 100px; /* Set the maximum height of the large image */
+            max-height: 100px;
             display: block;
-            margin: 0 auto; /* Center the large image horizontally */
+            margin: 0 auto;
         }
 
 
@@ -233,8 +235,11 @@
     <div class="sidenav-right" id="navbar"> <!-- Add the id "navbar" -->
         <!-- Navigation links -->
 
-        <a href="places-list.html">طلبات الإضافة</a>
         <a href="home.html">الصفحة الرئيسية</a>
+        <a href="ManagePlaces.html">إدارة الأماكن</a>
+        <a href="RequestedPlaces.html">طلبات الإضافة</a>
+        <a href="AddPlace.html">إضافة مكان</a>
+        <a href="ShailAddings.html">إضافات سهيل</a>
         <a class="logout" href="logout.html">تسجيل الخروج</a>
     </div>
 </div>
@@ -273,7 +278,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const placeId = urlParams.get("placeId");
 
-        // Reference to the "ApprovedPlaces" collection and the specific place document
+        // Reference to the "PendingPlaces" collection and the specific place document
         const addedPlacesRef = collection(db, 'PendingPlaces');
         const placeDocRef = doc(addedPlacesRef, placeId);
 

@@ -118,9 +118,6 @@
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-        .place-buttons {
-            text-align: center;
-        }
 
         /* Style for buttons */
         .button {
@@ -138,6 +135,17 @@
         #reject {
             background-color: #ff9999;
         }
+
+
+        .place-buttons {
+         margin: 10px 0;
+            text-align:right ;
+        }
+
+
+#accept {
+    background-color: #478B5E; /* Darker green color for the "قبول" button */
+}
   /* Add styles for the menu icon */
         .menu-icon {
             position: absolute;
@@ -277,10 +285,12 @@
                             <h3>${placeName}</h3>
                             <p>المدينة: ${city}</p>
                             <p>الحي: ${neighborhood}</p>
-
-                            <a class='button' href='placeDetails.html?placeId=${placeId}'>مشاهدة تفاصيل المكان</a>
-                            <button class='button' id='reject' onclick='rejectPlace("${placeId}")'>رفض</button>
-                            <button class='button' onclick='acceptPlace("${placeId}")'>قبول</button>
+                            <a class='button' href='UpdatePlace.html?placeId=${placeId}'>تحديث البيانات</a>
+    <a class='button' href='placeDetails.html?placeId=${placeId}'>مشاهدة التفاصيل</a>
+    <div class='place-buttons'>
+        <button class='button' id='reject' onclick='rejectPlace("${placeId}")'>رفض</button>
+        <button class='button' id='accept' onclick='acceptPlace("${placeId}")'>قبول</button>
+    </div>
                         `;
 
                         // Append the container to the places list
