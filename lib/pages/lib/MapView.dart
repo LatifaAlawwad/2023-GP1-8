@@ -23,6 +23,19 @@ class MapSampleState extends State<MapSample> {
 
 
   Completer<GoogleMapController> _controller = Completer();
+
+  void _initializeCurrentLocation() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        return;
+      }
+    }}
+
   String selectedCategory = 'الكل';
 
   List<placePage> allPlaces = [];
