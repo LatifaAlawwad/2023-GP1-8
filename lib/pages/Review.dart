@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
+
 class Review extends StatelessWidget {
   final String id;
   final String placeId;
@@ -9,6 +10,9 @@ class Review extends StatelessWidget {
   final double rating;
   final String text;
   final String timestamp;
+  final bool currentUserReview;
+  final Function onDelete;
+  final Function onUpdate;
 
   Review({
     required this.id,
@@ -18,6 +22,9 @@ class Review extends StatelessWidget {
     required this.rating,
     required this.text,
     required this.timestamp,
+    required this.currentUserReview,
+    required this.onDelete,
+    required this.onUpdate,
   });
 
   @override
@@ -43,12 +50,14 @@ class Review extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                userName,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+              Expanded(
+                child: Text(
+                  userName,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
               ),
               Text(
@@ -68,11 +77,12 @@ class Review extends StatelessWidget {
                 children: List.generate(
                   5,
                       (index) => Padding(
-                    padding: EdgeInsets.only(right:1.0 ,bottom:5.0),
+                    padding: EdgeInsets.only(right: 1.0, bottom: 5.0),
                     child: Icon(
                       index >= rating ? Icons.star_border : Icons.star,
                       size: 17,
-                      color: const Color.fromARGB(255, 109, 184, 129), // Green color for the edges
+                      color: const Color.fromARGB(
+                          255, 109, 184, 129), // Green color for the edges
                     ),
                   ),
                 ),
@@ -80,15 +90,56 @@ class Review extends StatelessWidget {
               SizedBox(height: 8),
             ],
           ),
-          Text(
-            text,
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.black,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // This row contains the text and the three dots
+              Expanded(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        text,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                        ),
+                      ),
+
+                    ),
+                    if (currentUserReview)
+                      PopupMenuButton<String>(
+                        icon: Icon(Icons.more_vert),
+                        itemBuilder: (context) => [
+                          PopupMenuItem<String>(
+                            value: 'update',
+                            child: Text('تحديث'),
+                          ),
+                          PopupMenuItem<String>(
+                            value: 'delete',
+                            child: Text('حذف'),
+                          ),
+                        ],
+                        onSelected: (value) {
+                          if (value == 'update') {
+                            onUpdate();
+                          } else if (value == 'delete') {
+                            onDelete();
+                          }
+                        },
+
+                      ),
+
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
+
+
     );
+
   }
 }
