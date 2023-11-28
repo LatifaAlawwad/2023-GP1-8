@@ -40,6 +40,34 @@ class placePage {
 
   });
 
+  get dayss => null;
+
+  get address => null;
+
+  get webLink => null;
+
+  get cuisine => null;
+
+  get priceRange => null;
+
+  get serves => null;
+
+  get atmosphere => null;
+
+  get hasCinema => null;
+
+  get INorOUT => null;
+
+  get hasFoodCourt => null;
+
+  get hasPlayArea => null;
+
+  get hasSupermarket => null;
+
+  get startDate => null;
+
+  get finishDate => null;
+
   Map<String, dynamic> toMap() {
     return {
       'place_id': place_id,

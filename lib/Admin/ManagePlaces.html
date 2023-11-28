@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Admin Dashboard">
-    <title>إدارة الأماكن</title>
+    <!-- Add Google Font for Arabic text -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap">
+
     <style>
         /* Reset some default margin and padding for consistency */
         body, h1, h2, p {
@@ -15,10 +15,13 @@
         /* Basic CSS for styling the layout */
         .container {
             display: flex;
+            flex-direction: column;
+            align-items: flex-start;
             min-height: 100vh;
         }
- .sidenav-right {
-            width: 150px; /* Set the width as needed */
+
+        .sidenav-right {
+            width: 150px;
             background-color: #6DB881;
             color: white;
             padding: 20px;
@@ -27,17 +30,17 @@
             flex-direction: column;
             position: absolute;
             top: 0;
-            right: -150px; /* Initial position outside the container */
-            bottom: 0; /* Extend to the bottom of the container */
-            transition: right 0.3s; /* Add transition animation */
+            right: -150px;
+            bottom: 0;
+            transition: right 0.3s;
         }
 
         .sidenav-right.active {
-            right: 0; /* Move the sidebar to the right */
+            right: 0;
         }
 
- .sidenav-right a {
-           visibility: hidden;
+        .sidenav-right a {
+            visibility: hidden;
             color: #ffffff;
             text-decoration: none;
             display: block;
@@ -47,7 +50,7 @@
         }
 
         .sidenav-right.active a {
-           visibility: visible;
+            visibility: visible;
             color: #ffffff;
             text-decoration: none;
             display: block;
@@ -55,7 +58,6 @@
             padding: 15px;
             transition: background-color 0.3s, color 0.3s;
         }
-
 
         .sidenav-right a:hover {
             background-color: #90c996;
@@ -68,44 +70,79 @@
             text-align: center;
         }
 
+        .header {
+            background-color: white;
+            color: #6DB881;
+            padding: 10px;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .logo {
+            text-align: center;
+            padding: 10px;
+            width: 150px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo img {
+            width: 130px;
+            height: 130px;
+        }
+
+        .menu-bar {
+            background-color: #6DB881;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 1;
+        }
+
+        .menu-bar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .menu-bar a:hover {
+            background-color: #555;
+            color: #fff;
+        }
+
+        .search-bar {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .content {
+            padding: 20px;
+            text-align: center;
+        }
+
         .footer {
             background-color: #DEDEDE;
             color: white;
             text-align: center;
             padding: 10px;
-            width: 100%; /* Full width */
+            width: 100%;
             position: absolute;
             bottom: 0;
         }
 
-             .logo {
-  text-align: left;
-  padding: 10px;
-  width: 150px;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.logo img {
-  width: 130px;
-  height:130px;
-}
-        body {
-            background-color: #f9f9f9;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-         /* Add styles for the menu icon */
         .menu-icon {
             position: absolute;
             top: 10px;
             right: 10px;
             cursor: pointer;
-            z-index: 1;
+            z-index: 3;
         }
 
         .menu-icon span {
@@ -128,6 +165,67 @@
         .menu-icon.active span:nth-child(3) {
             transform: rotate(45deg) translate(-5px, -6px);
         }
+        body {
+            background-color: #f9f9f9;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Style for the container */
+        #placesList {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Style for the heading */
+        #listHeading {
+            font-size: 24px;
+            color: green;
+            text-align: center;
+        }
+
+   /* Style for each place container */
+.place-container {
+    border: 1px solid #dcdcdc;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #f2f2f2;
+    text-align: right;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+        .place-buttons {
+            text-align: center;
+        }
+
+        /* Style for buttons */
+        .button {
+            background-color: #90c996;
+            color: white;
+            padding: 6px 12px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #delete {
+            background-color: #ff9999;
+        }
+  /* Add styles for the menu icon */
+        .menu-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            z-index: 1;
+        }
     </style>
 </head>
 <body>
@@ -137,29 +235,49 @@
         <img src="images/logowithname.png" alt="Logo">
     </div>
 
+    <div class="header">
+        <h1>إدارة الأماكن</h1>
+        <div class="search-bar">
+            <!-- Add your search bar code here -->
+            <input type="text" placeholder="البحث...">
+            <button type="button">بحث</button>
+        </div>
+    </div>
 
+    <!-- Menu Bars -->
+    <div class="menu-bar">
+        <a href="#" data-category="all">الكل</a>
+        <a href="#" data-category="attractions">فعاليات و ترفيه</a>
+        <a href="#" data-category="restaurants">مطاعم</a>
+        <a href="#" data-category="malls">مراكز تسوق</a>
+    </div>
 
 
     <!-- Content of the Homepage -->
     <div class="content">
         <!-- Add your admin dashboard content here -->
     </div>
+
+    <!-- Places List -->
+    <div id="placesList"></div>
 </div>
 
 <!-- Footer with space between navigation and footer -->
 <div class="footer">
     &copy; 2023 Admin Dashboard
 </div>
+
 <!-- Menu Icon -->
-<div class="menu-icon" onclick="toggleSideNav()"> <!-- Add the onclick event -->
+<div class="menu-icon" onclick="toggleSideNav()">
     <span></span>
     <span></span>
     <span></span>
 </div>
+
 <!-- Vertical navigation bar on the right -->
-<div class="sidenav-right" id="navbar"> <!-- Add the id "navbar" -->
+<div class="sidenav-right" id="navbar">
     <!-- Navigation links -->
-    <span>  </span>
+    <span></span>
     <a href="home.html">الصفحة الرئيسية</a>
     <a href="ManagePlaces.html">إدارة الأماكن</a>
     <a href="RequestedPlaces.html">طلبات الإضافة</a>
@@ -168,16 +286,168 @@
     <a class="logout" href="logout.html">تسجيل الخروج</a>
 </div>
 
-<script >
+<script>
     // Toggle the side navigation bar
     function toggleSideNav() {
-        const sideNav = document.getElementById('navbar'); // Change the id to "navbar"
+        const sideNav = document.getElementById('navbar');
         sideNav.classList.toggle('active');
 
         const menuIcon = document.querySelector('.menu-icon');
         menuIcon.classList.toggle('active');
     }
-</script>
+    </script>
 
+<script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-app.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+        import { getFirestore, doc, collection, getDocs, getDoc, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-auth.js";
+
+        // Function to handle the "View Details" button click
+        window.viewDetails = function (placeId) {
+
+        };
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Initialize Firebase with your configuration
+            const firebaseConfig = {
+             apiKey: "AIzaSyBKCStEljQdADcPTDJPG49jPYdj65Ld-aE",
+            appId: "1:652061667089:web:1103ef9a5c45ea6d1c26b0",
+            messagingSenderId: "652061667089",
+            projectId: "fir-hail-ec5a7"
+            };
+
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
+            const menuBarLinks = document.querySelectorAll('.menu-bar a');
+
+            // Reference to the "ApprovedPlaces" collection
+            const ApprovedPlacesRef = collection(db, 'ApprovedPlaces');
+
+         // Function to fetch and display places
+const displayPlaces = async (category) => {
+    try {
+        const querySnapshot = await getDocs(ApprovedPlacesRef);
+        const placesList = document.getElementById('placesList');
+        placesList.innerHTML = '';
+
+        querySnapshot.forEach((doc) => {
+            const placeData = doc.data();
+            const placeName = placeData.placeName;
+            const city = placeData.city;
+            const neighborhood = placeData.neighbourhood;
+            const placeId = doc.id;
+
+            // Filter places based on the selected category
+            if (category === 'all' || placeData.category === category) {
+                // Create a container for each place
+                const placeContainer = document.createElement('div');
+                placeContainer.classList.add('place-container');
+                placeContainer.setAttribute('data-place-id', placeId);
+
+
+
+                // Append the container to the places list
+                placesList.appendChild(placeContainer);
+            }
+        });
+    } catch (error) {
+        console.error('Error getting places: ', error);
+    }
+}
+
+
+ // Function to handle menu bar link clicks
+const handleMenuBarClick = (event) => {
+    const selectedCategory = event.target.dataset.category;
+    if (selectedCategory) {
+        // Remove the 'active' class from all menu bar links
+        menuBarLinks.forEach(link => link.classList.remove('active'));
+
+        // Add the 'active' class to the clicked link
+        event.target.classList.add('active');
+
+        // Display places based on the selected category
+        displayPlaces(selectedCategory);
+    }
+};
+
+// Add click event listeners to menu bar links
+menuBarLinks.forEach(link => link.addEventListener('click', handleMenuBarClick));
+
+// Function to fetch and display places
+const displayPlaces = async (category) => {
+    try {
+        const querySnapshot = await getDocs(ApprovedPlacesRef);
+        const placesList = document.getElementById('placesList');
+        placesList.innerHTML = '';
+
+        querySnapshot.forEach((doc) => {
+            const placeData = doc.data();
+            const placeName = placeData.placeName;
+            const city = placeData.city;
+            const neighborhood = placeData.neighbourhood;
+            const placeId = doc.id;
+
+            // Filter places based on the selected category
+            if (category === 'all' || placeData.category === category) {
+                // Create a container for each place
+                const placeContainer = document.createElement('div');
+                placeContainer.classList.add('place-container');
+                placeContainer.setAttribute('data-place-id', placeId);
+
+                // Populate the container with place information and buttons
+                placeContainer.innerHTML = `
+                    <h3>${placeName}</h3>
+                    <p>المدينة: ${city}</p>
+                    <p>الحي: ${neighborhood}</p>
+
+                    <a class='button' href='placeDetails.html?placeId=${placeId}'>مشاهدة تفاصيل المكان</a>
+                    <button class='button' id='delete' onclick='deletePlace("${placeId}")'>حذف</button>
+                    <button class='button' onclick='updatePlace("${placeId}")'>تعديل</button>
+                `;
+
+                // Append the container to the places list
+                placesList.appendChild(placeContainer);
+            }
+        });
+    } catch (error) {
+        console.error('Error getting places: ', error);
+    }
+}
+
+
+            async function removeDeletedPlace(placeId) {
+                try {
+                    const ApprovedPlacesRef = doc(db, 'ApprovedPlaces', placeId);
+                    // Get the place data from the "pendingPlaces" collection
+                    const placeSnapshot = await getDoc(ApprovedPlacesRef);
+                    if (placeSnapshot.exists()) {
+                        const placeData = placeSnapshot.data();
+                        // Create the "deletedPlaces" collection if it doesn't exist
+                        const deletedPlacesRef = collection(db, 'deletedPlaces');
+                        // Add the place data to the "deletedPlaces" collection
+                        await addDoc(deletedPlacesRef, placeData);
+                        // Delete the place from the "pendingPlaces" collection
+                        await deleteDoc(ApprovedPlacesRef);
+                        // Remove the container from the page
+                        const placeContainer = document.querySelector(`[data-place-id="${placeId}"]`);
+                        if (placeContainer) {
+                            placeContainer.remove();
+                        }
+                    } else {
+                        console.error('Place not found in "pendingPlaces"');
+                    }
+                } catch (error) {
+                    console.error('Error removing rejected place: ', error);
+                }
+            }
+
+            // Call the displayPlaces function to retrieve and display places
+            displayPlaces(selectedCategory);
+        });
+    </script>
 </body>
 </html>
