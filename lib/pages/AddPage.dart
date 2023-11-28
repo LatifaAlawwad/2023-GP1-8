@@ -2425,39 +2425,40 @@ class CustomFormState extends State<CustomForm> {
                     height: 20,
                   ),
                   const Text(
-                    'وصف المكان ',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontFamily: "Tajawal-b",
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    controller: description,
-                    textAlign: TextAlign.end,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    cursorColor: const Color(0xFF6db881),
-                    decoration: const InputDecoration(
-                      filled: true,
-                      contentPadding: EdgeInsets.only(
-                          top: 0, bottom: 0, right: 10, left: 10),
-                      fillColor: Colors.white,
-                      hintText: 'وصف',
-                      hintStyle: TextStyle(
-                        color: Colors.black45,
-                      ),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          borderSide:
-                          BorderSide(color: Color(0xFF6db881), width: 1)),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(
-                            color: Color(
-                                0xFF6db881)), // Set the desired border color
-                      ),
-                    ),
-                    validator: (value) {
+                  ':وصف المكان ',
+                  style: TextStyle(
+    fontSize: 18.0,
+    fontFamily: "Tajawal-b",
+    ),
+    ),
+    const SizedBox(height: 10),
+    TextFormField(
+    controller: description,
+    textAlign: TextAlign.end,
+    autovalidateMode: AutovalidateMode.onUserInteraction,
+    cursorColor: const Color(0xFF6db881),
+    maxLines: null, // Allow the TextFormField to dynamically adjust its height
+    decoration: const InputDecoration(
+    filled: true,
+    contentPadding: EdgeInsets.only(top: 0, bottom: 0, right: 10, left: 10),
+    fillColor: Colors.white,
+    hintText: 'وصف',
+    hintStyle: TextStyle(
+    color: Colors.black45,
+    ),
+    border: OutlineInputBorder(
+    borderRadius: BorderRadius.all(Radius.circular(10)),
+    borderSide: BorderSide(color: Color(0xFF6db881), width: 1),
+    ),
+    focusedBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.all(Radius.circular(10)),
+    borderSide: BorderSide(
+    color: Color(0xFF6db881),
+    ),
+    ),
+    ),
+
+    validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'الرجاء عدم ترك الخانة فارغة!';
                       }
@@ -2466,7 +2467,7 @@ class CustomFormState extends State<CustomForm> {
                   ),
                   const SizedBox(height: 20),
                   const Text(
-                    'الموقع',
+                    ':الموقع',
                     style: TextStyle(
                       fontSize: 18.0,
                       fontFamily: "Tajawal-b",

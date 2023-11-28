@@ -21,9 +21,13 @@ class _MapViewState extends State<MapView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Map View'),
-      ),
+        appBar: AppBar(
+        title: Text(
+        'الخريطة',
+        ),
+          backgroundColor: const Color.fromARGB(255, 109, 184, 129),
+    ),
+
       body: Stack(children: [
         GoogleMap(
           //Map widget from google_maps_flutter package
@@ -109,7 +113,7 @@ class _MapViewState extends State<MapView> {
                         ),
                       ),
                       child: const Text(
-                        'Done',
+                        'حفظ',
                         style: TextStyle(
                           fontSize: 18.0,
                           fontFamily: "Tajawal-m",
