@@ -18,7 +18,9 @@ import 'package:photo_view/photo_view_gallery.dart';
 import 'Review.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:cloud_firestore/cloud_firestore.dart';
+/*import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
+import 'package:flutter_langdetect/flutter_langdetect.dart' show LanguagePrediction;
+import 'package:google_mlkit_language_id/google_mlkit_language_id.dart';*/
 
 class placeDetailsPage extends StatefulWidget {
   final placePage place;
@@ -850,31 +852,77 @@ class _placeDetailsState extends State<placeDetailsPage> {
 }
 ////////////////////////////////////////////////////////////////////////////////////
 
+Future<void> makePostRequest(String reviewText, double rating, String userId, String placeid, String username) async {
+  try {
+    // Detect the language of the review text
+    List<String> reviewParts = splitReviewText(reviewText);
 
-Future makePostRequest(String reviewText,double rating,String userId,String placeid, String username) async {
+    // Make API requests for each language
+    for (String reviewPart in reviewParts) {
+      String language = detectLanguage(string: reviewPart);
 
-  final uri = Uri.parse('https://profanity-cleaner-bad-word-filter.p.rapidapi.com/profanity');
-  final headers = {'Content-Type': 'application/json',
-    'X-RapidAPI-Key':'f3c39b2fbamsh9dd5600086c2bd6p11cd83jsn3b07a4b3724c'};
-  Map<String, dynamic> body = {
-    "text": reviewText,
-    "maskCharacter": "*",
-    "language": "ar"
-  };
-  String jsonBody = json.encode(body);
-  final encoding = Encoding.getByName('utf-8');
+      // Make the profanity filter API request
+      final uri = Uri.parse('https://profanity-cleaner-bad-word-filter.p.rapidapi.com/profanity');
+      final headers = {
+        'Content-Type': 'application/json',
+        'X-RapidAPI-Key': 'f3c39b2fbamsh9dd5600086c2bd6p11cd83jsn3b07a4b3724c',
+      };
 
-  var  response = await http.post(
-    uri,
-    headers: headers,
-    body: jsonBody,
-    encoding: encoding,
-  );
-  int statusCode = response.statusCode;
-  Map responseBody = jsonDecode(response.body);
-  print(responseBody['clean']);
-  await  _saveReviewToFirebase(responseBody['clean'], rating, userId, placeid,  username);
+      Map<String, dynamic> body = {
+        'text': reviewPart,
+        'maskCharacter': '*',
+        'language': language,
+      };
+
+      String jsonBody = json.encode(body);
+      final encoding = Encoding.getByName('utf-8');
+
+      var response = await http.post(
+        uri,
+        headers: headers,
+        body: jsonBody,
+        encoding: encoding,
+      );
+
+      int statusCode = response.statusCode;
+      Map responseBody = jsonDecode(response.body);
+      print(responseBody['clean']);
+
+      // Save the cleaned review to Firebase Firestore
+      await _saveReviewToFirebase(responseBody['clean'], rating, userId, placeid, username);
+    }
+  } catch (error) {
+    // Handle errors during the process
+    print('Error making POST request: $error');
+  }
 }
+
+List<String> splitReviewText(String reviewText) {
+  List<String> parts = [];
+
+  String currentLanguage = detectLanguage(string: reviewText);
+  StringBuffer currentPart = StringBuffer();
+
+  for (int i = 0; i < reviewText.length; i++) {
+    String char = reviewText[i];
+    String charLanguage = detectLanguage(string: char);
+
+    if (charLanguage != currentLanguage) {
+      // Language transition found, start a new part
+      parts.add(currentPart.toString());
+      currentPart.clear();
+      currentLanguage = charLanguage;
+    }
+
+    currentPart.write(char);
+  }
+
+  // Add the last part
+  parts.add(currentPart.toString());
+
+  return parts;
+}
+
 
 
 Future<void> _saveReviewToFirebase(String reviewText, double rating, String userId, String placeId, String username, [String? reviewId]) async {
@@ -932,6 +980,24 @@ Future<void> _saveReviewToFirebase(String reviewText, double rating, String user
     });
   }
 }
+
+String detectLanguage({required String string}) {
+  String languageCode = 'ar'; // Default to Arabic
+
+  final RegExp english = RegExp(r'^[a-zA-Z]+');
+  final RegExp arabic = RegExp(r'^[\u0621-\u064A]+');
+
+  if (english.hasMatch(string)) {
+    languageCode = 'en'; // Set to English if the string contains English characters
+  } else if (arabic.hasMatch(string)) {
+    languageCode = 'ar'; // Set to Arabic if the string contains Arabic characters
+  }
+
+  return languageCode;
+}
+
+
+
 showguestDialog(BuildContext context) async {
   showDialog(
     context: context,
