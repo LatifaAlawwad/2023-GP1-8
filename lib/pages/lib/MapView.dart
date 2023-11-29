@@ -124,7 +124,7 @@ void _initializeCurrentLocation() async {
       filteredPlacesInfo.clear();
     });
 
-    await for (var snapshot in _firestore.collection('PendingPlaces').snapshots())
+    await for (var snapshot in _firestore.collection('ApprovedPlaces').snapshots())
       for (var place in snapshot.docs) {
         setState(() {
           String category = place['category'] ?? '';
