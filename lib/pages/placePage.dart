@@ -43,7 +43,7 @@ class placePage {
     required this.Location,
     required this.latitude,
     required this.longitude,
-    required this.workedDays,
+     this.workedDays=const[],
     this.allowChildren = false,
     this.hasValetServiced = false,
     this.cuisine = const [],
