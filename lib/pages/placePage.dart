@@ -29,6 +29,8 @@ class placePage {
   String startDate;
   String finishDate;
   String WebLink;
+  bool hasReservation;
+String reservationDetails;
 
   placePage({
     required this.place_id,
@@ -61,6 +63,9 @@ class placePage {
     this.startDate = '',
     this.finishDate = '',
     this.WebLink = '',
+    this.hasReservation=false,
+    this.reservationDetails='',
+
   });
 
   Map<String, dynamic> toMap() {
@@ -95,6 +100,8 @@ class placePage {
       'startDate': startDate,
       'finishDate': finishDate,
       'WebLink': WebLink,
+      'hasReservation':hasReservation,
+      'reservationDetails':reservationDetails,
     };
   }
 
@@ -130,6 +137,8 @@ class placePage {
       startDate: map['startDate']??'',
       finishDate: map['finishDate']??'',
       WebLink: map['WebLink']??'',
+      hasReservation: map['hasReservation']??false,
+      reservationDetails: map['reservationDetails']??'',
     );
   }
 
@@ -193,5 +202,10 @@ class placePage {
   String get getFinishDate => finishDate;
 
   String get getWebLink => WebLink;
+
+  String get getReservationDetails => reservationDetails;
+
+  bool get getHasReservation => hasReservation;
+
 }
 

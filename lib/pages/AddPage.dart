@@ -236,6 +236,10 @@ class CustomFormState extends State<CustomForm> {
   bool? hasPlayArea;
   bool? hasFoodCourt;
   bool? hasSupermarket;
+  String reservationDetails='';
+
+
+
 
   void autoCompleteSearch(String value) async {
     setState(() {
@@ -862,11 +866,13 @@ class CustomFormState extends State<CustomForm> {
                 "INorOUT": INorOUT,
                 "hasReservation": hasReservation,
                 'isTemporary': isTemporary,
+                'WebLink': WebLink.text,
                 // Add attributes specific to Entertainment
                 'startDate': startDate,
                 'finishDate': finishDate,
                 'latitude': startPosition?.geometry?.location?.lat,
                 'longitude': startPosition?.geometry?.location?.lng,
+                'reservationDetails':reservationDetails,
               });
               await FirebaseFirestore.instance
                   .collection('users')
@@ -885,7 +891,7 @@ class CustomFormState extends State<CustomForm> {
                 'city': city,
                 'neighbourhood': address,
                 'images': arrImage,
-                'Location': WebLink.text,
+                'WebLink': WebLink.text,
                 'description': description.text,
                 'category': type1,
                 'hasValetServiced': hasValetServiced,
@@ -898,6 +904,7 @@ class CustomFormState extends State<CustomForm> {
                 'latitude': startPosition?.geometry?.location?.lat,
                 'longitude': startPosition?.geometry?.location?.lng,
                 'allowChildren': allowChildren,
+                'reservationDetails':reservationDetails,
               });
               await FirebaseFirestore.instance
                   .collection('users')
@@ -2013,38 +2020,39 @@ class CustomFormState extends State<CustomForm> {
                           ],
                         ),
                         if (hasReservation == true)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: TextFormField(
-                              textAlign: TextAlign.end,
-                              autovalidateMode:
-                              AutovalidateMode.onUserInteraction,
-                              cursorColor: const Color(0xFF6db881),
-                              decoration: const InputDecoration(
-                                filled: true,
-                                contentPadding: EdgeInsets.only(
-                                    top: 0, bottom: 0, right: 10, left: 10),
-                                fillColor: Colors.white,
-                                hintText:
-                                ' تفاصيل طريقة الحجز و رقم للتواصل إن وجد',
-                                hintStyle: TextStyle(
-                                  color: Colors.black45,
-                                ),
-                                border: OutlineInputBorder(
-                                    borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
+                          if (hasReservation == true)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: TextFormField(
+                                textAlign: TextAlign.end,
+                                autovalidateMode: AutovalidateMode.onUserInteraction,
+                                cursorColor: const Color(0xFF6db881),
+                                onChanged: (value) {
+                                  // Update the reservationDetails variable when text changes
+                                  reservationDetails = value;
+                                },
+                                decoration: const InputDecoration(
+                                  filled: true,
+                                  contentPadding: EdgeInsets.only(top: 0, bottom: 0, right: 10, left: 10),
+                                  fillColor: Colors.white,
+                                  hintText: 'تفاصيل طريقة الحجز و رقم للتواصل إن وجد',
+                                  hintStyle: TextStyle(
+                                    color: Colors.black45,
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    borderSide: BorderSide(color: Color(0xFF6db881), width: 1),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(10)),
                                     borderSide: BorderSide(
-                                        color: Color(0xFF6db881), width: 1)),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                                  borderSide: BorderSide(
-                                      color: Color(
-                                          0xFF6db881)), // Set the desired border color
+                                      color: Color(0xFF6db881),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
+
                         const SizedBox(height: 20),
                         const Text(
                           'هل يسمح بدخول الأطفال ؟',

@@ -4,6 +4,7 @@ import 'package:gp/helper/showBoolAttributes.dart';
 
 import 'package:gp/pages/placePage.dart';
 import 'package:intl/intl.dart';
+import 'package:gp/helper/ShowTextAttributesWidget.dart';
 
 class PlaceDetailsWidget extends StatelessWidget {
   final placePage place;
@@ -180,26 +181,43 @@ class PlaceDetailsWidget extends StatelessWidget {
           ],
         ],
         Divider(),
+
         ShowBoolAttributesWidget(
-            text: 'السماح للأطفال', check: place.allowChildren),
-        ShowBoolAttributesWidget(
-            text: 'خدمة صف السيارات', check: place.hasValetServiced),
+            text: 'خدمة ركن السيارات', check: place.hasValetServiced),
         if (place.category == 'مراكز تسوق')
           Wrap(alignment: WrapAlignment.end, spacing: 3, children: [
-            ShowBoolAttributesWidget(text: 'بها سينما', check: place.hasCinema),
+            ShowBoolAttributesWidget(text: ' سينما', check: place.hasCinema),
             ShowBoolAttributesWidget(
                 text: place.INorOUT
-                    ? 'الجلوس في الداخل أو الخارج : خارج'
-                    : 'الجلوس في الداخل أو الخارج : داخل',
+                    ? 'مكان داخلي'
+                    : 'مكان خارجي',
                 check: place.INorOUT),
             ShowBoolAttributesWidget(
-                text: 'لديه قاعة طعام', check: place.hasFoodCourt),
+                text: ' قاعة طعام', check: place.hasFoodCourt),
             ShowBoolAttributesWidget(
-                text: 'يوجد بها منطقة لعب', check: place.hasPlayArea),
+                text: '  منطقة لعب', check: place.hasPlayArea),
             ShowBoolAttributesWidget(
-                text: 'يوجد سوبر ماركت', check: place.hasSupermarket),
+                text: ' سوبر ماركت', check: place.hasSupermarket),
 
           ]),
+        Divider(),
+        if (place.category == 'مطاعم') ...[
+          ShowBoolAttributesWidget(
+            text: 'السماح للأطفال',
+            check: place.allowChildren,
+          ),
+          ShowBoolAttributesWidget(
+            text: 'يتطلب حجز',
+            check: place.hasReservation,
+          ),
+          if (place.hasReservation) // Check if hasReservation is true
+            ShowTextAttributesWidget(
+              text: place.reservationDetails,
+            ),
+        ],
+
+
+
         Divider(),
         if (place.category == 'فعاليات و ترفيه') ...[
           if (place.startDate != '') ...[
