@@ -158,6 +158,7 @@ void _initializeCurrentLocation() async {
                             description: place['description'] ?? '',
                             latitude: place['latitude'] ?? 0.0,
                             longitude: place['longitude'] ?? 0.0,
+                            workedDays: [],
 
                           ),
                         ),
@@ -179,6 +180,7 @@ void _initializeCurrentLocation() async {
                 description: place['description'] ?? '',
                 latitude: place['latitude'] ?? 0.0,
                 longitude: place['longitude'] ?? 0.0,
+                workedDays: [],
               ));
             }
           }

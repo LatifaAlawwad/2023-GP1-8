@@ -55,6 +55,7 @@ dependencies:
   intl: ^0.18.1
   bottom_picker: ^2.3.2
   geocoding: ^2.1.1
+  expandable: ^5.0.1
 
 
 
