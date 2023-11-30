@@ -31,6 +31,7 @@ class placePage {
   String WebLink;
   bool hasReservation;
 String reservationDetails;
+  List<String> shopOptions;
 
   placePage({
     required this.place_id,
@@ -65,6 +66,7 @@ String reservationDetails;
     this.WebLink = '',
     this.hasReservation=false,
     this.reservationDetails='',
+    this.shopOptions = const [],
 
   });
 
@@ -102,6 +104,7 @@ String reservationDetails;
       'WebLink': WebLink,
       'hasReservation':hasReservation,
       'reservationDetails':reservationDetails,
+      'shopOptions': shopOptions,
     };
   }
 
@@ -139,6 +142,7 @@ String reservationDetails;
       WebLink: map['WebLink']??'',
       hasReservation: map['hasReservation']??false,
       reservationDetails: map['reservationDetails']??'',
+      shopOptions: List<String>.from(map['shopOptions'] ?? []),
     );
   }
 
@@ -206,6 +210,8 @@ String reservationDetails;
   String get getReservationDetails => reservationDetails;
 
   bool get getHasReservation => hasReservation;
+
+  List<String> get getShopOptions => shopOptions;
 
 }
 

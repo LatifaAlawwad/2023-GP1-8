@@ -315,19 +315,7 @@ class CustomFormState extends State<CustomForm> {
       'الجمعة',
       'السبت'
     ];
-    // List<String> hours = [
-    //   '9 AM',
-    //   '10 AM',
-    //   '11 AM',
-    //   '12 PM',
-    //   '1 PM',
-    //   '2 PM',
-    //   '3 PM',
-    //   '4 PM',
-    //   '5 PM'
-    // ];
 
-    Map<String, Map<String, String>> selectedHoursMap = {};
 
     showDialog(
       context: context,
@@ -775,7 +763,7 @@ class CustomFormState extends State<CustomForm> {
     'داخلي',
     'خارجي'
   ];
-  List<String> ShopOptions = [
+  List<String> shopOptions = [
     'ملابس',
     'أحذية',
     'حقائب',
@@ -858,7 +846,6 @@ class CustomFormState extends State<CustomForm> {
                 'city': city,
                 'neighbourhood': address,
                 'images': arrImage,
-                'Location': WebLink.text,
                 'description': description.text,
                 'category': type1,
                 'hasValetServiced': hasValetServiced,
@@ -923,10 +910,6 @@ class CustomFormState extends State<CustomForm> {
                 'city': city,
                 'neighbourhood': address,
                 'images': arrImage,
-                'Location': WebLink.text,
-                'days': userChecked,
-                "OpenAt": openAt,
-                "CloseAt": closeAt,
                 'WebLink': WebLink.text,
                 'description': description.text,
                 'category': type1,
@@ -939,6 +922,7 @@ class CustomFormState extends State<CustomForm> {
                 'hasSupermarket': hasSupermarket,
                 'latitude': startPosition?.geometry?.location?.lat,
                 'longitude': startPosition?.geometry?.location?.lng,
+               'shopOptions':shopOptions,
               });
               await FirebaseFirestore.instance
                   .collection('users')
@@ -2291,7 +2275,7 @@ class CustomFormState extends State<CustomForm> {
                           spacing: 10,
                           runSpacing: 7,
                           alignment: WrapAlignment.end,
-                          children: ShopOptions.map((ShopOptions) {
+                          children: shopOptions.map((ShopOptions) {
                             return GestureDetector(
                                 onTap: () {
                                   setState(() {
