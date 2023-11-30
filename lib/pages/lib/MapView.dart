@@ -158,7 +158,7 @@ void _initializeCurrentLocation() async {
                             description: place['description'] ?? '',
                             latitude: place['latitude'] ?? 0.0,
                             longitude: place['longitude'] ?? 0.0,
-                            workedDays: [],
+                            workedDays: List<Map<String, dynamic>>.from(place['WorkedDays']??[]),
 
                           ),
                         ),
@@ -180,7 +180,8 @@ void _initializeCurrentLocation() async {
                 description: place['description'] ?? '',
                 latitude: place['latitude'] ?? 0.0,
                 longitude: place['longitude'] ?? 0.0,
-                workedDays: [],
+                workedDays: List<Map<String, dynamic>>.from(place['WorkedDays']??[]),
+
               ));
             }
           }
