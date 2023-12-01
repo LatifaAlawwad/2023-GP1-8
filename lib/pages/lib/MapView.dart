@@ -154,11 +154,13 @@ void _initializeCurrentLocation() async {
                             city: place['city'] ?? '',
                             neighbourhood: place['neighbourhood'] ?? '',
                             images: List<String>.from(place['images']),
-                            Location: place['Location'] ?? '',
+                            Location: place['WebLink'] ?? '',
                             description: place['description'] ?? '',
                             latitude: place['latitude'] ?? 0.0,
                             longitude: place['longitude'] ?? 0.0,
                             workedDays: List<Map<String, dynamic>>.from(place['WorkedDays']??[]),
+
+
 
                           ),
                         ),
@@ -176,11 +178,12 @@ void _initializeCurrentLocation() async {
                 city: place['city'] ?? '',
                 neighbourhood: place['neighbourhood'] ?? '',
                 images: List<String>.from(place['images']),
-                Location: place['Location'] ?? '',
+                Location: place['WebLink'] ?? '',
                 description: place['description'] ?? '',
                 latitude: place['latitude'] ?? 0.0,
                 longitude: place['longitude'] ?? 0.0,
                 workedDays: List<Map<String, dynamic>>.from(place['WorkedDays']??[]),
+                hasValetServiced: place['hasValetServiced']?? false,
 
               ));
             }
