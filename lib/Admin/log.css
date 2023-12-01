@@ -158,7 +158,25 @@ a:hover {
     font-size: 1rem;
 }
 
+button {
+    border-radius: 90px;
+    background-color: #90c996;
+    color: white;
+    padding: 6px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Add a 3D-like box shadow */
+    transform: translateY(0); /* Add initial transform to keep it flat */
+    transition: transform 0.1s;
+}
 
+/* Add hover effect for the button */
+button:hover {
+    transform: translateY(2px); /* Move the button down on hover for a pressed effect */
+}
 
 @media(max-width: 575px) {
     .wrapper {
