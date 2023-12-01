@@ -1,12 +1,16 @@
 import 'dart:async';
-import 'dart:developer';
 
+import 'package:bottom_picker/bottom_picker.dart';
+import 'package:bottom_picker/resources/arrays.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:gp/Registration/logIn.dart';
+import 'package:gp/helper/CustomRadioButton.dart';
+import 'package:gp/helper/MapViewDrop.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:io';
@@ -36,7 +40,7 @@ class _AddPageState extends State<AddPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 109, 184, 129),
+        backgroundColor: const Color.fromARGB(255, 109, 184, 129),
         automaticallyImplyLeading: false,
         title: const Padding(
           padding: EdgeInsets.only(left: 150),
@@ -51,12 +55,12 @@ class _AddPageState extends State<AddPage> {
         toolbarHeight: 60,
         actions: [
           Padding(
-            padding: EdgeInsets.only(right: 20.0),
+            padding: const EdgeInsets.only(right: 20.0),
             child: GestureDetector(
               onTap: () {
                 Navigator.pop(context);
               },
-              child: Icon(
+              child: const Icon(
                 Icons.arrow_forward_ios,
                 color: Colors.white,
                 size: 28,
@@ -70,8 +74,8 @@ class _AddPageState extends State<AddPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 20),
-            Padding(
+            const SizedBox(height: 20),
+            const Padding(
               padding: EdgeInsets.symmetric(horizontal: 79),
               child: Text(
                 "عذراً لابد من تسجيل الدخول",
@@ -83,19 +87,20 @@ class _AddPageState extends State<AddPage> {
                 textAlign: TextAlign.center,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LogIn()),
+                  MaterialPageRoute(builder: (context) => const LogIn()),
                 );
               },
               style: ButtonStyle(
                 backgroundColor:
-                MaterialStateProperty.all(Color(0xFF6db881)),
+                MaterialStateProperty.all(const Color(0xFF6db881)),
                 padding: MaterialStateProperty.all(
-                  EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  const EdgeInsets.symmetric(
+                      horizontal: 20, vertical: 10),
                 ),
                 shape: MaterialStateProperty.all(
                   RoundedRectangleBorder(
@@ -103,7 +108,7 @@ class _AddPageState extends State<AddPage> {
                   ),
                 ),
               ),
-              child: Text(
+              child: const Text(
                 "تسجيل الدخول",
                 style: TextStyle(fontSize: 20, fontFamily: "Tajawal-m"),
               ),
@@ -111,9 +116,42 @@ class _AddPageState extends State<AddPage> {
           ],
         ),
       )
-          : const CustomForm(),
+          : Stack(
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ClipPath(
+                clipper: MyCustomClipper(),
+                child: Container(
+                  height: MediaQuery.of(context).size.height / 2,
+                  color: const Color(0xFF6db881),
+                ),
+              )
+            ],
+          ),
+          const CustomForm()
+        ],
+      ),
     );
   }
+}
+
+class MyCustomClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path()
+      ..moveTo(0, size.height)
+      ..lineTo(size.width, size.height)
+      ..lineTo(size.width, 0)
+      ..lineTo(0, size.height / 3)
+      ..close();
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
 
 class CustomForm extends StatefulWidget {
@@ -144,14 +182,15 @@ class CustomFormState extends State<CustomForm> {
   TextEditingController();
   late GooglePlace googlePlace;
   List<AutocompletePrediction> predictions = [];
+  bool isLoadingPlaces = false;
   Timer? _debounce;
-  DetailsResult? startPosition;
+  var startPosition = null;
 
   final GlobalKey<FormFieldState> _AddressKey = GlobalKey<FormFieldState>();
   bool? hasValetServiced;
 
   bool? allowChildren;
-  bool?isOutdoor;
+  bool? isOutdoor;
 
   @override
   void initState() {
@@ -179,7 +218,7 @@ class CustomFormState extends State<CustomForm> {
     'صحي',
   ];
 
-  List<String> typeEnt = [];
+
   List<String> typeEntOptions = [
     'رياضة و مغامرات',
     'فنون',
@@ -197,21 +236,39 @@ class CustomFormState extends State<CustomForm> {
   bool? hasPlayArea;
   bool? hasFoodCourt;
   bool? hasSupermarket;
+  String reservationDetails='';
+ String typeEnt='';
+
+
+
 
   void autoCompleteSearch(String value) async {
+    setState(() {
+      isLoadingPlaces = true;
+      startPosition = null;
+    });
     var result = await googlePlace.autocomplete.get(value);
     if (result != null && result.predictions != null && mounted) {
       setState(() {
         predictions = result.predictions!;
       });
     }
+    setState(() {
+      isLoadingPlaces = false;
+    });
   }
 
   void _onSelected(bool selected, String day) {
     if (selected == true) {
       setState(() {
         userChecked.add(day);
+        if (dayss.where((element) => element['day'] == day).isEmpty)
+          dayss.add(
+              {"day": day, "وقت الإغلاق": closeAt, "وقت الإفتتاح": openAt});
       });
+      print(closeAt);
+      print(openAt);
+      print(dayss);
     } else {
       setState(() {
         userChecked.remove(day);
@@ -220,8 +277,33 @@ class CustomFormState extends State<CustomForm> {
     }
   }
 
-  String openAt = "9:00 Am";
-  String closeAt = "5:00 Pm";
+  void _onSelected24(bool selected, String day) {
+    dayss.removeWhere((element) => element['day'] == day);
+    if (selected == true) {
+      setState(() {
+        dayss.add({
+          "day": day,
+          "وقت الإغلاق": '12:59 PM',
+          "وقت الإفتتاح": '00:00 AM'
+        });
+      });
+      print(closeAt);
+      print(openAt);
+      print(dayss);
+    } else {
+      setState(() {
+        dayss.add({"day": day, "وقت الإغلاق": closeAt, "وقت الإفتتاح": openAt});
+      });
+    }
+  }
+
+  bool is24HourOpen(String openAt, String closeAt) {
+    // Check if the difference is exactly 24 hours
+    return openAt == '00:00 AM' && closeAt == '12:59 PM';
+  }
+
+  String openAt = "09:00 AM";
+  String closeAt = "05:00 PM";
   List<Map<String, dynamic>> dayss = [];
 
   Future<void> showWorkingHoursDialog(BuildContext context) async {
@@ -234,207 +316,350 @@ class CustomFormState extends State<CustomForm> {
       'الجمعة',
       'السبت'
     ];
-    List<String> hours = [
-      '9 AM',
-      '10 AM',
-      '11 AM',
-      '12 PM',
-      '1 PM',
-      '2 PM',
-      '3 PM',
-      '4 PM',
-      '5 PM'
-    ];
 
-    Map<String, Map<String, String>> selectedHoursMap = {};
 
     showDialog(
       context: context,
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setState) => AlertDialog(
-            title: Text('اختر ساعات العمل'),
-            contentPadding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-            content: Container(
-              constraints: BoxConstraints(
-                maxWidth: 400, // Set your desired width here
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        children: days.map((day) {
-                          return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ListTile(
-                                    contentPadding: EdgeInsets.all(0),
-                                    trailing: Checkbox(
-                                      activeColor: Colors.black,
-                                      checkColor: Colors.white,
-                                      value: userChecked.contains(day),
-                                      onChanged: (val) {
-                                        print(val.toString());
-                                        setState(() {
-                                          _onSelected(val!, day);
-                                          print(userChecked.toString());
-                                        });
-                                      },
-                                    ),
-                                    title:
-                                    Container(width: 80, child: Text(day))),
-                                if (userChecked.contains(day))
-                                  Column(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "وقت الإفتتاح",
-                                        style: TextStyle(
-                                            color: Colors.grey[700],
-                                            fontWeight: FontWeight.w700),
-                                      ),
-                                      SizedBox(
-                                        height: 17,
-                                      ),
-                                      DropdownButtonFormField(
-                                        decoration: InputDecoration(
-                                          isDense: true,
-                                          border: InputBorder.none,
-                                          contentPadding:
-                                          const EdgeInsets.only(left: 8),
-                                          hintStyle:TextStyle(color:Colors.black),
-                                          labelStyle: TextStyle(color:Colors.black),
-                                          hintText: dayss
-                                              .where((element) =>
-                                          element['day'] == day)
-                                              .isNotEmpty
-                                              ? dayss[dayss.indexWhere(
-                                                  (element) =>
-                                              element['day'] ==
-                                                  day)]['وقت الإفتتاح']
-                                              : openAt,
-                                        ),
-                                        onChanged: (newValue) {
-                                          setState(() {
-                                            openAt = newValue!;
-                                          });
-                                          if (userChecked
-                                              .contains(
-                                              day)) if (dayss
-                                              .where((element) =>
-                                          element['day'] == day)
-                                              .isEmpty) {
-                                            dayss.add({
-                                              "day": day,
-                                              "وقت الإغلاق": closeAt,
-                                              "وقت الإفتتاح": openAt
-                                            });
-                                          } else {
-                                            dayss.removeWhere((element) =>
-                                            element['day'] == day);
-                                            dayss.add({
-                                              "day": day,
-                                              "وقت الإغلاق": closeAt,
-                                              "وقت الإفتتاح": openAt
-                                            });
-                                          }
-                                          print(day);
-                                        },
-                                        items: hours.map((hour) {
-                                          return DropdownMenuItem<String>(
-                                            value: hour,
-                                            child: Text(hour),
-                                          );
-                                        }).toList(),
-                                      ),
-                                      SizedBox(
-                                        height: 25,
-                                      ),
-                                      Text(
-                                        "وقت الإغلاق",
-                                        style: TextStyle(
-                                            color: Colors.grey[700],
-                                            fontWeight: FontWeight.w700),
-                                      ),
-                                      SizedBox(
-                                        height: 17,
-                                      ),
-                                      DropdownButtonFormField(
-                                        decoration: InputDecoration(
-                                          isDense: true,
-                                          border: InputBorder.none,
-                                          contentPadding:
-                                          const EdgeInsets.only(left: 8),
-                                          hintStyle:
-                                          TextStyle(color: Colors.black),
-                                          hintText: dayss
-                                              .where((element) =>
-                                          element['day'] == day)
-                                              .isNotEmpty
-                                              ? dayss[dayss.indexWhere(
-                                                  (element) =>
-                                              element['day'] ==
-                                                  day)]['وقت الإغلاق']
-                                              : closeAt,
-                                        ),
-                                        onChanged: (newValue) {
-                                          setState(() {
-                                            closeAt = newValue!;
-                                          });
-                                          if (userChecked
-                                              .contains(
-                                              day)) if (dayss
-                                              .where((element) =>
-                                          element['day'] == day)
-                                              .isEmpty) {
-                                            dayss.add({
-                                              "day": day,
-                                              "وقت الإغلاق": closeAt,
-                                              "وقت الإفتتاح": openAt
-                                            });
-                                          } else {
-                                            dayss.removeWhere((element) =>
-                                            element['day'] == day);
-                                            dayss.add({
-                                              "day": day,
-                                              "وقت الإغلاق": closeAt,
-                                              "وقت الإفتتاح": openAt
-                                            });
-                                          }
-                                        },
-                                        items: hours.map((hour) {
-                                          return DropdownMenuItem<String>(
-                                            value: hour,
-                                            child: Text(hour),
-                                          );
-                                        }).toList(),
-                                      ),
-                                    ],
-                                  )
-                              ]);
-                        }).toList(),
-                      )
-                    ]
+            shape: RoundedRectangleBorder(
+              side: const BorderSide(width: 1, color: Color(0xFF6db881)),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            title: const Center(
+                child: Text(
+                  'اختر ساعات العمل',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                )),
+            contentPadding:
+            const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: days.map((day) {
+                  String openHours = dayss
+                      .where((element) => element['day'] == day)
+                      .isNotEmpty
+                      ? dayss[dayss.indexWhere(
+                          (element) => element['day'] == day)]['وقت الإفتتاح']
+                      : openAt;
+                  String closeHours = dayss
+                      .where((element) => element['day'] == day)
+                      .isNotEmpty
+                      ? dayss[dayss.indexWhere(
+                          (element) => element['day'] == day)]['وقت الإغلاق']
+                      : closeAt;
 
-                ),
+                  return Container(
+                    margin: const EdgeInsets.symmetric(vertical: 5),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(width: 1, color: Colors.black),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ListTile(
+                              contentPadding: const EdgeInsets.all(0),
+                              leading: Transform.scale(
+                                scale: 0.8,
+                                //open/close
+                                child: CupertinoSwitch(
+                                    value: userChecked.contains(day),
+                                    activeColor: const Color(0xFF6db881),
+                                    onChanged: (bool value) {
+                                      print(value.toString());
+                                      setState(() {
+                                        _onSelected(value!, day);
+                                        print(userChecked.toString());
+                                      });
+                                    }),
+                              ),
+                              title: Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: Text(
+                                  day,
+                                  textAlign: TextAlign.end,
+                                ),
+                              )),
+                          if (userChecked.contains(day))
+                            Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Transform.scale(
+                                      scale: 0.8,
+                                      child: CupertinoSwitch(
+                                          value: is24HourOpen(
+                                              openHours, closeHours),
+                                          activeColor: const Color(0xFF6db881),
+                                          onChanged: (bool value) {
+                                            print(value.toString());
+                                            setState(() {
+                                              _onSelected24(value!, day);
+                                              print(userChecked.toString());
+                                            });
+                                          }),
+                                    ),
+                                    const Padding(
+                                      padding:
+                                      EdgeInsets.symmetric(horizontal: 10),
+                                      child: Text('٢٤ ساعة'),
+                                    )
+                                  ],
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 5),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "وقت الإغلاق",
+                                              style: TextStyle(
+                                                  color: Colors.grey[700],
+                                                  fontWeight: FontWeight.w700),
+                                            ),
+                                            const SizedBox(
+                                              height: 6,
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                BottomPicker.time(
+                                                  title: 'وقت الإغلاق - ${day}',
+                                                  titleStyle: const TextStyle(
+                                                      fontWeight:
+                                                      FontWeight.bold,
+                                                      fontSize: 15,
+                                                      color: Color(0xFF6db881)),
+                                                  onChange: (value) {
+                                                    String newValue =
+                                                    DateFormat('hh:mm a')
+                                                        .format(value!);
+                                                    // setState(() {
+                                                    //   closeAt = newValue;
+                                                    // });
+                                                    if (userChecked
+                                                        .contains(
+                                                        day)) if (dayss
+                                                        .where((element) =>
+                                                    element['day'] ==
+                                                        day)
+                                                        .isEmpty) {
+                                                      dayss.add({
+                                                        "day": day,
+                                                        "وقت الإغلاق": newValue,
+                                                        "وقت الإفتتاح": openAt
+                                                      });
+                                                    } else {
+                                                      var prevDay = dayss[
+                                                      dayss.indexWhere(
+                                                              (element) =>
+                                                          element[
+                                                          'day'] ==
+                                                              day)];
+                                                      dayss.removeWhere(
+                                                              (element) =>
+                                                          element['day'] ==
+                                                              day);
+                                                      dayss.add({
+                                                        "day": day,
+                                                        "وقت الإغلاق": newValue,
+                                                        "وقت الإفتتاح": prevDay[
+                                                        "وقت الإفتتاح"]
+                                                      });
+                                                    }
+                                                    setState(() {});
+                                                  },
+                                                  buttonWidth: 80,
+                                                  titleAlignment:
+                                                  CrossAxisAlignment.center,
+                                                  buttonSingleColor:
+                                                  const Color(0xFF6db881),
+                                                  displayButtonIcon: false,
+                                                  buttonTextStyle:
+                                                  const TextStyle(
+                                                      fontSize: 17),
+                                                  buttonText: 'حفظ',
+                                                  use24hFormat: false,
+                                                  minuteInterval: 15,
+                                                  initialTime: Time(
+                                                    minutes: 0,
+                                                  ),
+                                                  pickerTextStyle:
+                                                  const TextStyle(
+                                                      fontSize: 17,
+                                                      color: Colors.black),
+                                                ).show(context);
+                                              },
+                                              child: Container(
+                                                decoration: const BoxDecoration(
+                                                    color: Colors.white,
+                                                    border: Border(
+                                                      bottom: BorderSide(
+                                                          width: 1,
+                                                          color: Colors.black),
+                                                    )),
+                                                child: Text(
+                                                  dayss
+                                                      .where((element) =>
+                                                  element['day'] ==
+                                                      day)
+                                                      .isNotEmpty
+                                                      ? dayss[dayss.indexWhere(
+                                                          (element) =>
+                                                      element[
+                                                      'day'] ==
+                                                          day)]
+                                                  ['وقت الإغلاق']
+                                                      : closeAt,
+                                                  style: const TextStyle(
+                                                      fontSize: 25),
+                                                ),
+                                              ),
+                                            )
+                                          ]),
+                                      Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "وقت الإفتتاح",
+                                              style: TextStyle(
+                                                  color: Colors.grey[700],
+                                                  fontWeight: FontWeight.w700),
+                                            ),
+                                            const SizedBox(
+                                              height: 6,
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                BottomPicker.time(
+                                                  title:
+                                                  'وقت الإفتتاح - ${day}',
+                                                  titleStyle: const TextStyle(
+                                                      fontWeight:
+                                                      FontWeight.bold,
+                                                      fontSize: 15,
+                                                      color: Color(0xFF6db881)),
+                                                  onChange: (value) {
+                                                    String newValue =
+                                                    DateFormat('hh:mm a')
+                                                        .format(value!);
+                                                    // setState(() {
+                                                    //   openAt = newValue;
+                                                    // });
+                                                    if (userChecked
+                                                        .contains(
+                                                        day)) if (dayss
+                                                        .where((element) =>
+                                                    element['day'] ==
+                                                        day)
+                                                        .isEmpty) {
+                                                      dayss.add({
+                                                        "day": day,
+                                                        "وقت الإغلاق": closeAt,
+                                                        "وقت الإفتتاح": newValue
+                                                      });
+                                                    } else {
+                                                      var prevDay = dayss[
+                                                      dayss.indexWhere(
+                                                              (element) =>
+                                                          element[
+                                                          'day'] ==
+                                                              day)];
+                                                      dayss.removeWhere(
+                                                              (element) =>
+                                                          element['day'] ==
+                                                              day);
+                                                      dayss.add({
+                                                        "day": day,
+                                                        "وقت الإغلاق": prevDay[
+                                                        "وقت الإغلاق"],
+                                                        "وقت الإفتتاح": newValue
+                                                      });
+                                                    }
+                                                    setState(() {});
+                                                  },
+                                                  onClose: () {
+                                                    print('Picker closed');
+                                                  },
+                                                  buttonWidth: 80,
+                                                  titleAlignment:
+                                                  CrossAxisAlignment.center,
+                                                  buttonSingleColor:
+                                                  const Color(0xFF6db881),
+                                                  displayButtonIcon: false,
+                                                  buttonText: 'حفظ',
+                                                  use24hFormat: false,
+                                                  minuteInterval: 15,
+                                                  initialTime: Time(
+                                                    minutes: 0,
+                                                  ),
+                                                ).show(context);
+                                              },
+                                              child: Container(
+                                                decoration: const BoxDecoration(
+                                                    color: Colors.white,
+                                                    border: Border(
+                                                      bottom: BorderSide(
+                                                          width: 1,
+                                                          color: Colors.black),
+                                                    )),
+                                                child: Text(
+                                                  dayss
+                                                      .where((element) =>
+                                                  element['day'] ==
+                                                      day)
+                                                      .isNotEmpty
+                                                      ? dayss[dayss.indexWhere(
+                                                          (element) =>
+                                                      element[
+                                                      'day'] ==
+                                                          day)]
+                                                  ['وقت الإفتتاح']
+                                                      : openAt,
+                                                  style: const TextStyle(
+                                                      fontSize: 25),
+                                                ),
+                                              ),
+                                            )
+                                          ]),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                        ]),
+                  );
+                }).toList(),
               ),
             ),
             actions: [
-              TextButton(
-                onPressed: () {
-                  log(dayss.toString());
-                  Navigator.of(context).pop();
-                },
-                child: Text('إضافة'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('إلغاء'),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        const Color(0xFF6db881)),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text('   حفظ   '),
+                  ),
+                ),
               ),
             ],
           ),
@@ -505,14 +730,15 @@ class CustomFormState extends State<CustomForm> {
             context: context,
             builder: (context) {
               return AlertDialog(
-                title: Text('خطأ'),
-                content: Text('تاريخ الانتهاء يجب أن يكون بعد تاريخ البدء.'),
+                title: const Text('خطأ'),
+                content:
+                const Text('تاريخ الانتهاء يجب أن يكون بعد تاريخ البدء'),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text('موافق'),
+                    child: const Text('موافق'),
                   ),
                 ],
               );
@@ -528,9 +754,10 @@ class CustomFormState extends State<CustomForm> {
     }
   }
 
-  String priceRange = 'مرتفع';
+
   bool? hasReservation;
   List<String> servesOptions = ['فطور', 'غداء', 'عشاء'];
+  String priceRange = 'مرتفع';
   List<String> atmosphereOptions = [
     'يوجد موسيقى',
     'بدون موسيقى',
@@ -538,7 +765,7 @@ class CustomFormState extends State<CustomForm> {
     'داخلي',
     'خارجي'
   ];
-  List<String> ShopOptions = [
+  List<String> shopOptions = [
     'ملابس',
     'أحذية',
     'حقائب',
@@ -556,6 +783,7 @@ class CustomFormState extends State<CustomForm> {
   Set<String> serves = Set<String>();
   Set<String> atmosphere = Set<String>();
   Set<String> ShopType = Set<String>();
+
   @override
   void dispose() {
     WebLink.dispose();
@@ -609,33 +837,32 @@ class CustomFormState extends State<CustomForm> {
               var imageUrl = await uploadFile(selectedFiles[i], userId);
               arrImage.add(imageUrl.toString());
             }
-            _formKey.currentState!.save();
-            var uuid = Uuid();
+
+            var uuid = const Uuid();
             place_id = uuid.v4();
             if (type1 == 'فعاليات و ترفيه') {
-              await FirebaseFirestore.instance
-                  .collection('PendingPlaces')
-                  .doc(place_id)
-                  .set({
+              await FirebaseFirestore.instance.collection('PendingPlaces').doc(place_id).set({
                 'place_id': place_id,
                 'User_id': userId,
                 'placeName': placeName.text,
                 'city': city,
                 'neighbourhood': address,
                 'images': arrImage,
-                'Location': WebLink.text,
-
                 'description': description.text,
                 'category': type1,
                 'hasValetServiced': hasValetServiced,
                 "WorkedDays": dayss,
-                "INorOUT":INorOUT,
-                "hasReservation":hasReservation,
-                'isTemporary': isTemporary, // Add attributes specific to Entertainment
+                "INorOUT": INorOUT,
+                "hasReservation": hasReservation,
+                'isTemporary': isTemporary,
+                'WebLink': WebLink.text,
+                // Add attributes specific to Entertainment
                 'startDate': startDate,
                 'finishDate': finishDate,
                 'latitude': startPosition?.geometry?.location?.lat,
                 'longitude': startPosition?.geometry?.location?.lng,
+                'reservationDetails': reservationDetails,
+                'typeEnt':typeEnt,
               });
               await FirebaseFirestore.instance
                   .collection('users')
@@ -647,17 +874,14 @@ class CustomFormState extends State<CustomForm> {
                 HomePageState.isDownloadedData = false;
               });
             } else if (type1 == 'مطاعم') {
-              await FirebaseFirestore.instance
-                  .collection('PendingPlaces')
-                  .doc(place_id)
-                  .set({
+              await FirebaseFirestore.instance.collection('PendingPlaces').doc(place_id).set({
                 'place_id': place_id,
                 'User_id': userId,
                 'placeName': placeName.text,
                 'city': city,
                 'neighbourhood': address,
                 'images': arrImage,
-                'Location': WebLink.text,
+                'WebLink': WebLink.text,
                 'description': description.text,
                 'category': type1,
                 'hasValetServiced': hasValetServiced,
@@ -670,7 +894,7 @@ class CustomFormState extends State<CustomForm> {
                 'latitude': startPosition?.geometry?.location?.lat,
                 'longitude': startPosition?.geometry?.location?.lng,
                 'allowChildren': allowChildren,
-
+                'reservationDetails':reservationDetails,
               });
               await FirebaseFirestore.instance
                   .collection('users')
@@ -682,22 +906,13 @@ class CustomFormState extends State<CustomForm> {
                 HomePageState.isDownloadedData = false;
               });
             } else if (type1 == 'مراكز تسوق') {
-              await FirebaseFirestore.instance
-                  .collection('PendingPlaces')
-                  .doc(place_id)
-                  .set({
+              await FirebaseFirestore.instance.collection('PendingPlaces').doc(place_id).set({
                 'place_id': place_id,
                 'User_id': userId,
                 'placeName': placeName.text,
                 'city': city,
                 'neighbourhood': address,
                 'images': arrImage,
-
-                'Location': WebLink.text,
-
-                //'days': userChecked,
-                //"OpenAt": openAt,
-                //"CloseAt": closeAt,
                 'WebLink': WebLink.text,
                 'description': description.text,
                 'category': type1,
@@ -710,6 +925,7 @@ class CustomFormState extends State<CustomForm> {
                 'hasSupermarket': hasSupermarket,
                 'latitude': startPosition?.geometry?.location?.lat,
                 'longitude': startPosition?.geometry?.location?.lng,
+               'shopOptions':shopOptions,
               });
               await FirebaseFirestore.instance
                   .collection('users')
@@ -733,7 +949,6 @@ class CustomFormState extends State<CustomForm> {
                 'city': city,
                 'neighbourhood': address,
                 'images': arrImage,
-                'Location': WebLink.text,
                 'WebLink': WebLink.text,
                 'description': description.text,
                 'category': type1,
@@ -778,150 +993,161 @@ class CustomFormState extends State<CustomForm> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Column(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(top: 20),
+          child: Text(
+            ' تفاصيل المكان ',
+            style: TextStyle(
+                fontSize: 20.0, fontFamily: "Tajawal-b", color: Colors.black),
+            // textDirection: TextDirection.rtl,
+          ),
+        ),
+        Expanded(
+          child: Container(
+            margin: const EdgeInsets.only(top: 20, left: 15, right: 15),
+            padding: const EdgeInsets.only(top: 15, left: 15, right: 15),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+              border: Border.all(color: Colors.grey.shade300, width: 1),
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.all(6.0),
-                    child: SizedBox(width: double.infinity),
+                  const SizedBox(
+                    height: 10,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(margin: const EdgeInsets.all(6)),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                ' : تفاصيل المكان ',
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontFamily: "Tajawal-b",
-                                ),
-                                // textDirection: TextDirection.rtl,
-                              ),
-                            ],
-                          ),
-                        ],
+                  const Text(
+                    ':اسم المكان',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontFamily: "Tajawal-b",
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    controller: placeName,
+                    textAlign: TextAlign.end,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    cursorColor: const Color(0xFF6db881),
+                    decoration: const InputDecoration(
+                      filled: true,
+                      contentPadding: EdgeInsets.only(
+                          top: 0, bottom: 0, right: 10, left: 10),
+                      fillColor: Colors.white,
+                      hintText: 'اسم المكان',
+
+
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          borderSide:
+                          BorderSide(color: Color(0xFF6db881), width: 1)),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderSide: BorderSide(
+                            color: Color(
+                                0xFF6db881)), // Set the desired border color
                       ),
                     ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'الرجاء عدم ترك الخانة فارغة!';
+                      }
+                      return null;
+                    },
                   ),
-                ],
-              ),
 
-              Container(
-                margin: const EdgeInsets.all(15),
-              ),
-
-              // Type selection section
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 83, right: 25),
-
-                      //textDirection: TextDirection.rtl,
-                      child: TextFormField(
-                        controller: placeName,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'الرجاء عدم ترك الخانة فارغة!';
-                          }
-                          return null;
-                        },
-                      ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const Text(
+                    ':تصنيف المكان ',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontFamily: "Tajawal-b",
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Row(
-                      children: [
-                        Text(
-                          ':اسم المكان ',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontFamily: "Tajawal-b",
-                          ),
-                        ),
-                        Text(
-                          '*',
-                          style: TextStyle(
-                            color: Colors.red,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              // Add more widgets here
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
                   Container(
-                    margin: const EdgeInsets.only(top: 10, left: 10),
+                    margin: const EdgeInsets.only(top: 10),
                     // Adjust top and left values
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
                       color: Colors.white,
                       border: Border.all(
-                        color: Colors.grey.shade300,
-                        width: 2,
+                        color: Colors.black54,
+                        width: 1,
                       ),
                     ),
-                    height: 50,
-                    width: 150,
                     child: DropdownButtonFormField<int>(
+                      value: null, // Set initial value to null
                       decoration: const InputDecoration(
                         isDense: true,
                         border: InputBorder.none,
-                        contentPadding: EdgeInsets.only(left: 8),
-                        hintText: 'اختر التصنيف',
+                        prefixIcon: Icon(
+                          Icons.arrow_drop_down, // Set your desired icon
+                          color: Color(0xFF6db881),
+                        ),
+                        contentPadding: EdgeInsets.only(top: 15, bottom: 15, right: 10, left: 10),
                       ),
-                      items: const [
+                      iconSize: 0,
+                      hint: const Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          'اختر تصنيف المكان',
+                        ),
+                      ),
+                      isExpanded: true,
+                      items: [
                         DropdownMenuItem<int>(
                           value: 1,
-                          child: Text(
-                            "فعاليات و ترفيه",
-                            style: TextStyle(
-                              fontSize: 17.0,
-                              fontFamily: "Tajawal-m",
-                              color: Color(0xFF6db881),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              "فعاليات و ترفيه",
+                              style: TextStyle(
+                                fontSize: 17.0,
+                                fontFamily: "Tajawal-m",
+                                color: Color(0xFF6db881),
+                              ),
+                              textAlign: TextAlign.end,
                             ),
                           ),
                         ),
                         DropdownMenuItem<int>(
                           value: 2,
-                          child: Text(
-                            "مطاعم",
-                            style: TextStyle(
-                              fontSize: 17.0,
-                              fontFamily: "Tajawal-m",
-                              color: Color(0xFF6db881),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              "مطاعم",
+                              style: TextStyle(
+                                fontSize: 17.0,
+                                fontFamily: "Tajawal-m",
+                                color: Color(0xFF6db881),
+                              ),
+                              textAlign: TextAlign.end,
                             ),
                           ),
                         ),
                         DropdownMenuItem<int>(
                           value: 3,
-                          child: Text(
-                            "مراكز تسوق",
-                            style: TextStyle(
-                              fontSize: 17.0,
-                              fontFamily: "Tajawal-m",
-                              color: Color(0xFF6db881),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              "مراكز تسوق",
+                              style: TextStyle(
+                                fontSize: 17.0,
+                                fontFamily: "Tajawal-m",
+                                color: Color(0xFF6db881),
+                              ),
+                              textAlign: TextAlign.end,
                             ),
                           ),
                         ),
@@ -936,140 +1162,109 @@ class CustomFormState extends State<CustomForm> {
                       },
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Row(
-                      children: [
-                        Text(
-                          ':تصنيف المكان ',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontFamily: "Tajawal-b",
-                          ),
-                        ),
-                        Text(
-                          '*',
-                          style: TextStyle(
-                            color: Colors.red,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 10,
-              ),
 
-              // City
-              Container(
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.only(left: 7),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          color: Colors.white,
-                          border: Border.all(
-                            color: Colors.grey.shade300,
-                            width: 1,
-                          ),
-                        ),
-                        height: 50,
-                        width: 155,
-                        child: DropdownButtonFormField(
-                          isExpanded: true,
-                          menuMaxHeight: 400,
-                          items: citiesList.map((value) {
-                            return DropdownMenuItem(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                          onChanged: (_selectedValue) async {
-                            var tempCity = await cities.where((element) =>
-                            (element['name_ar'] == _selectedValue));
-                            var tempArea = await areas.where((element) =>
-                            (element['city_id'] ==
-                                tempCity.first['city_id']));
-                            _AddressKey.currentState?.reset();
-                            areasList.clear();
-                            areasList.addAll(tempArea);
-                            setState(() {
-                              city = _selectedValue.toString();
-                            });
-                          },
-                          validator: (value) {
-                            if (value == null) {
-                              return 'الرجاء اختيار المدينة';
-                            }
-                          },
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          style: const TextStyle(
-                            fontSize: 16.0,
-                            fontFamily: "Tajawal-m",
-                            color: Color(0xFF6db881),
-                          ),
-                          decoration: const InputDecoration(
-                            isDense: true,
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.only(right: 7),
-                            hintText: 'اختر المدينة',
-                          ),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(right: 7),
-                      ),
-                      const Padding(
-                          padding: EdgeInsets.only(left: 80, right: 50)),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Row(
-                          children: [
-                            Text(
-                              ':المدينة ',
-                              style: TextStyle(
-                                fontSize: 20.0,
-                                fontFamily: "Tajawal-b",
-                              ),
-                            ),
-                            Text(
-                              '*',
-                              style: TextStyle(
-                                color: Colors.red,
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
+                  const SizedBox(
+                    height: 20,
                   ),
-                ),
-              ),
-
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
+                  const Text(
+                    ':المدينة ',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontFamily: "Tajawal-b",
+                    ),
+                  ),
                   Container(
-                    margin: const EdgeInsets.only(top: 8, left: 8),
+                    margin: const EdgeInsets.only(top: 10),
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
                       color: Colors.white,
-                      border: Border.all(color: Colors.grey.shade300, width: 1),
+                      border: Border.all(
+                        color: Colors.black54,
+                        width: 1,
+                      ),
                     ),
-                    height: 50,
-                    width: 155,
                     child: DropdownButtonFormField(
                       isExpanded: true,
+                      menuMaxHeight: 400,
+                      items: citiesList.map((value) {
+                        return DropdownMenuItem(
+                          value: value,
+                          child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Text(value)),
+                        );
+                      }).toList(),
+                      onChanged: (_selectedValue) async {
+                        var tempCity = await cities.where((element) =>
+                        (element['name_ar'] == _selectedValue));
+                        var tempArea = await areas.where((element) =>
+                        (element['city_id'] == tempCity.first['city_id']));
+                        _AddressKey.currentState?.reset();
+                        areasList.clear();
+                        areasList.addAll(tempArea);
+                        setState(() {
+                          city = _selectedValue.toString();
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null) {
+                          return 'الرجاء اختيار المدينة';
+                        }
+                      },
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      style: const TextStyle(
+                        fontSize: 16.0,
+                        fontFamily: "Tajawal-m",
+                        color: Color(0xFF6db881),
+                      ),
+                      decoration: const InputDecoration(
+                        isDense: true,
+                        border: InputBorder.none,
+                        prefixIcon: Icon(
+                          Icons.arrow_drop_down, // Set your desired icon
+                          color: Color(0xFF6db881),
+                        ),
+                        contentPadding: EdgeInsets.only(
+                            top: 15, bottom: 15, right: 10, left: 10),
+                      ),
+                      iconSize: 0,
+                      hint: const Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            'اختر المدينة',
+                          )),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const Text(
+                    ':الحي ',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontFamily: "Tajawal-b",
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 10),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      color: Colors.white,
+                      border: Border.all(
+                        color: Colors.black54,
+                        width: 1,
+                      ),
+                    ),
+                    child: DropdownButtonFormField(
+                      isExpanded: true,
+                      menuMaxHeight: 400,
                       key: _AddressKey,
                       items: areasList.map((value) {
                         return DropdownMenuItem(
                           value: value,
-                          child: Text(value['name_ar']),
+                          child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Text(value['name_ar'])),
                         );
                       }).toList(),
                       onChanged: (dynamic value) {
@@ -1091,119 +1286,89 @@ class CustomFormState extends State<CustomForm> {
                       decoration: const InputDecoration(
                         isDense: true,
                         border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(7),
-                        hintText: 'اختر الحي ',
+                        prefixIcon: Icon(
+                          Icons.arrow_drop_down, // Set your desired icon
+                          color: Color(0xFF6db881),
+                        ),
+                        contentPadding: EdgeInsets.only(
+                            top: 15, bottom: 15, right: 10, left: 10),
                       ),
+                      iconSize: 0,
+                      hint: const Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            'اختر الحي',
+                          )),
                     ),
                   ),
-                  Container(
-                    margin: const EdgeInsets.all(21),
+                  // City
+
+                  const SizedBox(
+                    height: 20,
                   ),
-                  const Padding(padding: EdgeInsets.only(left: 75, right: 50)),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Row(
-                      children: [
-                        Text(
-                          ':الحي ',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontFamily: "Tajawal-b",
-                          ),
-                        ),
-                        Text(
-                          '*',
-                          style: TextStyle(
-                            color: Colors.red,
-                          ),
-                        ),
-                      ],
+                  const Text(
+                    ' :ساعات العمل ',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontFamily: "Tajawal-b",
                     ),
-                  )
-                ],
-              ),
-
-
-
-              SizedBox(
-                height: 15,
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    margin: const EdgeInsets.only(top: 8, left: 8),
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      color: Colors.white,
-                      border: Border.all(color: Colors.grey.shade300, width: 1),
-                    ),
-                    width: 150,
-                    // Set the width as needed
-                    height: 50,
-                    // Set the height as needed
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Center(
                     child: ElevatedButton(
                       onPressed: () {
                         showWorkingHoursDialog(context);
                       },
-                      child: Text('أضف ساعات العمل'),
                       style: ButtonStyle(
-                        backgroundColor:
-                        MaterialStateProperty.all<Color>(Color(0xFF6db881)),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            const Color(0xFF6db881)),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text('أضف ساعات العمل'),
+                          ),
+                          Icon(Icons.access_time)
+                        ],
                       ),
                     ),
                   ),
-                  SizedBox(width: 85),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Row(
+                  const SizedBox(
+                    height: 15,
+                  ),
+
+                  // Display selected working hours for weekdays
+                  // Text('ساعات العمل في أيام الأسبوع: $weekdaysWorkingHr'),
+
+                  /////////////////////////////////new attr////////////////////////////////////////////////
+
+                  if (type == 1)
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Text(
-                          ': ساعات العمل ',
+                        const Text(
+                          'نوع الفعالية: ',
                           style: TextStyle(
-                            fontSize: 20.0,
+                            fontSize: 18.0,
                             fontFamily: "Tajawal-b",
                           ),
                         ),
-                        Text(
-                          '*',
-                          style: TextStyle(
-                            color: Colors.red,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 15,
-              ),
-
-              // Display selected working hours for weekdays
-              // Text('ساعات العمل في أيام الأسبوع: $weekdaysWorkingHr'),
-
-              /////////////////////////////////new attr////////////////////////////////////////////////
-
-              if (type == 1)
-                Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
                         Container(
-                          margin: const EdgeInsets.only(top: 10, left: 10),
+                          margin: const EdgeInsets.only(top: 5),
                           decoration: BoxDecoration(
                             borderRadius:
                             const BorderRadius.all(Radius.circular(10)),
                             color: Colors.white,
                             border: Border.all(
-                              color: Colors.grey.shade300,
+                              color: Colors.black54,
                               width: 2,
                             ),
                           ),
-                          height: 50,
-                          width: 154,
                           child: DropdownButtonFormField<String>(
                             style: const TextStyle(
                               fontSize: 16.0,
@@ -1213,365 +1378,384 @@ class CustomFormState extends State<CustomForm> {
                             decoration: const InputDecoration(
                               isDense: true,
                               border: InputBorder.none,
-                              contentPadding: EdgeInsets.only(left: 8),
-                              hintText: 'اختر نوع الفعالية',
+                              prefixIcon: Icon(
+                                Icons.arrow_drop_down, // Set your desired icon
+                                color: Color(0xFF6db881),
+                              ),
+                              contentPadding: EdgeInsets.only(
+                                  top: 15, bottom: 15, right: 10, left: 10),
                             ),
+                            iconSize: 0,
+                            isExpanded: true,
+                            hint: const Align(
+                                alignment: Alignment.centerRight,
+                                child: Text(
+                                  'اختر نوع الفعالية',
+                                )),
                             onChanged: (String? newValue) {
                               setState(() {
-                                typeEnt.add(newValue!);
+                                typeEnt = newValue ?? '';
                               });
                             },
                             items: typeEntOptions.map((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
                                 child: Align(
-                                  alignment: Alignment.center,
+                                  alignment: Alignment.centerRight,
                                   child: Text(value,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontSize: 16.0,
+                                          color: Color(0xFF6db881),
                                           fontFamily: 'Tajawal-m')),
                                 ),
                               );
                             }).toList(),
                           ),
                         ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Row(
-                            children: [
-                              Text(
-                                ':نوع الفعالية ',
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontFamily: "Tajawal-b",
-                                ),
-                              ),
-                              Text(
-                                '*',
-                                style: TextStyle(
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                        const SizedBox(height: 20),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
+                            const Text(
+                              'هل الفعالية مؤقتة؟',
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                fontFamily: 'Tajawal-b',
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                const Text(
-                                  'هل الفعالية مؤقتة؟',
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontFamily: 'Tajawal-b',
-                                  ),
+                                CustomRadioButton(
+                                    onTap: () {
+                                      setState(() {
+                                        isTemporary = false;
+                                      });
+                                    },
+                                    text: 'لا',
+                                    value: !(isTemporary ?? true)),
+                                const SizedBox(
+                                  width: 10,
                                 ),
-                                SizedBox(height: 10),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                CustomRadioButton(
+                                    onTap: () {
+                                      setState(() {
+                                        isTemporary = true;
+                                      });
+                                    },
+                                    text: 'نعم',
+                                    value: isTemporary ?? false),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                              ],
+                            ),
+                            Visibility(
+                              visible: isTemporary ?? false,
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 8),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          'نعم',
-                                          style: TextStyle(
-                                            fontSize: 16.0,
-                                            fontFamily: 'Tajawal-m',
+                                    Expanded(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          _selectFinishDate(context);
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 5, horizontal: 7),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                            const BorderRadius.all(
+                                                Radius.circular(10)),
+                                            color: Colors.white,
+                                            border: Border.all(
+                                              color: Colors.black54,
+                                              width: 1,
+                                            ),
                                           ),
-                                        ),
-                                        Container(
-                                          margin:
-                                          const EdgeInsets.only(left: 10),
-                                          child: Radio<bool>(
-                                            value: true,
-                                            groupValue: isTemporary,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                isTemporary = value;
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Visibility(
-                                      visible: isTemporary == true,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                        // Align buttons horizontally
-                                        children: [
-                                          Column(
+                                          child: Row(
                                             children: [
-                                              Text(
-                                                finishDate ??
-                                                    'تاريخ النهاية غير محدد',
-                                                style: TextStyle(
-                                                    fontSize: 16.0,
-                                                    fontFamily: 'Tajawal-m'),
+                                              Expanded(
+                                                child: Column(
+                                                  mainAxisSize:
+                                                  MainAxisSize.min,
+                                                  children: [
+                                                    const Padding(
+                                                      padding: EdgeInsets.only(
+                                                          bottom: 5),
+                                                      child: Text(
+                                                        'اختر تاريخ النهاية',
+                                                        style: TextStyle(
+                                                            fontSize: 14.0,
+                                                            fontFamily:
+                                                            'Tajawal-m'),
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      finishDate != ''
+                                                          ? finishDate
+                                                          : 'تاريخ النهاية غير محدد',
+                                                      style: TextStyle(
+                                                          fontSize: 13.0,
+                                                          color: finishDate !=
+                                                              ''
+                                                              ? const Color(
+                                                              0xFF6db881)
+                                                              : Colors.red,
+                                                          fontFamily:
+                                                          'Tajawal-m'),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                              ElevatedButton(
-                                                style: ElevatedButton.styleFrom(
-                                                    primary: Color(0xFF6db881)),
-                                                onPressed: () =>
-                                                    _selectFinishDate(context),
-                                                child:
-                                                Text('اختر تاريخ النهاية'),
-                                              ),
+                                              const Icon(Icons.access_time)
                                             ],
                                           ),
-                                          SizedBox(width: 10),
-                                          Column(
-                                            children: [
-                                              Text(
-                                                startDate ??
-                                                    'تاريخ البداية غير محدد',
-                                                style: TextStyle(
-                                                    fontSize: 16.0,
-                                                    fontFamily: 'Tajawal-m'),
-                                              ),
-                                              ElevatedButton(
-                                                style: ElevatedButton.styleFrom(
-                                                    primary: Color(0xFF6db881)),
-                                                onPressed: () =>
-                                                    _selectStartDate(context),
-                                                child:
-                                                Text('اختر تاريخ البداية'),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
+                                        ),
                                       ),
                                     ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          'لا',
-                                          style: TextStyle(
-                                            fontSize: 16.0,
-                                            fontFamily: 'Tajawal-m',
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          _selectStartDate(context);
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 5, horizontal: 7),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                            const BorderRadius.all(
+                                                Radius.circular(10)),
+                                            color: Colors.white,
+                                            border: Border.all(
+                                              color: Colors.black54,
+                                              width: 1,
+                                            ),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                child: Column(
+                                                  mainAxisSize:
+                                                  MainAxisSize.min,
+                                                  children: [
+                                                    const Padding(
+                                                      padding: EdgeInsets.only(
+                                                          bottom: 5),
+                                                      child: Text(
+                                                        'اختر تاريخ البداية',
+                                                        style: TextStyle(
+                                                            fontSize: 14.0,
+                                                            fontFamily:
+                                                            'Tajawal-m'),
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      startDate != ''
+                                                          ? startDate
+                                                          : 'تاريخ البداية غير محدد',
+                                                      style: TextStyle(
+                                                          fontSize: 13.0,
+                                                          color: startDate != ''
+                                                              ? const Color(
+                                                              0xFF6db881)
+                                                              : Colors.red,
+                                                          fontFamily:
+                                                          'Tajawal-m'),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              const Icon(Icons.access_time)
+                                            ],
                                           ),
                                         ),
-                                        Container(
-                                          margin:
-                                          const EdgeInsets.only(left: 10),
-                                          child: Radio<bool>(
-                                            value: false,
-                                            groupValue: isTemporary,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                isTemporary = value;
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                      ],
+                                      ),
                                     ),
                                   ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            const Text(
+                              ' هل هو مكان خارجي ؟',
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                fontFamily: "Tajawal-b",
+                                color:
+                                Colors.black, // Set the text color to black
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                CustomRadioButton(
+                                    onTap: () {
+                                      setState(() {
+                                        INorOUT = false;
+                                      });
+                                    },
+                                    text: 'لا',
+                                    value: !(INorOUT ?? true)),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                CustomRadioButton(
+                                    onTap: () {
+                                      setState(() {
+                                        INorOUT = true;
+                                      });
+                                    },
+                                    text: 'نعم',
+                                    value: INorOUT ?? false),
+                                const SizedBox(
+                                  width: 10,
                                 ),
                               ],
                             )
                           ],
                         ),
-                        SizedBox(height: 20),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: ' هل هو مكان خارجي ؟',
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontFamily: "Tajawal-b",
-                                        color: Colors
-                                            .black, // Set the text color to black
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: ' *',
-                                      style: TextStyle(
-                                        color: Colors.red,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text('نعم',
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontFamily: 'Tajawal-m')),
-                                Radio(
-                                  value: true,
-                                  groupValue: INorOUT,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      hasValetServiced = INorOUT!;
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text('لا',
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontFamily: 'Tajawal-m')),
-                                Radio(
-                                  value: false,
-                                  groupValue: INorOUT,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      INorOUT = value!;
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: 'هل يتطلب حجز ؟ ',
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontFamily: "Tajawal-b",
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: ' * ',
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                  ),
-                                ),
-                              ],
-                            ),
+                        const SizedBox(height: 20),
+                        const Text(
+                          'هل يتطلب حجز ؟ ',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontFamily: "Tajawal-b",
+                            color: Colors.black, // Set the text color to black
                           ),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Text('نعم',
-                                style: TextStyle(fontSize: 16.0, fontFamily: 'Tajawal-m')),
-                            Radio(
-                              value: true,
-                              groupValue: hasReservation,
-                              onChanged: (value) {
-                                setState(() {
-                                  hasReservation = value;
-                                });
-                              },
+                            CustomRadioButton(
+                                onTap: () {
+                                  setState(() {
+                                    hasReservation = false;
+                                  });
+                                },
+                                text: 'لا',
+                                value: !(hasReservation ?? true)),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            CustomRadioButton(
+                                onTap: () {
+                                  setState(() {
+                                    hasReservation = true;
+                                  });
+                                },
+                                text: 'نعم',
+                                value: hasReservation ?? false),
+                            const SizedBox(
+                              width: 10,
                             ),
                           ],
                         ),
-                        // Conditionally show the square-shaped TextField if 'نعم' is selected
-                        if (hasReservation == true)
-                          Container(
-                            width: 500,
-                            height: 50,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 94, right: 10),
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  hintText: ' تفاصيل طريقة الحجز و رقم للتواصل إن وجد',
-                                  border: OutlineInputBorder( // Set border to make it square-shaped
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text('لا',
-                                style: TextStyle(fontSize: 16.0, fontFamily: 'Tajawal-m')),
-                            Radio(
-                              value: false,
-                              groupValue: hasReservation,
-                              onChanged: (value) {
-                                setState(() {
-                                  hasReservation = value;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
 
-              if (type == 2) // Check if the type is for مطاعم
-                Column(
-                  children: [
-                    // Add the DropdownButtonFormField for 'cuisine'
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          if (hasReservation == true)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: TextFormField(
+                                textAlign: TextAlign.end,
+                                autovalidateMode: AutovalidateMode.onUserInteraction,
+                                cursorColor: const Color(0xFF6db881),
+                                onChanged: (value) {
+                                  // Update the reservationDetails variable when text changes
+                                  reservationDetails = value;
+                                },
+                                decoration: const InputDecoration(
+                                  filled: true,
+                                  contentPadding: EdgeInsets.only(top: 0, bottom: 0, right: 10, left: 10),
+                                  fillColor: Colors.white,
+                                  hintText: 'تفاصيل طريقة الحجز و رقم للتواصل إن وجد',
+                                  hintStyle: TextStyle(
+                                    color: Colors.black45,
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    borderSide: BorderSide(color: Color(0xFF6db881), width: 1),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    borderSide: BorderSide(
+                                      color: Color(0xFF6db881),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                      ],
+                    ),
+
+                  if (type == 2) // Check if the type is for مطاعم
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
+                        // Add the DropdownButtonFormField for 'cuisine'
+                        const Text(
+                          'نوع الطعام ',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontFamily: "Tajawal-b",
+                          ),
+                        ),
                         Container(
-                          margin: const EdgeInsets.only(top: 10, left: 10),
+                          margin: const EdgeInsets.only(top: 10),
                           decoration: BoxDecoration(
                             borderRadius:
                             const BorderRadius.all(Radius.circular(10)),
                             color: Colors.white,
                             border: Border.all(
-                              color: Colors.grey.shade300,
+                              color: Colors.black54,
                               width: 2,
                             ),
                           ),
-                          height: 50,
-                          width: 150,
                           child: DropdownButtonFormField<String>(
+                            style: const TextStyle(
+                              fontSize: 16.0,
+                              fontFamily: "Tajawal-m",
+                              color: Color(0xFF6db881),
+                            ),
                             decoration: const InputDecoration(
                               isDense: true,
                               border: InputBorder.none,
-                              contentPadding: EdgeInsets.only(left: 8),
-                              hintText: 'اختر نوع الطعام',
+                              prefixIcon: Icon(
+                                Icons.arrow_drop_down, // Set your desired icon
+                                color: Color(0xFF6db881),
+                              ),
+                              contentPadding: EdgeInsets.only(
+                                  top: 15, bottom: 15, right: 10, left: 10),
                             ),
+                            iconSize: 0,
+                            isExpanded: true,
                             onChanged: (String? newValue) {
                               setState(() {
                                 cuisine.add(
                                     newValue!); // Add the selected cuisine to the list
                               });
                             },
+                            hint: const Align(
+                                alignment: Alignment.centerRight,
+                                child: Text(
+                                  'اختر نوع الطعام',
+                                )),
                             items: cuisineOptions.map((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
                                 child: Align(
                                   alignment: Alignment.centerRight,
                                   child: Text(value,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontSize: 16.0,
                                           fontFamily: 'Tajawal-m')),
                                 ),
@@ -1579,34 +1763,16 @@ class CustomFormState extends State<CustomForm> {
                             }).toList(),
                           ),
                         ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Row(
-                            children: [
-                              Text(
-                                ':نوع الطعام ',
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontFamily: "Tajawal-b",
-                                ),
-                              ),
-                              Text(
-                                '*',
-                                style: TextStyle(
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ],
+                        const SizedBox(height: 20),
+                        const Text(
+                          'نطاق الأسعار ',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontFamily: "Tajawal-b",
                           ),
                         ),
-                      ],
-                    ),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
                         Container(
-                          margin: const EdgeInsets.only(top: 10, left: 10),
+                          margin: const EdgeInsets.only(top: 10),
                           decoration: BoxDecoration(
                             borderRadius:
                             const BorderRadius.all(Radius.circular(10)),
@@ -1616,21 +1782,35 @@ class CustomFormState extends State<CustomForm> {
                               width: 2,
                             ),
                           ),
-                          height: 50,
-                          width: 150,
                           child: DropdownButtonFormField<String>(
+                            style: const TextStyle(
+                              fontSize: 16.0,
+                              fontFamily: "Tajawal-m",
+                              color: Color(0xFF6db881),
+                            ),
                             decoration: const InputDecoration(
                               isDense: true,
                               border: InputBorder.none,
-                              contentPadding: EdgeInsets.only(left: 8),
-                              hintText: 'اختر نطاق الأسعار',
+                              prefixIcon: Icon(
+                                Icons.arrow_drop_down, // Set your desired icon
+                                color: Color(0xFF6db881),
+                              ),
+                              contentPadding: EdgeInsets.only(
+                                  top: 15, bottom: 15, right: 10, left: 10),
                             ),
+                            iconSize: 0,
+                            isExpanded: true,
                             value: priceRange,
                             onChanged: (String? newValue) {
                               setState(() {
                                 priceRange = newValue!;
                               });
                             },
+                            hint: const Align(
+                                alignment: Alignment.centerRight,
+                                child: Text(
+                                  'اختر نطاق الأسعار',
+                                )),
                             items:
                             ['مرتفع', 'متوسط', 'منخفض'].map((String value) {
                               return DropdownMenuItem<String>(
@@ -1638,7 +1818,7 @@ class CustomFormState extends State<CustomForm> {
                                 child: Align(
                                   alignment: Alignment.centerRight,
                                   child: Text(value,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontSize: 16.0,
                                           fontFamily: 'Tajawal-m')),
                                 ),
@@ -1646,986 +1826,949 @@ class CustomFormState extends State<CustomForm> {
                             }).toList(),
                           ),
                         ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Row(
-                            children: [
-                              Text(
-                                ':نطاق الأسعار ',
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontFamily: "Tajawal-b",
-                                ),
-                              ),
-                              Text(
-                                '*',
-                                style: TextStyle(
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ],
+                        const SizedBox(height: 20),
+                        const Text(
+                          'الوجبات المقدمة ',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontFamily: "Tajawal-b",
+                            color: Colors.black, // Set the text color to black
                           ),
                         ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: ':الوجبات المقدمة ',
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontFamily: "Tajawal-b",
-                                    color: Colors
-                                        .black, // Set the text color to black
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: ' * ',
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Column(
+                        const SizedBox(height: 10),
+                        Wrap(
+                          spacing: 10,
+                          runSpacing: 7,
+                          alignment: WrapAlignment.end,
                           children: servesOptions.map((serve) {
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 1.0),
-                                  // Adjust the right padding as desired
-                                  child: Text(serve,
-                                      style: TextStyle(
-                                          fontSize: 16.0,
-                                          fontFamily: 'Tajawal-m')),
-                                ),
-                                Checkbox(
-                                  value: serves.contains(serve),
-                                  onChanged: (bool? value) {
-                                    setState(() {
-                                      if (value != null && value) {
-                                        serves.add(serve);
-                                      } else {
-                                        serves.remove(serve);
-                                      }
-                                    });
-                                  },
-                                ),
-                              ],
-                            );
+                            return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    if (serves.contains(serve)) {
+                                      serves.remove(serve);
+                                    } else {
+                                      serves.add(serve);
+                                    }
+                                  });
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.only(
+                                      top: 10, bottom: 10),
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(10)),
+                                    color: Colors.white,
+                                    border: Border.all(
+                                      color: serves.contains(serve)
+                                          ? const Color(0xFF6db881)
+                                          : Colors.black,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const SizedBox(
+                                        width: 25,
+                                      ),
+                                      Text(serve,
+                                          style: const TextStyle(
+                                              fontSize: 16.0,
+                                              fontFamily: 'Tajawal-m')),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      serves.contains(serve)
+                                          ? const Icon(
+                                        Icons.check_rounded,
+                                        size: 16,
+                                        color: Color(0xFF6db881),
+                                      )
+                                          : const SizedBox(
+                                        width: 16,
+                                      ),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                    ],
+                                  ),
+                                ));
                           }).toList(),
                         ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
+                        const SizedBox(height: 20),
 
-// Add the CheckBoxes for 'atmosphere'
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: ':الجو العام ',
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontFamily: "Tajawal-b",
-                                    color: Colors
-                                        .black, // Set the text color to black
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: ' * ',
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                  ),
-                                ),
-                              ],
-                            ),
+                        // Add the CheckBoxes for 'atmosphere'
+                        const Text(
+                          'الجو العام ',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontFamily: "Tajawal-b",
+                            color: Colors.black, // Set the text color to black
                           ),
                         ),
-                        SizedBox(height: 10),
-                        Column(
+                        const SizedBox(height: 10),
+                        Wrap(
+                          spacing: 10,
+                          runSpacing: 7,
+                          alignment: WrapAlignment.end,
                           children: atmosphereOptions.map((atmosphereOption) {
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(atmosphereOption,
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontFamily: 'Tajawal-m')),
-                                Checkbox(
-                                  value: atmosphere.contains(atmosphereOption),
-                                  onChanged: (bool? value) {
-                                    setState(() {
-                                      if (value == true) {
-                                        atmosphere.add(atmosphereOption);
-                                      } else {
-                                        atmosphere.remove(atmosphereOption);
-                                      }
-                                    });
-                                  },
-                                ),
-                              ],
-                            );
+                            return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    if (atmosphere.contains(atmosphereOption)) {
+                                      atmosphere.remove(atmosphereOption);
+                                    } else {
+                                      atmosphere.add(atmosphereOption);
+                                    }
+                                  });
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.only(
+                                      top: 10, bottom: 10),
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(10)),
+                                    color: Colors.white,
+                                    border: Border.all(
+                                      color:
+                                      atmosphere.contains(atmosphereOption)
+                                          ? const Color(0xFF6db881)
+                                          : Colors.black,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const SizedBox(
+                                        width: 25,
+                                      ),
+                                      Text(atmosphereOption,
+                                          style: const TextStyle(
+                                              fontSize: 16.0,
+                                              fontFamily: 'Tajawal-m')),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      atmosphere.contains(atmosphereOption)
+                                          ? const Icon(
+                                        Icons.check_rounded,
+                                        size: 16,
+                                        color: Color(0xFF6db881),
+                                      )
+                                          : const SizedBox(
+                                        width: 16,
+                                      ),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                    ],
+                                  ),
+                                ));
                           }).toList(),
                         ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: 'هل يتطلب حجز ؟ ',
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontFamily: "Tajawal-b",
-                                    color: Colors
-                                        .black, // Set the text color to black
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: ' * ',
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                  ),
-                                ),
-                              ],
-                            ),
+
+                        const SizedBox(height: 20),
+                        const Text(
+                          'هل يتطلب حجز ؟ ',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontFamily: "Tajawal-b",
+                            color: Colors.black, // Set the text color to black
                           ),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Text('نعم',
-                                style: TextStyle(
-                                    fontSize: 16.0, fontFamily: 'Tajawal-m')),
-                            Radio(
-                              value: true,
-                              groupValue: hasReservation,
-                              onChanged: (value) {
-                                setState(() {
-                                  hasReservation = value;
-                                });
-                              },
+                            CustomRadioButton(
+                                onTap: () {
+                                  setState(() {
+                                    hasReservation = false;
+                                  });
+                                },
+                                text: 'لا',
+                                value: !(hasReservation ?? true)),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            CustomRadioButton(
+                                onTap: () {
+                                  setState(() {
+                                    hasReservation = true;
+                                  });
+                                },
+                                text: 'نعم',
+                                value: hasReservation ?? false),
+                            const SizedBox(
+                              width: 10,
                             ),
                           ],
                         ),
                         if (hasReservation == true)
-                          Container(
-                            width: 500, // Adjust the width as needed
-                            height: 50, // Adjust the height as needed
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 94, right: 10),
+                          if (hasReservation == true)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10),
                               child: TextFormField(
-                                decoration: InputDecoration(
-                                  hintText: ' تفاصيل طريقة الحجز و رقم للتواصل إن وجد',
-                                  border: OutlineInputBorder( // Set border to make it square-shaped
-                                    borderRadius: BorderRadius.circular(10.0),
+                                textAlign: TextAlign.end,
+                                autovalidateMode: AutovalidateMode.onUserInteraction,
+                                cursorColor: const Color(0xFF6db881),
+                                onChanged: (value) {
+                                  // Update the reservationDetails variable when text changes
+                                  reservationDetails = value;
+                                },
+                                decoration: const InputDecoration(
+                                  filled: true,
+                                  contentPadding: EdgeInsets.only(top: 0, bottom: 0, right: 10, left: 10),
+                                  fillColor: Colors.white,
+                                  hintText: 'تفاصيل طريقة الحجز و رقم للتواصل إن وجد',
+                                  hintStyle: TextStyle(
+                                    color: Colors.black45,
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    borderSide: BorderSide(color: Color(0xFF6db881), width: 1),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    borderSide: BorderSide(
+                                      color: Color(0xFF6db881),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
+
+                        const SizedBox(height: 20),
+                        const Text(
+                          'هل يسمح بدخول الأطفال ؟',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontFamily: "Tajawal-b",
                           ),
+                        ),
+                        const SizedBox(height: 10),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Text('لا',
-                                style: TextStyle(
-                                    fontSize: 16.0, fontFamily: 'Tajawal-m')),
-                            Radio(
-                              value: false,
-                              groupValue: hasReservation,
-                              onChanged: (value) {
-                                setState(() {
-                                  hasReservation = value;
-                                });
-                              },
+                            CustomRadioButton(
+                                onTap: () {
+                                  setState(() {
+                                    allowChildren = false;
+                                  });
+                                },
+                                text: 'لا',
+                                value: !(allowChildren ?? true)),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            CustomRadioButton(
+                                onTap: () {
+                                  setState(() {
+                                    allowChildren = true;
+                                  });
+                                },
+                                text: 'نعم',
+                                value: allowChildren ?? false),
+                            const SizedBox(
+                              width: 10,
                             ),
                           ],
                         ),
                       ],
                     ),
 
+                  if (type == 3)
                     Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            'هل يسمح بدخول الأطفال ؟',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontFamily: "Tajawal-b",
-                            ),
+                        const SizedBox(height: 10),
+                        const Text(
+                          ':هل المركز داخلي أم خارجي ',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontFamily: "Tajawal-b",
+                            color: Colors.black, // Set the text color to black
                           ),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Text('نعم',
-                                style: TextStyle(
-                                    fontSize: 16.0, fontFamily: 'Tajawal-m')),
-                            Radio(
-                              value: true,
-                              groupValue: allowChildren,
-                              onChanged: (value) {
-                                setState(() {
-                                  allowChildren = value;
-                                });
-                              },
+                            CustomRadioButton(
+                                onTap: () {
+                                  setState(() {
+                                    INorOUT = false;
+                                  });
+                                },
+                                text: 'خارجي',
+                                value: !(INorOUT ?? true)),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            CustomRadioButton(
+                                onTap: () {
+                                  setState(() {
+                                    INorOUT = true;
+                                  });
+                                },
+                                text: 'داخلي',
+                                value: INorOUT ?? false),
+                            const SizedBox(
+                              width: 10,
                             ),
                           ],
                         ),
+                        const SizedBox(height: 20),
+                        const Text(
+                          'هل يوجد سينما؟',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontFamily: "Tajawal-b",
+                          ),
+                        ),
+                        const SizedBox(height: 10),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Text('لا',
-                                style: TextStyle(
-                                    fontSize: 16.0, fontFamily: 'Tajawal-m')),
-                            Radio(
-                              value: false,
-                              groupValue: allowChildren,
-                              onChanged: (value) {
-                                setState(() {
-                                  allowChildren = value;
-                                });
-                              },
+                            CustomRadioButton(
+                                onTap: () {
+                                  setState(() {
+                                    hasCinema = false;
+                                  });
+                                },
+                                text: 'لا',
+                                value: !(hasCinema ?? true)),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            CustomRadioButton(
+                                onTap: () {
+                                  setState(() {
+                                    hasCinema = true;
+                                  });
+                                },
+                                text: 'نعم',
+                                value: hasCinema ?? false),
+                            const SizedBox(
+                              width: 10,
                             ),
                           ],
                         ),
-                      ],
-                    )
-                  ],
-                ),
-
-              if (type == 3)
-                Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: ':هل المركز داخلي أم خارجي ',
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontFamily: "Tajawal-b",
-                                    color: Colors
-                                        .black, // Set the text color to black
+                        const SizedBox(height: 20),
+                        const Text(
+                          'هل توجد منطقة ألعاب؟',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontFamily: "Tajawal-b",
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            CustomRadioButton(
+                                onTap: () {
+                                  setState(() {
+                                    hasPlayArea = false;
+                                  });
+                                },
+                                text: 'لا',
+                                value: !(hasPlayArea ?? true)),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            CustomRadioButton(
+                                onTap: () {
+                                  setState(() {
+                                    hasPlayArea = true;
+                                  });
+                                },
+                                text: 'نعم',
+                                value: hasPlayArea ?? false),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        const Text(
+                          'هل يوجد منطقة مطاعم؟',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontFamily: "Tajawal-b",
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            CustomRadioButton(
+                                onTap: () {
+                                  setState(() {
+                                    hasFoodCourt = false;
+                                  });
+                                },
+                                text: 'لا',
+                                value: !(hasFoodCourt ?? true)),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            CustomRadioButton(
+                                onTap: () {
+                                  setState(() {
+                                    hasFoodCourt = true;
+                                  });
+                                },
+                                text: 'نعم',
+                                value: hasFoodCourt ?? false),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        const Text(
+                          'هل يوجد سوبرماركت؟',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontFamily: "Tajawal-b",
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            CustomRadioButton(
+                                onTap: () {
+                                  setState(() {
+                                    hasSupermarket = false;
+                                  });
+                                },
+                                text: 'لا',
+                                value: !(hasSupermarket ?? true)),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            CustomRadioButton(
+                                onTap: () {
+                                  setState(() {
+                                    hasSupermarket = true;
+                                  });
+                                },
+                                text: 'نعم',
+                                value: hasSupermarket ?? false),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        const Text(
+                          'أنواع المحلات',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontFamily: "Tajawal-b",
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Wrap(
+                          spacing: 10,
+                          runSpacing: 7,
+                          alignment: WrapAlignment.end,
+                          children: shopOptions.map((ShopOptions) {
+                            return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    if (ShopType.contains(ShopOptions)) {
+                                      ShopType.remove(ShopOptions);
+                                    } else {
+                                      ShopType.add(ShopOptions);
+                                    }
+                                  });
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.only(
+                                      top: 10, bottom: 10),
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(10)),
+                                    color: Colors.white,
+                                    border: Border.all(
+                                      color: ShopType.contains(ShopOptions)
+                                          ? const Color(0xFF6db881)
+                                          : Colors.black,
+                                      width: 1,
+                                    ),
                                   ),
-                                ),
-                                TextSpan(
-                                  text: '* ',
-                                  style: TextStyle(
-                                    color: Colors.red,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const SizedBox(
+                                        width: 25,
+                                      ),
+                                      Text(ShopOptions,
+                                          style: const TextStyle(
+                                              fontSize: 16.0,
+                                              fontFamily: 'Tajawal-m')),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      ShopType.contains(ShopOptions)
+                                          ? const Icon(
+                                        Icons.check_rounded,
+                                        size: 16,
+                                        color: Color(0xFF6db881),
+                                      )
+                                          : const SizedBox(
+                                        width: 16,
+                                      ),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text('داخلي',
-                                style: TextStyle(
-                                    fontSize: 16.0, fontFamily: 'Tajawal-m')),
-                            Radio(
-                              value: true,
-                              groupValue: INorOUT,
-                              onChanged: (value) {
-                                setState(() {
-                                  INorOUT = value!;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text('خارجي',
-                                style: TextStyle(
-                                    fontSize: 16.0, fontFamily: 'Tajawal-m')),
-                            Radio(
-                              value: false,
-                              groupValue: INorOUT,
-                              onChanged: (value) {
-                                setState(() {
-                                  INorOUT = value!;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            'هل يوجد سينما؟',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontFamily: "Tajawal-b",
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text('نعم',
-                                style: TextStyle(
-                                    fontSize: 16.0, fontFamily: 'Tajawal-m')),
-                            Radio(
-                              value: true,
-                              groupValue: hasCinema,
-                              onChanged: (value) {
-                                setState(() {
-                                  hasCinema = value!;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text('لا',
-                                style: TextStyle(
-                                    fontSize: 16.0, fontFamily: 'Tajawal-m')),
-                            Radio(
-                              value: false,
-                              groupValue: hasCinema,
-                              onChanged: (value) {
-                                setState(() {
-                                  hasCinema = value!;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            'هل توجد منطقة ألعاب؟',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontFamily: "Tajawal-b",
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text('نعم',
-                                style: TextStyle(
-                                    fontSize: 16.0, fontFamily: 'Tajawal-m')),
-                            Radio(
-                              value: true,
-                              groupValue: hasPlayArea,
-                              onChanged: (value) {
-                                setState(() {
-                                  hasPlayArea = value!;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text('لا',
-                                style: TextStyle(
-                                    fontSize: 16.0, fontFamily: 'Tajawal-m')),
-                            Radio(
-                              value: false,
-                              groupValue: hasPlayArea,
-                              onChanged: (value) {
-                                setState(() {
-                                  hasPlayArea = value!;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            'هل يوجد منطقة مطاعم؟',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontFamily: "Tajawal-b",
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text('نعم',
-                                style: TextStyle(
-                                    fontSize: 16.0, fontFamily: 'Tajawal-m')),
-                            Radio(
-                              value: true,
-                              groupValue: hasFoodCourt,
-                              onChanged: (value) {
-                                setState(() {
-                                  hasFoodCourt = value!;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text('لا',
-                                style: TextStyle(
-                                    fontSize: 16.0, fontFamily: 'Tajawal-m')),
-                            Radio(
-                              value: false,
-                              groupValue: hasFoodCourt,
-                              onChanged: (value) {
-                                setState(() {
-                                  hasFoodCourt = value!;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            'هل يوجد سوبرماركت؟',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontFamily: "Tajawal-b",
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text('نعم',
-                                style: TextStyle(
-                                    fontSize: 16.0, fontFamily: 'Tajawal-m')),
-                            Radio(
-                              value: true,
-                              groupValue: hasSupermarket,
-                              onChanged: (value) {
-                                setState(() {
-                                  hasSupermarket = value!;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text('لا',
-                                style: TextStyle(
-                                    fontSize: 16.0, fontFamily: 'Tajawal-m')),
-                            Radio(
-                              value: false,
-                              groupValue: hasSupermarket,
-                              onChanged: (value) {
-                                setState(() {
-                                  hasSupermarket = value!;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    // SizedBox(height: 20),
-                    SizedBox(height: 20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            ': أنواع المحلات',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontFamily: "Tajawal-b",
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Column(
-                          children: ShopOptions.map((ShopOptions) {
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(ShopOptions,
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontFamily: 'Tajawal-m')),
-                                Checkbox(
-                                  value: ShopType.contains(ShopOptions),
-                                  onChanged: (bool? value) {
-                                    setState(() {
-                                      if (value == true) {
-                                        ShopType.add(ShopOptions);
-                                      } else {
-                                        ShopType.remove(ShopOptions);
-                                      }
-                                    });
-                                  },
-                                ),
-                              ],
-                            );
+                                ));
                           }).toList(),
                         ),
                       ],
                     ),
-                  ],
-                ),
-
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      'هل توجد خدمة ركن السيارات؟',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontFamily: "Tajawal-b",
-                      ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'هل توجد خدمة ركن السيارات؟',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontFamily: "Tajawal-b",
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text('نعم',
-                          style: TextStyle(
-                              fontSize: 16.0, fontFamily: 'Tajawal-m')),
-                      Radio(
-                        value: true,
-                        groupValue: hasValetServiced,
-                        onChanged: (value) {
-                          setState(() {
-                            hasValetServiced = value!;
-                          });
-                        },
+                      CustomRadioButton(
+                          onTap: () {
+                            setState(() {
+                              hasValetServiced = false;
+                            });
+                          },
+                          text: 'لا',
+                          value: !(hasValetServiced ?? true)),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      CustomRadioButton(
+                          onTap: () {
+                            setState(() {
+                              hasValetServiced = true;
+                            });
+                          },
+                          text: 'نعم',
+                          value: hasValetServiced ?? false),
+                      const SizedBox(
+                        width: 10,
                       ),
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text('لا',
-                          style: TextStyle(
-                              fontSize: 16.0, fontFamily: 'Tajawal-m')),
-                      Radio(
-                        value: false,
-                        groupValue: hasValetServiced,
-                        onChanged: (value) {
-                          setState(() {
-                            hasValetServiced = value!;
-                          });
-                        },
-                      ),
-                    ],
+                  const SizedBox(
+                    height: 20,
                   ),
-                ],
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 83, right: 25),
-                      child: TextFormField(
-                        controller: WebLink,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'الرجاء عدم ترك الخانة فارغة!';
-                          }
-                          return null;
-                        },
-                      ),
+                  const Text(
+                    ' :رابط الموقع الالكتروني  ',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontFamily: "Tajawal-b",
                     ),
                   ),
-                  const Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      ' :رابط الموقع الالكتروني  ',
-                      style: TextStyle(
-                        fontSize: 19.0,
-                        fontFamily: "Tajawal-b",
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    controller: WebLink,
+                    textAlign: TextAlign.end,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    cursorColor: const Color(0xFF6db881),
+                    decoration: const InputDecoration(
+                      filled: true,
+                      contentPadding: EdgeInsets.only(
+                          top: 0, bottom: 0, right: 10, left: 10),
+                      fillColor: Colors.white,
+                      hintText: 'رابط موقع',
+                      hintStyle: TextStyle(
+                        color: Colors.black45,
+                      ),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          borderSide:
+                          BorderSide(color: Color(0xFF6db881), width: 1)),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderSide: BorderSide(
+                            color: Color(
+                                0xFF6db881)), // Set the desired border color
                       ),
                     ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'الرجاء عدم ترك الخانة فارغة!';
+                      }
+                      return null;
+                    },
                   ),
-                ],
-              ),
-
-
-              SizedBox(
-                height: 30,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        ': وصف المكان ',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontFamily: "Tajawal-b",
-                        ),
-                      ),
-                      Text(
-                        '*',
-                        style: TextStyle(
-                          color: Colors.red,
-                        ),
-                      ),
-                    ],
+                  const SizedBox(
+                    height: 20,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10, right: 94),
-                    child: Container(
-                      margin: const EdgeInsets.only(top: 10),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
-                          width: 1.0,
+                  const Text(
+                  ':وصف المكان ',
+                  style: TextStyle(
+    fontSize: 18.0,
+    fontFamily: "Tajawal-b",
+    ),
+    ),
+    const SizedBox(height: 10),
+    TextFormField(
+    controller: description,
+    textAlign: TextAlign.end,
+    autovalidateMode: AutovalidateMode.onUserInteraction,
+    cursorColor: const Color(0xFF6db881),
+    maxLines: null, // Allow the TextFormField to dynamically adjust its height
+    decoration: const InputDecoration(
+    filled: true,
+    contentPadding: EdgeInsets.only(top: 0, bottom: 0, right: 10, left: 10),
+    fillColor: Colors.white,
+    hintText: 'وصف',
+    hintStyle: TextStyle(
+    color: Colors.black45,
+    ),
+    border: OutlineInputBorder(
+    borderRadius: BorderRadius.all(Radius.circular(10)),
+    borderSide: BorderSide(color: Color(0xFF6db881), width: 1),
+    ),
+    focusedBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.all(Radius.circular(10)),
+    borderSide: BorderSide(
+    color: Color(0xFF6db881),
+    ),
+    ),
+    ),
+
+    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'الرجاء عدم ترك الخانة فارغة!';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    ':الموقع',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontFamily: "Tajawal-b",
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: _startSearchFieldController,
+                    textAlign: TextAlign.end,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    cursorColor: const Color(0xFF6db881),
+                    decoration: InputDecoration(
+                        filled: true,
+                        contentPadding: const EdgeInsets.only(
+                            top: 0, bottom: 0, right: 10, left: 10),
+                        fillColor: Colors.white,
+                        hintText: 'الموقع',
+                        hintStyle: const TextStyle(
+                          color: Colors.black45,
                         ),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: TextFormField(
-                          controller: description,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          maxLines: null,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'الرجاء عدم ترك الخانة فارغة!';
-                            }
-                            return null;
+                        border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            borderSide:
+                            BorderSide(color: Color(0xFF6db881), width: 1)),
+                        focusedBorder: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          borderSide: BorderSide(
+                              color: Color(
+                                  0xFF6db881)), // Set the desired border color
+                        ),
+                        prefixIcon: _startSearchFieldController.text.isNotEmpty
+                            ? IconButton(
+                          onPressed: () {
+                            setState(() {
+                              predictions = [];
+                              _startSearchFieldController.clear();
+                            });
+                          },
+                          icon: const Icon(Icons.clear_outlined),
+                        )
+                            : GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MapView()))
+                                .then((value) => {
+                              print(value),
+                              setState(() {
+                                startPosition = value;
+                                _startSearchFieldController.text =
+                                    value.name;
+                                predictions = [];
+                              })
+                            });
+                          },
+                          child: const Icon(Icons.location_searching,
+                              color: Color(0xFF6db881)),
+                        )),
+                    onChanged: (value) {
+                      if (_debounce?.isActive ?? false) _debounce!.cancel();
+                      _debounce = Timer(const Duration(milliseconds: 1000), () {
+                        if (value.isNotEmpty) {
+                          //places api
+                          autoCompleteSearch(value);
+                        }
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'مطلوب';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  if (_startSearchFieldController.text != '')
+                    isLoadingPlaces
+                        ? const Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                                width: 15,
+                                height: 15,
+                                child: CircularProgressIndicator(
+                                    color: Color(0xFF6db881))),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text('مكان البحث')
+                          ],
+                        ))
+                        : Column(children: [
+                      startPosition != null
+                          ? SizedBox()
+                          : Card(
+                        child: ListTile(
+                          leading: const CircleAvatar(
+                            backgroundColor: Color(0xFF6db881),
+                            child: Icon(
+                              Icons.my_location_outlined,
+                              color: Colors.white,
+                            ),
+                          ),
+                          title: Text(
+                            'Select with Pin Drop',
+                          ),
+                          onTap: () async {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        MapView()))
+                                .then((value) => {
+                              setState(() {
+                                startPosition = value;
+                                _startSearchFieldController
+                                    .text = value.name;
+                                predictions = [];
+                              }),
+                              setState(() {})
+                            });
                           },
                         ),
                       ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
+                      predictions.length > 0
+                          ? SizedBox(
+                        height: 200,
+                        child: ListView.builder(
+                            itemCount: predictions.length,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                child: ListTile(
+                                  leading: const CircleAvatar(
+                                    backgroundColor:
+                                    Color(0xFF6db881),
+                                    child: Icon(
+                                      Icons.location_on_outlined,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  title: Text(
+                                    predictions[index]
+                                        .description
+                                        .toString(),
+                                  ),
+                                  onTap: () async {
+                                    final placeId =
+                                    predictions[index].placeId!;
+                                    final details =
+                                    await googlePlace.details
+                                        .get(placeId);
+                                    if (details != null &&
+                                        details.result != null &&
+                                        mounted) {
+                                      setState(() {
+                                        startPosition =
+                                            details.result;
+                                        _startSearchFieldController
+                                            .text =
+                                        details.result!.name!;
 
-              TextFormField(
-                  controller: _startSearchFieldController,
-                  decoration: InputDecoration(
-                      hintStyle: TextStyle(
-                          fontSize: 16,
-                          color: Color.fromARGB(255, 202, 198, 198)),
-                      label: RichText(
-                        text: TextSpan(
-                            text: 'الموقع',
-                            style: const TextStyle(
-                                fontSize: 18, color: Colors.black87),
-                            children: [
-                              TextSpan(
-                                  text: ' *',
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                  ))
-                            ]),
-                      ),
-                      border: OutlineInputBorder(
-                        borderSide:
-                        BorderSide(color: Colors.black87, width: 2.0),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color(0xFF6db881),
-                          width: 2.0,
-                        ),
-                      ),
-                      suffixIcon: _startSearchFieldController.text.isNotEmpty
-                          ? IconButton(
-                        onPressed: () {
-                          setState(() {
-                            predictions = [];
-                            _startSearchFieldController.clear();
-                          });
-                        },
-                        icon: Icon(Icons.clear_outlined),
+                                        predictions = [];
+                                      });
+                                    }
+                                  },
+                                ),
+                              );
+                            }),
                       )
-                          : Icon(Icons.location_searching,
-                          color: Color(0xFF6db881))),
-                  onChanged: (value) {
-                    if (_debounce?.isActive ?? false) _debounce!.cancel();
-                    _debounce = Timer(const Duration(milliseconds: 1000), () {
-                      if (value.isNotEmpty) {
-                        //places api
-                        autoCompleteSearch(value);
-                      } else {
-                        //clear out the results
-                        setState(() {
-                          predictions = [];
-                          startPosition = null;
-                        });
-                      }
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'required';
-                    }
-                  }),
-              Scrollbar(
-                thumbVisibility: true,
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: predictions.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: Color(0xFF6db881),
-                          child: Icon(
-                            Icons.pin_drop,
-                            color: Colors.white,
-                          ),
-                        ),
-                        title: Text(
-                          predictions[index].description.toString(),
-                        ),
-                        onTap: () async {
-                          final placeId = predictions[index].placeId!;
-                          final details =
-                          await googlePlace.details.get(placeId);
-                          if (details != null &&
-                              details.result != null &&
-                              mounted) {
-                            setState(() {
-                              startPosition = details.result;
-                              _startSearchFieldController.text =
-                              details.result!.name!;
-
-                              predictions = [];
-                            });
-                          }
-                        },
-                      );
-                    }),
-              ),
-
-              // Upload images
-              Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
-                  // Adjust the top padding as needed
-                  child: Container(
+                          : startPosition != null
+                          ? const SizedBox()
+                          : const Text(
+                        'لم يتم العثور على مكان',
+                        style: TextStyle(color: Colors.red),
+                        textAlign: TextAlign.right,
+                      ),
+                    ]),
+                  // Upload images
+                  Container(
+                    margin: const EdgeInsets.only(top: 20),
+                    padding: const EdgeInsets.only(top: 5),
                     height: 100,
-                    width: 200,
+                    width: double.infinity,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(
-                        color: Color(0xFF6db881),
+                        color: const Color(0xFF6db881),
                         width: 1,
                       ),
-                      borderRadius: BorderRadius.circular(5),
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    child: SizedBox(
-                      height: 95,
-                      width: MediaQuery.of(context).size.width,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        physics: const AlwaysScrollableScrollPhysics(),
+                    child: selectedFiles.isEmpty
+                        ? GestureDetector(
+                      onTap: () {
+                        selectImage();
+                      },
+                      child: const Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          selectedFiles.isEmpty
-                              ? Container(
-                            alignment: Alignment.centerLeft,
-                            width:
-                            MediaQuery.of(context).size.width / 1.1,
-                            child: TextButton(
-                              child: const Text(
-                                '+إرفق صور للمكان',
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontFamily: "Tajawal-m",
-                                  color: Color(0xFF6db881),
-                                ),
-                              ),
-                              onPressed: () {
-                                selectImage();
-                              },
-                            ),
-                          )
-                              : Container(
-                            margin: EdgeInsets.only(
-                              top: MediaQuery.of(context).size.height /
-                                  100,
-                              right: MediaQuery.of(context).size.height /
-                                  100,
-                              bottom: MediaQuery.of(context).size.height /
-                                  100,
-                            ),
-                            height: 100,
-                            child: ListView(
-                              shrinkWrap: true,
-                              physics:
-                              const NeverScrollableScrollPhysics(),
-                              scrollDirection: Axis.horizontal,
-                              children: selectedFiles
-                                  .map(
-                                    (e) => Stack(
-                                  alignment:
-                                  AlignmentDirectional.topEnd,
-                                  children: [
-                                    Padding(
-                                      padding:
-                                      const EdgeInsets.all(3.0),
-                                      child: Container(
-                                        color: Colors.grey,
-                                        child: Image.file(
-                                          File(e.path),
-                                          fit: BoxFit.cover,
-                                          height: 100,
-                                          width: 100,
-                                        ),
-                                      ),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          selectedFiles.remove(e);
-                                        });
-                                      },
-                                      child: const Padding(
-                                        padding: EdgeInsets.all(.02),
-                                        child: Icon(
-                                          Icons.cancel,
-                                          size: 15,
-                                          color: Colors.red,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                                  .toList(),
+                          Icon(Icons.add_circle_outline_rounded,
+                              color: Color(0xFF6db881)),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            'إرفق صور للمكان',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              fontFamily: "Tajawal-m",
+                              color: Color(0xFF6db881),
                             ),
                           ),
                         ],
                       ),
+                    )
+                        : ListView(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      children: selectedFiles
+                          .map(
+                            (e) => Stack(
+                          alignment: AlignmentDirectional.topEnd,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(3.0),
+                              child: Container(
+                                color: Colors.grey,
+                                child: Image.file(
+                                  File(e.path),
+                                  fit: BoxFit.cover,
+                                  height: 100,
+                                  width: 100,
+                                ),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  selectedFiles.remove(e);
+                                });
+                              },
+                              child: const Padding(
+                                padding: EdgeInsets.all(.02),
+                                child: Icon(
+                                  Icons.cancel,
+                                  size: 15,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                          .toList(),
                     ),
-                  )),
+                  ),
 
-              Container(
-                margin: const EdgeInsets.all(20),
-              ),
-              Container(
-                margin: const EdgeInsets.all(3),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: ElevatedButton(
-                  onPressed: () async {
-                    if (placeName.text.isEmpty ||
-                        city == null ||
-                        city.isEmpty ||
-                        address!.isEmpty ||
-                        WebLink.text.isEmpty ||
-                        description.text.isEmpty) {
-                      showInvalidFieldsDialog(context);
-                    } else {
-                      // Check for duplicate place before adding
-                      await checkForDuplicatePlace();
-                    }
-                  },
-                  style: ButtonStyle(
-                    backgroundColor:
-                    MaterialStateProperty.all(const Color(0xFF6db881)),
-                    padding: MaterialStateProperty.all(
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    ),
-                    shape: MaterialStateProperty.all(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(27),
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20, bottom: 20),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (placeName.text.isEmpty ||
+                              city == null ||
+                              city.isEmpty ||
+                              address!.isEmpty ||
+                              WebLink.text.isEmpty ||
+                              description.text.isEmpty) {
+                            showInvalidFieldsDialog(context);
+                          } else {
+                            // Check for duplicate place before adding
+                            await checkForDuplicatePlace();
+                          }
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              const Color(0xFF6db881)),
+                          padding: MaterialStateProperty.all(
+                            const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                          ),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ),
+                        child: const Text(
+                          'إضافة المكان',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontFamily: "Tajawal-m",
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                  child: const Text(
-                    'إضافة المكان',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontFamily: "Tajawal-m",
-                    ),
-                  ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 
@@ -2686,7 +2829,7 @@ class CustomFormState extends State<CustomForm> {
           ),
           actions: [
             TextButton(
-              child: Text("موافق"),
+              child: const Text("موافق"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -2702,10 +2845,10 @@ class CustomFormState extends State<CustomForm> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          content: Text("المكان موجود مسبقا"),
+          content: const Text("المكان موجود مسبقا"),
           actions: <Widget>[
             TextButton(
-              child: Text("موافق"),
+              child: const Text("موافق"),
               onPressed: () {
                 Navigator.of(context).pop();
               },

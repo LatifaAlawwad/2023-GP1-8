@@ -204,6 +204,10 @@ br {
     margin-bottom: 20px;
 }
 
+/* Add space between name and form field */
+label {
+    margin-right: 10px;
+}
 
 /* Add space between form elements */
 form > div > * {
@@ -443,23 +447,30 @@ opacity:1;
 
 <body>
 <div class="header">
+    <!-- Logo on the left side without background -->
     <div class="logo">
         <img src="images/logowithname.png" alt="Logo">
     </div>
 
+    <!-- Content of the updateplace -->
     <div class="container">
         <div class="content">
             <form id="updatePlaceForm">
                 <h1 id="Heading">تحديث البيانات</h1>
                 <div id='form'>
+                    <!-- Place Name -->
                     <label for="placeName">:اسم المكان</label>
                     <input type="text" id="placeName" name="placeName" value=''>
+
+
                     <br>
 
+                    <!-- Description -->
                     <label for="description">:الوصف</label>
                     <div class="textarea-container">
                         <textarea id="description" name="description" style="max-width: 100%; min-width: 100px; min-height: 100px; height: 100px; max-height: 200px; overflow-y: auto;"></textarea>
                     </div>
+
                     <br>
 
                     <label for="description">:ساعات العمل</label>
@@ -468,7 +479,9 @@ opacity:1;
 
 
                     <label for="imageContainer">:الصور</label>
+                    <!-- Add a delete icon to each image in the image container -->
                     <div id="imageContainer" class="image-container"></div>
+
 
                     <div style="display: flex; align-items: center;">
                         <input type="file" id="imageInput" accept="image/*" multiple>
@@ -482,20 +495,27 @@ opacity:1;
         </div>
     </div>
 
+    <!-- Footer -->
     <div class="footer">
         &copy; 2023 S'hail Admin
     </div>
+    <!-- Menu Icon -->
     <div class="menu-icon" onclick="toggleSideNav()">
+        <!-- Add the onclick event -->
         <span></span>
         <span></span>
         <span></span>
     </div>
+    <!-- Vertical navigation bar on the right -->
     <div class="sidenav-right" id="navbar">
+        <!-- Add the id "navbar" -->
+        <!-- Navigation links -->
         <a href="home.html">الصفحة الرئيسية</a>
         <a href="ManagePlaces.html">إدارة الأماكن</a>
         <a href="RequestedPlaces.html">طلبات الإضافة</a>
         <a href="AddPlace.html">إضافة مكان</a>
         <a href="ShailAddings.html">إضافات سهيل</a>
+        <a class="UpdatePlace" href="logout.html"> تحديث المكان</a>
         <a class="logout" href="logout.html">تسجيل الخروج</a>
     </div>
 </div>
@@ -760,6 +780,16 @@ function convertToHTMLTimeFormat(databaseTime) {
 
 
 
+        const updateAddImageButtonStyle = () => {
+            const addImageButton = document.getElementById('addImageButton');
+            const imageInput = document.getElementById('imageInput');
+
+            if (imageInput.files.length > 0) {
+                addImageButton.classList.add('has-file');
+            } else {
+                addImageButton.classList.remove('has-file');
+            }
+        };
 
 
 

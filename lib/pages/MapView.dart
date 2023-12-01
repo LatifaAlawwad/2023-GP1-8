@@ -8,6 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_place/google_place.dart';
 import 'package:gp/pages/placeDetailsPage.dart';
 import 'package:gp/pages/placePage.dart';
+import 'dart:math';
 
 class MapSample extends StatefulWidget {
   @override
@@ -17,39 +18,60 @@ class MapSample extends StatefulWidget {
 }
 
 class MapSampleState extends State<MapSample> {
-  void onPressed() {
-    print('Button Pressed');
-  }
 
 
-  Completer<GoogleMapController> _controller = Completer();
-  String selectedCategory = 'الكل';
+late GoogleMapController _controller;
+String selectedCategory = 'الكل';
+List<placePage> allPlaces = [];
+late LatLng currentLatLng = LatLng(24.7136, 46.6753);
+List<placePage> filteredPlacesInfo = [];
+LatLng? droppedPin = null;
+// icon for the marker
+late BitmapDescriptor myIcon;
+final _firestore = FirebaseFirestore.instance;
+List<Marker> markers = [];
+static final TextEditingController _startSearchFieldController =
+TextEditingController();
+DetailsResult? startPosition;
+late GooglePlace googlePlace;
+List<AutocompletePrediction> predictions = [];
+Timer? _debounce;
 
-  List<placePage> allPlaces = [];
-  late LatLng currentLatLng = const LatLng(24.7136, 46.6753);
-  List<placePage> filteredPlacesInfo = [];
+
 
   @override
   void initState() {
-    _goToCurrentLocation();
-    selectedCategory = 'الكل';
+    super.initState();
+    //location permission
+    _initializeCurrentLocation();
 
+    //determine and  go to the current location
+    _goToCurrentLocation();
+
+    selectedCategory = 'الكل';
     String apiKey = 'AIzaSyCOT8waQ9GpvCUwXotTCZD9kSPfN8JljNk';
     googlePlace = GooglePlace(apiKey);
     getMarkers();
-    super.initState();
+
+    //Marker icon
+    BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(size: Size(48,48)), 'assets/images/marker.png')
+        .then((onValue) {
+      myIcon = onValue;
+    });
+
   }
+void _initializeCurrentLocation() async {
+  LocationPermission permission = await Geolocator.checkPermission();
 
-  final _firestore = FirebaseFirestore.instance;
-  List<Marker> markers = [];
-  static final TextEditingController _startSearchFieldController =
-  TextEditingController();
-
-  DetailsResult? startPosition;
-
-  late GooglePlace googlePlace;
-  List<AutocompletePrediction> predictions = [];
-  Timer? _debounce;
+  if (permission == LocationPermission.denied ||
+      permission == LocationPermission.deniedForever) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      return;
+    }
+  }}
 
 
   Future<void> _determinePosition() async {
@@ -59,72 +81,127 @@ class MapSampleState extends State<MapSample> {
     });
     return;
   }
+  //Calculate the distance
+  double calculateDistance(LatLng? point1, LatLng point2) {
+    const double earthRadius = 6371; // Radius of the earth in kilometers (use 3959 for miles)
+
+    double toRadians(double degree) {
+      return degree * (pi / 180.0);
+    }
+
+    double lat1 = toRadians(point1!.latitude);
+    double lon1 = toRadians(point1!.longitude);
+    double lat2 = toRadians(point2.latitude);
+    double lon2 = toRadians(point2.longitude);
+
+    double dLat = lat2 - lat1;
+    double dLon = lon2 - lon1;
+
+    double a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(lat1) * cos(lat2) * sin(dLon / 2) * sin(dLon / 2);
+
+    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+
+    double distance = earthRadius * c; // Distance in kilometers
+
+    return distance;
+  }
 
   Future<void> _goToCurrentLocation() async {
     await _determinePosition();
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(
-        CameraUpdate.newCameraPosition(CameraPosition(target: currentLatLng, zoom: 15)));
+    markers.clear();
+    droppedPin = null;
+    _controller.animateCamera(
+        CameraUpdate.newCameraPosition(CameraPosition(target: currentLatLng!, zoom: 15)));
+    getMarkers();
   }
 
-  Future getMarkers() async {
-    setState((){ filteredPlacesInfo = [] ;});
-    await for (var snapshot in _firestore.collection('PendingPlaces').snapshots())
+
+
+
+  Future<void> getMarkers() async {
+    setState(() {
+      filteredPlacesInfo.clear();
+    });
+
+    await for (var snapshot in _firestore.collection('ApprovedPlaces').snapshots())
       for (var place in snapshot.docs) {
         setState(() {
           String category = place['category'] ?? '';
-          if (selectedCategory == 'الكل' || category == selectedCategory){
-            markers.add(Marker(
-              markerId: MarkerId(place['placeName']),
-              position: new LatLng(place['latitude'], place['longitude']),
-              infoWindow: InfoWindow(
+          if (selectedCategory == 'الكل' || category == selectedCategory) {
+            LatLng placeLatLng = LatLng(place['latitude'], place['longitude']);
+            double distance = calculateDistance( droppedPin ?? currentLatLng  , placeLatLng);
+
+            // Display only markers within a certain distance (adjust the threshold as needed)
+            if (distance <= 5.0) {
+              markers.add(Marker(
+                markerId: MarkerId(place['placeName']),
+                position: placeLatLng,
+                icon: myIcon,
+                infoWindow: InfoWindow(
                   title: place['placeName'],
                   onTap: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => placeDetailsPage(
-                              place: placePage(
-                                place_id: place['place_id'] ?? '',
-                                userId: place['User_id'] ?? '',
-                                placeName: place['placeName'] ?? '',
-                                category: place['category'] ?? '',
-                                type1: '',
-                                city: place['city'] ?? '',
-                                neighbourhood: place['neighbourhood'] ?? '',
-                                images: List<String>.from(place['images']),
-                                Location: place['Location'] ?? '',
-                                description: place['description'] ?? '',
-                                latitude: place['latitude'] ?? 0.0,
-                                longitude: place['longitude'] ?? 0.0,
-                              ),
-                            )));
-                  }),
-            ));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => placeDetailsPage(
+                          place: placePage(
+                            place_id: place['place_id'] ?? '',
+                            userId: place['User_id'] ?? '',
+                            placeName: place['placeName'] ?? '',
+                            category: place['category'] ?? '',
+                            type1: '',
+                            city: place['city'] ?? '',
+                            neighbourhood: place['neighbourhood'] ?? '',
+                            images: List<String>.from(place['images']),
+                            Location: place['WebLink'] ?? '',
+                            description: place['description'] ?? '',
+                            latitude: place['latitude'] ?? 0.0,
+                            longitude: place['longitude'] ?? 0.0,
+                            workedDays: List<Map<String, dynamic>>.from(place['WorkedDays']??[]),
 
-          filteredPlacesInfo.add(placePage(
-            place_id: place['place_id'] ?? '',
-            userId: place['User_id'] ?? '',
-            placeName: place['placeName'] ?? '',
-            category: place['category'] ?? '',
-            type1: '',
-            city: place['city'] ?? '',
-            neighbourhood: place['neighbourhood'] ?? '',
-            images: List<String>.from(place['images']),
-            Location: place['Location'] ?? '',
-            description: place['description'] ?? '',
-            latitude: place['latitude'] ?? 0.0,
-            longitude: place['longitude'] ?? 0.0,
-          )); }
 
-      });
-  }}
+
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ));
+              filteredPlacesInfo.add(placePage(
+                place_id: place['place_id'] ?? '',
+                userId: place['User_id'] ?? '',
+                placeName: place['placeName'] ?? '',
+                category: place['category'] ?? '',
+                type1: '',
+                city: place['city'] ?? '',
+                neighbourhood: place['neighbourhood'] ?? '',
+                images: List<String>.from(place['images']),
+                Location: place['WebLink'] ?? '',
+                description: place['description'] ?? '',
+                latitude: place['latitude'] ?? 0.0,
+                longitude: place['longitude'] ?? 0.0,
+                workedDays: List<Map<String, dynamic>>.from(place['WorkedDays']??[]),
+                hasValetServiced: place['hasValetServiced']?? false,
+
+              ));
+            }
+          }
+        });
+      }
+    setState(() {
+      droppedPin=null;
+      displayFilteredPlacesList();
+    });
+
+  }
 
   changeLocation() async {
-    final GoogleMapController controller = await _controller.future;
+
     double? lat = startPosition?.geometry?.location?.lat;
     double? lng = startPosition?.geometry?.location?.lng;
-    controller.animateCamera(
+    _controller.animateCamera(
         CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(lat!, lng!), zoom: 14)));
     _startSearchFieldController.clear();
   }
@@ -260,11 +337,28 @@ class MapSampleState extends State<MapSample> {
                 new Factory<OneSequenceGestureRecognizer>(() => new EagerGestureRecognizer()),
               ].toSet(),
               mapType: MapType.normal,
-              markers: markers.toSet(),
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
+              onTap: (LatLng latLng) {
+                setState(() {
+                  droppedPin = latLng;
+                  markers.clear(); // Clear existing markers
+                  markers.add(Marker(
+                    markerId: MarkerId('droppedPin'),
+                    position: droppedPin!,
+
+                    infoWindow: InfoWindow(title: 'Dropped Pin'),
+                  ));
+                  _controller?.animateCamera(CameraUpdate.newLatLng(droppedPin!));
+                  getMarkers();
+                });
+
               },
-              initialCameraPosition: CameraPosition(target: currentLatLng, zoom: 14),
+              markers: markers.toSet(),
+              onMapCreated:(GoogleMapController controller) {
+                setState(() {
+                  _controller = controller;
+                });
+              },
+              initialCameraPosition: CameraPosition(target: currentLatLng!, zoom: 14),
               myLocationEnabled: true,
               zoomGesturesEnabled: true,
               zoomControlsEnabled: true,
@@ -491,8 +585,8 @@ class MapSampleState extends State<MapSample> {
 
 
   void _moveMapToPlace(placePage place) async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(
+
+    _controller.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
           target: LatLng(place.latitude, place.longitude),
@@ -503,13 +597,6 @@ class MapSampleState extends State<MapSample> {
   }
 
 }
-
-
-
-
-
-
-
 
 
 class PlaceInfo {

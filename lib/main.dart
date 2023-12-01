@@ -12,7 +12,7 @@ import 'package:gp/pages/NavigationBarPage.dart';
 import 'package:gp/pages/citiesPage.dart';
 
 
-import 'pages/lib/MapView.dart';
+import 'pages/MapView.dart';
 
 
 
