@@ -26,21 +26,30 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth();
 
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                if (user.email === 'admin@sohail.com') {
-                    // Sign out the admin user
-                    signOut(auth).then(() => {
-                        console.log('Admin signed out.');
-                    }).catch(error => {
-                        console.error("Error signing out admin:", error);
-                    });
-                }
-            }
 
-            // Add a confirmation dialog before logging out
-            const confirmLogout = confirm('هل ترغب في تسجيل الخروج؟');
-            if (confirmLogout) {
+    let confirmationDialogShown = false;
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            if (user.email === 'admin@sohail.com') {
+                // Sign out the admin user
+                signOut(auth).then(() => {
+                    console.log('Admin signed out.');
+                }).catch(error => {
+                    console.error("Error signing out admin:", error);
+                });
+            }
+        }
+    });
+
+    // Add a confirmation dialog before logging out
+    const confirmLogout = () => {
+        if (!confirmationDialogShown) {
+            confirmationDialogShown = true;
+
+            const shouldLogout = confirm('هل ترغب في تسجيل الخروج؟');
+
+            if (shouldLogout) {
                 signOut(auth).then(() => {
                     console.log('User signed out.');
                     window.location.replace('index.html'); // Redirect to the index page
@@ -48,10 +57,14 @@
                     console.error("Error signing out:", error);
                 });
             } else {
-                 window.location.replace('home.html');
+                window.location.replace('home.html');
             }
-        });
-    </script>
+        }
+    };
+
+    // Trigger the confirmation dialog
+    confirmLogout();
+</script>
 </body>
 
 </html>

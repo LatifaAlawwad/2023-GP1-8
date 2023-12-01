@@ -1,17 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>طلبات الاضافة</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قائمة طلبات الإضافة</title>
     <style>
+        /* Reset some default margin and padding for consistency */
+       body {
+       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: url('images/redsea.png') no-repeat fixed center top;
+   background-size: 105%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    opacity: 0.9;
+     transition: opacity 0.5s;
+}
+
+
+ /* Style for the heading */
+        #Heading {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 24px;
+            color: #1d5011;
+            text-align: center;
+
+        }
+
         /* Basic CSS for styling the layout */
         .container {
             display: flex;
             min-height: 100vh;
-        }
 
+        }
  .sidenav-right {
-            width: 150px;
+            width: 150px; /* Set the width as needed */
             background-color: #6DB881;
             color: white;
             padding: 20px;
@@ -20,13 +44,13 @@
             flex-direction: column;
             position: absolute;
             top: 0;
-            right: -150px;
-            bottom: 0;
-            transition: right 0.3s;
+            right: -150px; /* Initial position outside the container */
+            bottom: 0; /* Extend to the bottom of the container */
+            transition: right 0.3s; /* Add transition animation */
         }
 
         .sidenav-right.active {
-            right: 0;
+            right: 0; /* Move the sidebar to the right */
         }
 
  .sidenav-right a {
@@ -61,15 +85,21 @@
             text-align: center;
         }
 
-        .footer {
-            background-color: #DEDEDE;
-            color: white;
-            text-align: center;
-            padding: 10px;
-            width: 100%; /* Full width */
-            position: absolute;
-            bottom: 0;
-        }
+
+
+          .footer {
+
+    transition: opacity 0.5s;
+    background-color: #DEDEDE;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+
+}
 
         .logo {
   text-align: left;
@@ -85,27 +115,17 @@
   height: 130px;
 }
 
-        body {
-            background-color: #f9f9f9;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
+
 
         /* Style for the container */
         #placesList {
+
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
         }
 
-        /* Style for the heading */
-        #listHeading {
-            font-size: 24px;
-            color: green;
-            text-align: center;
-        }
+
 
    /* Style for each place container */
 .place-container {
@@ -120,18 +140,29 @@
 
 
         /* Style for buttons */
-        .button {
-            background-color: #90c996;
-            color: white;
-            padding: 6px 12px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+       .button {
+       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #90c996;
+    color: white;
+    padding: 6px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
+.button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.button:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
         #reject {
             background-color: #ff9999;
         }
@@ -144,7 +175,7 @@
 
 
 #accept {
-    background-color: #478B5E; /* Darker green color for the "قبول" button */
+    background-color: #478B5E;
 }
   /* Add styles for the menu icon */
         .menu-icon {
@@ -180,41 +211,32 @@
 <body>
 <div class="container">
 
-
-
-    <!-- Logo on the left side without background -->
     <div class="logo">
         <img src="images/logowithname.png" alt="Logo">
     </div>
 
-
-
-    <!-- Content of the Places List page -->
     <div class="content">
+        <h1 id="Heading">قائمة طلبات الإضافة</h1>
         <div id="placesList">
-            <!-- Places will be displayed here as containers -->
+
         </div>
     </div>
-
 </div>
 
-
-
-<!-- Footer with space between navigation and footer -->
 <div class="footer">
     &copy; 2023 Admin Dashboard
 </div>
-
 <!-- Menu Icon -->
-<div class="menu-icon" onclick="toggleSideNav()"> <!-- Add the onclick event -->
+<div class="menu-icon" onclick="toggleSideNav()">
+
     <span></span>
     <span></span>
     <span></span>
 </div>
-<!-- Vertical navigation bar on the right -->
-<div class="sidenav-right" id="navbar"> <!-- Add the id "navbar" -->
-    <!-- Navigation links -->
-    <span>  </span>
+
+<div class="sidenav-right" id="navbar">
+
+    <span> </span>
     <a href="home.html">الصفحة الرئيسية</a>
     <a href="ManagePlaces.html">إدارة الأماكن</a>
     <a href="RequestedPlaces.html">طلبات الإضافة</a>
@@ -222,17 +244,15 @@
     <a href="ShailAddings.html">إضافات سهيل</a>
     <a class="logout" href="logout.html">تسجيل الخروج</a>
 </div>
-
-<script >
-    // Toggle the side navigation bar
-    function toggleSideNav() {
-        const sideNav = document.getElementById('navbar'); // Change the id to "navbar"
-        sideNav.classList.toggle('active');
-
-        const menuIcon = document.querySelector('.menu-icon');
-        menuIcon.classList.toggle('active');
-    }
-</script>
+<script>
+        // Toggle the side navigation bar
+        function toggleSideNav() {
+            const sideNav = document.getElementById('navbar'); // Change the id to "navbar"
+            sideNav.classList.toggle('active');
+            const menuIcon = document.querySelector('.menu-icon');
+            menuIcon.classList.toggle('active');
+        }
+    </script>
 <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-app.js";
@@ -243,16 +263,16 @@
 
         // Function to handle the "View Details" button click
         window.viewDetails = function (placeId) {
-
+            // Your viewDetails implementation here
         };
 
         document.addEventListener('DOMContentLoaded', async () => {
             // Initialize Firebase with your configuration
             const firebaseConfig = {
-             apiKey: "AIzaSyBKCStEljQdADcPTDJPG49jPYdj65Ld-aE",
-            appId: "1:652061667089:web:1103ef9a5c45ea6d1c26b0",
-            messagingSenderId: "652061667089",
-            projectId: "fir-hail-ec5a7"
+                apiKey: "AIzaSyBKCStEljQdADcPTDJPG49jPYdj65Ld-aE",
+                appId: "1:652061667089:web:1103ef9a5c45ea6d1c26b0",
+                messagingSenderId: "652061667089",
+                projectId: "fir-hail-ec5a7"
             };
 
             const app = initializeApp(firebaseConfig);
@@ -285,12 +305,12 @@
                             <h3>${placeName}</h3>
                             <p>المدينة: ${city}</p>
                             <p>الحي: ${neighborhood}</p>
-                            <a class='button' href='UpdatePlace.html?placeId=${placeId}'>تحديث البيانات</a>
-    <a class='button' href='placeDetails.html?placeId=${placeId}'>مشاهدة التفاصيل</a>
-    <div class='place-buttons'>
-        <button class='button' id='reject' onclick='rejectPlace("${placeId}")'>رفض</button>
-        <button class='button' id='accept' onclick='acceptPlace("${placeId}")'>قبول</button>
-    </div>
+                            <a class='button' href='UpdatePlace.html?placeId=${placeId}&db=pending'>تحديث البيانات</a>
+                            <a class='button' href='placeDetails.html?placeId=${placeId}&db=pending'>مشاهدة التفاصيل</a>
+                            <div class='place-buttons'>
+                                <button class='button' id='reject' onclick='rejectPlace("${placeId}")'>رفض</button>
+                                <button class='button' id='accept' onclick='acceptPlace("${placeId}")'>قبول</button>
+                            </div>
                         `;
 
                         // Append the container to the places list
@@ -299,12 +319,12 @@
                 } catch (error) {
                     console.error('Error getting places: ', error);
                 }
-            }
+            };
 
             // Function to handle the "Reject" button click
             window.rejectPlace = function (placeId) {
                 // Display a confirmation dialog
-                const confirmation = confirm("هل انت متأكد من رفض إضافة المكان ؟");
+                const confirmation = confirm("هل أنت متأكد من رفض إضافة المكان؟");
                 if (confirmation) {
                     removeRejectedPlace(placeId);
                 }
@@ -313,7 +333,7 @@
             // Function to handle the "Accept" button click
             window.acceptPlace = function (placeId) {
                 // Display a confirmation dialog
-                const confirmation = confirm("هل انت متأكد من قبول إضافة المكان ؟");
+                const confirmation = confirm("هل أنت متأكد من قبول إضافة المكان؟");
                 if (confirmation) {
                     acceptAndDeletePlace(placeId);
                 }
@@ -351,16 +371,21 @@
             async function removeRejectedPlace(placeId) {
                 try {
                     const pendingPlaceRef = doc(db, 'PendingPlaces', placeId);
+
                     // Get the place data from the "pendingPlaces" collection
                     const placeSnapshot = await getDoc(pendingPlaceRef);
                     if (placeSnapshot.exists()) {
                         const placeData = placeSnapshot.data();
+
                         // Create the "RejectedPlaces" collection if it doesn't exist
                         const rejectedPlacesRef = collection(db, 'RejectedPlaces');
+
                         // Add the place data to the "RejectedPlaces" collection
                         await addDoc(rejectedPlacesRef, placeData);
+
                         // Delete the place from the "pendingPlaces" collection
                         await deleteDoc(pendingPlaceRef);
+
                         // Remove the container from the page
                         const placeContainer = document.querySelector(`[data-place-id="${placeId}"]`);
                         if (placeContainer) {
