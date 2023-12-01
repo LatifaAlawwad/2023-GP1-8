@@ -32,6 +32,7 @@ class placePage {
   bool hasReservation;
   String reservationDetails;
   List<String> shopOptions;
+  bool isTemporary;
 
   placePage({
     required this.place_id,
@@ -67,6 +68,7 @@ class placePage {
     this.hasReservation=false,
     this.reservationDetails='',
     this.shopOptions = const [],
+    this.isTemporary=false,
 
   });
 
@@ -105,6 +107,7 @@ class placePage {
       'hasReservation':hasReservation,
       'reservationDetails':reservationDetails,
       'shopOptions': shopOptions,
+      'isTemporary': isTemporary,
     };
   }
 
@@ -143,6 +146,7 @@ class placePage {
       hasReservation: map['hasReservation']??false,
       reservationDetails: map['reservationDetails']??'',
       shopOptions: List<String>.from(map['shopOptions'] ?? []),
+      isTemporary: map['isTemporary'] ?? false,
     );
   }
 
@@ -212,5 +216,7 @@ class placePage {
   bool get getHasReservation => hasReservation;
 
   List<String> get getShopOptions => shopOptions;
+
+  bool get getisTemporary => isTemporary;
 
 }

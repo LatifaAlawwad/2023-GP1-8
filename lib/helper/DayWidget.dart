@@ -157,7 +157,7 @@ class PlaceDays extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerRight,
               child: Text(
-                'أيام الافتتاح ',
+                'ساعات العمل ',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
             ),
@@ -173,11 +173,8 @@ class PlaceDays extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Divider(),
-                const Text(
-                  'أيام الافتتاح ',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
+               // const Divider(),
+
                 const Divider(),
                 Column(children: dayWidgets),
               ],

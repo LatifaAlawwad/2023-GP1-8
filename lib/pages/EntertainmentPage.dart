@@ -6,8 +6,6 @@ class Entertainment {
   final String startDate;
   final String finishDate;
   final bool isOutdoor;
-  // final placePage place;
-  //final bool? hasValet;
 
   Entertainment({
     required this.typeEnt,
@@ -15,32 +13,25 @@ class Entertainment {
     required this.startDate,
     required this.finishDate,
     required this.isOutdoor,
-    // required this.place,
-    // this.hasValet,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'type': typeEnt,
+      'typeEnt': typeEnt, // Modified field name
       'isTemporary': isTemporary,
       'startDate': startDate,
       'finishDate': finishDate,
       'isOutdoor': isOutdoor,
-      //'place': place.toMap(),
-      //'hasValet' : hasValet,
     };
   }
 
   factory Entertainment.fromMap(Map<String, dynamic> map) {
     return Entertainment(
-      typeEnt: map['type'] ?? '',
+      typeEnt: map['typeEnt'] ?? '', // Modified field name
       isTemporary: map['isTemporary'] ?? false,
       startDate: map['startDate'] ?? '',
       finishDate: map['finishDate'] ?? '',
       isOutdoor: map['isOutdoor'] ?? false,
-      // place: placePage.fromMap(map),
-      //  hasValet: map['hasValet'],
     );
   }
 }
-

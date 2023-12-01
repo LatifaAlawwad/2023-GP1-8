@@ -74,7 +74,7 @@ class PlaceDetailsWidget extends StatelessWidget {
                 height: 5,
               ),
               const Text(
-                ':رابط موقع',
+                ':رابط الموقع الالكتروني',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -90,8 +90,9 @@ class PlaceDetailsWidget extends StatelessWidget {
               ),
             ],
           ),
-        Divider(),
+
         if (place.category == 'مطاعم') ...[
+          Divider(),
           if (place.cuisine.length > 0)
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -174,7 +175,12 @@ class PlaceDetailsWidget extends StatelessWidget {
 
 
         if (place.category == 'مراكز تسوق')
+
           Wrap(alignment: WrapAlignment.end, spacing: 3, children: [
+            const SizedBox(
+              height: 4,
+            ),
+            Divider(),
             if (place.shopOptions.length > 0) ...[
               const SizedBox(
                 height: 5,
@@ -183,7 +189,7 @@ class PlaceDetailsWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   const Text(
-                    ': أنواع المحلات:',
+                    ': أنواع المحلات',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -241,37 +247,45 @@ class PlaceDetailsWidget extends StatelessWidget {
             ],
           ),
           Divider(),
-          if (place.hasReservation) // Check if hasReservation is true
+          if (place.hasReservation)
             ShowTextAttributesWidget(
               text: place.reservationDetails,
             ),
         ],
-
-
-
-
 
         if (place.category == 'فعاليات و ترفيه') ...[
           Wrap(
             alignment: WrapAlignment.end,
             spacing: 4,
             children: [
-
               ShowBoolAttributesWidget(
                 text: 'يتطلب حجز',
                 check: place.hasReservation,
               ),
-
               ShowBoolAttributesWidget(
                   text: 'خدمة ركن السيارات', check: place.hasValetServiced),
-            ],
+              ShowBoolAttributesWidget(
+                  text: place.INorOUT
+                      ? 'مكان داخلي'
+                      : 'مكان خارجي',
+                  check: place.INorOUT),
+              ShowBoolAttributesWidget(
+                text: 'فعالية مؤقته',
+                check: place.isTemporary,
+              ),
+
+
+          ]
           ),
           Divider(),
           if (place.hasReservation) // Check if hasReservation is true
             ShowTextAttributesWidget(
               text: place.reservationDetails,
             ),
-        
+          const SizedBox(
+            height: 4,
+          ),
+          Divider(),
           if (place.startDate != '') ...[
             const SizedBox(
               height: 5,
