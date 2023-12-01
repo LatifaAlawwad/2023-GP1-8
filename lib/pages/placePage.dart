@@ -30,7 +30,7 @@ class placePage {
   String finishDate;
   String WebLink;
   bool hasReservation;
-String reservationDetails;
+  String reservationDetails;
   List<String> shopOptions;
 
   placePage({
@@ -46,7 +46,7 @@ String reservationDetails;
     required this.Location,
     required this.latitude,
     required this.longitude,
-     this.workedDays=const[],
+    this.workedDays=const[],
     this.allowChildren = false,
     this.hasValetServiced = false,
     this.cuisine = const [],
@@ -214,4 +214,3 @@ String reservationDetails;
   List<String> get getShopOptions => shopOptions;
 
 }
-

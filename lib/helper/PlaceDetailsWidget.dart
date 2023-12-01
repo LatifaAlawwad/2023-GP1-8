@@ -42,6 +42,21 @@ class PlaceDetailsWidget extends StatelessWidget {
       child: Text(value),
     );
   }
+  Widget _buildTextCard(String text) {
+    return Container(
+      margin: const EdgeInsets.only(top: 2, bottom: 2),
+      padding: const EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        color: Colors.white,
+        border: Border.all(
+          color: const Color(0xFF6db881),
+          width: 1,
+        ),
+      ),
+      child: Text(text),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +64,7 @@ class PlaceDetailsWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
+        Divider(),
         if (place.WebLink != '')
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -74,6 +90,7 @@ class PlaceDetailsWidget extends StatelessWidget {
               ),
             ],
           ),
+        Divider(),
         if (place.category == 'مطاعم') ...[
           if (place.cuisine.length > 0)
             Column(
@@ -83,7 +100,7 @@ class PlaceDetailsWidget extends StatelessWidget {
                   height: 5,
                 ),
                 const Text(
-                  ':مطبخ',
+                  ':نوع الطعام',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -101,56 +118,30 @@ class PlaceDetailsWidget extends StatelessWidget {
               ],
             ),
           if (place.priceRange != '')
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                const SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  '${place.priceRange}',
-                  textAlign: TextAlign.right,
-                ),
-                const SizedBox(
-                  width: 4,
-                ),
-                const Text(
-                  ':نطاق السعر',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: "Tajawal-m",
-                  ),
-                  textAlign: TextAlign.right,
-                ),
-              ],
-            ),
-          if (place.serves.length > 0)
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                const SizedBox(
-                  height: 5,
+                const SizedBox(height: 5),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const Text(
+                      ':نطاق السعر',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: "Tajawal-m",
+                      ),
+                      textAlign: TextAlign.right,
+                    ),
+                    const SizedBox(width: 4),
+                    _buildTextCard('${place.priceRange}'),
+                  ],
                 ),
-                const Text(
-                  ':يخدم',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: "Tajawal-m",
-                  ),
-                  textAlign: TextAlign.right,
-                ),
-                const SizedBox(
-                  width: 4,
-                ),
-                Wrap(
-                  alignment: WrapAlignment.end,
-                  spacing: 3,
-                  children: place.serves.map((e) => _buildCard(e)).toList(),
-                )
               ],
             ),
+
 
           if (place.atmosphere.length > 0) ...[
             const SizedBox(
@@ -160,7 +151,7 @@ class PlaceDetailsWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 const Text(
-                  ':أَجواء',
+                  ':الجو العام',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -180,36 +171,76 @@ class PlaceDetailsWidget extends StatelessWidget {
             ),
           ],
         ],
-        Divider(),
 
-        ShowBoolAttributesWidget(
-            text: 'خدمة ركن السيارات', check: place.hasValetServiced),
+
         if (place.category == 'مراكز تسوق')
           Wrap(alignment: WrapAlignment.end, spacing: 3, children: [
+            if (place.shopOptions.length > 0) ...[
+              const SizedBox(
+                height: 5,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  const Text(
+                    ': أنواع المحلات:',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: "Tajawal-m",
+                    ),
+                    textAlign: TextAlign.right,
+                  ),
+                  const SizedBox(
+                    width: 4,
+                  ),
+                  Wrap(
+                    alignment: WrapAlignment.end,
+                    spacing: 3,
+                    children: place.shopOptions.map((e) => _buildCard(e)).toList(),
+                  )
+                ],
+              ),
+            ],
+            Divider(),
             ShowBoolAttributesWidget(text: ' سينما', check: place.hasCinema),
             ShowBoolAttributesWidget(
                 text: place.INorOUT
-                    ? 'مكان داخلي'
-                    : 'مكان خارجي',
+                    ? 'مركز داخلي'
+                    : 'مركز خارجي',
                 check: place.INorOUT),
             ShowBoolAttributesWidget(
-                text: ' قاعة طعام', check: place.hasFoodCourt),
+                text: 'منطقة مطاعم', check: place.hasFoodCourt),
             ShowBoolAttributesWidget(
-                text: '  منطقة لعب', check: place.hasPlayArea),
+                text: 'منطقة ألعاب', check: place.hasPlayArea),
             ShowBoolAttributesWidget(
-                text: ' سوبر ماركت', check: place.hasSupermarket),
+                text: 'سوبرماركت', check: place.hasSupermarket),
+            ShowBoolAttributesWidget(
+                text: 'خدمة ركن السيارات', check: place.hasValetServiced),
+
 
           ]),
+
         Divider(),
         if (place.category == 'مطاعم') ...[
-          ShowBoolAttributesWidget(
-            text: 'السماح للأطفال',
-            check: place.allowChildren,
+          Wrap(
+            alignment: WrapAlignment.end,
+            spacing: 3, // Adjust the spacing between widgets
+            children: [
+              ShowBoolAttributesWidget(
+                text: 'السماح للأطفال',
+                check: place.allowChildren,
+              ),
+              ShowBoolAttributesWidget(
+                text: 'يتطلب حجز',
+                check: place.hasReservation,
+              ),
+
+              ShowBoolAttributesWidget(
+                  text: 'خدمة ركن السيارات', check: place.hasValetServiced),
+            ],
           ),
-          ShowBoolAttributesWidget(
-            text: 'يتطلب حجز',
-            check: place.hasReservation,
-          ),
+          Divider(),
           if (place.hasReservation) // Check if hasReservation is true
             ShowTextAttributesWidget(
               text: place.reservationDetails,
@@ -218,8 +249,29 @@ class PlaceDetailsWidget extends StatelessWidget {
 
 
 
-        Divider(),
+
+
         if (place.category == 'فعاليات و ترفيه') ...[
+          Wrap(
+            alignment: WrapAlignment.end,
+            spacing: 4,
+            children: [
+
+              ShowBoolAttributesWidget(
+                text: 'يتطلب حجز',
+                check: place.hasReservation,
+              ),
+
+              ShowBoolAttributesWidget(
+                  text: 'خدمة ركن السيارات', check: place.hasValetServiced),
+            ],
+          ),
+          Divider(),
+          if (place.hasReservation) // Check if hasReservation is true
+            ShowTextAttributesWidget(
+              text: place.reservationDetails,
+            ),
+        
           if (place.startDate != '') ...[
             const SizedBox(
               height: 5,
@@ -278,4 +330,5 @@ class PlaceDetailsWidget extends StatelessWidget {
       ],
     );
   }
+
 }

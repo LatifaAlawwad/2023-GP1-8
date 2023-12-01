@@ -753,9 +753,10 @@ class CustomFormState extends State<CustomForm> {
     }
   }
 
-  String priceRange = 'مرتفع';
+
   bool? hasReservation;
   List<String> servesOptions = ['فطور', 'غداء', 'عشاء'];
+  String priceRange = 'مرتفع';
   List<String> atmosphereOptions = [
     'يوجد موسيقى',
     'بدون موسيقى',
@@ -946,7 +947,6 @@ class CustomFormState extends State<CustomForm> {
                 'city': city,
                 'neighbourhood': address,
                 'images': arrImage,
-                'Location': WebLink.text,
                 'WebLink': WebLink.text,
                 'description': description.text,
                 'category': type1,
@@ -1042,9 +1042,8 @@ class CustomFormState extends State<CustomForm> {
                           top: 0, bottom: 0, right: 10, left: 10),
                       fillColor: Colors.white,
                       hintText: 'اسم المكان',
-                      hintStyle: TextStyle(
-                        color: Colors.black45,
-                      ),
+
+
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                           borderSide:
@@ -1086,6 +1085,7 @@ class CustomFormState extends State<CustomForm> {
                       ),
                     ),
                     child: DropdownButtonFormField<int>(
+                      value: null, // Set initial value to null
                       decoration: const InputDecoration(
                         isDense: true,
                         border: InputBorder.none,
@@ -1093,17 +1093,17 @@ class CustomFormState extends State<CustomForm> {
                           Icons.arrow_drop_down, // Set your desired icon
                           color: Color(0xFF6db881),
                         ),
-                        contentPadding: EdgeInsets.only(
-                            top: 15, bottom: 15, right: 10, left: 10),
+                        contentPadding: EdgeInsets.only(top: 15, bottom: 15, right: 10, left: 10),
                       ),
                       iconSize: 0,
                       hint: const Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            'اختر التصنيف',
-                          )),
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          'اختر تصنيف المكان',
+                        ),
+                      ),
                       isExpanded: true,
-                      items: const [
+                      items: [
                         DropdownMenuItem<int>(
                           value: 1,
                           child: Align(
@@ -1823,7 +1823,6 @@ class CustomFormState extends State<CustomForm> {
                             }).toList(),
                           ),
                         ),
-
                         const SizedBox(height: 20),
                         const Text(
                           'الوجبات المقدمة ',

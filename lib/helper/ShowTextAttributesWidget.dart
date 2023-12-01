@@ -15,7 +15,7 @@ class ShowTextAttributesWidget extends StatelessWidget {
           height: 5,
         ),
         const Text(
-          'تفاصيل الحجز:',
+          ': تفاصيل الحجز',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
