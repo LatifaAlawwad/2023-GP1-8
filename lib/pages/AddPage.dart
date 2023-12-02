@@ -226,6 +226,7 @@ class CustomFormState extends State<CustomForm> {
     'ثقافة',
     'حدائق و منتزهات',
     'مدينة  ملاهي',
+    'معارض',
   ];
 
   bool? isTemporary;
@@ -782,7 +783,7 @@ class CustomFormState extends State<CustomForm> {
   ];
   Set<String> serves = Set<String>();
   Set<String> atmosphere = Set<String>();
-  Set<String> ShopType = Set<String>();
+  Set<String> shopType = Set<String>();
 
   @override
   void dispose() {
@@ -925,7 +926,7 @@ class CustomFormState extends State<CustomForm> {
                 'hasSupermarket': hasSupermarket,
                 'latitude': startPosition?.geometry?.location?.lat,
                 'longitude': startPosition?.geometry?.location?.lng,
-               'shopOptions':shopOptions,
+               'shopType':shopType,
               });
               await FirebaseFirestore.instance
                   .collection('users')
@@ -953,9 +954,6 @@ class CustomFormState extends State<CustomForm> {
                 'description': description.text,
                 'category': type1,
                 "WorkedDays": dayss,
-                //    'days': userChecked,
-                //  "OpenAt": openAt,
-                //"CloseAt": closeAt,
                 'hasValetServiced': hasValetServiced,
                 'latitude': startPosition?.geometry?.location?.lat,
                 'longitude': startPosition?.geometry?.location?.lng,
@@ -2264,27 +2262,28 @@ class CustomFormState extends State<CustomForm> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 20),
-                        const Text(
-                          'أنواع المحلات',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontFamily: "Tajawal-b",
-                          ),
-                        ),
-                        const SizedBox(height: 10),
+    const SizedBox(height: 20),
+    const Text(
+    'أنواع المحلات',
+    style: TextStyle(
+    fontSize: 20.0,
+    fontFamily: "Tajawal-b",
+    ),
+    ),
+    const SizedBox(height: 10),
+
                         Wrap(
                           spacing: 10,
                           runSpacing: 7,
                           alignment: WrapAlignment.end,
-                          children: shopOptions.map((ShopOptions) {
+                          children: shopOptions.map((ShopType) {
                             return GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                    if (ShopType.contains(ShopOptions)) {
-                                      ShopType.remove(ShopOptions);
+                                    if (shopType.contains(ShopType)) {
+                                      shopType.remove(ShopType);
                                     } else {
-                                      ShopType.add(ShopOptions);
+                                      shopType.add(ShopType);
                                     }
                                   });
                                 },
@@ -2296,7 +2295,7 @@ class CustomFormState extends State<CustomForm> {
                                         Radius.circular(10)),
                                     color: Colors.white,
                                     border: Border.all(
-                                      color: ShopType.contains(ShopOptions)
+                                      color: shopType.contains(ShopType)
                                           ? const Color(0xFF6db881)
                                           : Colors.black,
                                       width: 1,
@@ -2308,14 +2307,14 @@ class CustomFormState extends State<CustomForm> {
                                       const SizedBox(
                                         width: 25,
                                       ),
-                                      Text(ShopOptions,
+                                      Text(ShopType,
                                           style: const TextStyle(
                                               fontSize: 16.0,
                                               fontFamily: 'Tajawal-m')),
                                       const SizedBox(
                                         width: 5,
                                       ),
-                                      ShopType.contains(ShopOptions)
+                                      shopType.contains(ShopType)
                                           ? const Icon(
                                         Icons.check_rounded,
                                         size: 16,
@@ -2332,9 +2331,9 @@ class CustomFormState extends State<CustomForm> {
                                 ));
                           }).toList(),
                         ),
-                      ],
-                    ),
-                  const SizedBox(height: 20),
+],),
+
+    const SizedBox(height: 20),
                   const Text(
                     'هل توجد خدمة ركن السيارات؟',
                     style: TextStyle(
@@ -2393,7 +2392,7 @@ class CustomFormState extends State<CustomForm> {
                       contentPadding: EdgeInsets.only(
                           top: 0, bottom: 0, right: 10, left: 10),
                       fillColor: Colors.white,
-                      hintText: 'رابط موقع',
+                      hintText: 'رابط الموقع الالكتروني',
                       hintStyle: TextStyle(
                         color: Colors.black45,
                       ),
@@ -2419,7 +2418,7 @@ class CustomFormState extends State<CustomForm> {
                     height: 20,
                   ),
                   const Text(
-                  ':وصف المكان ',
+                  ':الوصف ',
                   style: TextStyle(
     fontSize: 18.0,
     fontFamily: "Tajawal-b",
@@ -2436,7 +2435,7 @@ class CustomFormState extends State<CustomForm> {
     filled: true,
     contentPadding: EdgeInsets.only(top: 0, bottom: 0, right: 10, left: 10),
     fillColor: Colors.white,
-    hintText: 'وصف',
+    hintText: 'وصف المكان',
     hintStyle: TextStyle(
     color: Colors.black45,
     ),
@@ -2765,10 +2764,12 @@ class CustomFormState extends State<CustomForm> {
                   ),
                 ],
               ),
+
             ),
           ),
         ),
-      ],
+  
+    ],
     );
   }
 

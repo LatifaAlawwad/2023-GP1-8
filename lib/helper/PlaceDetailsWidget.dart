@@ -181,7 +181,7 @@ class PlaceDetailsWidget extends StatelessWidget {
               height: 4,
             ),
             Divider(),
-            if (place.shopOptions.length > 0) ...[
+            if (place.shopType.length > 0) ...[
               const SizedBox(
                 height: 5,
               ),
@@ -203,7 +203,7 @@ class PlaceDetailsWidget extends StatelessWidget {
                   Wrap(
                     alignment: WrapAlignment.end,
                     spacing: 3,
-                    children: place.shopOptions.map((e) => _buildCard(e)).toList(),
+                    children: place.shopType.map((e) => _buildCard(e)).toList(),
                   )
                 ],
               ),
@@ -281,11 +281,13 @@ class PlaceDetailsWidget extends StatelessWidget {
           if (place.hasReservation) // Check if hasReservation is true
             ShowTextAttributesWidget(
               text: place.reservationDetails,
+
             ),
+
           const SizedBox(
             height: 4,
           ),
-          Divider(),
+
           if (place.startDate != '') ...[
             const SizedBox(
               height: 5,

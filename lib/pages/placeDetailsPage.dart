@@ -3,7 +3,6 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gp/helper/PlaceDetailsWidget.dart';
 import 'package:uuid/uuid.dart';
-
 import '../Registration/logIn.dart';
 import 'placePage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -30,6 +29,7 @@ class placeDetailsPage extends StatefulWidget {
 }
 
 class _placeDetailsState extends State<placeDetailsPage> {
+
   late GoogleMapController myMapController;
   final Set<Marker> _markers = new Set();
 
@@ -65,6 +65,7 @@ class _placeDetailsState extends State<placeDetailsPage> {
       print(key + " : " + value.toString());
     });
     super.initState();
+
     _scrollController.addListener(() {
       double scrollPosition = _scrollController.position.pixels;
       double maxScrollExtent = _scrollController.position.maxScrollExtent;
@@ -287,6 +288,13 @@ class _placeDetailsState extends State<placeDetailsPage> {
                     topRight: Radius.circular(30),
                   ),
                 ),
+    child: ScrollbarTheme(
+    data: ScrollbarThemeData(
+    thumbColor: MaterialStateProperty.all(Color.fromARGB(
+    255, 109, 184, 129), )// Set the color of the scrollbar thumb
+    //  trackColor: MaterialStateProperty.all( Color.fromARGB(255, 17, 99, 14)),// Set the color of the track
+    ),
+    child: Scrollbar(
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(15.0),
@@ -295,7 +303,7 @@ class _placeDetailsState extends State<placeDetailsPage> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         const Text(
-                          "وصف",
+                          "الوصف",
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -563,8 +571,11 @@ class _placeDetailsState extends State<placeDetailsPage> {
                                 onDelete: () async {
                                   // Handle delete action
                                   await deleteReview(
-                                      commentData["placeId"] ?? "",
-                                      doc.id); // Pass placeId
+                                    context, // Pass the BuildContext
+                                    commentData["placeId"] ?? "", // Pass placeId
+                                    doc.id, // Pass reviewId
+                                  );
+                                  // Pass placeId
                                   // Optionally, you can perform additional actions after deletion
                                 },
                                 onUpdate: () {
@@ -600,7 +611,9 @@ class _placeDetailsState extends State<placeDetailsPage> {
                     ),
                   ),
                 ),
+    ),
               ),
+            ),
             ),
           ],
         ),
@@ -854,17 +867,39 @@ class _placeDetailsState extends State<placeDetailsPage> {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////
+  Future<void> deleteReview(BuildContext context, String placeId, String reviewId) async {
+    try {
+      // Implement the logic to delete the review from Firebase
+      await FirebaseFirestore.instance
+          .collection('ApprovedPlaces')
+          .doc(placeId)
+          .collection('Reviews')
+          .doc(reviewId)
+          .delete();
 
-  Future<void> deleteReview(String placeId, String reviewId) async {
-    // Implement the logic to delete the review from Firebase
-    await FirebaseFirestore.instance
-        .collection('ApprovedPlaces')
-        .doc(placeId)
-        .collection('Reviews')
-        .doc(reviewId)
-        .delete();
+      // Show a toast message to indicate successful deletion
+      Fluttertoast.showToast(
+        msg: 'تم حذف التقييم بنجاح',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Color.fromARGB(255, 109, 184, 129),
 
-    // Optionally, you can perform additional actions after deletion
+      );
+
+      // Optionally, you can perform additional actions after deletion
+    } catch (error) {
+      // Handle errors if any
+      print('Error deleting review: $error');
+
+      // Show an error toast message
+      Fluttertoast.showToast(
+        msg: 'يوجد هناك مشكلة في حذف التقييم حاول مرة أخرى',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Color.fromARGB(255, 109, 184, 129)
+
+      );
+    }
   }
 
   Future<void> updateReviewText(
@@ -881,51 +916,68 @@ class _placeDetailsState extends State<placeDetailsPage> {
   }
 }
 ////////////////////////////////////////////////////////////////////////////////////
+Future<void> makePostRequest(String reviewText, double rating, String userId, String placeid, String username) async {
+  try {
+    // Detect the language of the review text
+    String language = detectLanguage(string: reviewText);
 
-Future makePostRequest(String reviewText, double rating, String userId,
-    String placeid, String username) async {
-  final uri = Uri.parse(
-      'https://profanity-cleaner-bad-word-filter.p.rapidapi.com/profanity');
-  final headers = {
-    'Content-Type': 'application/json',
-    'X-RapidAPI-Key': 'f3c39b2fbamsh9dd5600086c2bd6p11cd83jsn3b07a4b3724c'
-  };
-  Map<String, dynamic> body = {
-    "text": reviewText,
-    "maskCharacter": "*",
-    "language": "ar"
-  };
-  String jsonBody = json.encode(body);
-  final encoding = Encoding.getByName('utf-8');
+    // Make the profanity filter API request
+    final uri = Uri.parse('https://profanity-cleaner-bad-word-filter.p.rapidapi.com/profanity');
+    final headers = {
+      'Content-Type': 'application/json',
+      'X-RapidAPI-Key': 'f3c39b2fbamsh9dd5600086c2bd6p11cd83jsn3b07a4b3724c',
+    };
 
-  var response = await http.post(
-    uri,
-    headers: headers,
-    body: jsonBody,
-    encoding: encoding,
-  );
-  int statusCode = response.statusCode;
-  Map responseBody = jsonDecode(response.body);
-  print(responseBody['clean']);
-  await _saveReviewToFirebase(
-      responseBody['clean'], rating, userId, placeid, username);
+    Map<String, dynamic> body = {
+      'text': reviewText,
+      'maskCharacter': '*',
+      'language': language,
+    };
+
+    String jsonBody = json.encode(body);
+    final encoding = Encoding.getByName('utf-8');
+
+    var response = await http.post(
+      uri,
+      headers: headers,
+      body: jsonBody,
+      encoding: encoding,
+    );
+
+    int statusCode = response.statusCode;
+    Map responseBody = jsonDecode(response.body);
+    print(responseBody['clean']);
+
+    // Save the cleaned review to Firebase Firestore
+    await _saveReviewToFirebase(responseBody['clean'], rating, userId, placeid, username);
+  } catch (error) {
+    // Handle errors during the process
+    print('Error making POST request: $error');
+  }
+}
+String detectLanguage({required String string}) {
+  String languageCode = 'ar'; // Default to Arabic
+
+  final RegExp english = RegExp(r'^[a-zA-Z]+');
+  final RegExp arabic = RegExp(r'^[\u0621-\u064A]+');
+
+  if (english.hasMatch(string)) {
+    languageCode = 'en'; // Set to English if the string contains English characters
+  } else if (arabic.hasMatch(string)) {
+    languageCode = 'ar'; // Set to Arabic if the string contains Arabic characters
+  }
+
+  return languageCode;
 }
 
-Future<void> _saveReviewToFirebase(String reviewText, double rating,
-    String userId, String placeId, String username,
-    [String? reviewId]) async {
-  final CollectionReference reviewsCollection = FirebaseFirestore.instance
-      .collection('ApprovedPlaces')
-      .doc(placeId)
-      .collection('Reviews');
+Future<void> _saveReviewToFirebase(String reviewText, double rating, String userId, String placeId, String username, [String? reviewId]) async {
+  final CollectionReference reviewsCollection = FirebaseFirestore.instance.collection('ApprovedPlaces').doc(placeId).collection('Reviews');
 
   // Check for previous reviews with the same userId for the specific place
-  QuerySnapshot existingReviews =
-  await reviewsCollection.where('userId', isEqualTo: userId).get();
+  QuerySnapshot existingReviews = await reviewsCollection.where('userId', isEqualTo: userId).get();
 
   // Exclude the current review from the check if the user is updating the comment
-  if (existingReviews.docs.isNotEmpty &&
-      (reviewText.isNotEmpty || rating > 0.0)) {
+  if (existingReviews.docs.isNotEmpty && (reviewText.isNotEmpty || rating > 0.0)) {
     // User has already submitted a review for this place, allow updating the comment, rating, and timestamp
     var existingReview = existingReviews.docs.first;
     await existingReview.reference.update({
@@ -940,12 +992,12 @@ Future<void> _saveReviewToFirebase(String reviewText, double rating,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 1,
-      backgroundColor: const Color(0xFF6db881),
+      backgroundColor: Color(0xFF6db881),
       textColor: Colors.white,
     );
   } else {
     // User does not have a previous review and rate, proceed to save the new review and rate
-    var uuid = const Uuid();
+    var uuid = Uuid();
     String newReviewId = uuid.v4();
 
     // Create a new review document with a timestamp
@@ -964,7 +1016,7 @@ Future<void> _saveReviewToFirebase(String reviewText, double rating,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 1,
-        backgroundColor: const Color(0xFF6db881),
+        backgroundColor: Color(0xFF6db881),
         textColor: Colors.white,
       );
     }).catchError((error) {
@@ -973,6 +1025,37 @@ Future<void> _saveReviewToFirebase(String reviewText, double rating,
     });
   }
 }
+
+
+List<String> detectLanguages({required String string}) {
+  List<String> languageCodes = [];
+
+  final RegExp english = RegExp(r'^[a-zA-Z]+');
+  final RegExp arabic = RegExp(r'^[\u0621-\u064A]+');
+
+  // Split the input string into words
+  List<String> words = string.split(' ');
+
+  // Check the language of each word
+  for (String word in words) {
+    if (english.hasMatch(word)) {
+      languageCodes.add('en'); // Set to English if the word contains English characters
+    } else if (arabic.hasMatch(word)) {
+      languageCodes.add('ar'); // Set to Arabic if the word contains Arabic characters
+    }
+  }
+
+  // Remove duplicate language codes
+  languageCodes = languageCodes.toSet().toList();
+
+  // If no language is detected, default to Arabic
+  if (languageCodes.isEmpty) {
+    languageCodes.add('ar');
+  }
+
+  return languageCodes;
+}
+
 
 showguestDialog(BuildContext context) async {
   showDialog(

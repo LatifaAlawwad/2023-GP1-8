@@ -9,6 +9,7 @@ import 'package:google_place/google_place.dart';
 import 'package:gp/pages/placeDetailsPage.dart';
 import 'package:gp/pages/placePage.dart';
 import 'dart:math';
+import 'package:gp/helper/PlaceDetailsWidget.dart';
 
 class MapSample extends StatefulWidget {
   @override
@@ -158,9 +159,8 @@ void _initializeCurrentLocation() async {
                             description: place['description'] ?? '',
                             latitude: place['latitude'] ?? 0.0,
                             longitude: place['longitude'] ?? 0.0,
-                            workedDays: List<Map<String, dynamic>>.from(place['WorkedDays']??[]),
-
-
+                            workedDays: List<Map<String, dynamic>>.from(place['WorkedDays'] ?? []),
+                            hasValetServiced: place['hasValetServiced'] ?? false,
 
                           ),
                         ),
