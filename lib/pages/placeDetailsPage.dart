@@ -453,160 +453,198 @@ class _placeDetailsState extends State<placeDetailsPage> {
                           ),
                         const SizedBox(height: 10),
                         Divider(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  if (currentUser == null) {
-                                    showguestDialog(context);
-                                  } else {
-                                    // Check if the user has already submitted a review
-                                    bool hasPreviousReview =
-                                    await checkPreviousReview(
-                                        widget.place.place_id);
 
-                                    if (hasPreviousReview) {
-                                      // User has a previous review, show a message indicating they can update
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                              'لديك تقييم وتعليق سابق، يمكنك تحديثه من قسم التعليقات.'),
-                                          duration: Duration(seconds: 5),
-                                        ),
-                                      );
-                                    } else {
-                                      // User does not have a previous review, open the review dialog
-                                      showReviewDialog(
-                                          context, widget.place.place_id);
-                                    }
-                                  }
-                                },
-                                style: ButtonStyle(
-                                  backgroundColor:
-                                  MaterialStateProperty.all(Colors.white),
-                                  side: MaterialStateProperty.all(
-                                    const BorderSide(
-                                        color: Color(0xFF6db881), width: 1.0),
-                                  ),
-                                  shape: MaterialStateProperty.all(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          10), // Smaller border radius
-                                    ),
-                                  ),
-                                ),
-                                child: const Text(
-                                  'قيّم وشارك تجربتك',
-                                  style: TextStyle(
-                                    fontSize: 16.0, // Smaller font size
-                                    fontFamily: "Tajawal-m",
-                                    color: Color(0xFF6db881),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            const Text(
-                              ':التعليقات',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: "Tajawal-m",
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        StreamBuilder<QuerySnapshot>(
-                          stream: FirebaseFirestore.instance
-                              .collection('ApprovedPlaces')
-                              .doc(widget.place.place_id)
-                              .collection('Reviews')
-                              .orderBy('timestamp', descending: true)
-                              .snapshots(),
+
+                        FutureBuilder<String>(
+                          future: checkPlaceStatus(widget.place.place_id),
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            } else if (!snapshot.hasData ||
-                                snapshot.data!.docs.isEmpty) {
-                              return const Center(
-                                child: Padding(
-                                  padding:
-                                  EdgeInsets.only(top: 16.0, bottom: 16.0),
-                                  child: Text(
-                                    'لا يوجد أي تعليق حتى الان',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontFamily: "Tajawal-m",
-                                      color: Colors.grey,
-                                    ),
+                            print('Snapshot Data: ${snapshot.data}');
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return CircularProgressIndicator();
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else if (snapshot.data == "yes" ) {
+                              print('Hiding content because snapshot data is "yes"');
+                             return Container();
+                                } else {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                        child: ElevatedButton(
+                                          onPressed: () async {
+                                            if (currentUser == null) {
+                                              showguestDialog(context);
+                                            } else {
+                                              // Check if the user has already submitted a review
+                                              bool hasPreviousReview = await checkPreviousReview(widget.place.place_id);
+
+                                              if (hasPreviousReview) {
+                                                // User has a previous review, show a message indicating they can update
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text(
+                                                      'لديك تقييم وتعليق سابق، يمكنك تحديثه من قسم التعليقات.',
+                                                    ),
+                                                    duration: Duration(seconds: 5),
+                                                  ),
+                                                );
+                                              } else {
+                                                // User does not have a previous review, open the review dialog
+                                                showReviewDialog(context, widget.place.place_id);
+                                              }
+                                            }
+                                          },
+                                          style: ButtonStyle(
+                                            backgroundColor: MaterialStateProperty.all(Colors.white),
+                                            side: MaterialStateProperty.all(
+                                              const BorderSide(color: Color(0xFF6db881), width: 1.0),
+                                            ),
+                                            shape: MaterialStateProperty.all(
+                                              RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(10),
+                                              ),
+                                            ),
+                                          ),
+                                          child: const Text(
+                                            'قيّم وشارك تجربتك',
+                                            style: TextStyle(
+                                              fontSize: 16.0,
+                                              fontFamily: "Tajawal-m",
+                                              color: Color(0xFF6db881),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      const Text(
+                                        ':التعليقات',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: "Tajawal-m",
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              );
+                                  const SizedBox(height: 10),
+                                  StreamBuilder<QuerySnapshot>(
+                                    stream: FirebaseFirestore.instance
+                                        .collection('ApprovedPlaces')
+                                        .doc(widget.place.place_id)
+                                        .collection('Reviews')
+                                        .orderBy('timestamp', descending: true)
+                                        .snapshots(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState == ConnectionState.waiting) {
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                                        return const Center(
+                                          child: Padding(
+                                            padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
+                                            child: Text(
+                                              'لا يوجد أي تعليق حتى الان ',
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontFamily: "Tajawal-m",
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }
+
+                                      // Retrieve reviews from the snapshot
+                                      List<Review> reviews = snapshot.data!.docs.map((doc) {
+                                        final commentData = doc.data() as Map<String, dynamic>;
+                                        return Review(
+                                          id: commentData["id"] ?? "",
+                                          placeId: commentData["placeId"] ?? "",
+                                          userId: commentData["userId"] ?? "",
+                                          userName: commentData["userName"] ?? "anonymous",
+                                          rating: commentData["rating"].toDouble() ?? 0.0,
+                                          text: commentData["text"] ?? "",
+                                          timestamp: formatDate(commentData["timestamp"]),
+                                          currentUserReview: commentData["userId"] == getuserId(),
+                                          onDelete: () async {
+                                            // Handle delete action
+                                            await deleteReview(
+                                              context, // Pass the BuildContext
+                                              commentData["placeId"] ?? "", // Pass placeId
+                                              doc.id, // Pass reviewId
+                                            );
+                                            // Pass placeId
+                                            // Optionally, you can perform additional actions after deletion
+                                          },
+                                          onUpdate: () {
+                                            // Show a dialog to enter the updated comment
+                                            showReviewDialog(
+                                              context,
+                                              widget.place.place_id,
+                                              initialRating: commentData["rating"].toDouble(),
+                                              initialComment: commentData["text"],
+                                            );
+                                          },
+                                        );
+                                      }).toList();
+
+                                      // Sort the reviews to have the user's review first
+                                      reviews.sort((a, b) {
+                                        if (a.currentUserReview) {
+                                          return -1; // User's review comes first
+                                        } else if (b.currentUserReview) {
+                                          return 1;
+                                        } else {
+                                          return b.timestamp.compareTo(a.timestamp);
+                                        }
+                                      });
+
+                                      return ListView(
+                                        shrinkWrap: true,
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        children: reviews,
+                                      );
+                                    },
+                                  ),
+                                ],
+                                );
                             }
-
-                            // Retrieve reviews from the snapshot
-                            List<Review> reviews =
-                            snapshot.data!.docs.map((doc) {
-                              final commentData =
-                              doc.data() as Map<String, dynamic>;
-                              return Review(
-                                id: commentData["id"] ?? "",
-                                placeId: commentData["placeId"] ?? "",
-                                userId: commentData["userId"] ?? "",
-                                userName:
-                                commentData["userName"] ?? "anonymous",
-                                rating: commentData["rating"].toDouble() ?? 0.0,
-                                text: commentData["text"] ?? "",
-                                timestamp: formatDate(commentData["timestamp"]),
-                                currentUserReview:
-                                commentData["userId"] == getuserId(),
-                                onDelete: () async {
-                                  // Handle delete action
-                                  await deleteReview(
-                                    context, // Pass the BuildContext
-                                    commentData["placeId"] ?? "", // Pass placeId
-                                    doc.id, // Pass reviewId
-                                  );
-                                  // Pass placeId
-                                  // Optionally, you can perform additional actions after deletion
-                                },
-                                onUpdate: () {
-                                  // Show a dialog to enter the updated comment
-                                  showReviewDialog(
-                                      context, widget.place.place_id,
-                                      initialRating:
-                                      commentData["rating"].toDouble(),
-                                      initialComment: commentData["text"]);
-                                },
-                              );
-                            }).toList();
-
-                            // Sort the reviews to have the user's review first
-                            reviews.sort((a, b) {
-                              if (a.currentUserReview) {
-                                return -1; // User's review comes first
-                              } else if (b.currentUserReview) {
-                                return 1;
-                              } else {
-                                return b.timestamp.compareTo(a.timestamp);
-                              }
-                            });
-
-                            return ListView(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              children: reviews,
-                            );
                           },
                         )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                       ],
                     ),
                   ),
@@ -620,6 +658,48 @@ class _placeDetailsState extends State<placeDetailsPage> {
       ),
     );
   }
+
+
+
+
+
+  Future<String> checkPlaceStatus(String placeId) async {
+    try {
+      DocumentSnapshot snapshotPending = await FirebaseFirestore.instance
+          .collection('PendingPlaces')
+          .doc(placeId)
+          .get();
+
+      QuerySnapshot snapshotRejected = await FirebaseFirestore.instance
+          .collection('RejectedPlaces')
+          .where('place_id', isEqualTo: placeId)
+          .get();
+
+print(placeId);
+      if (snapshotRejected.docs.isNotEmpty  || snapshotPending.exists) {
+        return "yes";
+      }
+
+      // If the document is not found in the "RejectedPlaces" collection, return an empty string or null
+      return "";
+    } catch (e) {
+      print("Error checking place status: $e");
+      return ""; // Return an empty string or null in case of an error
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   Future<bool> checkPreviousReview(String placeId) async {
     FirebaseAuth auth = FirebaseAuth.instance;
@@ -865,6 +945,22 @@ class _placeDetailsState extends State<placeDetailsPage> {
       },
     );
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ////////////////////////////////////////////////////////////////////////////////////
   Future<void> deleteReview(BuildContext context, String placeId, String reviewId) async {
@@ -1140,6 +1236,19 @@ double calculateAverageRating(List<Review> reviews) {
 
   return totalRating / reviews.length;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Widget PlaceInfo(IconData iconData, String text, String label) {
   return Column(
