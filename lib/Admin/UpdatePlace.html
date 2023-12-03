@@ -526,17 +526,7 @@ function cancelUpdate() {
  // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-app.js";
 import { getFirestore, doc, collection, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-firestore.js";
-
-
-
-
-
-
-
-
-
-
-
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-storage.js";
 
 
 
@@ -556,6 +546,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const firebaseConfig = {
         apiKey: "AIzaSyBKCStEljQdADcPTDJPG49jPYdj65Ld-aE",
         appId: "1:652061667089:web:1103ef9a5c45ea6d1c26b0",
+        storageBucket:"gs://fir-hail-ec5a7.appspot.com",
         messagingSenderId: "652061667089",
         projectId: "fir-hail-ec5a7"
     };
@@ -821,9 +812,9 @@ const saveChanges = async () => {
 
         await updatePlaceInDatabase(updatedData);
 
-        const imageContainer = document.getElementById('imageContainer');
-        const images = Array.from(imageContainer.children).map((div) => div.querySelector('img').src);
+        // Add the following line to update images in the database
         await updateImagesInDatabase(images);
+
         displayPlaceDetails();
         showToast('تم تحديث البيانات بنجاح!');
     } finally {
@@ -860,29 +851,48 @@ function showToast(message) {
 };
 
 
- const addImages = () => {
-    console.log('addImages function is called!');
+
+
+
+
+
+
+
+
+
+
+
+const storage = getStorage(app);
+
+const uploadImage = async (imageFile) => {
+    const storageRef = ref(storage, 'images/' + imageFile.name);
+    await uploadBytes(storageRef, imageFile);
+
+    // Get the permanent download URL
+    const downloadURL = await getDownloadURL(storageRef);
+    return downloadURL;
+};
+
+const addImages = async () => {
     const imageInput = document.getElementById('imageInput');
     const imageContainer = document.getElementById('imageContainer');
-    const addImageButton = document.getElementById('addImageButton');
 
     const imageFiles = imageInput.files;
 
     if (imageFiles.length > 0) {
         for (let i = 0; i < imageFiles.length; i++) {
             const imageFile = imageFiles[i];
-            const imageUrl = URL.createObjectURL(imageFile);
+            const imageUrl = await uploadImage(imageFile);
             const imageContainerDiv = createImageContainerDiv(imageUrl, images.length + i);
             imageContainer.appendChild(imageContainerDiv);
             images.push(imageUrl);
         }
 
-        updateImagesInDatabase(images);
-         updateAddImageButtonStyle();
+
+        updateAddImageButtonStyle();
     } else {
         alert('Please select one or more images.');
     }
-
 
     imageInput.value = null;
 };
@@ -911,7 +921,7 @@ function showToast(message) {
 
 
 
- const imageContainer = document.getElementById('imageContainer');
+  const imageContainer = document.getElementById('imageContainer');
     const largeImageContainer = document.createElement('div');
     largeImageContainer.className = 'large-image-container';
     document.body.appendChild(largeImageContainer);

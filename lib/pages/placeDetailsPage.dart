@@ -632,19 +632,6 @@ class _placeDetailsState extends State<placeDetailsPage> {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
                       ],
                     ),
                   ),
