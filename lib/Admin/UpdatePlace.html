@@ -575,7 +575,7 @@ console.log("dbplace:", dbplace);
 
 
 let images = [];
-
+let deletedImageIndexes = [];
 
 
 
@@ -721,14 +721,13 @@ function convertToHTMLTimeFormat(databaseTime) {
             deleteIcon.style.right = '5px';
             deleteIcon.style.cursor = 'pointer';
 
-            deleteIcon.onclick = () => {
-                const isConfirmed = confirm("هل أنت متأكد أنك تريد حذف هذه الصورة؟");
-                if (isConfirmed) {
-                    images.splice(index, 1);
-                    updateImagesInDatabase(images);
-                    imageContainer.removeChild(imageContainerDiv);
-                }
-            };
+ deleteIcon.onclick = () => {
+    const isConfirmed = confirm("هل أنت متأكد أنك تريد حذف هذه الصورة؟");
+    if (isConfirmed) {
+        deletedImageIndexes.push(index);
+        imageContainer.removeChild(imageContainerDiv);
+    }
+};
 
             const image = document.createElement('img');
             image.src = imageUrl;
@@ -812,8 +811,18 @@ const saveChanges = async () => {
 
         await updatePlaceInDatabase(updatedData);
 
-        // Add the following line to update images in the database
-        await updateImagesInDatabase(images);
+console.log('Updated Images:', images);
+await updateImagesInDatabase(images);
+
+
+
+          await updateImagesInDatabase(images);
+
+       if (deletedImageIndexes.length > 0) {
+    const updatedImages = images.filter((_, index) => !deletedImageIndexes.includes(index));
+    await updateImagesInDatabase(updatedImages);
+    deletedImageIndexes = []; // Clear the array after deletion
+}
 
         displayPlaceDetails();
         showToast('تم تحديث البيانات بنجاح!');
@@ -891,7 +900,7 @@ const addImages = async () => {
 
         updateAddImageButtonStyle();
     } else {
-        alert('Please select one or more images.');
+        alert('الرجاء اختيار الصور.');
     }
 
     imageInput.value = null;
