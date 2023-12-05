@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:gp/Registration/logIn.dart';
 import 'package:gp/helper/CustomRadioButton.dart';
 import 'package:gp/helper/MapViewDrop.dart';
+import 'package:gp/pages/MapView.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:io';
@@ -2777,9 +2778,8 @@ class CustomFormState extends State<CustomForm> {
     final firestore = FirebaseFirestore.instance;
     final duplicatePlaceQuery = await firestore
         .collection('ApprovedPlaces')
-        .where('placeName', isEqualTo: placeName.text)
-        .where('city', isEqualTo: city)
-    // .where('location', isEqualTo: location.text)
+        .where('latitude', isEqualTo:  startPosition?.geometry?.location?.lat)
+        .where('longitude', isEqualTo: startPosition?.geometry?.location?.lng)
         .get();
 
     if (duplicatePlaceQuery.docs.isEmpty) {

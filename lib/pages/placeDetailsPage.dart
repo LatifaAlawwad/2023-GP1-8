@@ -1001,25 +1001,64 @@ print(placeId);
 ////////////////////////////////////////////////////////////////////////////////////
 Future<void> makePostRequest(String reviewText, double rating, String userId, String placeid, String username) async {
   try {
-    // Detect the language of the review text
-    String language = detectLanguage(string: reviewText);
+    // Split the review text into words
+    List<String> words = reviewText.split(' ');
 
-    // Make the profanity filter API request
-    final uri = Uri.parse('https://profanity-cleaner-bad-word-filter.p.rapidapi.com/profanity');
-    final headers = {
-      'Content-Type': 'application/json',
-      'X-RapidAPI-Key': 'f3c39b2fbamsh9dd5600086c2bd6p11cd83jsn3b07a4b3724c',
-    };
+    print('Original Review Text: $reviewText');
 
-    Map<String, dynamic> body = {
-      'text': reviewText,
-      'maskCharacter': '*',
-      'language': language,
-    };
+    // Check each word for profanity
+    for (int i = 0; i < words.length; i++) {
+      // Check if the word contains 'ال'
+      if (words[i].contains('ال')) {
+        // Split the word by 'ال' and mask the second part
+        List<String> parts = words[i].split('ال');
+        if (parts.length > 1) {
+          // Mask the second part if it exists
+          words[i] = 'ال${await maskProfanity(parts[1])}';
+        }
+      } else {
+        // The word does not contain 'ال', check for profanity
+        words[i] = await maskProfanity(words[i]);
+      }
+    }
+    // Join the words back into the review text
+    String maskedReviewText = words.join(' ');
 
-    String jsonBody = json.encode(body);
-    final encoding = Encoding.getByName('utf-8');
+    print('Masked Review Text: $maskedReviewText');
 
+    // Save the cleaned review to Firebase Firestore
+    await _saveReviewToFirebase(
+      maskedReviewText,
+      rating,
+      userId,
+      placeid,
+      username,
+    );
+  } catch (error) {
+    // Handle errors during the process
+    print('Error making POST request: $error');
+  }
+}
+
+Future<String> maskProfanity(String word) async {
+  final uri = Uri.parse('https://profanity-cleaner-bad-word-filter.p.rapidapi.com/profanity');
+  final headers = {
+    'Content-Type': 'application/json',
+    'X-RapidAPI-Key': 'f3c39b2fbamsh9dd5600086c2bd6p11cd83jsn3b07a4b3724c',
+  };
+
+  String language = detectLanguage(string: word);
+
+  Map<String, dynamic> body = {
+    'text': word,
+    'maskCharacter': '*',
+    'language': language,
+  };
+
+  String jsonBody = json.encode(body);
+  final encoding = Encoding.getByName('utf-8');
+
+  try {
     var response = await http.post(
       uri,
       headers: headers,
@@ -1029,15 +1068,19 @@ Future<void> makePostRequest(String reviewText, double rating, String userId, St
 
     int statusCode = response.statusCode;
     Map responseBody = jsonDecode(response.body);
-    print(responseBody['clean']);
 
-    // Save the cleaned review to Firebase Firestore
-    await _saveReviewToFirebase(responseBody['clean'], rating, userId, placeid, username);
+    // Return the masked version of the word
+    return responseBody['clean'];
   } catch (error) {
-    // Handle errors during the process
-    print('Error making POST request: $error');
+    print('Error making POST request for word: $word');
+    // Return the original word in case of an error
+    return word;
   }
 }
+
+
+
+
 String detectLanguage({required String string}) {
   String languageCode = 'ar'; // Default to Arabic
 
@@ -1108,38 +1151,6 @@ Future<void> _saveReviewToFirebase(String reviewText, double rating, String user
     });
   }
 }
-
-
-List<String> detectLanguages({required String string}) {
-  List<String> languageCodes = [];
-
-  final RegExp english = RegExp(r'^[a-zA-Z]+');
-  final RegExp arabic = RegExp(r'^[\u0621-\u064A]+');
-
-  // Split the input string into words
-  List<String> words = string.split(' ');
-
-  // Check the language of each word
-  for (String word in words) {
-    if (english.hasMatch(word)) {
-      languageCodes.add('en'); // Set to English if the word contains English characters
-    } else if (arabic.hasMatch(word)) {
-      languageCodes.add('ar'); // Set to Arabic if the word contains Arabic characters
-    }
-  }
-
-  // Remove duplicate language codes
-  languageCodes = languageCodes.toSet().toList();
-
-  // If no language is detected, default to Arabic
-  if (languageCodes.isEmpty) {
-    languageCodes.add('ar');
-  }
-
-  return languageCodes;
-}
-
-
 showguestDialog(BuildContext context) async {
   showDialog(
     context: context,
