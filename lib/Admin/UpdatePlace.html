@@ -14,6 +14,7 @@
 
 
 
+
 body{
 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
    background: url('images/buildings.jpg') no-repeat fixed center top;
@@ -22,10 +23,9 @@ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
     flex-direction: column;
     position: relative;
-    opacity: 0.9;
-     transition: opacity 0.5s;
+ opacity: 0.9;
+    transition: opacity 0.5s;
 }
-
 
 
 
@@ -234,9 +234,12 @@ form > div > * {
     display: flex;
     border: 4px solid #ccc;
     border-radius: 10px;
-
+    background-color: rgba(255, 255, 255, 0.1); /* Adjust the opacity as needed */
+ z-index: 1; /* Place it behind the images */
 
 }
+
+
 
 .image-container img {
 
@@ -247,7 +250,8 @@ form > div > * {
     display: inline-block;
     border-right: 1px solid #ccc;
     border-radius: 10px;
-
+ opacity: 1 !important;
+  z-index: 2;
 }
 
 
@@ -442,6 +446,7 @@ opacity:1;
 </head>
 
 <body>
+<div class="bodyy">
 <div class="header">
     <div class="logo">
         <img src="images/logowithname.png" alt="Logo">
@@ -468,7 +473,7 @@ opacity:1;
 
 
                     <label for="imageContainer">:الصور</label>
-                    <div id="imageContainer" class="image-container"></div>
+                    <div id="imageContainer" class="image-container" ></div>
 
                     <div style="display: flex; align-items: center;">
                         <input type="file" id="imageInput" accept="image/*" multiple>
@@ -616,14 +621,18 @@ function convertToHTMLTimeFormat(databaseTime) {
 
 
 
-        const displayPlaceDetails = async () => {
-            try {
+     const displayPlaceDetails = async () => {
+    try {
         const placeDoc = await getDoc(placeDocRef);
         if (placeDoc.exists()) {
             const placeData = placeDoc.data();
             const placeName = placeData.placeName;
             const description = placeData.description;
-            const images = placeData.images || [];
+            const existingImages = placeData.images || []; // Existing images from the database
+
+            // Preserve existing images by adding them to the images array
+            images = existingImages.slice(); // Create a copy to avoid direct modification
+
             const workedDaysArray = placeData.WorkedDays;
 
             const timeContainer = document.getElementById('timeContainer');
@@ -671,32 +680,29 @@ function convertToHTMLTimeFormat(databaseTime) {
                 const dayText = document.createTextNode(day);
                 dayCell.appendChild(dayText);
                 dayCell.style.textAlign = 'center';
-
-
             });
 
-                    document.getElementById('placeName').value = placeName;
-                    document.getElementById('description').value = description;
+            document.getElementById('placeName').value = placeName;
+            document.getElementById('description').value = description;
 
+            const imageContainer = document.getElementById('imageContainer');
+            imageContainer.innerHTML = ''; // Clear previous images
 
+            // Add existing images to the imageContainer
+            existingImages.forEach((imageUrl, index) => {
+                const imageContainerDiv = createImageContainerDiv(imageUrl, index);
+                imageContainer.appendChild(imageContainerDiv);
+            });
 
-                    const imageContainer = document.getElementById('imageContainer');
-                    imageContainer.innerHTML = ''; // Clear previous images
+            updateAddImageButtonStyle();
+        } else {
+            console.error('Place not found.');
+        }
+    } catch (error) {
+        console.error('Error getting place details: ', error);
+    }
+};
 
-                    if (images.length > 0) {
-                        images.forEach((imageUrl, index) => {
-                            const imageContainerDiv = createImageContainerDiv(imageUrl, index);
-
-                            imageContainer.appendChild(imageContainerDiv);
-                        });
-                    } updateAddImageButtonStyle();
-                } else {
-                    console.error('Place not found.');
-                }
-            } catch (error) {
-                console.error('Error getting place details: ', error);
-            }
-        };
 
 
 
@@ -721,6 +727,7 @@ function convertToHTMLTimeFormat(databaseTime) {
             deleteIcon.style.right = '5px';
             deleteIcon.style.cursor = 'pointer';
 
+
  deleteIcon.onclick = () => {
     const isConfirmed = confirm("هل أنت متأكد أنك تريد حذف هذه الصورة؟");
     if (isConfirmed) {
@@ -732,6 +739,7 @@ function convertToHTMLTimeFormat(databaseTime) {
             const image = document.createElement('img');
             image.src = imageUrl;
             image.alt = 'Place Image';
+            image.style.opacity = '1';
 
 
             imageContainerDiv.appendChild(deleteIcon);
@@ -811,18 +819,13 @@ const saveChanges = async () => {
 
         await updatePlaceInDatabase(updatedData);
 
-console.log('Updated Images:', images);
-await updateImagesInDatabase(images);
-
-
-
-          await updateImagesInDatabase(images);
-
-       if (deletedImageIndexes.length > 0) {
-    const updatedImages = images.filter((_, index) => !deletedImageIndexes.includes(index));
-    await updateImagesInDatabase(updatedImages);
-    deletedImageIndexes = []; // Clear the array after deletion
-}
+        if (deletedImageIndexes.length > 0) {
+            const remainingImages = images.filter((_, index) => !deletedImageIndexes.includes(index));
+            await updateImagesInDatabase(remainingImages);
+            deletedImageIndexes = []; // Clear the array after deletion
+        } else {
+            await updateImagesInDatabase(images);
+        }
 
         displayPlaceDetails();
         showToast('تم تحديث البيانات بنجاح!');
@@ -830,13 +833,11 @@ await updateImagesInDatabase(images);
         saveChangesInProgress = false;
     }
 };
-
 window.saveChanges = saveChanges;
 
 function showToast(message) {
     alert(message);
 }
-
 
 
 
@@ -965,7 +966,7 @@ const addImages = async () => {
 
 
     </script>
-
+</div>
 </body>
 
 </html>
