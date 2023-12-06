@@ -1022,13 +1022,27 @@ class CustomFormState extends State<CustomForm> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Text(
-                    ':اسم المكان',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontFamily: "Tajawal-b",
+                  RichText(
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontFamily: "Tajawal-b",
+                        color: Colors.black,  // Set the color for the non-red part of the text
+                      ),
+                      children: [
+                        TextSpan(
+                          text: ':اسم المكان',
+                        ),
+                        TextSpan(
+                          text: ' *',  // Added red asterisk
+                          style: TextStyle(
+                            color: Colors.red,  // Set the color for the red asterisk
+                          ),
+                        ),
+                      ],
                     ),
                   ),
+
                   const SizedBox(
                     height: 10,
                   ),
@@ -1037,28 +1051,37 @@ class CustomFormState extends State<CustomForm> {
                     textAlign: TextAlign.end,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     cursorColor: const Color(0xFF6db881),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       filled: true,
-                      contentPadding: EdgeInsets.only(
-                          top: 0, bottom: 0, right: 10, left: 10),
+                      contentPadding: EdgeInsets.only(top: 0, bottom: 0, right: 10, left: 10),
                       fillColor: Colors.white,
                       hintText: 'اسم المكان',
-
-
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          borderSide:
-                          BorderSide(color: Color(0xFF6db881), width: 1)),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderSide: BorderSide(color: Color(0xFF6db881), width: 1),
+                      ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(
-                            color: Color(
-                                0xFF6db881)), // Set the desired border color
+                          color: Color(0xFF6db881),
+                        ),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderSide: BorderSide(
+                          color: Colors.red, // Set the color for the red border
+                        ),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderSide: BorderSide(
+                          color: Colors.red, // Set the color for the red border
+                        ),
                       ),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'الرجاء عدم ترك الخانة فارغة!';
+                        return 'مطلوب';
                       }
                       return null;
                     },
@@ -1067,13 +1090,27 @@ class CustomFormState extends State<CustomForm> {
                   const SizedBox(
                     height: 20,
                   ),
-                  const Text(
-                    ':تصنيف المكان ',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontFamily: "Tajawal-b",
+                  RichText(
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontFamily: "Tajawal-b",
+                        color: Colors.black,  // Set the color for the non-red part of the text
+                      ),
+                      children: [
+                        TextSpan(
+                          text: ':تصنيف المكان',
+                        ),
+                        TextSpan(
+                          text: ' *',  // Added red asterisk
+                          style: TextStyle(
+                            color: Colors.red,  // Set the color for the red asterisk
+                          ),
+                        ),
+                      ],
                     ),
                   ),
+
                   Container(
                     margin: const EdgeInsets.only(top: 10),
                     // Adjust top and left values
@@ -1165,13 +1202,27 @@ class CustomFormState extends State<CustomForm> {
                   const SizedBox(
                     height: 20,
                   ),
-                  const Text(
-                    ':المدينة ',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontFamily: "Tajawal-b",
+                  RichText(
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontFamily: "Tajawal-b",
+                        color: Colors.black,  // Set the color for the non-red part of the text
+                      ),
+                      children: [
+                        TextSpan(
+                          text: ':المدينة',
+                        ),
+                        TextSpan(
+                          text: ' *',  // Added red asterisk
+                          style: TextStyle(
+                            color: Colors.red,  // Set the color for the red asterisk
+                          ),
+                        ),
+                      ],
                     ),
                   ),
+
                   Container(
                     margin: const EdgeInsets.only(top: 10),
                     decoration: BoxDecoration(
@@ -1237,13 +1288,27 @@ class CustomFormState extends State<CustomForm> {
                   const SizedBox(
                     height: 20,
                   ),
-                  const Text(
-                    ':الحي ',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontFamily: "Tajawal-b",
+                  RichText(
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontFamily: "Tajawal-b",
+                        color: Colors.black,  // Set the color for the non-red part of the text
+                      ),
+                      children: [
+                        TextSpan(
+                          text: ':الحي',
+                        ),
+                        TextSpan(
+                          text: ' *',  // Added red asterisk
+                          style: TextStyle(
+                            color: Colors.red,  // Set the color for the red asterisk
+                          ),
+                        ),
+                      ],
                     ),
                   ),
+
                   Container(
                     margin: const EdgeInsets.only(top: 10),
                     decoration: BoxDecoration(
@@ -2390,83 +2455,120 @@ class CustomFormState extends State<CustomForm> {
                     cursorColor: const Color(0xFF6db881),
                     decoration: const InputDecoration(
                       filled: true,
-                      contentPadding: EdgeInsets.only(
-                          top: 0, bottom: 0, right: 10, left: 10),
+                      contentPadding: EdgeInsets.only(top: 0, bottom: 0, right: 10, left: 10),
                       fillColor: Colors.white,
                       hintText: 'رابط الموقع الالكتروني',
                       hintStyle: TextStyle(
                         color: Colors.black45,
                       ),
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          borderSide:
-                          BorderSide(color: Color(0xFF6db881), width: 1)),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderSide: BorderSide(color: Color(0xFF6db881), width: 1),
+                      ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(
-                            color: Color(
-                                0xFF6db881)), // Set the desired border color
+                          color: Color(0xFF6db881),
+                        ),
                       ),
                     ),
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'الرجاء عدم ترك الخانة فارغة!';
-                      }
+                      // Optional field, so no validation needed
                       return null;
                     },
                   ),
                   const SizedBox(
                     height: 20,
                   ),
-                  const Text(
-                  ':الوصف ',
-                  style: TextStyle(
-    fontSize: 18.0,
-    fontFamily: "Tajawal-b",
-    ),
-    ),
-    const SizedBox(height: 10),
-    TextFormField(
-    controller: description,
-    textAlign: TextAlign.end,
-    autovalidateMode: AutovalidateMode.onUserInteraction,
-    cursorColor: const Color(0xFF6db881),
-    maxLines: null, // Allow the TextFormField to dynamically adjust its height
-    decoration: const InputDecoration(
-    filled: true,
-    contentPadding: EdgeInsets.only(top: 0, bottom: 0, right: 10, left: 10),
-    fillColor: Colors.white,
-    hintText: 'وصف المكان',
-    hintStyle: TextStyle(
-    color: Colors.black45,
-    ),
-    border: OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(10)),
-    borderSide: BorderSide(color: Color(0xFF6db881), width: 1),
-    ),
-    focusedBorder: OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(10)),
-    borderSide: BorderSide(
-    color: Color(0xFF6db881),
-    ),
-    ),
-    ),
+                  RichText(
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontFamily: "Tajawal-b",
+                        color: Colors.black,  // Set the color for the non-red part of the text
+                      ),
+                      children: [
+                        TextSpan(
+                          text: ':الوصف',
+                        ),
+                        TextSpan(
+                          text: ' *',  // Added red asterisk
+                          style: TextStyle(
+                            color: Colors.red,  // Set the color for the red asterisk
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
 
-    validator: (value) {
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: description,
+                    textAlign: TextAlign.end,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    cursorColor: const Color(0xFF6db881),
+                    maxLines: null,
+                    decoration: InputDecoration(
+                      filled: true,
+                      contentPadding: EdgeInsets.only(top: 0, bottom: 0, right: 10, left: 10),
+                      fillColor: Colors.white,
+                      hintText: 'وصف المكان',
+                      hintStyle: TextStyle(
+                        color: Colors.black45,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderSide: BorderSide(color: Color(0xFF6db881), width: 1),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderSide: BorderSide(
+                          color: Color(0xFF6db881),
+                        ),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderSide: BorderSide(
+                          color: Colors.red, // Set the color for the red border
+                        ),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderSide: BorderSide(
+                          color: Colors.red, // Set the color for the red border
+                        ),
+                      ),
+                    ),
+                    validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'الرجاء عدم ترك الخانة فارغة!';
+                        return 'مطلوب';
                       }
                       return null;
                     },
                   ),
+
                   const SizedBox(height: 20),
-                  const Text(
-                    ':الموقع',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontFamily: "Tajawal-b",
+                  RichText(
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontFamily: "Tajawal-b",
+                        color: Colors.black,  // Set the color for the non-red part of the text
+                      ),
+                      children: [
+                        TextSpan(
+                          text: ':الموقع',
+                        ),
+                        TextSpan(
+                          text: ' *',  // Added red asterisk
+                          style: TextStyle(
+                            color: Colors.red,  // Set the color for the red asterisk
+                          ),
+                        ),
+                      ],
                     ),
                   ),
+
                   const SizedBox(height: 10),
                   TextFormField(
                     controller: _startSearchFieldController,
@@ -2732,8 +2834,10 @@ class CustomFormState extends State<CustomForm> {
                               city == null ||
                               city.isEmpty ||
                               address!.isEmpty ||
-                              WebLink.text.isEmpty ||
-                              description.text.isEmpty) {
+                             // WebLink.text.isEmpty ||
+                              description.text.isEmpty||
+                              startPosition?.geometry?.location?.lat == null ||
+                              startPosition?.geometry?.location?.lng == null) {
                             showInvalidFieldsDialog(context);
                           } else {
                             // Check for duplicate place before adding

@@ -10,6 +10,7 @@ import 'package:gp/pages/placeDetailsPage.dart';
 import 'package:gp/pages/placePage.dart';
 import 'dart:math';
 import 'package:gp/helper/PlaceDetailsWidget.dart';
+  import 'package:gp/pages/mapdetailspage.dart';
 
 class MapSample extends StatefulWidget {
   @override
@@ -21,22 +22,22 @@ class MapSample extends StatefulWidget {
 class MapSampleState extends State<MapSample> {
 
 
-late GoogleMapController _controller;
-String selectedCategory = 'الكل';
-List<placePage> allPlaces = [];
-late LatLng currentLatLng = LatLng(24.7136, 46.6753);
-List<placePage> filteredPlacesInfo = [];
-LatLng? droppedPin = null;
+  late GoogleMapController _controller;
+  String selectedCategory = 'الكل';
+  List<placePage> allPlaces = [];
+  late LatLng currentLatLng = LatLng(24.7136, 46.6753);
+  List<placePage> filteredPlacesInfo = [];
+  LatLng? droppedPin = null;
 // icon for the marker
-late BitmapDescriptor myIcon;
-final _firestore = FirebaseFirestore.instance;
-List<Marker> markers = [];
-static final TextEditingController _startSearchFieldController =
-TextEditingController();
-DetailsResult? startPosition;
-late GooglePlace googlePlace;
-List<AutocompletePrediction> predictions = [];
-Timer? _debounce;
+  late BitmapDescriptor myIcon;
+  final _firestore = FirebaseFirestore.instance;
+  List<Marker> markers = [];
+  static final TextEditingController _startSearchFieldController =
+  TextEditingController();
+  DetailsResult? startPosition;
+  late GooglePlace googlePlace;
+  List<AutocompletePrediction> predictions = [];
+  Timer? _debounce;
 
 
 
@@ -62,17 +63,17 @@ Timer? _debounce;
     });
 
   }
-void _initializeCurrentLocation() async {
-  LocationPermission permission = await Geolocator.checkPermission();
+  void _initializeCurrentLocation() async {
+    LocationPermission permission = await Geolocator.checkPermission();
 
-  if (permission == LocationPermission.denied ||
-      permission == LocationPermission.deniedForever) {
-    permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied ||
         permission == LocationPermission.deniedForever) {
-      return;
-    }
-  }}
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        return;
+      }
+    }}
 
 
   Future<void> _determinePosition() async {
@@ -145,7 +146,7 @@ void _initializeCurrentLocation() async {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => placeDetailsPage(
+                        builder: (context) => mapdetailspage(
                           place: placePage(
                             place_id: place['place_id'] ?? '',
                             userId: place['User_id'] ?? '',
@@ -159,8 +160,6 @@ void _initializeCurrentLocation() async {
                             description: place['description'] ?? '',
                             latitude: place['latitude'] ?? 0.0,
                             longitude: place['longitude'] ?? 0.0,
-                            workedDays: List<Map<String, dynamic>>.from(place['WorkedDays'] ?? []),
-                            hasValetServiced: place['hasValetServiced'] ?? false,
 
                           ),
                         ),
@@ -182,8 +181,6 @@ void _initializeCurrentLocation() async {
                 description: place['description'] ?? '',
                 latitude: place['latitude'] ?? 0.0,
                 longitude: place['longitude'] ?? 0.0,
-                workedDays: List<Map<String, dynamic>>.from(place['WorkedDays']??[]),
-                hasValetServiced: place['hasValetServiced']?? false,
 
               ));
             }
