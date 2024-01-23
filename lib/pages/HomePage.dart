@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'FilterPage.dart';
 import 'citiesPage.dart';
 import 'placePage.dart';
 import 'placeDetailsPage.dart';
@@ -335,7 +336,26 @@ class HomePageState extends State<HomePage> {
                     backgroundColor: Color(0xFF6db881),
                     title: Row(
                       children: [
+
+                        Padding(
+                          padding: EdgeInsets.only(right: 20.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => FilterPage()),
+                              );
+                            },
+                            child: Icon(
+                              Icons.tune_rounded,
+                              color: Colors.white,
+                              size: 35,
+                            ),
+                          ),
+                        ),
+
                         Expanded(
+
                           child: TextField(
                             textAlign: TextAlign.right,
                             onChanged: (value) {
