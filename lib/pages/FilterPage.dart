@@ -40,15 +40,16 @@ class _FilterPageState extends State<FilterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar:AppBar(
         backgroundColor: const Color.fromARGB(255, 109, 184, 129),
+        elevation: 0.0, // Set the elevation to 0.0 to remove the shadow
         automaticallyImplyLeading: false,
-        title: const Padding(
-          padding: EdgeInsets.only(left: 150),
+        title: Padding(
+          padding: const EdgeInsets.only(left: 150),
           child: Text(
             "تصفية",
             style: TextStyle(
-              fontSize: 17,
+              fontSize: 22,
               fontFamily: "Tajawal-b",
             ),
           ),
@@ -62,7 +63,7 @@ class _FilterPageState extends State<FilterPage> {
                 Navigator.pop(context);
               },
               child: const Icon(
-                Icons.arrow_forward_ios,
+                Icons.close_outlined,
                 color: Colors.white,
                 size: 28,
               ),
@@ -70,20 +71,39 @@ class _FilterPageState extends State<FilterPage> {
           ),
         ],
       ),
+
       body: Stack(
         children: [
-          Column(
+
+
+
+          /*Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               ClipPath(
                 clipper: MyCustomClipper(),
                 child: Container(
-                  height: MediaQuery.of(context).size.height / 2,
+                 height: MediaQuery.of(context).size.height / 2,
                   color: const Color(0xFF6db881),
                 ),
               )
             ],
+          ),*/
+          Column(
+            children: [
+              Expanded(
+                child:
+
+                  Container(
+                    color: const Color(0xff6db881),
+                  ),
+
+              ),
+
+            ],
           ),
+
+
           const CustomForm()
         ],
       ),
@@ -172,7 +192,8 @@ class CustomFormState extends State<CustomForm> {
     'صحي',
   ];
 
-
+  List<bool> checkedOptions = [false, false, false,false,false,false,false];
+  List<String> isThereInMalls=['سينما','منطقة ألعاب','منطقة مطاعم','سوبرماركت']  ;
   List<String> typeEntOptions = [
     'رياضة و مغامرات',
     'فنون',
@@ -395,18 +416,20 @@ class CustomFormState extends State<CustomForm> {
 
 
 
-
-
-
                   /////////////////////////////////new attr////////////////////////////////////////////////
 
                   if (type == 1)
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
+                  Column(
+
+
+
+                    mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
+
+                        const SizedBox(height: 10),
                         const Text(
-                          'نوع الفعالية: ',
+                          'نوع الفعالية',
                           style: TextStyle(
                             fontSize: 18.0,
                             fontFamily: "Tajawal-b",
@@ -415,141 +438,49 @@ class CustomFormState extends State<CustomForm> {
                         Container(
                           margin: const EdgeInsets.only(top: 5),
                           decoration: BoxDecoration(
-                            borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
+                            borderRadius: const BorderRadius.all(Radius.circular(10)),
                             color: Colors.white,
-                            border: Border.all(
-                              color: Colors.black54,
-                              width: 2,
-                            ),
                           ),
-                          child: DropdownButtonFormField<String>(
-                            style: const TextStyle(
-                              fontSize: 16.0,
-                              fontFamily: "Tajawal-m",
-                              color: Color(0xFF6db881),
-                            ),
-                            decoration: const InputDecoration(
-                              isDense: true,
-                              border: InputBorder.none,
-                              prefixIcon: Icon(
-                                Icons.arrow_drop_down, // Set your desired icon
-                                color: Color(0xFF6db881),
-                              ),
-                              contentPadding: EdgeInsets.only(
-                                  top: 15, bottom: 15, right: 10, left: 10),
-                            ),
-                            iconSize: 0,
-                            isExpanded: true,
-                            hint: const Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                  'اختر نوع الفعالية',
-                                )),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                typeEnt = newValue ?? '';
-                              });
-                            },
-                            items: typeEntOptions.map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Align(
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: typeEntOptions.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return CheckboxListTile(
+                                title: Align(
                                   alignment: Alignment.centerRight,
-                                  child: Text(value,
-                                      style: const TextStyle(
-                                          fontSize: 16.0,
-                                          color: Color(0xFF6db881),
-                                          fontFamily: 'Tajawal-m')),
+                                  child: Text(
+                                    typeEntOptions[index],
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontFamily: "Tajawal-m",
+                                      color: Color(0xFF6db881),
+                                    ),
+                                  ),
                                 ),
+                                activeColor: const Color.fromARGB(
+                                    255, 70, 147, 90), // Set the check color to green
+                                controlAffinity: ListTileControlAffinity.trailing,
+                                value: checkedOptions[index],
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    checkedOptions[index] = value ?? false;
+                                    if (value ?? false) {
+                                      typeEnt = typeEntOptions[index];
+                                    } else {
+                                      typeEnt = ''; // Reset if unchecked
+                                    }
+                                  });
+                                },
                               );
-                            }).toList(),
+                            },
                           ),
                         ),
-                        const SizedBox(height: 20),
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            const Text(
-                              'هل الفعالية مؤقتة؟',
-                              style: TextStyle(
-                                fontSize: 18.0,
-                                fontFamily: 'Tajawal-b',
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                CustomRadioButton(
-                                    onTap: () {
-                                      setState(() {
-                                        isTemporary = false;
-                                      });
-                                    },
-                                    text: 'لا',
-                                    value: !(isTemporary ?? true)),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                CustomRadioButton(
-                                    onTap: () {
-                                      setState(() {
-                                        isTemporary = true;
-                                      });
-                                    },
-                                    text: 'نعم',
-                                    value: isTemporary ?? false),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                              ],
-                            ),
 
-                            const SizedBox(height: 20),
-                            const Text(
-                              ' هل هو مكان خارجي ؟',
-                              style: TextStyle(
-                                fontSize: 18.0,
-                                fontFamily: "Tajawal-b",
-                                color:
-                                Colors.black, // Set the text color to black
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                CustomRadioButton(
-                                    onTap: () {
-                                      setState(() {
-                                        INorOUT = false;
-                                      });
-                                    },
-                                    text: 'لا',
-                                    value: !(INorOUT ?? true)),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                CustomRadioButton(
-                                    onTap: () {
-                                      setState(() {
-                                        INorOUT = true;
-                                      });
-                                    },
-                                    text: 'نعم',
-                                    value: INorOUT ?? false),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                        const SizedBox(height: 20),
+
+                        Divider(height:50, color: Colors.grey),
+
                         const Text(
-                          'هل يتطلب حجز ؟ ',
+                          'طبيعة الفعالية',
                           style: TextStyle(
                             fontSize: 18.0,
                             fontFamily: "Tajawal-b",
@@ -561,29 +492,94 @@ class CustomFormState extends State<CustomForm> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             CustomRadioButton(
-                                onTap: () {
-                                  setState(() {
-                                    hasReservation = false;
-                                  });
-                                },
-                                text: 'لا',
-                                value: !(hasReservation ?? true)),
+                              onTap: () {
+                                setState(() {
+                                  // If the current option is selected, undo the selection
+                                  if (INorOUT == false) {
+                                    INorOUT = null;
+                                  } else {
+                                    INorOUT = false;
+                                  }
+                                });
+                              },
+                              text: 'خارجي',
+                              value: INorOUT == false,
+                            ),
                             const SizedBox(
                               width: 10,
                             ),
                             CustomRadioButton(
-                                onTap: () {
-                                  setState(() {
-                                    hasReservation = true;
-                                  });
-                                },
-                                text: 'نعم',
-                                value: hasReservation ?? false),
+                              onTap: () {
+                                setState(() {
+                                  // If the current option is selected, undo the selection
+                                  if (INorOUT == true) {
+                                    INorOUT = null;
+                                  } else {
+                                    INorOUT = true;
+                                  }
+                                });
+                              },
+                              text: 'داخلي',
+                              value: INorOUT == true,
+                            ),
                             const SizedBox(
                               width: 10,
                             ),
                           ],
                         ),
+
+
+                        Divider(height:50, color: Colors.grey),
+
+                        const Text(
+                          'الحجز',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontFamily: "Tajawal-b",
+                            color: Colors.black, // Set the text color to black
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            CustomRadioButton(
+                              onTap: () {
+                                setState(() {
+                                  // If the current option is selected, undo the selection
+                                  if (hasReservation == false) {
+                                    hasReservation = null;
+                                  } else {
+                                    hasReservation = false;
+                                  }
+                                });
+                              },
+                              text: 'يتطلب حجز',
+                              value: hasReservation == false,
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            CustomRadioButton(
+                              onTap: () {
+                                setState(() {
+                                  // If the current option is selected, undo the selection
+                                  if (hasReservation == true) {
+                                    hasReservation = null;
+                                  } else {
+                                    hasReservation = true;
+                                  }
+                                });
+                              },
+                              text: 'لا يتطلب حجز',
+                              value: hasReservation == true,
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                          ],
+                        ),
+
 
 
 
@@ -916,9 +912,12 @@ class CustomFormState extends State<CustomForm> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
+
                         const SizedBox(height: 10),
+
+
                         const Text(
-                          ':هل المركز داخلي أم خارجي ',
+                          'طبيعة الفعالية',
                           style: TextStyle(
                             fontSize: 18.0,
                             fontFamily: "Tajawal-b",
@@ -930,174 +929,100 @@ class CustomFormState extends State<CustomForm> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             CustomRadioButton(
-                                onTap: () {
-                                  setState(() {
+                              onTap: () {
+                                setState(() {
+                                  // If the current option is selected, undo the selection
+                                  if (INorOUT == false) {
+                                    INorOUT = null;
+                                  } else {
                                     INorOUT = false;
-                                  });
-                                },
-                                text: 'خارجي',
-                                value: !(INorOUT ?? true)),
+                                  }
+                                });
+                              },
+                              text: 'خارجي',
+                              value: INorOUT == false,
+                            ),
                             const SizedBox(
                               width: 10,
                             ),
                             CustomRadioButton(
-                                onTap: () {
-                                  setState(() {
+                              onTap: () {
+                                setState(() {
+                                  // If the current option is selected, undo the selection
+                                  if (INorOUT == true) {
+                                    INorOUT = null;
+                                  } else {
                                     INorOUT = true;
-                                  });
-                                },
-                                text: 'داخلي',
-                                value: INorOUT ?? false),
+                                  }
+                                });
+                              },
+                              text: 'داخلي',
+                              value: INorOUT == true,
+                            ),
                             const SizedBox(
                               width: 10,
                             ),
                           ],
                         ),
-                        const SizedBox(height: 20),
+
+                        Divider(height:50, color: Colors.grey),
+
                         const Text(
-                          'هل يوجد سينما؟',
+                         'يوجد في مراكز التسوق',
                           style: TextStyle(
                             fontSize: 18.0,
                             fontFamily: "Tajawal-b",
+                            color: Colors.black, // Set the text color to black
                           ),
                         ),
-                        const SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            CustomRadioButton(
-                                onTap: () {
+                        Container(
+                          margin: const EdgeInsets.only(top: 5),
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.all(Radius.circular(10)),
+                            color: Colors.white,
+                          ),
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: isThereInMalls.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return CheckboxListTile(
+                                title: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    isThereInMalls[index],
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontFamily: "Tajawal-m",
+                                      color: Color(0xFF6db881),
+                                    ),
+                                  ),
+                                ),
+                                activeColor: const Color.fromARGB(
+                                    255, 70, 147, 90), // Set the check color to green
+                                controlAffinity: ListTileControlAffinity.trailing,
+                                value: checkedOptions[index],
+                                onChanged: (bool? value) {
                                   setState(() {
-                                    hasCinema = false;
+                                    checkedOptions[index] = value ?? false;
+                                    if (value ?? false) {
+                                      typeEnt = isThereInMalls[index];
+                                    } else {
+                                      typeEnt = ''; // Reset if unchecked
+                                    }
                                   });
                                 },
-                                text: 'لا',
-                                value: !(hasCinema ?? true)),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            CustomRadioButton(
-                                onTap: () {
-                                  setState(() {
-                                    hasCinema = true;
-                                  });
-                                },
-                                text: 'نعم',
-                                value: hasCinema ?? false),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        const Text(
-                          'هل توجد منطقة ألعاب؟',
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            fontFamily: "Tajawal-b",
+                              );
+                            },
                           ),
                         ),
-                        const SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            CustomRadioButton(
-                                onTap: () {
-                                  setState(() {
-                                    hasPlayArea = false;
-                                  });
-                                },
-                                text: 'لا',
-                                value: !(hasPlayArea ?? true)),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            CustomRadioButton(
-                                onTap: () {
-                                  setState(() {
-                                    hasPlayArea = true;
-                                  });
-                                },
-                                text: 'نعم',
-                                value: hasPlayArea ?? false),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        const Text(
-                          'هل يوجد منطقة مطاعم؟',
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            fontFamily: "Tajawal-b",
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            CustomRadioButton(
-                                onTap: () {
-                                  setState(() {
-                                    hasFoodCourt = false;
-                                  });
-                                },
-                                text: 'لا',
-                                value: !(hasFoodCourt ?? true)),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            CustomRadioButton(
-                                onTap: () {
-                                  setState(() {
-                                    hasFoodCourt = true;
-                                  });
-                                },
-                                text: 'نعم',
-                                value: hasFoodCourt ?? false),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        const Text(
-                          'هل يوجد سوبرماركت؟',
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            fontFamily: "Tajawal-b",
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            CustomRadioButton(
-                                onTap: () {
-                                  setState(() {
-                                    hasSupermarket = false;
-                                  });
-                                },
-                                text: 'لا',
-                                value: !(hasSupermarket ?? true)),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            CustomRadioButton(
-                                onTap: () {
-                                  setState(() {
-                                    hasSupermarket = true;
-                                  });
-                                },
-                                text: 'نعم',
-                                value: hasSupermarket ?? false),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
+
+
+
+
+
+
+                        Divider(height:50, color: Colors.grey),
+
                         const Text(
                           'أنواع المحلات',
                           style: TextStyle(
@@ -1167,6 +1092,106 @@ class CustomFormState extends State<CustomForm> {
                           }).toList(),
                         ),
                       ],),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                  const SizedBox(
+                    width: 10,
+                  ),
+
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20, bottom: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () async {
+                              // Button press logic
+                            },
+                            style: ButtonStyle(
+                              backgroundColor:
+                              MaterialStateProperty.all(const Color(0xFF6db881)),
+                              padding: MaterialStateProperty.all(
+                                const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                              ),
+                              shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+                            child: const Text(
+                              'مسح الكل',
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                fontFamily: "Tajawal-m",
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10), // Adjust the spacing between buttons
+                          ElevatedButton(
+                            onPressed: () async {
+                              // Second button press logic
+                            },
+                            style: ButtonStyle(
+                              backgroundColor:
+                              MaterialStateProperty.all(const Color(0xFF6db881)),
+                              padding: MaterialStateProperty.all(
+                                const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                              ),
+                              shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+                            child: const Text(
+                              'عرض النتائج',
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                fontFamily: "Tajawal-m",
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+
+
 
 
 
