@@ -193,6 +193,9 @@ class CustomFormState extends State<CustomForm> {
   ];
 
   List<bool> checkedOptions = [false, false, false,false,false,false,false];
+
+  List<bool> checkedOptionss = [false, false, false,false,false,false,false,false,false,false,false,false,false,false];
+
   List<String> isThereInMalls=['سينما','منطقة ألعاب','منطقة مطاعم','سوبرماركت']  ;
   List<String> typeEntOptions = [
     'رياضة و مغامرات',
@@ -208,12 +211,14 @@ class CustomFormState extends State<CustomForm> {
   String startDate = '';
   String finishDate = '';
   bool? INorOUT;
+  bool? priceRange;
   bool? hasCinema;
   bool? hasPlayArea;
   bool? hasFoodCourt;
   bool? hasSupermarket;
   String reservationDetails='';
   String typeEnt='';
+  String cus='';
 
 
 
@@ -247,7 +252,9 @@ class CustomFormState extends State<CustomForm> {
 
   bool? hasReservation;
   List<String> servesOptions = ['فطور', 'غداء', 'عشاء'];
-  String priceRange = 'مرتفع';
+
+
+
   List<String> atmosphereOptions = [
     'يوجد موسيقى',
     'بدون موسيقى',
@@ -271,6 +278,7 @@ class CustomFormState extends State<CustomForm> {
     'أخرى'
   ];
   Set<String> serves = Set<String>();
+  Set<String> prices = Set<String>();
   Set<String> atmosphere = Set<String>();
   Set<String> shopType = Set<String>();
 
@@ -585,7 +593,7 @@ class CustomFormState extends State<CustomForm> {
 
                       ],
                     ),
-
+/////////////////////////////////////////////////////////
                   if (type == 2) // Check if the type is for مطاعم
                     Column(
                       mainAxisSize: MainAxisSize.min,
@@ -593,132 +601,123 @@ class CustomFormState extends State<CustomForm> {
                       children: [
                         // Add the DropdownButtonFormField for 'cuisine'
                         const Text(
-                          'نوع الطعام ',
+                          ': نوع الطعام',
                           style: TextStyle(
                             fontSize: 20.0,
                             fontFamily: "Tajawal-b",
                           ),
                         ),
                         Container(
-                          margin: const EdgeInsets.only(top: 10),
+                          margin: const EdgeInsets.only(top: 5),
                           decoration: BoxDecoration(
-                            borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
+                            borderRadius: const BorderRadius.all(Radius.circular(10)),
                             color: Colors.white,
-                            border: Border.all(
-                              color: Colors.black54,
-                              width: 2,
-                            ),
                           ),
-                          child: DropdownButtonFormField<String>(
-                            style: const TextStyle(
-                              fontSize: 16.0,
-                              fontFamily: "Tajawal-m",
-                              color: Color(0xFF6db881),
-                            ),
-                            decoration: const InputDecoration(
-                              isDense: true,
-                              border: InputBorder.none,
-                              prefixIcon: Icon(
-                                Icons.arrow_drop_down, // Set your desired icon
-                                color: Color(0xFF6db881),
-                              ),
-                              contentPadding: EdgeInsets.only(
-                                  top: 15, bottom: 15, right: 10, left: 10),
-                            ),
-                            iconSize: 0,
-                            isExpanded: true,
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                cuisine.add(
-                                    newValue!); // Add the selected cuisine to the list
-                              });
-                            },
-                            hint: const Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                  'اختر نوع الطعام',
-                                )),
-                            items: cuisineOptions.map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Align(
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: cuisineOptions.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return CheckboxListTile(
+                                title: Align(
                                   alignment: Alignment.centerRight,
-                                  child: Text(value,
-                                      style: const TextStyle(
-                                          fontSize: 16.0,
-                                          fontFamily: 'Tajawal-m')),
+                                  child: Text(
+                                    cuisineOptions[index],
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontFamily: "Tajawal-m",
+                                      color: Color(0xFF6db881),
+                                    ),
+                                  ),
                                 ),
+                                activeColor: const Color.fromARGB(
+                                    255, 70, 147, 90), // Set the check color to green
+                                controlAffinity: ListTileControlAffinity.trailing,
+                                value: checkedOptionss[index],
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    checkedOptionss[index] = value ?? false;
+                                    if (value ?? false) {
+                                      cus = cuisineOptions[index];
+                                    } else {
+                                      cus = ''; // Reset if unchecked
+                                    }
+                                  });
+                                },
                               );
-                            }).toList(),
+                            },
                           ),
                         ),
+
+
+                        Divider(height:50, color: Colors.grey),
                         const SizedBox(height: 20),
                         const Text(
-                          'نطاق الأسعار ',
+                          ': نطاق الأسعار',
                           style: TextStyle(
                             fontSize: 20.0,
                             fontFamily: "Tajawal-b",
                           ),
                         ),
-                        Container(
-                          margin: const EdgeInsets.only(top: 10),
-                          decoration: BoxDecoration(
-                            borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
-                            color: Colors.white,
-                            border: Border.all(
-                              color: Colors.grey.shade300,
-                              width: 2,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            CustomRadioButton(
+                              onTap: () {
+                                setState(() {
+                                  // If the current option is selected, undo the selection
+                                  if (priceRange == false) {
+                                    priceRange = null;
+                                  } else {
+                                    priceRange = false;
+                                  }
+                                });
+                              },
+                              text: 'مرتفع',
+                              value: priceRange == false,
                             ),
-                          ),
-                          child: DropdownButtonFormField<String>(
-                            style: const TextStyle(
-                              fontSize: 16.0,
-                              fontFamily: "Tajawal-m",
-                              color: Color(0xFF6db881),
+                            const SizedBox(
+                              width: 10,
                             ),
-                            decoration: const InputDecoration(
-                              isDense: true,
-                              border: InputBorder.none,
-                              prefixIcon: Icon(
-                                Icons.arrow_drop_down, // Set your desired icon
-                                color: Color(0xFF6db881),
-                              ),
-                              contentPadding: EdgeInsets.only(
-                                  top: 15, bottom: 15, right: 10, left: 10),
+                            CustomRadioButton(
+                              onTap: () {
+                                setState(() {
+                                  // If the current option is selected, undo the selection
+                                  if (priceRange == false) {
+                                    priceRange = null;
+                                  } else {
+                                    priceRange = false;
+                                  }
+                                });
+                              },
+                              text: 'متوسط',
+                              value: priceRange == false,
                             ),
-                            iconSize: 0,
-                            isExpanded: true,
-                            value: priceRange,
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                priceRange = newValue!;
-                              });
-                            },
-                            hint: const Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                  'اختر نطاق الأسعار',
-                                )),
-                            items:
-                            ['مرتفع', 'متوسط', 'منخفض'].map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Text(value,
-                                      style: const TextStyle(
-                                          fontSize: 16.0,
-                                          fontFamily: 'Tajawal-m')),
-                                ),
-                              );
-                            }).toList(),
-                          ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            CustomRadioButton(
+                              onTap: () {
+                                setState(() {
+                                  // If the current option is selected, undo the selection
+                                  if (priceRange == true) {
+                                    priceRange = null;
+                                  } else {
+                                    priceRange = true;
+                                  }
+                                });
+                              },
+                              text: 'منخفض',
+                              value: priceRange == true,
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                          ],
                         ),
+                        Divider(height:50, color: Colors.grey),
                         const SizedBox(height: 20),
                         const Text(
-                          'الوجبات المقدمة ',
+                          ': الوجبات المقدمة ',
                           style: TextStyle(
                             fontSize: 18.0,
                             fontFamily: "Tajawal-b",
@@ -788,12 +787,13 @@ class CustomFormState extends State<CustomForm> {
 
 
 
-
+                        Divider(height:50, color: Colors.grey),
                         const SizedBox(height: 20),
+
 
                         // Add the CheckBoxes for 'atmosphere'
                         const Text(
-                          'الجو العام ',
+                          ' : الجو العام',
                           style: TextStyle(
                             fontSize: 18.0,
                             fontFamily: "Tajawal-b",
@@ -862,7 +862,11 @@ class CustomFormState extends State<CustomForm> {
                           }).toList(),
                         ),
 
+                        Divider(height:50, color: Colors.grey),
                         const SizedBox(height: 20),
+
+
+
                         const Text(
                           'هل يتطلب حجز ؟ ',
                           style: TextStyle(
