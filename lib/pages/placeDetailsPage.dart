@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gp/helper/PlaceDetailsWidget.dart';
+import 'package:gp/pages/HomePage.dart';
 import 'package:uuid/uuid.dart';
 import '../Registration/logIn.dart';
 import 'placePage.dart';
@@ -36,36 +37,24 @@ class placeDetailsPage extends StatefulWidget {
   State<placeDetailsPage> createState() => _placeDetailsState();
 }
 
-
-
 class _placeDetailsState extends State<placeDetailsPage> {
-
+  //List<placePage> recommendedPlaces = [];
+  bool hasRecommendations = true; // Set to true initially
   late GoogleMapController myMapController;
   final Set<Marker> _markers = new Set();
+  List<dynamic> output = [];
 
-  void SimilarPropFunction() async {
-    try {
-      String url = 'https://sohail-gp-906c5868723b.herokuapp.com/api?query=' + widget.place.place_id;
-      String data = await fetchdata(url);
-
-     // print('Raw JSON Data: $data');
-
-      var decoded = jsonDecode(data);
-
-      List<dynamic> recommendations = decoded; // Remove ['recommendations']
-
-      // Print the recommendations in the terminal
-      print('Similar Property Recommendations:');
-      for (var recommendation in recommendations) {
-        print('- $recommendation');
-        // Add more details as needed
+      void SimilarPropFunction() async {
+        url =  url = 'https://sohail-gp-906c5868723b.herokuapp.com/api?query=' + widget.place.place_id;
+        data = await fetchdata(url);
+        var decoded = jsonDecode(data);
+        output = decoded;
+        //output = ["001ac7c1-67b1-4ac3-bbf4-6db8baf2e6cc", "001ac7c1-67b1-4ac3-bbf4-6db8baf2e6cc" ,"001ac7c1-67b1-4ac3-bbf4-6db8baf2e6cc"];
+        setState(() {});
       }
 
-      setState(() {});
-    } catch (e) {
-      print('Error fetching and processing recommendations: $e');
-    }
-  }
+
+
 
 
   Set<Marker> myMarker() {
@@ -84,7 +73,7 @@ class _placeDetailsState extends State<placeDetailsPage> {
 
   String url = '';
   var data;
-  List<dynamic> output = [];
+
   late String id;
   final ScrollController _scrollController = ScrollController();
   double thumbWidth = 0.0;
@@ -100,8 +89,9 @@ class _placeDetailsState extends State<placeDetailsPage> {
       print(key + " : " + value.toString());
 
     });
-    SimilarPropFunction();
+
     super.initState();
+    SimilarPropFunction();
 
     _scrollController.addListener(() {
       double scrollPosition = _scrollController.position.pixels;
@@ -657,12 +647,58 @@ class _placeDetailsState extends State<placeDetailsPage> {
                             }
                           },
                         ),
-                        // Add this section for recommendations
+
 /////////////////////////////////////////////////////////////////////////////////////////rec////////
-                        const SizedBox(height: 20),
 
-
-
+                        Padding(
+                          padding: EdgeInsets.only(left: 235, bottom: 16),
+                          child: Text(
+                            "أماكن مقترحة",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: "Tajawal-m",
+                            ),
+                          ),
+                        ),
+                        output.length != 0
+                            ? Directionality(
+                          textDirection: TextDirection.rtl,
+                          child: Container(
+                            height: 210,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 20, bottom: 24, right: 20),
+                              child: ListView.separated(
+                                physics: BouncingScrollPhysics(),
+                                scrollDirection: Axis.horizontal,
+                                separatorBuilder: (context, index) => SizedBox(width: 20),
+                                itemCount: output.length,
+                                itemBuilder: (context, index) {
+                                  for (int i = 0; i < HomePageState.allData.length; i++) {
+                                    if (HomePageState.allData[i] is placePage) {
+                                      placePage place = HomePageState.allData[i] as placePage;
+                                      if (place.place_id == output[index]) {
+                                        return _buildPlacePageWidget(context, place);
+                                      }
+                                    }
+                                  }
+                                  return Container();
+                                },
+                              ),
+                            ),
+                          ),
+                        )
+                            : Container(
+                          padding: EdgeInsets.only(left: 70, bottom: 20),
+                          child: const Text(
+                            '! لا يوجد لدينا حالياً أماكن مقترحة',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              fontFamily: "Tajawal-b",
+                              color: Color.fromARGB(255, 139, 139, 139),
+                            ),
+                          ),
+                        ),
 
                       ],
                     ),
@@ -678,6 +714,168 @@ class _placeDetailsState extends State<placeDetailsPage> {
     );
   }
 //---------------------------------------------------------------------------------------
+  Widget _buildPlacePageWidget(BuildContext context, placePage place) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => placeDetailsPage(place: place),
+          ),
+        );
+      },
+
+      child: Card(
+        margin: EdgeInsets.all(3), // Adjust the margin to reduce space
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(15),
+          ),
+        ),
+        child: Container(
+          height: 400,
+          width: 180,
+          decoration: BoxDecoration(
+            image: place.images.isEmpty
+                ? DecorationImage(
+              image: NetworkImage(
+                'https://www.guardanthealthamea.com/wp-content/uploads/2019/09/no-image.jpg',
+              ),
+              fit: BoxFit.fill,
+            )
+                : DecorationImage(
+              image: NetworkImage(place.images[0]),
+              fit: BoxFit.fill,
+            ),
+          ),
+          child: Container(
+            padding: EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                stops: [0.5, 1.0],
+                colors: [
+                  Colors.transparent,
+                  Colors.black.withOpacity(0.7),
+                ],
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Container(),
+                ),
+                Column(
+                  children: [
+                    Text(
+                      '${place.placeName}',
+                      style: TextStyle(
+                        height: 2,
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: "Tajawal-l",
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Row(
+                      //mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          child:Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: StreamBuilder<QuerySnapshot>(
+                                  stream: FirebaseFirestore.instance
+                                      .collection('ApprovedPlaces')
+                                      .doc(place.place_id)
+                                      .collection('Reviews')
+                                      .snapshots(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                      return CircularProgressIndicator();
+                                    }
+
+                                    List<double> ratings = List<double>.from(
+                                      snapshot.data!.docs.map((doc) {
+                                        final commentData = doc.data() as Map<String, dynamic>;
+                                        return commentData["rating"].toDouble() ?? 0.0;
+                                      }),
+                                    );
+
+                                    // Calculate the average rating
+                                    double averageRating =
+                                    ratings.isNotEmpty ? ratings.reduce((a, b) => a + b) / ratings.length : 0.0;
+
+                                    return Row(
+                                      children: [
+                                        for (int index = 0; index < 5; index++)
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                                            child: Icon(
+                                              index < averageRating.floor()
+                                                  ? Icons.star
+                                                  : index + 0.5 == averageRating
+                                                  ? Icons.star_half
+                                                  : Icons.star_border,
+                                              color: const Color.fromARGB(255, 109, 184, 129),
+                                              size: 20.0,
+                                            ),
+                                          ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                            ],
+                          ),
+
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              '${place.neighbourhood} ، ${place.city}',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: "Tajawal-l",
+
+                              ),
+                            ),
+                            SizedBox(
+                              width: 4,
+                            ),
+                            Icon(
+                              Icons.location_pin,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                          ],
+                        ),
+                        // SizedBox(width: 10),
+                      ],
+                    ),
+
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+
+    );
+  }
+
+//-------------------------------------------------------------------------------
+
   Future<String> checkPlaceStatus(String placeId) async {
     try {
       DocumentSnapshot snapshotPending = await FirebaseFirestore.instance

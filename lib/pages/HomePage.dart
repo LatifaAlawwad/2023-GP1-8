@@ -30,7 +30,7 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   int indexOfTap = 0;
-  List<placePage> allData = [];
+  static List<dynamic> allData = [];
   List<placePage> attractions = [];
   List<placePage> restaurants = [];
   List<placePage> malls = [];
@@ -38,7 +38,7 @@ class HomePageState extends State<HomePage> {
   String name = '';
   String selectedCategory = 'الكل';
 
-  List<placePage> searchResults = [];
+  static List<dynamic> searchResults = [];
 
 
   @override
@@ -72,7 +72,7 @@ class HomePageState extends State<HomePage> {
 
           allData.add(place);
         });
-
+        print("Fetched Data: $allData");
         setState(() {});
       }
     } catch (e) {
@@ -248,12 +248,6 @@ class HomePageState extends State<HomePage> {
                                 SizedBox(width: 10),
                               ],
                             ),
-
-
-
-
-
-
 
                           ),
                           Row(
@@ -465,9 +459,10 @@ class HomePageState extends State<HomePage> {
                         ? restaurants
                         : selectedCategory == 'مراكز تسوق'
                         ? malls
-                        : allData
-                        : searchResults,
+                        : allData.cast<placePage>() // Explicit cast here
+                        : searchResults.cast<placePage>(), // Explicit cast here
                   ),
+
                 ),
               ],
             ),
