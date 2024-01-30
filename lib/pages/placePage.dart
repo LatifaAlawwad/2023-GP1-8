@@ -72,6 +72,8 @@ class placePage {
 
   });
 
+
+
   Map<String, dynamic> toMap() {
     return {
       'place_id': place_id,

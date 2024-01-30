@@ -6,7 +6,6 @@ import 'package:uuid/uuid.dart';
 import '../Registration/logIn.dart';
 import 'placePage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -17,7 +16,16 @@ import 'package:photo_view/photo_view_gallery.dart';
 import 'Review.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+
+
+fetchdata(String url) async {
+  http.Response response = await http.get(Uri.parse(url));
+  return response.body;
+}
 
 class placeDetailsPage extends StatefulWidget {
   final placePage place;
@@ -28,10 +36,37 @@ class placeDetailsPage extends StatefulWidget {
   State<placeDetailsPage> createState() => _placeDetailsState();
 }
 
+
+
 class _placeDetailsState extends State<placeDetailsPage> {
 
   late GoogleMapController myMapController;
   final Set<Marker> _markers = new Set();
+
+  void SimilarPropFunction() async {
+    try {
+      String url = 'https://sohail-gp-906c5868723b.herokuapp.com/api?query=' + widget.place.place_id;
+      String data = await fetchdata(url);
+
+     // print('Raw JSON Data: $data');
+
+      var decoded = jsonDecode(data);
+
+      List<dynamic> recommendations = decoded; // Remove ['recommendations']
+
+      // Print the recommendations in the terminal
+      print('Similar Property Recommendations:');
+      for (var recommendation in recommendations) {
+        print('- $recommendation');
+        // Add more details as needed
+      }
+
+      setState(() {});
+    } catch (e) {
+      print('Error fetching and processing recommendations: $e');
+    }
+  }
+
 
   Set<Marker> myMarker() {
     setState(() {
@@ -63,7 +98,9 @@ class _placeDetailsState extends State<placeDetailsPage> {
   void initState() {
     widget.place.toMap().forEach((key, value) {
       print(key + " : " + value.toString());
+
     });
+    SimilarPropFunction();
     super.initState();
 
     _scrollController.addListener(() {
@@ -614,20 +651,15 @@ class _placeDetailsState extends State<placeDetailsPage> {
                                       );
                                     },
                                   ),
+
                                 ],
                                 );
                             }
                           },
-                        )
-
-
-
-
-
-
-
-
-
+                        ),
+                        // Add this section for recommendations
+/////////////////////////////////////////////////////////////////////////////////////////rec////////
+                        const SizedBox(height: 20),
 
 
 
@@ -645,11 +677,7 @@ class _placeDetailsState extends State<placeDetailsPage> {
       ),
     );
   }
-
-
-
-
-
+//---------------------------------------------------------------------------------------
   Future<String> checkPlaceStatus(String placeId) async {
     try {
       DocumentSnapshot snapshotPending = await FirebaseFirestore.instance
@@ -674,19 +702,6 @@ print(placeId);
       return ""; // Return an empty string or null in case of an error
     }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   Future<bool> checkPreviousReview(String placeId) async {
     FirebaseAuth auth = FirebaseAuth.instance;
@@ -931,24 +946,8 @@ print(placeId);
         );
       },
     );
+
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ////////////////////////////////////////////////////////////////////////////////////
   Future<void> deleteReview(BuildContext context, String placeId, String reviewId) async {
     try {
@@ -1077,9 +1076,6 @@ Future<String> maskProfanity(String word) async {
     return word;
   }
 }
-
-
-
 
 String detectLanguage({required String string}) {
   String languageCode = 'ar'; // Default to Arabic
@@ -1221,7 +1217,6 @@ showguestDialog(BuildContext context) async {
     },
   );
 }
-
 double calculateAverageRating(List<Review> reviews) {
   if (reviews.isEmpty) {
     return 0.0; // Default rating if there are no reviews
@@ -1234,19 +1229,6 @@ double calculateAverageRating(List<Review> reviews) {
 
   return totalRating / reviews.length;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 Widget PlaceInfo(IconData iconData, String text, String label) {
   return Column(
