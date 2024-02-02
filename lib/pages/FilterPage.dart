@@ -1,29 +1,15 @@
 import 'dart:async';
-
-import 'package:bottom_picker/bottom_picker.dart';
-import 'package:bottom_picker/resources/arrays.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
-import 'package:gp/Registration/logIn.dart';
 import 'package:gp/helper/CustomRadioButton.dart';
-import 'package:gp/helper/MapViewDrop.dart';
-import 'package:gp/pages/MapView.dart';
-import 'package:intl/intl.dart';
-import 'package:uuid/uuid.dart';
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
 import 'package:csc_picker/csc_picker.dart';
-import 'neighbourhood.dart';
-import 'cities.dart';
-import 'MyPlacesPage.dart';
-import 'HomePage.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_place/google_place.dart';
+
+import 'HomePage.dart';
+
+
+
+
 
 class FilterPage extends StatefulWidget {
   const FilterPage({Key? key}) : super(key: key);
@@ -60,7 +46,7 @@ class _FilterPageState extends State<FilterPage> {
             padding: const EdgeInsets.only(right: 20.0),
             child: GestureDetector(
               onTap: () {
-                Navigator.pop(context);
+                Navigator.pop(context,null);
               },
               child: const Icon(
                 Icons.close_outlined,
@@ -76,7 +62,7 @@ class _FilterPageState extends State<FilterPage> {
         children: [
 
 
-
+// another background design option
           /*Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -89,6 +75,9 @@ class _FilterPageState extends State<FilterPage> {
               )
             ],
           ),*/
+
+
+
           Column(
             children: [
               Expanded(
@@ -111,22 +100,6 @@ class _FilterPageState extends State<FilterPage> {
   }
 }
 
-class MyCustomClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    Path path = Path()
-      ..moveTo(0, size.height)
-      ..lineTo(size.width, size.height)
-      ..lineTo(size.width, 0)
-      ..lineTo(0, size.height / 3)
-      ..close();
-
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
-}
 
 class CustomForm extends StatefulWidget {
   const CustomForm({Key? key});
@@ -142,12 +115,9 @@ class CustomFormState extends State<CustomForm> {
   int type = 0;
   String? type1;
   String place_id = '';
-  String city = "الرياض";
-  String? address;
-  final WebLink = TextEditingController();
-  final description = TextEditingController();
-  final placeName = TextEditingController();
-  DateTime startDateDateTime = DateTime.now();
+
+
+  //DateTime startDateDateTime = DateTime.now();
 
   List<Map<String, String>> workingHoursList = [];
 
@@ -157,22 +127,15 @@ class CustomFormState extends State<CustomForm> {
   late GooglePlace googlePlace;
   List<AutocompletePrediction> predictions = [];
   bool isLoadingPlaces = false;
-  Timer? _debounce;
+
   var startPosition = null;
 
   final GlobalKey<FormFieldState> _AddressKey = GlobalKey<FormFieldState>();
-  bool? hasValetServiced;
 
-  bool? allowChildren;
-  bool? isOutdoor;
 
-  @override
-  void initState() {
-    super.initState();
-    googlePlace = GooglePlace('AIzaSyCOT8waQ9GpvCUwXotTCZD9kSPfN8JljNk');
-  }
 
-  //for rest
+
+
   List<String> userChecked = [];
   List<String> cuisine = [];
   List<String> cuisineOptions = [
@@ -192,9 +155,9 @@ class CustomFormState extends State<CustomForm> {
     'صحي',
   ];
 
-  List<bool> checkedOptions = [false, false, false,false,false,false,false];
-
-  List<bool> checkedOptionss = [false, false, false,false,false,false,false,false,false,false,false,false,false,false];
+  List<bool> checkedOptionsatt = [false, false, false,false,false,false,false];
+  List<bool> checkedOptionsmalls = [false, false, false,false];
+  List<bool> checkedOptionsres = [false, false, false,false,false,false,false,false,false,false,false,false,false,false];
 
   List<String> isThereInMalls=['سينما','منطقة ألعاب','منطقة مطاعم','سوبرماركت']  ;
   List<String> typeEntOptions = [
@@ -207,61 +170,8 @@ class CustomFormState extends State<CustomForm> {
     'معارض',
   ];
 
-  bool? isTemporary;
-  String startDate = '';
-  String finishDate = '';
-  bool? INorOUT;
-  bool? priceRange;
-  bool? hasCinema;
-  bool? hasPlayArea;
-  bool? hasFoodCourt;
-  bool? hasSupermarket;
-  String reservationDetails='';
-  String typeEnt='';
-  String cus='';
 
 
-
-
-  void autoCompleteSearch(String value) async {
-    setState(() {
-      isLoadingPlaces = true;
-      startPosition = null;
-    });
-    var result = await googlePlace.autocomplete.get(value);
-    if (result != null && result.predictions != null && mounted) {
-      setState(() {
-        predictions = result.predictions!;
-      });
-    }
-    setState(() {
-      isLoadingPlaces = false;
-    });
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-  bool? hasReservation;
-  List<String> servesOptions = ['فطور', 'غداء', 'عشاء'];
-
-
-
-  List<String> atmosphereOptions = [
-    'يوجد موسيقى',
-    'بدون موسيقى',
-    'على البحر',
-    'داخلي',
-    'خارجي'
-  ];
   List<String> shopOptions = [
     'ملابس',
     'أحذية',
@@ -278,22 +188,106 @@ class CustomFormState extends State<CustomForm> {
     'أخرى'
   ];
   Set<String> serves = Set<String>();
-  Set<String> prices = Set<String>();
+  Set<String> price = Set<String>();
   Set<String> atmosphere = Set<String>();
   Set<String> shopType = Set<String>();
+  bool? INorOUT;
+  bool? hasReservation;
 
-  @override
-  void dispose() {
-    WebLink.dispose();
-    description.dispose();
-    placeName.dispose();
-    super.dispose();
+  String typeEnt='';
+  String cus='';
+  //bool? isTemporary;
+  //String startDate = '';
+ // String finishDate = '';
+
+
+  List<String> servesOptions = ['فطور', 'غداء', 'عشاء'];
+  List<String> priceRange = ['مرتفع','متوسط','منخفض'];
+
+
+  List<String> atmosphereOptions = [
+    'يوجد موسيقى',
+    'بدون موسيقى',
+    'على البحر',
+    'داخلي',
+    'خارجي'
+  ];
+
+  List<String> originalShopOptions = [
+    'ملابس',
+    'أحذية',
+    'حقائب',
+    'أثاث',
+    'الكترونيات',
+    'أواني',
+    'عطور',
+    'عبايات',
+    'مجوهرات',
+    'ملابس أطفال',
+    'مستحضرات تجميل',
+    'صيدليات',
+    'أخرى'
+  ];
+
+  List<String> originalAtmosphereOptions = [
+    'يوجد موسيقى',
+    'بدون موسيقى',
+    'على البحر',
+    'داخلي',
+    'خارجي'
+  ];
+
+
+  List<String> originalServesOptions = ['فطور', 'غداء', 'عشاء'];
+  bool? originalHasReservation;
+  bool? originalINorOUT;
+  List<bool> originalCheckedOptions = [false, false, false,false,false,false,false];
+
+  List<bool> originalCheckedOptionss = [false, false, false,false,false,false,false,false,false,false,false,false,false,false];
+
+
+  List<String> originalIsThereInMalls =['سينما','منطقة ألعاب','منطقة مطاعم','سوبرماركت'] ;
+
+
+
+
+  List<String> originalPriceRange = ['مرتفع','متوسط','منخفض'];
+
+  void initState() {
+    super.initState();
+
+    // Store the original values at the beginning
+
+    originalINorOUT = INorOUT;
+    originalHasReservation = hasReservation;
+    originalIsThereInMalls = List.from(isThereInMalls);
+
+    originalPriceRange = List<String>.from(priceRange);
+    originalServesOptions = List.from(servesOptions);
+    originalAtmosphereOptions = List.from(atmosphereOptions);
+    originalShopOptions = List.from(shopOptions);
   }
 
+  void resetFilters() {
+    setState(() {
+      // Reset the state variables to the original values
+      checkedOptionsres = originalCheckedOptionss;
+      checkedOptionsatt = originalCheckedOptions;
+      INorOUT = originalINorOUT;
+      hasReservation = originalHasReservation;
+      isThereInMalls = List.from(originalIsThereInMalls);
 
-  List areasList = [];
-
-
+      // Reset the servesOptions and other attribute lists
+      serves.clear();
+      price.clear();
+      atmosphere.clear();
+      shopType.clear();
+      priceRange = List<String>.from(originalPriceRange);
+      servesOptions = List<String>.from(originalServesOptions);
+      atmosphereOptions = List<String>.from(originalAtmosphereOptions);
+      shopOptions = List<String>.from(originalShopOptions);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -312,6 +306,8 @@ class CustomFormState extends State<CustomForm> {
               border: Border.all(color: Colors.grey.shade300, width: 1),
             ),
             child: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -322,6 +318,8 @@ class CustomFormState extends State<CustomForm> {
                   const SizedBox(
                     height: 20,
                   ),
+
+
                   const Text(
                     ':تصنيف المكان ',
                     style: TextStyle(
@@ -346,7 +344,7 @@ class CustomFormState extends State<CustomForm> {
                         isDense: true,
                         border: InputBorder.none,
                         prefixIcon: Icon(
-                          Icons.arrow_drop_down, // Set your desired icon
+                          Icons.arrow_drop_down,
                           color: Color(0xFF6db881),
                         ),
                         contentPadding: EdgeInsets.only(top: 15, bottom: 15, right: 10, left: 10),
@@ -466,12 +464,12 @@ class CustomFormState extends State<CustomForm> {
                                   ),
                                 ),
                                 activeColor: const Color.fromARGB(
-                                    255, 70, 147, 90), // Set the check color to green
+                                    255, 70, 147, 90),
                                 controlAffinity: ListTileControlAffinity.trailing,
-                                value: checkedOptions[index],
+                                value: checkedOptionsatt[index],
                                 onChanged: (bool? value) {
                                   setState(() {
-                                    checkedOptions[index] = value ?? false;
+                                    checkedOptionsatt[index] = value ?? false;
                                     if (value ?? false) {
                                       typeEnt = typeEntOptions[index];
                                     } else {
@@ -492,7 +490,7 @@ class CustomFormState extends State<CustomForm> {
                           style: TextStyle(
                             fontSize: 18.0,
                             fontFamily: "Tajawal-b",
-                            color: Colors.black, // Set the text color to black
+                            color: Colors.black,
                           ),
                         ),
                         const SizedBox(height: 10),
@@ -544,7 +542,7 @@ class CustomFormState extends State<CustomForm> {
                           style: TextStyle(
                             fontSize: 18.0,
                             fontFamily: "Tajawal-b",
-                            color: Colors.black, // Set the text color to black
+                            color: Colors.black,
                           ),
                         ),
                         const SizedBox(height: 10),
@@ -599,7 +597,7 @@ class CustomFormState extends State<CustomForm> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        // Add the DropdownButtonFormField for 'cuisine'
+                        const SizedBox(height: 10),
                         const Text(
                           ': نوع الطعام',
                           style: TextStyle(
@@ -630,12 +628,12 @@ class CustomFormState extends State<CustomForm> {
                                   ),
                                 ),
                                 activeColor: const Color.fromARGB(
-                                    255, 70, 147, 90), // Set the check color to green
+                                    255, 70, 147, 90),
                                 controlAffinity: ListTileControlAffinity.trailing,
-                                value: checkedOptionss[index],
+                                value: checkedOptionsres[index],
                                 onChanged: (bool? value) {
                                   setState(() {
-                                    checkedOptionss[index] = value ?? false;
+                                    checkedOptionsres[index] = value ?? false;
                                     if (value ?? false) {
                                       cus = cuisineOptions[index];
                                     } else {
@@ -650,7 +648,7 @@ class CustomFormState extends State<CustomForm> {
 
 
                         Divider(height:50, color: Colors.grey),
-                        const SizedBox(height: 20),
+
                         const Text(
                           ': نطاق الأسعار',
                           style: TextStyle(
@@ -658,64 +656,69 @@ class CustomFormState extends State<CustomForm> {
                             fontFamily: "Tajawal-b",
                           ),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            CustomRadioButton(
-                              onTap: () {
-                                setState(() {
-                                  // If the current option is selected, undo the selection
-                                  if (priceRange == false) {
-                                    priceRange = null;
-                                  } else {
-                                    priceRange = false;
-                                  }
-                                });
-                              },
-                              text: 'مرتفع',
-                              value: priceRange == false,
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            CustomRadioButton(
-                              onTap: () {
-                                setState(() {
-                                  // If the current option is selected, undo the selection
-                                  if (priceRange == false) {
-                                    priceRange = null;
-                                  } else {
-                                    priceRange = false;
-                                  }
-                                });
-                              },
-                              text: 'متوسط',
-                              value: priceRange == false,
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            CustomRadioButton(
-                              onTap: () {
-                                setState(() {
-                                  // If the current option is selected, undo the selection
-                                  if (priceRange == true) {
-                                    priceRange = null;
-                                  } else {
-                                    priceRange = true;
-                                  }
-                                });
-                              },
-                              text: 'منخفض',
-                              value: priceRange == true,
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                          ],
+                        Wrap(
+                          spacing: 10,
+                          runSpacing: 7,
+                          alignment: WrapAlignment.end,
+                          children: priceRange.map((prc) {
+                            return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    if (price.contains(prc)) {
+                                      price.remove(prc);
+                                    } else {
+                                      price.add(prc);
+                                    }
+                                  });
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.only(
+                                      top: 10, bottom: 10),
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(10)),
+                                    color: Colors.white,
+                                    border: Border.all(
+                                      color: price.contains(prc)
+                                          ? const Color(0xFF6db881)
+                                          : Colors.black,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const SizedBox(
+                                        width: 25,
+                                      ),
+                                      Text(prc,
+                                          style: const TextStyle(
+                                              fontSize: 16.0,
+                                              fontFamily: 'Tajawal-m')),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      price.contains(prc)
+                                          ? const Icon(
+                                        Icons.check_rounded,
+                                        size: 16,
+                                        color: Color(0xFF6db881),
+                                      )
+                                          : const SizedBox(
+                                        width: 16,
+                                      ),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                    ],
+                                  ),
+                                ));
+                          }).toList(),
                         ),
                         Divider(height:50, color: Colors.grey),
-                        const SizedBox(height: 20),
+
+
+
                         const Text(
                           ': الوجبات المقدمة ',
                           style: TextStyle(
@@ -788,16 +791,16 @@ class CustomFormState extends State<CustomForm> {
 
 
                         Divider(height:50, color: Colors.grey),
-                        const SizedBox(height: 20),
 
 
-                        // Add the CheckBoxes for 'atmosphere'
+
+
                         const Text(
                           ' : الجو العام',
                           style: TextStyle(
                             fontSize: 18.0,
                             fontFamily: "Tajawal-b",
-                            color: Colors.black, // Set the text color to black
+                            color: Colors.black,
                           ),
                         ),
                         const SizedBox(height: 10),
@@ -863,7 +866,7 @@ class CustomFormState extends State<CustomForm> {
                         ),
 
                         Divider(height:50, color: Colors.grey),
-                        const SizedBox(height: 20),
+
 
 
 
@@ -872,7 +875,7 @@ class CustomFormState extends State<CustomForm> {
                           style: TextStyle(
                             fontSize: 18.0,
                             fontFamily: "Tajawal-b",
-                            color: Colors.black, // Set the text color to black
+                            color: Colors.black,
                           ),
                         ),
                         const SizedBox(height: 10),
@@ -880,24 +883,36 @@ class CustomFormState extends State<CustomForm> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             CustomRadioButton(
-                                onTap: () {
-                                  setState(() {
+                              onTap: () {
+                                setState(() {
+                                  // If the current option is selected, undo the selection
+                                  if (hasReservation == false) {
+                                    hasReservation = null;
+                                  } else {
                                     hasReservation = false;
-                                  });
-                                },
-                                text: 'لا',
-                                value: !(hasReservation ?? true)),
+                                  }
+                                });
+                              },
+                              text: 'يتطلب حجز',
+                              value: hasReservation == false,
+                            ),
                             const SizedBox(
                               width: 10,
                             ),
                             CustomRadioButton(
-                                onTap: () {
-                                  setState(() {
+                              onTap: () {
+                                setState(() {
+                                  // If the current option is selected, undo the selection
+                                  if (hasReservation == true) {
+                                    hasReservation = null;
+                                  } else {
                                     hasReservation = true;
-                                  });
-                                },
-                                text: 'نعم',
-                                value: hasReservation ?? false),
+                                  }
+                                });
+                              },
+                              text: 'لا يتطلب حجز',
+                              value: hasReservation == true,
+                            ),
                             const SizedBox(
                               width: 10,
                             ),
@@ -921,11 +936,11 @@ class CustomFormState extends State<CustomForm> {
 
 
                         const Text(
-                          'طبيعة الفعالية',
+                          'طبيعة المركز',
                           style: TextStyle(
                             fontSize: 18.0,
                             fontFamily: "Tajawal-b",
-                            color: Colors.black, // Set the text color to black
+                            color: Colors.black,
                           ),
                         ),
                         const SizedBox(height: 10),
@@ -1002,12 +1017,12 @@ class CustomFormState extends State<CustomForm> {
                                   ),
                                 ),
                                 activeColor: const Color.fromARGB(
-                                    255, 70, 147, 90), // Set the check color to green
+                                    255, 70, 147, 90),
                                 controlAffinity: ListTileControlAffinity.trailing,
-                                value: checkedOptions[index],
+                                value: checkedOptionsmalls[index],
                                 onChanged: (bool? value) {
                                   setState(() {
-                                    checkedOptions[index] = value ?? false;
+                                    checkedOptionsmalls[index] = value ?? false;
                                     if (value ?? false) {
                                       typeEnt = isThereInMalls[index];
                                     } else {
@@ -1019,9 +1034,6 @@ class CustomFormState extends State<CustomForm> {
                             },
                           ),
                         ),
-
-
-
 
 
 
@@ -1100,39 +1112,10 @@ class CustomFormState extends State<CustomForm> {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                   const SizedBox(
                     width: 10,
                   ),
-
+                  if ( type == 1 || type == 2 || type == 3)
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
@@ -1141,18 +1124,15 @@ class CustomFormState extends State<CustomForm> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ElevatedButton(
-                            onPressed: () async {
-                              // Button press logic
-                            },
+                            onPressed: resetFilters,
                             style: ButtonStyle(
-                              backgroundColor:
-                              MaterialStateProperty.all(const Color(0xFF6db881)),
-                              padding: MaterialStateProperty.all(
-                                const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-                              ),
+                              backgroundColor: MaterialStateProperty.all(Colors.white),
+                              elevation: MaterialStateProperty.all(2),
+                              padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 40, vertical: 10)),
                               shape: MaterialStateProperty.all(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
+                                  side: BorderSide(color: Color(0xFF6db881)),
                                 ),
                               ),
                             ),
@@ -1161,17 +1141,36 @@ class CustomFormState extends State<CustomForm> {
                               style: TextStyle(
                                 fontSize: 18.0,
                                 fontFamily: "Tajawal-m",
+                                color: Color(0xFF6db881),
                               ),
                             ),
                           ),
-                          const SizedBox(width: 10), // Adjust the spacing between buttons
+
+                          const SizedBox(width: 10),
                           ElevatedButton(
-                            onPressed: () async {
-                              // Second button press logic
+                            onPressed: () {
+                              List<String> typeEntNames = getCheckedOptionNames(typeEntOptions, checkedOptionsatt);
+                              List<String> cusNames = getCheckedOptionNames(cuisineOptions, checkedOptionsres);
+                              List<String> typeEntInMallsNames = getCheckedOptionNames(isThereInMalls, checkedOptionsmalls);
+                              if (_formKey.currentState!.validate()) {
+                                Navigator.pop(context, {
+                                  "type": type,
+                                  "typeEntNames": type == 1 ? typeEntNames : null,
+                                  "INorOUT": type == 1 || type == 3 ? INorOUT : null,
+                                  "hasReservation": type == 1 || type == 2 ? hasReservation : null,
+                                  "cusNames": type == 2 ? cusNames : null,
+                                  "price": type == 2 ? price : null,
+                                  "serves": type == 2 ? serves : null,
+                                  "atmosphere": type == 2 ? atmosphere : null,
+                                  "typeEntInMallsNames": type == 3 ? typeEntInMallsNames : null,
+
+                                  "shopType": type == 3 ? shopType : null,
+                                });
+                              }
                             },
+
                             style: ButtonStyle(
-                              backgroundColor:
-                              MaterialStateProperty.all(const Color(0xFF6db881)),
+                              backgroundColor: MaterialStateProperty.all(const Color(0xFF6db881)),
                               padding: MaterialStateProperty.all(
                                 const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
                               ),
@@ -1189,6 +1188,7 @@ class CustomFormState extends State<CustomForm> {
                               ),
                             ),
                           ),
+
                         ],
                       ),
                     ),
@@ -1207,7 +1207,7 @@ class CustomFormState extends State<CustomForm> {
                 ],
               ),
 
-            ),
+            ),),
           ),
         ),
 
@@ -1219,6 +1219,16 @@ class CustomFormState extends State<CustomForm> {
 
 
 
+  List<String> getCheckedOptionNames(List<String> options, List<bool> checkedOptions) {
+    List<String> checkedNames = [];
 
+    for (int index = 0; index < options.length; index++) {
+      if (checkedOptions[index]) {
+        checkedNames.add(options[index]);
+      }
+    }
+
+    return checkedNames;
+  }
 
 }

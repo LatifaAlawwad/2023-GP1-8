@@ -33,6 +33,7 @@ class placePage {
   String reservationDetails;
   List<String> shopType;
   bool isTemporary;
+  String typeEnt;
 
   placePage({
     required this.place_id,
@@ -69,10 +70,9 @@ class placePage {
     this.reservationDetails='',
     this.shopType = const [],
     this.isTemporary=false,
+    this.typeEnt='',
 
   });
-
-
 
   Map<String, dynamic> toMap() {
     return {
@@ -110,6 +110,7 @@ class placePage {
       'reservationDetails':reservationDetails,
       'shopType': shopType,
       'isTemporary': isTemporary,
+      'typeEnt': typeEnt,
     };
   }
 
@@ -149,6 +150,7 @@ class placePage {
       reservationDetails: map['reservationDetails']??'',
       shopType: List<String>.from(map['shopType'] ?? []),
       isTemporary: map['isTemporary'] ?? false,
+      typeEnt: map['typeEnt'] ?? '',
     );
   }
 

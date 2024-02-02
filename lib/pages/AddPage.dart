@@ -858,7 +858,7 @@ class CustomFormState extends State<CustomForm> {
                 "hasReservation": hasReservation,
                 'isTemporary': isTemporary,
                 'WebLink': WebLink.text,
-                // Add attributes specific to Entertainment
+
                 'startDate': startDate,
                 'finishDate': finishDate,
                 'latitude': startPosition?.geometry?.location?.lat,
@@ -866,12 +866,12 @@ class CustomFormState extends State<CustomForm> {
                 'reservationDetails': reservationDetails,
                 'typeEnt':typeEnt,
               });
-              await FirebaseFirestore.instance
+             /* await FirebaseFirestore.instance
                   .collection('users')
                   .doc(userId)
                   .update({
                 "ArrayOfPlaces": FieldValue.arrayUnion([place_id])
-              });
+              });*/
               setState(() {
                 HomePageState.isDownloadedData = false;
               });
@@ -898,12 +898,12 @@ class CustomFormState extends State<CustomForm> {
                 'allowChildren': allowChildren,
                 'reservationDetails':reservationDetails,
               });
-              await FirebaseFirestore.instance
+              /*await FirebaseFirestore.instance
                   .collection('users')
                   .doc(userId)
                   .update({
                 "ArrayOfPlaces": FieldValue.arrayUnion([place_id])
-              });
+              });*/
               setState(() {
                 HomePageState.isDownloadedData = false;
               });
@@ -929,12 +929,12 @@ class CustomFormState extends State<CustomForm> {
                 'longitude': startPosition?.geometry?.location?.lng,
                'shopType':shopType,
               });
-              await FirebaseFirestore.instance
+              /*await FirebaseFirestore.instance
                   .collection('users')
                   .doc(userId)
                   .update({
                 "ArrayOfPlaces": FieldValue.arrayUnion([place_id])
-              });
+              });*/
               setState(() {
                 HomePageState.isDownloadedData = false;
               });
