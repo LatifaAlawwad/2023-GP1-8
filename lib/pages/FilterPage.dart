@@ -159,6 +159,11 @@ class CustomFormState extends State<CustomForm> {
   List<bool> checkedOptionsmalls = [false, false, false,false];
   List<bool> checkedOptionsres = [false, false, false,false,false,false,false,false,false,false,false,false,false,false];
 
+
+  List<bool> ocheckedOptionsatt = [false, false, false,false,false,false,false];
+  List<bool> ocheckedOptionsmalls = [false, false, false,false];
+  List<bool> ocheckedOptionsres = [false, false, false,false,false,false,false,false,false,false,false,false,false,false];
+
   List<String> isThereInMalls=['سينما','منطقة ألعاب','منطقة مطاعم','سوبرماركت']  ;
   List<String> typeEntOptions = [
     'رياضة و مغامرات',
@@ -241,9 +246,9 @@ class CustomFormState extends State<CustomForm> {
   List<String> originalServesOptions = ['فطور', 'غداء', 'عشاء'];
   bool? originalHasReservation;
   bool? originalINorOUT;
-  List<bool> originalCheckedOptions = [false, false, false,false,false,false,false];
 
-  List<bool> originalCheckedOptionss = [false, false, false,false,false,false,false,false,false,false,false,false,false,false];
+
+
 
 
   List<String> originalIsThereInMalls =['سينما','منطقة ألعاب','منطقة مطاعم','سوبرماركت'] ;
@@ -271,8 +276,9 @@ class CustomFormState extends State<CustomForm> {
   void resetFilters() {
     setState(() {
       // Reset the state variables to the original values
-      checkedOptionsres = originalCheckedOptionss;
-      checkedOptionsatt = originalCheckedOptions;
+      checkedOptionsatt = List.from(ocheckedOptionsatt);
+      checkedOptionsmalls = List.from(ocheckedOptionsmalls);
+      checkedOptionsres = List.from(ocheckedOptionsres);
       INorOUT = originalINorOUT;
       hasReservation = originalHasReservation;
       isThereInMalls = List.from(originalIsThereInMalls);
