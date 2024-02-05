@@ -2,10 +2,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gp/helper/CustomRadioButton.dart';
-import 'package:csc_picker/csc_picker.dart';
-import 'package:google_place/google_place.dart';
-
-import 'HomePage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 
@@ -18,17 +15,18 @@ class FilterPage extends StatefulWidget {
   State<FilterPage> createState() => _FilterPageState();
 }
 
-class _FilterPageState extends State<FilterPage> {
-  GlobalKey<CSCPickerState> _cscPickerKey = GlobalKey();
+class _FilterPageState extends State<FilterPage>  {
 
-  static const appTitle = 'تصفية';
+
+
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:AppBar(
+      appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 109, 184, 129),
-        elevation: 0.0, // Set the elevation to 0.0 to remove the shadow
+        elevation: 0.0,
         automaticallyImplyLeading: false,
         title: Padding(
           padding: const EdgeInsets.only(left: 150),
@@ -46,59 +44,51 @@ class _FilterPageState extends State<FilterPage> {
             padding: const EdgeInsets.only(right: 20.0),
             child: GestureDetector(
               onTap: () {
-                Navigator.pop(context,null);
+                CustomFormState().resetFilterState;
+
+                Navigator.pop(context, null);
               },
-              child: const Icon(
-                Icons.close_outlined,
-                color: Colors.white,
-                size: 28,
+              child: Container(
+                padding: const EdgeInsets.only(right:9.0),
+                child: const Icon(
+                  Icons.close_outlined,
+                  color: Colors.white,
+                  size: 28,
+                ),
               ),
             ),
+
           ),
         ],
       ),
-
       body: Stack(
         children: [
-
-
-// another background design option
-          /*Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              ClipPath(
-                clipper: MyCustomClipper(),
-                child: Container(
-                 height: MediaQuery.of(context).size.height / 2,
-                  color: const Color(0xFF6db881),
-                ),
-              )
-            ],
-          ),*/
-
-
-
           Column(
             children: [
               Expanded(
-                child:
-
-                  Container(
-                    color: const Color(0xff6db881),
-                  ),
-
+                child: Container(
+                  color: const Color(0xff6db881),
+                ),
               ),
-
             ],
           ),
-
-
-          const CustomForm()
+          CustomForm(),
         ],
       ),
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 class CustomForm extends StatefulWidget {
@@ -110,27 +100,20 @@ class CustomForm extends StatefulWidget {
   }
 }
 
+
+
+
+
 class CustomFormState extends State<CustomForm> {
   final _formKey = GlobalKey<FormState>();
-  int type = 0;
+   int type = 0;
   String? type1;
-  String place_id = '';
+
+  late SharedPreferences prefs;
 
 
-  //DateTime startDateDateTime = DateTime.now();
 
-  List<Map<String, String>> workingHoursList = [];
 
-  //for the location
-  static final TextEditingController _startSearchFieldController =
-  TextEditingController();
-  late GooglePlace googlePlace;
-  List<AutocompletePrediction> predictions = [];
-  bool isLoadingPlaces = false;
-
-  var startPosition = null;
-
-  final GlobalKey<FormFieldState> _AddressKey = GlobalKey<FormFieldState>();
 
 
 
@@ -201,9 +184,7 @@ class CustomFormState extends State<CustomForm> {
 
   String typeEnt='';
   String cus='';
-  //bool? isTemporary;
-  //String startDate = '';
- // String finishDate = '';
+
 
 
   List<String> servesOptions = ['فطور', 'غداء', 'عشاء'];
@@ -258,45 +239,200 @@ class CustomFormState extends State<CustomForm> {
 
   List<String> originalPriceRange = ['مرتفع','متوسط','منخفض'];
 
-  void initState() {
+
+void initState() {
     super.initState();
 
-    // Store the original values at the beginning
+    initPrefs();
+
 
     originalINorOUT = INorOUT;
     originalHasReservation = hasReservation;
     originalIsThereInMalls = List.from(isThereInMalls);
-
     originalPriceRange = List<String>.from(priceRange);
     originalServesOptions = List.from(servesOptions);
     originalAtmosphereOptions = List.from(atmosphereOptions);
     originalShopOptions = List.from(shopOptions);
+
+
   }
 
-  void resetFilters() {
-    setState(() {
-      // Reset the state variables to the original values
-      checkedOptionsatt = List.from(ocheckedOptionsatt);
-      checkedOptionsmalls = List.from(ocheckedOptionsmalls);
-      checkedOptionsres = List.from(ocheckedOptionsres);
-      INorOUT = originalINorOUT;
-      hasReservation = originalHasReservation;
-      isThereInMalls = List.from(originalIsThereInMalls);
 
-      // Reset the servesOptions and other attribute lists
-      serves.clear();
-      price.clear();
-      atmosphere.clear();
-      shopType.clear();
-      priceRange = List<String>.from(originalPriceRange);
-      servesOptions = List<String>.from(originalServesOptions);
-      atmosphereOptions = List<String>.from(originalAtmosphereOptions);
-      shopOptions = List<String>.from(originalShopOptions);
+
+
+
+
+
+  Future<void> initPrefs() async {
+    prefs = await SharedPreferences.getInstance();
+    loadFilterState();
+  }
+
+
+
+  void saveFilterState() {
+
+    prefs.setInt('type', type);
+
+
+      switch (type) {
+
+        case 0 :
+        case 1:// فعاليات و ترفيه
+        prefs.setStringList('checkedOptionsatt', checkedOptionsatt.map((value) => value.toString()).toList());
+        if (INorOUT != null) {
+          prefs.setBool('INorOUT', INorOUT!);
+        } else {
+          prefs.remove('INorOUT'); // Remove the key if INorOUT is null
+        }
+        if (hasReservation != null) {
+          prefs.setBool('hasReservation', hasReservation!);
+        } else {
+          prefs.remove('hasReservation'); // Remove the key if hasReservation is null
+        }
+
+        break;
+        case 0 :
+      case 2: // مطاعم
+        prefs.setStringList('checkedOptionsres', checkedOptionsres.map((value) => value.toString()).toList());
+        prefs.setStringList('price', price.toList());
+        prefs.setStringList('serves', serves.toList());
+        prefs.setStringList('atmosphere', atmosphere.toList());
+        prefs.setBool('hasReservationSet', hasReservation != null);
+        if (hasReservation != null) {
+          prefs.setBool('hasReservation', hasReservation!);
+        } else {
+          prefs.remove('hasReservation'); // Remove the key if hasReservation is null
+        }
+
+
+
+        break;
+     case 0 :
+      case 3: // المراكز التجارية
+        if (INorOUT != null) {
+          prefs.setBool('INorOUT', INorOUT!);
+        } else {
+          prefs.remove('INorOUT'); // Remove the key if INorOUT is null
+        }
+
+        prefs.setStringList('checkedOptionsmalls', checkedOptionsmalls.map((value) => value.toString()).toList());
+        prefs.setStringList('shopType', shopType.map((e) => e.toString()).toList());
+
+
+        break;
+
+
+
+
+
+    }
+  }
+
+
+
+
+
+
+  void loadFilterState() {
+
+    setState(() {
+    int savedType = prefs.getInt('type') ?? 0;
+    type = savedType;
+
+
+
+      switch (type) {
+
+        case 0: type=0;
+            break;
+
+        case 1:// فعاليات و ترفيه
+
+
+          checkedOptionsatt = prefs.getStringList('checkedOptionsatt')?.map((value) => value == 'true').toList() ?? [];
+          INorOUT = prefs.getBool('INorOUT') ?? null; // Nullable bool
+          hasReservation = prefs.getBool('hasReservation') ?? null; // Nullable bool
+          break;
+
+        case 2: // مطاعم
+          checkedOptionsres = prefs.getStringList('checkedOptionsres')?.map((value) => value == 'true').toList() ?? [];
+          price = prefs.getStringList('price')?.toSet() ?? Set<String>();
+          serves = prefs.getStringList('serves')?.toSet() ?? Set<String>();
+          atmosphere = prefs.getStringList('atmosphere')?.toSet() ?? Set<String>();
+          hasReservation = prefs.getBool('hasReservation') ?? null; // Nullable bool
+          break;
+
+        case 3: // المراكز التجارية
+          INorOUT = prefs.getBool('INorOUT') ?? null; // Nullable bool
+          checkedOptionsmalls = prefs.getStringList('checkedOptionsmalls')?.map((value) => value == 'true').toList() ?? [];
+          shopType = prefs.getStringList('shopType')?.toSet() ?? Set<String>();
+          break;
+
+
+      }
     });
   }
 
+
+
+
+
+
+
+ void resetFilterState() {
+    setState(() {
+      switch (type) {
+        case 1:
+
+          checkedOptionsatt = List.from(ocheckedOptionsatt);
+          INorOUT = originalINorOUT;
+          hasReservation = originalHasReservation;
+          break;
+        case 2:
+          checkedOptionsres = List.from(ocheckedOptionsres);
+          serves.clear();
+          price.clear();
+          atmosphere.clear();
+          hasReservation = originalHasReservation;
+          break;
+        case 3:
+          INorOUT = originalINorOUT;
+          isThereInMalls = List.from(originalIsThereInMalls);
+          checkedOptionsmalls = List.from(ocheckedOptionsmalls);
+          shopType.clear();
+          break;
+      }
+
+      type=0;
+      saveFilterState();
+
+    });
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -1130,7 +1266,11 @@ class CustomFormState extends State<CustomForm> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ElevatedButton(
-                            onPressed: resetFilters,
+                            onPressed: (){
+                              resetFilterState();
+
+                            },
+
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(Colors.white),
                               elevation: MaterialStateProperty.all(2),
@@ -1155,6 +1295,8 @@ class CustomFormState extends State<CustomForm> {
                           const SizedBox(width: 10),
                           ElevatedButton(
                             onPressed: () {
+
+                              saveFilterState();
                               List<String> typeEntNames = getCheckedOptionNames(typeEntOptions, checkedOptionsatt);
                               List<String> cusNames = getCheckedOptionNames(cuisineOptions, checkedOptionsres);
                               List<String> typeEntInMallsNames = getCheckedOptionNames(isThereInMalls, checkedOptionsmalls);
@@ -1169,7 +1311,6 @@ class CustomFormState extends State<CustomForm> {
                                   "serves": type == 2 ? serves : null,
                                   "atmosphere": type == 2 ? atmosphere : null,
                                   "typeEntInMallsNames": type == 3 ? typeEntInMallsNames : null,
-
                                   "shopType": type == 3 ? shopType : null,
                                 });
                               }
@@ -1213,7 +1354,8 @@ class CustomFormState extends State<CustomForm> {
                 ],
               ),
 
-            ),),
+            ),
+            ),
           ),
         ),
 
