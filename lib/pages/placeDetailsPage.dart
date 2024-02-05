@@ -17,9 +17,8 @@ import 'package:photo_view/photo_view_gallery.dart';
 import 'Review.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+
 
 
 
@@ -52,6 +51,7 @@ class _placeDetailsState extends State<placeDetailsPage> {
         //output = ["001ac7c1-67b1-4ac3-bbf4-6db8baf2e6cc", "001ac7c1-67b1-4ac3-bbf4-6db8baf2e6cc" ,"001ac7c1-67b1-4ac3-bbf4-6db8baf2e6cc"];
         setState(() {});
       }
+
 
 
 
@@ -646,9 +646,13 @@ class _placeDetailsState extends State<placeDetailsPage> {
                                 );
                             }
                           },
+
                         ),
 
 /////////////////////////////////////////////////////////////////////////////////////////rec////////
+
+                        const Divider(),
+                        SizedBox(height: 5),
 
                         Padding(
                           padding: EdgeInsets.only(left: 235, bottom: 16),
@@ -665,13 +669,13 @@ class _placeDetailsState extends State<placeDetailsPage> {
                             ? Directionality(
                           textDirection: TextDirection.rtl,
                           child: Container(
-                            height: 210,
+                            height: 220,
                             child: Padding(
-                              padding: EdgeInsets.only(left: 20, bottom: 24, right: 20),
+                              padding: EdgeInsets.only(left: 2, bottom: 24, right: 2),
                               child: ListView.separated(
                                 physics: BouncingScrollPhysics(),
                                 scrollDirection: Axis.horizontal,
-                                separatorBuilder: (context, index) => SizedBox(width: 20),
+                                separatorBuilder: (context, index) => SizedBox(width: 15),
                                 itemCount: output.length,
                                 itemBuilder: (context, index) {
                                   for (int i = 0; i < HomePageState.allData.length; i++) {
@@ -714,6 +718,8 @@ class _placeDetailsState extends State<placeDetailsPage> {
     );
   }
 //---------------------------------------------------------------------------------------
+
+
   Widget _buildPlacePageWidget(BuildContext context, placePage place) {
     return GestureDetector(
       onTap: () {
@@ -724,155 +730,149 @@ class _placeDetailsState extends State<placeDetailsPage> {
           ),
         );
       },
-
-      child: Card(
-        margin: EdgeInsets.all(3), // Adjust the margin to reduce space
-        clipBehavior: Clip.antiAlias,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(15),
-          ),
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              //spreadRadius: 2,
+              blurRadius: 10,
+              offset: Offset(0, 1),
+            ),
+          ],
         ),
-        child: Container(
-          height: 400,
-          width: 180,
-          decoration: BoxDecoration(
-            image: place.images.isEmpty
-                ? DecorationImage(
-              image: NetworkImage(
-                'https://www.guardanthealthamea.com/wp-content/uploads/2019/09/no-image.jpg',
-              ),
-              fit: BoxFit.fill,
-            )
-                : DecorationImage(
-              image: NetworkImage(place.images[0]),
-              fit: BoxFit.fill,
+        child: Card(
+          clipBehavior: Clip.antiAlias,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(15),
             ),
           ),
           child: Container(
-            padding: EdgeInsets.all(20),
+            height: 220,
+            width: 180,
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: [0.5, 1.0],
-                colors: [
-                  Colors.transparent,
-                  Colors.black.withOpacity(0.7),
-                ],
+
+              image: place.images.isEmpty
+                  ? DecorationImage(
+                image: NetworkImage(
+                  'https://www.guardanthealthamea.com/wp-content/uploads/2019/09/no-image.jpg',
+                ),
+                fit: BoxFit.fill,
+              )
+                  : DecorationImage(
+                image: NetworkImage(place.images[0]),
+                fit: BoxFit.fill,
               ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Container(),
-                ),
-                Column(
-                  children: [
-                    Text(
-                      '${place.placeName}',
-                      style: TextStyle(
-                        height: 2,
+            child: Container(
+              padding: EdgeInsets.all(20),
+              decoration: BoxDecoration(
+
+                boxShadow: [
+
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Container(),
+                  ),
+                  Text(
+                    '${place.placeName}',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: "Tajawal-l",
+                    ),
+                  ),
+                  SizedBox(height: 2),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.location_pin,
                         color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: "Tajawal-l",
+                        size: 18,
                       ),
-                    ),
-                    SizedBox(width: 10),
-                    Row(
-                      //mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child:Row(
+                      SizedBox(
+                        width: 2,
+                      ),
+                      Text(
+                        '${place.neighbourhood} ، ${place.city}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: "Tajawal-l",
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 2),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('ApprovedPlaces')
+                            .doc(place.place_id)
+                            .collection('Reviews')
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          }
+
+                          List<double> ratings = List<double>.from(
+                            snapshot.data!.docs.map((doc) {
+                              final commentData = doc.data() as Map<String, dynamic>;
+                              return commentData["rating"].toDouble() ?? 0.0;
+                            }),
+                          );
+
+                          double averageRating =
+                          ratings.isNotEmpty ? ratings.reduce((a, b) => a + b) / ratings.length : 0.0;
+
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: StreamBuilder<QuerySnapshot>(
-                                  stream: FirebaseFirestore.instance
-                                      .collection('ApprovedPlaces')
-                                      .doc(place.place_id)
-                                      .collection('Reviews')
-                                      .snapshots(),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState == ConnectionState.waiting) {
-                                      return CircularProgressIndicator();
-                                    }
-
-                                    List<double> ratings = List<double>.from(
-                                      snapshot.data!.docs.map((doc) {
-                                        final commentData = doc.data() as Map<String, dynamic>;
-                                        return commentData["rating"].toDouble() ?? 0.0;
-                                      }),
-                                    );
-
-                                    // Calculate the average rating
-                                    double averageRating =
-                                    ratings.isNotEmpty ? ratings.reduce((a, b) => a + b) / ratings.length : 0.0;
-
-                                    return Row(
-                                      children: [
-                                        for (int index = 0; index < 5; index++)
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                                            child: Icon(
-                                              index < averageRating.floor()
-                                                  ? Icons.star
-                                                  : index + 0.5 == averageRating
-                                                  ? Icons.star_half
-                                                  : Icons.star_border,
-                                              color: const Color.fromARGB(255, 109, 184, 129),
-                                              size: 20.0,
-                                            ),
-                                          ),
-                                      ],
-                                    );
-                                  },
+                              for (int index = 0; index < 5; index++)
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                                  child: Icon(
+                                    index < averageRating.floor()
+                                        ? Icons.star
+                                        : index + 0.5 == averageRating
+                                        ? Icons.star_half
+                                        : Icons.star_border,
+                                    color: const Color.fromARGB(255, 109, 184, 129),
+                                    size: 20.0,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(width: 10),
                             ],
-                          ),
+                          );
+                        },
+                      ),
+                    ],
 
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              '${place.neighbourhood} ، ${place.city}',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: "Tajawal-l",
-
-                              ),
-                            ),
-                            SizedBox(
-                              width: 4,
-                            ),
-                            Icon(
-                              Icons.location_pin,
-                              color: Colors.white,
-                              size: 18,
-                            ),
-                          ],
-                        ),
-                        // SizedBox(width: 10),
-                      ],
-                    ),
-
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
 
+
+
+
     );
   }
+
 
 //-------------------------------------------------------------------------------
 
