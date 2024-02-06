@@ -43,14 +43,17 @@ class _placeDetailsState extends State<placeDetailsPage> {
   final Set<Marker> _markers = new Set();
   List<dynamic> output = [];
 
-      void SimilarPropFunction() async {
-        url =  url = 'https://sohail-gp-906c5868723b.herokuapp.com/api?query=' + widget.place.place_id;
-        data = await fetchdata(url);
-        var decoded = jsonDecode(data);
-        output = decoded;
-        //output = ["001ac7c1-67b1-4ac3-bbf4-6db8baf2e6cc", "001ac7c1-67b1-4ac3-bbf4-6db8baf2e6cc" ,"001ac7c1-67b1-4ac3-bbf4-6db8baf2e6cc"];
-        setState(() {});
-      }
+  void SimilarPropFunction() async {
+    url = 'https://sohail-gp-906c5868723b.herokuapp.com/api?query=' + widget.place.place_id;
+    data = await fetchdata(url);
+    var decoded = jsonDecode(data);
+
+    // Extract place_id values from the decoded JSON data
+    output = List<String>.from(decoded.map((item) => item['place_id']));
+
+    setState(() {});
+  }
+
 
 
 
