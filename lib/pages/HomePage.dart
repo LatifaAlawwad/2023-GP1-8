@@ -116,6 +116,8 @@ class HomePageState extends State<HomePage> {
         itemBuilder: (BuildContext context, int index) {
           if (listItem[index] is placePage) {
             final place = listItem[index] as placePage;
+
+            if (place.city == widget.cityName){
             if (filters != null && FilterValue == true) {
 
               if (filters["type"] == 1) {
@@ -199,7 +201,7 @@ class HomePageState extends State<HomePage> {
                 place,
                 context,
               );
-            }
+            }}
           }
           return Container();
         },
