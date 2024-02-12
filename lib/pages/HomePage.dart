@@ -124,7 +124,7 @@ class HomePageState extends State<HomePage> {
 
                 if (place.category =='فعاليات و ترفيه' &&
                     (filters["typeEntNames"].isEmpty || filters["typeEntNames"].contains(place.typeEnt)) &&
-                    (filters["INorOUT"] == null || place.INorOUT == filters["INorOUT"]) &&
+                    (filters["INorOUT"] == '' || place.INorOUT == filters["INorOUT"]) &&
                     (filters["hasReservation"] == null || place.hasReservation == filters["hasReservation"])) {
 
                   return _buildItem(
@@ -171,7 +171,7 @@ class HomePageState extends State<HomePage> {
                 if(place.category =='مراكز تسوق' &&
                     (filters["typeEntInMallsNames"].isEmpty ||
                         filters["typeEntInMallsNames"].any((name) => InMalls.contains(name)))
-                    && (filters["INorOUT"] == null || place.INorOUT == filters["INorOUT"] ) &&
+                    && (filters["INorOUT"] == '' || place.INorOUT == filters["INorOUT"] ) &&
                     (filters["shopType"].isEmpty || place.shopType == filters["shopType"])) {
                   return _buildItem(
                         () {
@@ -297,7 +297,7 @@ class HomePageState extends State<HomePage> {
                         children: [
                           Expanded(
                             flex: 1,
-                            child: Container(), // Add an empty container to take up the remaining space
+                            child: Container(),
                           ),
                           Text(
                             '${place.placeName}',

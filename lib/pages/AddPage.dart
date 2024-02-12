@@ -191,7 +191,7 @@ class CustomFormState extends State<CustomForm> {
   bool? hasValetServiced;
 
   bool? allowChildren;
-  bool? isOutdoor;
+  String isOutdoor="";
 
   @override
   void initState() {
@@ -233,7 +233,9 @@ class CustomFormState extends State<CustomForm> {
   bool? isTemporary;
   String startDate = '';
   String finishDate = '';
-  bool? INorOUT;
+  String INorOUT='';
+
+
   bool? hasCinema;
   bool? hasPlayArea;
   bool? hasFoodCourt;
@@ -1652,8 +1654,7 @@ class CustomFormState extends State<CustomForm> {
                               style: TextStyle(
                                 fontSize: 18.0,
                                 fontFamily: "Tajawal-b",
-                                color:
-                                Colors.black, // Set the text color to black
+                                color: Colors.black,
                               ),
                             ),
                             const SizedBox(height: 10),
@@ -1661,29 +1662,38 @@ class CustomFormState extends State<CustomForm> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 CustomRadioButton(
-                                    onTap: () {
-                                      setState(() {
-                                        INorOUT = false;
-                                      });
-                                    },
-                                    text: 'لا',
-                                    value: !(INorOUT ?? true)),
-                                const SizedBox(
-                                  width: 10,
+                                  onTap: () {
+                                    setState(() {
+                                      INorOUT = 'كلاهما';
+                                    });
+                                  },
+                                  text: 'كلاهما',
+                                  value: INorOUT == 'كلاهما',
                                 ),
+                                const SizedBox(width: 10),
                                 CustomRadioButton(
-                                    onTap: () {
-                                      setState(() {
-                                        INorOUT = true;
-                                      });
-                                    },
-                                    text: 'نعم',
-                                    value: INorOUT ?? false),
-                                const SizedBox(
-                                  width: 10,
+                                  onTap: () {
+                                    setState(() {
+                                      INorOUT = 'لا';
+                                    });
+                                  },
+                                  text: 'لا',
+                                  value: INorOUT == 'لا',
+                                ),
+                                const SizedBox(width: 10),
+                                CustomRadioButton(
+                                  onTap: () {
+                                    setState(() {
+                                      INorOUT = 'نعم';
+                                    });
+                                  },
+                                  text: 'نعم',
+                                  value: INorOUT == 'نعم',
                                 ),
                               ],
                             )
+
+
                           ],
                         ),
                         const SizedBox(height: 20),
@@ -2161,29 +2171,37 @@ class CustomFormState extends State<CustomForm> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             CustomRadioButton(
-                                onTap: () {
-                                  setState(() {
-                                    INorOUT = false;
-                                  });
-                                },
-                                text: 'خارجي',
-                                value: !(INorOUT ?? true)),
-                            const SizedBox(
-                              width: 10,
+                              onTap: () {
+                                setState(() {
+                                  INorOUT = 'كلاهما';
+                                });
+                              },
+                              text: 'كلاهما',
+                              value: INorOUT == 'كلاهما',
                             ),
+                            const SizedBox(width: 10),
                             CustomRadioButton(
-                                onTap: () {
-                                  setState(() {
-                                    INorOUT = true;
-                                  });
-                                },
-                                text: 'داخلي',
-                                value: INorOUT ?? false),
-                            const SizedBox(
-                              width: 10,
+                              onTap: () {
+                                setState(() {
+                                  INorOUT = 'لا';
+                                });
+                              },
+                              text: 'لا',
+                              value: INorOUT == 'لا',
+                            ),
+                            const SizedBox(width: 10),
+                            CustomRadioButton(
+                              onTap: () {
+                                setState(() {
+                                  INorOUT = 'نعم';
+                                });
+                              },
+                              text: 'نعم',
+                              value: INorOUT == 'نعم',
                             ),
                           ],
                         ),
+
                         const SizedBox(height: 20),
                         const Text(
                           'هل يوجد سينما؟',

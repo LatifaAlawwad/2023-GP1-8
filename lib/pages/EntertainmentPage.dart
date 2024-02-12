@@ -5,7 +5,7 @@ class Entertainment {
   final bool isTemporary;
   final String startDate;
   final String finishDate;
-  final bool isOutdoor;
+  final String isOutdoor;
 
   Entertainment({
     required this.typeEnt,
@@ -31,7 +31,7 @@ class Entertainment {
       isTemporary: map['isTemporary'] ?? false,
       startDate: map['startDate'] ?? '',
       finishDate: map['finishDate'] ?? '',
-      isOutdoor: map['isOutdoor'] ?? false,
+      isOutdoor: map['isOutdoor'] ?? '',
     );
   }
 }

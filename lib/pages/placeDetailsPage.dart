@@ -9,15 +9,12 @@ import 'placePage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'HomePage.dart';
+
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'Review.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 
 

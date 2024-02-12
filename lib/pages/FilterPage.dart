@@ -179,7 +179,7 @@ class CustomFormState extends State<CustomForm> {
   Set<String> price = Set<String>();
   Set<String> atmosphere = Set<String>();
   Set<String> shopType = Set<String>();
-  bool? INorOUT;
+  String INorOUT='';
   bool? hasReservation;
 
   String typeEnt='';
@@ -226,7 +226,7 @@ class CustomFormState extends State<CustomForm> {
 
   List<String> originalServesOptions = ['فطور', 'غداء', 'عشاء'];
   bool? originalHasReservation;
-  bool? originalINorOUT;
+String originalINorOUT='';
 
 
 
@@ -280,8 +280,8 @@ void initState() {
         case 0 :
         case 1:// فعاليات و ترفيه
         prefs.setStringList('checkedOptionsatt', checkedOptionsatt.map((value) => value.toString()).toList());
-        if (INorOUT != null) {
-          prefs.setBool('INorOUT', INorOUT!);
+        if (INorOUT != '') {
+          prefs.setString('INorOUT', INorOUT!);
         } else {
           prefs.remove('INorOUT'); // Remove the key if INorOUT is null
         }
@@ -310,8 +310,8 @@ void initState() {
         break;
      case 0 :
       case 3: // المراكز التجارية
-        if (INorOUT != null) {
-          prefs.setBool('INorOUT', INorOUT!);
+        if (INorOUT != '') {
+          prefs.setString('INorOUT', INorOUT!);
         } else {
           prefs.remove('INorOUT'); // Remove the key if INorOUT is null
         }
@@ -351,7 +351,7 @@ void initState() {
 
 
           checkedOptionsatt = prefs.getStringList('checkedOptionsatt')?.map((value) => value == 'true').toList() ?? [];
-          INorOUT = prefs.getBool('INorOUT') ?? null; // Nullable bool
+          INorOUT = prefs.getString('INorOUT') ?? ''; // Nullable bool
           hasReservation = prefs.getBool('hasReservation') ?? null; // Nullable bool
           break;
 
@@ -364,7 +364,7 @@ void initState() {
           break;
 
         case 3: // المراكز التجارية
-          INorOUT = prefs.getBool('INorOUT') ?? null; // Nullable bool
+          INorOUT = prefs.getString('INorOUT') ?? '';
           checkedOptionsmalls = prefs.getStringList('checkedOptionsmalls')?.map((value) => value == 'true').toList() ?? [];
           shopType = prefs.getStringList('shopType')?.toSet() ?? Set<String>();
           break;
@@ -642,36 +642,31 @@ void initState() {
                             CustomRadioButton(
                               onTap: () {
                                 setState(() {
-                                  // If the current option is selected, undo the selection
-                                  if (INorOUT == false) {
-                                    INorOUT = null;
-                                  } else {
-                                    INorOUT = false;
-                                  }
+                                  INorOUT = 'كلاهما';
                                 });
                               },
-                              text: 'خارجي',
-                              value: INorOUT == false,
+                              text: 'خارجي وداخلي',
+                              value: INorOUT == 'كلاهما',
                             ),
-                            const SizedBox(
-                              width: 10,
-                            ),
+                            const SizedBox(width: 10),
                             CustomRadioButton(
                               onTap: () {
                                 setState(() {
-                                  // If the current option is selected, undo the selection
-                                  if (INorOUT == true) {
-                                    INorOUT = null;
-                                  } else {
-                                    INorOUT = true;
-                                  }
+                                  INorOUT = 'لا';
+                                });
+                              },
+                              text: 'خارجي',
+                              value: INorOUT == 'لا',
+                            ),
+                            const SizedBox(width: 10),
+                            CustomRadioButton(
+                              onTap: () {
+                                setState(() {
+                                  INorOUT = 'نعم';
                                 });
                               },
                               text: 'داخلي',
-                              value: INorOUT == true,
-                            ),
-                            const SizedBox(
-                              width: 10,
+                              value: INorOUT == 'نعم',
                             ),
                           ],
                         ),
@@ -1092,36 +1087,31 @@ void initState() {
                             CustomRadioButton(
                               onTap: () {
                                 setState(() {
-                                  // If the current option is selected, undo the selection
-                                  if (INorOUT == false) {
-                                    INorOUT = null;
-                                  } else {
-                                    INorOUT = false;
-                                  }
+                                  INorOUT = 'كلاهما';
                                 });
                               },
-                              text: 'خارجي',
-                              value: INorOUT == false,
+                              text: 'خارجي وداخلي',
+                              value: INorOUT == 'كلاهما',
                             ),
-                            const SizedBox(
-                              width: 10,
-                            ),
+                            const SizedBox(width: 10),
                             CustomRadioButton(
                               onTap: () {
                                 setState(() {
-                                  // If the current option is selected, undo the selection
-                                  if (INorOUT == true) {
-                                    INorOUT = null;
-                                  } else {
-                                    INorOUT = true;
-                                  }
+                                  INorOUT = 'لا';
+                                });
+                              },
+                              text: 'خارجي',
+                              value: INorOUT == 'لا',
+                            ),
+                            const SizedBox(width: 10),
+                            CustomRadioButton(
+                              onTap: () {
+                                setState(() {
+                                  INorOUT = 'نعم';
                                 });
                               },
                               text: 'داخلي',
-                              value: INorOUT == true,
-                            ),
-                            const SizedBox(
-                              width: 10,
+                              value: INorOUT == 'نعم',
                             ),
                           ],
                         ),
@@ -1304,7 +1294,7 @@ void initState() {
                                 Navigator.pop(context, {
                                   "type": type,
                                   "typeEntNames": type == 1 ? typeEntNames : null,
-                                  "INorOUT": type == 1 || type == 3 ? INorOUT : null,
+                                  "INorOUT": type == 1 || type == 3 ? INorOUT : '',
                                   "hasReservation": type == 1 || type == 2 ? hasReservation : null,
                                   "cusNames": type == 2 ? cusNames : null,
                                   "price": type == 2 ? price : null,

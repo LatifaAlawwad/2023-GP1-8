@@ -6,6 +6,8 @@ import 'package:gp/pages/placePage.dart';
 import 'package:intl/intl.dart';
 import 'package:gp/helper/ShowTextAttributesWidget.dart';
 
+import 'ShowINorOUtAttributesWidget.dart';
+
 class PlaceDetailsWidget extends StatelessWidget {
   final placePage place;
 
@@ -211,12 +213,16 @@ class PlaceDetailsWidget extends StatelessWidget {
             Divider(),
             ShowBoolAttributesWidget(text: ' سينما', check: place.hasCinema),
             ShowBoolAttributesWidget(
-                text: place.INorOUT
-                    ? 'مركز داخلي'
-                    : 'مركز خارجي',
-                check: place.INorOUT),
-            ShowBoolAttributesWidget(
                 text: 'منطقة مطاعم', check: place.hasFoodCourt),
+            ShowINorOUtAttributesWidget(
+              text: place.INorOUT == 'كلاهما'
+                  ? 'مركز داخلي وخارجي'
+                  : place.INorOUT == 'نعم'
+                  ? 'مركز داخلي'
+                  : 'مركز خارجي',
+
+            ),
+
             ShowBoolAttributesWidget(
                 text: 'منطقة ألعاب', check: place.hasPlayArea),
             ShowBoolAttributesWidget(
@@ -257,6 +263,7 @@ class PlaceDetailsWidget extends StatelessWidget {
           Wrap(
             alignment: WrapAlignment.end,
             spacing: 4,
+
             children: [
               ShowBoolAttributesWidget(
                 text: 'يتطلب حجز',
@@ -264,11 +271,15 @@ class PlaceDetailsWidget extends StatelessWidget {
               ),
               ShowBoolAttributesWidget(
                   text: 'خدمة ركن السيارات', check: place.hasValetServiced),
-              ShowBoolAttributesWidget(
-                  text: place.INorOUT
-                      ? 'مكان داخلي'
-                      : 'مكان خارجي',
-                  check: place.INorOUT),
+
+              ShowINorOUtAttributesWidget(
+                text: place.INorOUT == 'كلاهما'
+                    ? 'مكان داخلي وخارجي'
+                    : place.INorOUT == 'نعم'
+                    ? 'مكان داخلي'
+                    : 'مكان خارجي',
+
+              ),
               ShowBoolAttributesWidget(
                 text: 'فعالية مؤقته',
                 check: place.isTemporary,

@@ -22,7 +22,7 @@ class placePage {
   String openAt;
   String closeAt;
   bool hasCinema;
-  bool INorOUT;
+  String INorOUT;
   bool hasFoodCourt;
   bool hasPlayArea;
   bool hasSupermarket;
@@ -59,7 +59,7 @@ class placePage {
     this.openAt = '',
     this.closeAt = '',
     this.hasCinema = false,
-    this.INorOUT = false,
+    this.INorOUT = '',
     this.hasFoodCourt = false,
     this.hasPlayArea = false,
     this.hasSupermarket = false,
@@ -139,7 +139,7 @@ class placePage {
       openAt: map['openAt']??'',
       closeAt: map['closeAt']??'',
       hasCinema: map['hasCinema']??false,
-      INorOUT: map['INorOUT']??false,
+      INorOUT: map['INorOUT']??'',
       hasFoodCourt: map['hasFoodCourt']??false,
       hasPlayArea: map['hasPlayArea']??false,
       hasSupermarket: map['hasSupermarket']??false,
@@ -201,7 +201,7 @@ class placePage {
 
   bool get getHasCinema => hasCinema;
 
-  bool get getINorOUT => INorOUT;
+  String get getINorOUT => INorOUT;
 
   bool get getHasFoodCourt => hasFoodCourt;
 

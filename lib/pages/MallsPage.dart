@@ -5,7 +5,7 @@ class Mall {
   final bool hasPlayArea;
   final bool hasFoodCourt;
   final bool hasSupermarket;
-  final bool INorOUT;
+  final String INorOUT;
   final String ShopType;
   final placePage place;
 
@@ -38,7 +38,7 @@ class Mall {
       hasFoodCourt: map['hasFoodCourt'] ?? false,
       hasSupermarket: map['hasSupermarket'] ?? false,
       ShopType: map['ShopType'] ?? '',
-      INorOUT: map['INorOUT'] ?? false,
+      INorOUT: map['INorOUT'] ?? '',
       place: placePage.fromMap(map),
     );
   }
