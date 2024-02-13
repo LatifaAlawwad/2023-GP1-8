@@ -218,8 +218,8 @@ class PlaceDetailsWidget extends StatelessWidget {
               text: place.INorOUT == 'كلاهما'
                   ? 'مركز داخلي وخارجي'
                   : place.INorOUT == 'نعم'
-                  ? 'مركز داخلي'
-                  : 'مركز خارجي',
+                  ? 'مركز خارجي'
+                  : 'مركز داخلي',
 
             ),
 
@@ -276,8 +276,8 @@ class PlaceDetailsWidget extends StatelessWidget {
                 text: place.INorOUT == 'كلاهما'
                     ? 'مكان داخلي وخارجي'
                     : place.INorOUT == 'نعم'
-                    ? 'مكان داخلي'
-                    : 'مكان خارجي',
+                    ? 'مكان خارجي'
+                    : 'مكان داخلي',
 
               ),
               ShowBoolAttributesWidget(

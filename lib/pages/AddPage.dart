@@ -1650,7 +1650,7 @@ class CustomFormState extends State<CustomForm> {
                             ),
                             const SizedBox(height: 20),
                             const Text(
-                              ' هل هو مكان خارجي ؟',
+                              ' هل هو مكان خارجي ام داخلي؟',
                               style: TextStyle(
                                 fontSize: 18.0,
                                 fontFamily: "Tajawal-b",
@@ -1677,7 +1677,7 @@ class CustomFormState extends State<CustomForm> {
                                       INorOUT = 'لا';
                                     });
                                   },
-                                  text: 'لا',
+                                  text: 'داخلي',
                                   value: INorOUT == 'لا',
                                 ),
                                 const SizedBox(width: 10),
@@ -1687,7 +1687,7 @@ class CustomFormState extends State<CustomForm> {
                                       INorOUT = 'نعم';
                                     });
                                   },
-                                  text: 'نعم',
+                                  text: 'داخلي',
                                   value: INorOUT == 'نعم',
                                 ),
                               ],
@@ -2159,11 +2159,11 @@ class CustomFormState extends State<CustomForm> {
                       children: [
                         const SizedBox(height: 10),
                         const Text(
-                          ':هل المركز داخلي أم خارجي ',
+                          ' هل هو مكان خارجي ام داخلي؟',
                           style: TextStyle(
                             fontSize: 18.0,
                             fontFamily: "Tajawal-b",
-                            color: Colors.black, // Set the text color to black
+                            color: Colors.black,
                           ),
                         ),
                         const SizedBox(height: 10),
@@ -2186,7 +2186,7 @@ class CustomFormState extends State<CustomForm> {
                                   INorOUT = 'لا';
                                 });
                               },
-                              text: 'لا',
+                              text: 'داخلي',
                               value: INorOUT == 'لا',
                             ),
                             const SizedBox(width: 10),
@@ -2196,7 +2196,7 @@ class CustomFormState extends State<CustomForm> {
                                   INorOUT = 'نعم';
                                 });
                               },
-                              text: 'نعم',
+                              text: 'داخلي',
                               value: INorOUT == 'نعم',
                             ),
                           ],

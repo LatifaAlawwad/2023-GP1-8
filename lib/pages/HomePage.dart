@@ -31,11 +31,14 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
 
   static bool FilterValue = false;
+  static String noResults= "";
+
   static List<placePage> FilteredItems = [];
   static List<placePage> FilterForAtt = [];
   static List<placePage> FilterForRes = [];
   static List<placePage> FilterForMall = [];
   Map<String, dynamic>? filters;
+
 
   int indexOfTap = 0;
   static List<dynamic> allData = [];
@@ -94,10 +97,10 @@ class HomePageState extends State<HomePage> {
     }
   }
 
-// Inside your `handleListItems` method
+
 
   Widget handleListItems(List<placePage> listItem, Map<String, dynamic>? filters) {
-    if (listItem.isEmpty) {
+    if (listItem.isEmpty || checkFilterNoResults(filters) ) {
       return Center(
         child: Text(
           "لم يتم العثور على نتائج",
@@ -114,20 +117,22 @@ class HomePageState extends State<HomePage> {
           return SizedBox(height: 10);
         },
         itemBuilder: (BuildContext context, int index) {
+
           if (listItem[index] is placePage) {
+
             final place = listItem[index] as placePage;
 
             if (place.city == widget.cityName){
+
             if (filters != null && FilterValue == true) {
 
               if (filters["type"] == 1) {
-
                 if (place.category =='فعاليات و ترفيه' &&
                     (filters["typeEntNames"].isEmpty || filters["typeEntNames"].contains(place.typeEnt)) &&
                     (filters["INorOUT"] == '' || place.INorOUT == filters["INorOUT"]) &&
                     (filters["hasReservation"] == null || place.hasReservation == filters["hasReservation"])) {
 
-                  return _buildItem(
+                  return  _buildItem(
                         () {
                       Navigator.push(
                         context,
@@ -162,11 +167,11 @@ class HomePageState extends State<HomePage> {
                   );
                 }
               } else if (filters["type"] == 3) {
+
+
+
                 Set<String> InMalls=Set<String>() ;
                 if(place.hasCinema) InMalls.add('سينما'); if(place.hasFoodCourt) InMalls.add('منطقة مطاعم'); if(place.hasPlayArea) InMalls.add('منطقة ألعاب'); if(place.hasSupermarket)InMalls.add('سوبرماركت');
-
-
-
 
                 if(place.category =='مراكز تسوق' &&
                     (filters["typeEntInMallsNames"].isEmpty ||
@@ -208,6 +213,54 @@ class HomePageState extends State<HomePage> {
       );
     }
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  bool checkFilterNoResults(Map<String, dynamic>? filters){
+
+    if (FilterValue==false){return false;}
+
+if (filters!=null) {
+  if (filters["type"] == 1 && (selectedCategory == 'مطاعم' || selectedCategory == 'مراكز تسوق')) {
+return true;
+  }else   if (filters["type"] == 2 && (selectedCategory == 'فعاليات و ترفيه' || selectedCategory == 'مراكز تسوق')) {
+    return true;
+  }else if (filters["type"] == 3 && (selectedCategory == 'فعاليات و ترفيه' || selectedCategory ==  'مطاعم')) {
+    return true;
+  }
+
+
+
+
+}
+  return false;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -491,13 +544,12 @@ class HomePageState extends State<HomePage> {
 
 
 
-                          // Show FilterPage and wait for result
                           final result = await Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => FilterPage()),
                           );
 
-                          // Check if filters were returned
+
 
 
                           setState(() {
@@ -508,6 +560,7 @@ class HomePageState extends State<HomePage> {
                               dynamic filtertype = result["type"];
                               if (filtertype == 1) {
                                 FilteredItems = FilterForAtt;
+
                               } else if (filtertype == 2) {
                                 FilteredItems = FilterForRes;
                               } else if (filtertype == 3) {
@@ -516,7 +569,7 @@ class HomePageState extends State<HomePage> {
 
                               print(FilterValue);
                               print(filters);
-
+                            print(filtertype);
 
                             }else if (result == null){ FilterValue = false; print(result); }
 
@@ -607,15 +660,20 @@ class HomePageState extends State<HomePage> {
                       switch (index) {
                         case 0:
                           selectedCategory = 'الكل';
+
+
                           break;
                         case 1:
                           selectedCategory = 'فعاليات و ترفيه';
+
                           break;
                         case 2:
                           selectedCategory = 'مطاعم';
+
                           break;
                         case 3:
                           selectedCategory = 'مراكز تسوق';
+
                           break;
                       }
                     });
@@ -650,9 +708,9 @@ class HomePageState extends State<HomePage> {
                       : selectedCategory == 'مراكز تسوق'
                       ? malls
                       : allData.cast<placePage>()
-                      :name.isEmpty && FilterValue == true
+                 :name.isEmpty && FilterValue == true
                       ? selectedCategory == 'فعاليات و ترفيه'
-                      ? FilterForAtt
+                      ?FilterForAtt
                       : selectedCategory == 'مطاعم'
                       ? FilterForRes
                       : selectedCategory == 'مراكز تسوق'

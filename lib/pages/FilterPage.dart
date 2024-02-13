@@ -15,8 +15,12 @@ class FilterPage extends StatefulWidget {
   State<FilterPage> createState() => _FilterPageState();
 }
 
+
+
 class _FilterPageState extends State<FilterPage>  {
 
+
+  final GlobalKey<CustomFormState> _formKey = GlobalKey();
 
 
 
@@ -44,8 +48,10 @@ class _FilterPageState extends State<FilterPage>  {
             padding: const EdgeInsets.only(right: 20.0),
             child: GestureDetector(
               onTap: () {
-                CustomFormState().resetFilterState;
 
+                _formKey.currentState?.resetFilterState();
+
+                print("called reset");
                 Navigator.pop(context, null);
               },
               child: Container(
@@ -72,8 +78,12 @@ class _FilterPageState extends State<FilterPage>  {
               ),
             ],
           ),
-          CustomForm(),
-        ],
+          CustomForm(
+            key: _formKey,
+            resetFilterStateCallback: () {
+              _formKey.currentState?.resetFilterState();
+            },
+          ),        ],
       ),
     );
   }
@@ -92,19 +102,16 @@ class _FilterPageState extends State<FilterPage>  {
 
 
 class CustomForm extends StatefulWidget {
-  const CustomForm({Key? key});
+  const CustomForm({Key? key, required this.resetFilterStateCallback}) : super(key: key);
+
+  final VoidCallback resetFilterStateCallback;
 
   @override
-  CustomFormState createState() {
-    return CustomFormState();
-  }
+  CustomFormState createState() => CustomFormState();
 }
 
-
-
-
-
 class CustomFormState extends State<CustomForm> {
+
   final _formKey = GlobalKey<FormState>();
    int type = 0;
   String? type1;
@@ -381,6 +388,7 @@ void initState() {
 
 
  void resetFilterState() {
+   print("insiiiideee reset");
     setState(() {
       switch (type) {
         case 1:
@@ -655,7 +663,7 @@ void initState() {
                                   INorOUT = 'لا';
                                 });
                               },
-                              text: 'خارجي',
+                              text: 'داخلي',
                               value: INorOUT == 'لا',
                             ),
                             const SizedBox(width: 10),
@@ -665,7 +673,7 @@ void initState() {
                                   INorOUT = 'نعم';
                                 });
                               },
-                              text: 'داخلي',
+                              text: 'خارجي',
                               value: INorOUT == 'نعم',
                             ),
                           ],
@@ -1100,7 +1108,7 @@ void initState() {
                                   INorOUT = 'لا';
                                 });
                               },
-                              text: 'خارجي',
+                              text: 'داخلي',
                               value: INorOUT == 'لا',
                             ),
                             const SizedBox(width: 10),
@@ -1110,7 +1118,7 @@ void initState() {
                                   INorOUT = 'نعم';
                                 });
                               },
-                              text: 'داخلي',
+                              text: 'خارجي',
                               value: INorOUT == 'نعم',
                             ),
                           ],
