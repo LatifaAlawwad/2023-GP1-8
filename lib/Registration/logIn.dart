@@ -120,7 +120,7 @@ class _LogInState extends State<LogIn> {
                                 final emailPattern = RegExp(r'^[a-z0-9A-Z_.-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,3}$');
 
                                 if (!emailPattern.hasMatch(value)) {
-                                  return 'أدخل البريد الإلكتروني بالشكل الصحيح (example@example.com)';
+                                  return 'يجب أن يكون البريد الالكتروني بالشكل الصحيح (example@example.com)';
                                 }
 
                                 return null;
@@ -147,7 +147,7 @@ class _LogInState extends State<LogIn> {
                                 ),
                                 labelText: "كلمة المرور:",
                                 labelStyle: TextStyle(fontFamily: "Tajawal-m"),
-                                hintText: "كلمة المرور يجب ان تكون من 8 خانات وتشمل على حرف كبير ورمز مميز",
+                                hintText: "كلمة المرور يجب ان تكون من 8 خانات وتشمل على حرف كبير ورمز مميز ورقم",
                                 hintStyle: TextStyle(fontSize: 10),
                                 fillColor: Color(0xFFdff1e0),
                                 filled: true,
