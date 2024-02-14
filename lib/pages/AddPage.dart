@@ -217,6 +217,7 @@ class CustomFormState extends State<CustomForm> {
     'مخبوزات',
     'عالمي',
     'صحي',
+    'قهوة وحلى',
   ];
 
 
@@ -2852,16 +2853,21 @@ class CustomFormState extends State<CustomForm> {
                               city == null ||
                               city.isEmpty ||
                               address!.isEmpty ||
-                             // WebLink.text.isEmpty ||
-                              description.text.isEmpty||
+                              // WebLink.text.isEmpty ||
+                              description.text.isEmpty ||
                               startPosition?.geometry?.location?.lat == null ||
                               startPosition?.geometry?.location?.lng == null) {
                             showInvalidFieldsDialog(context);
                           } else {
+                            double? latitude = startPosition?.geometry?.location?.lat; // Get latitude
+                            double? longitude = startPosition?.geometry?.location?.lng; // Get longitude
+                            String? placeNameValue = placeName.text; // Get the value of placeName
                             // Check for duplicate place before adding
-                            await checkForDuplicatePlace();
+                            await checkForDuplicatePlace(latitude: latitude, longitude: longitude, placeName: placeNameValue);
                           }
                         },
+
+
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
                               const Color(0xFF6db881)),
@@ -2896,10 +2902,11 @@ class CustomFormState extends State<CustomForm> {
     );
   }
 
-  Future<void> checkForDuplicatePlace() async {
+  Future<void> checkForDuplicatePlace({double? latitude, double? longitude, String? placeName}) async {
     final firestore = FirebaseFirestore.instance;
     final duplicatePlaceQuery = await firestore
         .collection('ApprovedPlaces')
+        .where('placeName', isEqualTo: placeName)
         .where('latitude', isEqualTo:  startPosition?.geometry?.location?.lat)
         .where('longitude', isEqualTo: startPosition?.geometry?.location?.lng)
         .get();

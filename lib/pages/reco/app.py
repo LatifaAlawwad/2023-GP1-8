@@ -61,6 +61,7 @@ def model(id):
     return json.dumps(recommend_item)
 
 
+
 @app.route('/api', methods=['GET'])
 def get_recommendations():
     place_id = str(request.args['query'])
@@ -68,8 +69,11 @@ def get_recommendations():
     return recommend_list
 
 
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
+
 
 
 

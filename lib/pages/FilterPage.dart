@@ -143,16 +143,17 @@ class CustomFormState extends State<CustomForm> {
     'مخبوزات',
     'عالمي',
     'صحي',
+    'قهوة وحلى',
   ];
 
   List<bool> checkedOptionsatt = [false, false, false,false,false,false,false];
   List<bool> checkedOptionsmalls = [false, false, false,false];
-  List<bool> checkedOptionsres = [false, false, false,false,false,false,false,false,false,false,false,false,false,false];
+  List<bool> checkedOptionsres = [false, false, false,false,false,false,false,false,false,false,false,false,false,false,false];
 
 
   List<bool> ocheckedOptionsatt = [false, false, false,false,false,false,false];
   List<bool> ocheckedOptionsmalls = [false, false, false,false];
-  List<bool> ocheckedOptionsres = [false, false, false,false,false,false,false,false,false,false,false,false,false,false];
+  List<bool> ocheckedOptionsres = [false, false, false,false,false,false,false,false,false,false,false,false,false,false,false];
 
   List<String> isThereInMalls=['سينما','منطقة ألعاب','منطقة مطاعم','سوبرماركت']  ;
   List<String> typeEntOptions = [
