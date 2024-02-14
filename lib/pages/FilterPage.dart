@@ -696,36 +696,24 @@ void initState() {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             CustomRadioButton(
-                              onTap: () {
-                                setState(() {
-                                  // If the current option is selected, undo the selection
-                                  if (hasReservation == false) {
-                                    hasReservation = null;
-                                  } else {
+                                onTap: () {
+                                  setState(() {
                                     hasReservation = false;
-                                  }
-                                });
-                              },
-                              text: 'يتطلب حجز',
-                              value: hasReservation == false,
-                            ),
+                                  });
+                                },
+                                text: 'لا يتطلب حجز',
+                                value: !(hasReservation ?? true)),
                             const SizedBox(
                               width: 10,
                             ),
                             CustomRadioButton(
-                              onTap: () {
-                                setState(() {
-                                  // If the current option is selected, undo the selection
-                                  if (hasReservation == true) {
-                                    hasReservation = null;
-                                  } else {
+                                onTap: () {
+                                  setState(() {
                                     hasReservation = true;
-                                  }
-                                });
-                              },
-                              text: 'لا يتطلب حجز',
-                              value: hasReservation == true,
-                            ),
+                                  });
+                                },
+                                text: 'يتطلب حجز',
+                                value: hasReservation ?? false),
                             const SizedBox(
                               width: 10,
                             ),
@@ -1029,36 +1017,24 @@ void initState() {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             CustomRadioButton(
-                              onTap: () {
-                                setState(() {
-                                  // If the current option is selected, undo the selection
-                                  if (hasReservation == false) {
-                                    hasReservation = null;
-                                  } else {
+                                onTap: () {
+                                  setState(() {
                                     hasReservation = false;
-                                  }
-                                });
-                              },
-                              text: 'يتطلب حجز',
-                              value: hasReservation == false,
-                            ),
+                                  });
+                                },
+                                text: 'لا يتطلب حجز',
+                                value: !(hasReservation ?? true)),
                             const SizedBox(
                               width: 10,
                             ),
                             CustomRadioButton(
-                              onTap: () {
-                                setState(() {
-                                  // If the current option is selected, undo the selection
-                                  if (hasReservation == true) {
-                                    hasReservation = null;
-                                  } else {
+                                onTap: () {
+                                  setState(() {
                                     hasReservation = true;
-                                  }
-                                });
-                              },
-                              text: 'لا يتطلب حجز',
-                              value: hasReservation == true,
-                            ),
+                                  });
+                                },
+                                text: 'يتطلب حجز',
+                                value: hasReservation ?? false),
                             const SizedBox(
                               width: 10,
                             ),

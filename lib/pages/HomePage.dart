@@ -100,7 +100,94 @@ class HomePageState extends State<HomePage> {
 
 
   Widget handleListItems(List<placePage> listItem, Map<String, dynamic>? filters) {
-    if (listItem.isEmpty || checkFilterNoResults(filters) ) {
+    List<Widget> filteredItems = [];
+
+    for (int index = 0; index < listItem.length; index++) {
+      if (listItem[index] is placePage) {
+        final place = listItem[index] as placePage;
+
+        if (place.city == widget.cityName) {
+          if (filters != null && FilterValue == true) {
+            if (filters["type"] == 1) {
+              if (place.category =='فعاليات و ترفيه' &&
+                  (filters["typeEntNames"].isEmpty || filters["typeEntNames"].contains(place.typeEnt)) &&
+                  (filters["INorOUT"] == '' || place.INorOUT == filters["INorOUT"]) &&
+                  (filters["hasReservation"] == null || place.hasReservation == filters["hasReservation"])) {
+                filteredItems.add(_buildItem(
+                      () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => placeDetailsPage(place: listItem[index]),
+                      ),
+                    );
+                  },
+                  place,
+                  context,
+                ));
+              }
+            } else if (filters["type"] == 2) {
+              if (place.category  == 'مطاعم' &&
+                  (filters["cusNames"].isEmpty|| filters["cusNames"].any((name) => place.cuisine.contains(name))) &&
+                  (filters["price"].isEmpty||filters["price"].contains(place.priceRange)) &&
+                  (filters["serves"].isEmpty||filters["serves"].any((value)=> place.serves.contains(value))) &&
+                  (filters["atmosphere"].isEmpty||filters["atmosphere"].any((value)=> place.atmosphere.contains(value)))
+                  && (filters["hasReservation"] == null || place.hasReservation == filters["hasReservation"])) {
+                filteredItems.add(_buildItem(
+                      () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => placeDetailsPage(place: listItem[index]),
+                      ),
+                    );
+                  },
+                  place,
+                  context,
+                ));
+              }
+            } else if (filters["type"] == 3) {
+              Set<String> InMalls=Set<String>() ;
+              if(place.hasCinema) InMalls.add('سينما'); if(place.hasFoodCourt) InMalls.add('منطقة مطاعم'); if(place.hasPlayArea) InMalls.add('منطقة ألعاب'); if(place.hasSupermarket)InMalls.add('سوبرماركت');
+
+              if(place.category =='مراكز تسوق' &&
+                  (filters["typeEntInMallsNames"].isEmpty ||
+                      filters["typeEntInMallsNames"].any((name) => InMalls.contains(name)))
+                  && (filters["INorOUT"] == '' || place.INorOUT == filters["INorOUT"] ) &&
+                  (filters["shopType"].isEmpty ||filters["shopType"].any((shoptype)=> place.shopType.contains(shoptype)))) {
+                filteredItems.add(_buildItem(
+                      () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => placeDetailsPage(place: listItem[index]),
+                      ),
+                    );
+                  },
+                  place,
+                  context,
+                ));
+              }
+            }
+          } else {
+            filteredItems.add(_buildItem(
+                  () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => placeDetailsPage(place: listItem[index]),
+                  ),
+                );
+              },
+              place,
+              context,
+            ));
+          }
+        }
+      }
+    }
+
+    if (filteredItems.isEmpty) {
       return Center(
         child: Text(
           "لم يتم العثور على نتائج",
@@ -112,103 +199,12 @@ class HomePageState extends State<HomePage> {
       );
     } else {
       return ListView.separated(
-        itemCount: listItem.length,
+        itemCount: filteredItems.length,
         separatorBuilder: (BuildContext context, int index) {
-          return SizedBox(height: 10);
+          return SizedBox(height: 0);
         },
         itemBuilder: (BuildContext context, int index) {
-
-          if (listItem[index] is placePage) {
-
-            final place = listItem[index] as placePage;
-
-            if (place.city == widget.cityName){
-
-            if (filters != null && FilterValue == true) {
-
-              if (filters["type"] == 1) {
-                if (place.category =='فعاليات و ترفيه' &&
-                    (filters["typeEntNames"].isEmpty || filters["typeEntNames"].contains(place.typeEnt)) &&
-                    (filters["INorOUT"] == '' || place.INorOUT == filters["INorOUT"]) &&
-                    (filters["hasReservation"] == null || place.hasReservation == filters["hasReservation"])) {
-
-                  return  _buildItem(
-                        () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => placeDetailsPage(place: listItem[index]),
-                        ),
-                      );
-                    },
-                    place,
-                    context,
-                  );
-                }
-              } else if (filters["type"] == 2) {
-
-                if (place.category  == 'مطاعم' &&
-                    (filters["cusNames"].isEmpty|| filters["cusNames"].any((name) => place.cuisine.contains(name))) &&
-                    (filters["price"].isEmpty||filters["price"].contains(place.priceRange)) &&
-                    (filters["serves"].isEmpty||filters["serves"].any((value)=> place.serves.contains(value))) &&
-                    (filters["atmosphere"].isEmpty||filters["atmosphere"].any((value)=> place.atmosphere.contains(value)))
-                    && (filters["hasReservation"] == null || place.hasReservation == filters["hasReservation"])) {
-                  return _buildItem(
-                        () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => placeDetailsPage(place: listItem[index]),
-                        ),
-                      );
-                    },
-                    place,
-                    context,
-                  );
-                }
-              } else if (filters["type"] == 3) {
-
-
-
-                Set<String> InMalls=Set<String>() ;
-                if(place.hasCinema) InMalls.add('سينما'); if(place.hasFoodCourt) InMalls.add('منطقة مطاعم'); if(place.hasPlayArea) InMalls.add('منطقة ألعاب'); if(place.hasSupermarket)InMalls.add('سوبرماركت');
-
-                if(place.category =='مراكز تسوق' &&
-                    (filters["typeEntInMallsNames"].isEmpty ||
-                        filters["typeEntInMallsNames"].any((name) => InMalls.contains(name)))
-                    && (filters["INorOUT"] == '' || place.INorOUT == filters["INorOUT"] ) &&
-                    (filters["shopType"].isEmpty || place.shopType == filters["shopType"])) {
-                  return _buildItem(
-                        () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => placeDetailsPage(place: listItem[index]),
-                        ),
-                      );
-                    },
-                    place,
-                    context,
-                  );
-                }
-              }
-            } else {
-              // If no filters or FilterValue is false, display the item without filtering
-              return _buildItem(
-                    () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => placeDetailsPage(place: listItem[index]),
-                    ),
-                  );
-                },
-                place,
-                context,
-              );
-            }}
-          }
-          return Container();
+          return filteredItems[index];
         },
       );
     }
