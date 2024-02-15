@@ -72,68 +72,68 @@ class _AddPageState extends State<AddPage> {
       ),
       body: FirebaseAuth.instance.currentUser == null
           ? Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: 20),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 79),
-              child: Text(
-                "عذراً لابد من تسجيل الدخول",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontFamily: "Tajawal-b",
-                  color: Color(0xFF6db881),
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LogIn()),
-                );
-              },
-              style: ButtonStyle(
-                backgroundColor:
-                MaterialStateProperty.all(const Color(0xFF6db881)),
-                padding: MaterialStateProperty.all(
-                  const EdgeInsets.symmetric(
-                      horizontal: 20, vertical: 10),
-                ),
-                shape: MaterialStateProperty.all(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(27),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 20),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 79),
+                    child: Text(
+                      "عذراً لابد من تسجيل الدخول",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontFamily: "Tajawal-b",
+                        color: Color(0xFF6db881),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const LogIn()),
+                      );
+                    },
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(const Color(0xFF6db881)),
+                      padding: MaterialStateProperty.all(
+                        const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                      ),
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(27),
+                        ),
+                      ),
+                    ),
+                    child: const Text(
+                      "تسجيل الدخول",
+                      style: TextStyle(fontSize: 20, fontFamily: "Tajawal-m"),
+                    ),
+                  ),
+                ],
               ),
-              child: const Text(
-                "تسجيل الدخول",
-                style: TextStyle(fontSize: 20, fontFamily: "Tajawal-m"),
-              ),
-            ),
-          ],
-        ),
-      )
+            )
           : Stack(
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              ClipPath(
-                clipper: MyCustomClipper(),
-                child: Container(
-                  height: MediaQuery.of(context).size.height / 2,
-                  color: const Color(0xFF6db881),
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ClipPath(
+                      clipper: MyCustomClipper(),
+                      child: Container(
+                        height: MediaQuery.of(context).size.height / 2,
+                        color: const Color(0xFF6db881),
+                      ),
+                    )
+                  ],
                 ),
-              )
-            ],
-          ),
-          const CustomForm()
-        ],
-      ),
+                const CustomForm()
+              ],
+            ),
     );
   }
 }
@@ -180,7 +180,7 @@ class CustomFormState extends State<CustomForm> {
 
   //for the location
   static final TextEditingController _startSearchFieldController =
-  TextEditingController();
+      TextEditingController();
   late GooglePlace googlePlace;
   List<AutocompletePrediction> predictions = [];
   bool isLoadingPlaces = false;
@@ -191,12 +191,12 @@ class CustomFormState extends State<CustomForm> {
   bool? hasValetServiced;
 
   bool? allowChildren;
-  String isOutdoor="";
+  String isOutdoor = "";
 
   @override
   void initState() {
     super.initState();
-    googlePlace = GooglePlace('AIzaSyCOT8waQ9GpvCUwXotTCZD9kSPfN8JljNk');
+    googlePlace = GooglePlace('AIzaSyCJ3yUvAXaEKXPoo5ngfht4se568rq3mBk');
   }
 
   //for rest
@@ -220,7 +220,6 @@ class CustomFormState extends State<CustomForm> {
     'قهوة وحلى',
   ];
 
-
   List<String> typeEntOptions = [
     'رياضة و مغامرات',
     'فنون',
@@ -234,18 +233,14 @@ class CustomFormState extends State<CustomForm> {
   bool? isTemporary;
   String startDate = '';
   String finishDate = '';
-  String INorOUT='';
-
+  String INorOUT = '';
 
   bool? hasCinema;
   bool? hasPlayArea;
   bool? hasFoodCourt;
   bool? hasSupermarket;
-  String reservationDetails='';
- String typeEnt='';
-
-
-
+  String reservationDetails = '';
+  String typeEnt = '';
 
   void autoCompleteSearch(String value) async {
     setState(() {
@@ -322,7 +317,6 @@ class CustomFormState extends State<CustomForm> {
       'السبت'
     ];
 
-
     showDialog(
       context: context,
       builder: (context) {
@@ -334,24 +328,24 @@ class CustomFormState extends State<CustomForm> {
             ),
             title: const Center(
                 child: Text(
-                  'اختر ساعات العمل',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                )),
+              'اختر ساعات العمل',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            )),
             contentPadding:
-            const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
             content: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: days.map((day) {
                   String openHours = dayss
-                      .where((element) => element['day'] == day)
-                      .isNotEmpty
+                          .where((element) => element['day'] == day)
+                          .isNotEmpty
                       ? dayss[dayss.indexWhere(
                           (element) => element['day'] == day)]['وقت الإفتتاح']
                       : openAt;
                   String closeHours = dayss
-                      .where((element) => element['day'] == day)
-                      .isNotEmpty
+                          .where((element) => element['day'] == day)
+                          .isNotEmpty
                       ? dayss[dayss.indexWhere(
                           (element) => element['day'] == day)]['وقت الإغلاق']
                       : closeAt;
@@ -395,7 +389,7 @@ class CustomFormState extends State<CustomForm> {
                               children: [
                                 Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Transform.scale(
                                       scale: 0.8,
@@ -413,7 +407,7 @@ class CustomFormState extends State<CustomForm> {
                                     ),
                                     const Padding(
                                       padding:
-                                      EdgeInsets.symmetric(horizontal: 10),
+                                          EdgeInsets.symmetric(horizontal: 10),
                                       child: Text('٢٤ ساعة'),
                                     )
                                   ],
@@ -423,11 +417,11 @@ class CustomFormState extends State<CustomForm> {
                                       horizontal: 8, vertical: 5),
                                   child: Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Column(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                              CrossAxisAlignment.center,
                                           children: [
                                             Text(
                                               "وقت الإغلاق",
@@ -444,22 +438,22 @@ class CustomFormState extends State<CustomForm> {
                                                   title: 'وقت الإغلاق - ${day}',
                                                   titleStyle: const TextStyle(
                                                       fontWeight:
-                                                      FontWeight.bold,
+                                                          FontWeight.bold,
                                                       fontSize: 15,
                                                       color: Color(0xFF6db881)),
                                                   onChange: (value) {
                                                     String newValue =
-                                                    DateFormat('hh:mm a')
-                                                        .format(value!);
+                                                        DateFormat('hh:mm a')
+                                                            .format(value!);
                                                     // setState(() {
                                                     //   closeAt = newValue;
                                                     // });
                                                     if (userChecked
                                                         .contains(
-                                                        day)) if (dayss
+                                                            day)) if (dayss
                                                         .where((element) =>
-                                                    element['day'] ==
-                                                        day)
+                                                            element['day'] ==
+                                                            day)
                                                         .isEmpty) {
                                                       dayss.add({
                                                         "day": day,
@@ -468,33 +462,33 @@ class CustomFormState extends State<CustomForm> {
                                                       });
                                                     } else {
                                                       var prevDay = dayss[
-                                                      dayss.indexWhere(
+                                                          dayss.indexWhere(
                                                               (element) =>
-                                                          element[
-                                                          'day'] ==
-                                                              day)];
+                                                                  element[
+                                                                      'day'] ==
+                                                                  day)];
                                                       dayss.removeWhere(
-                                                              (element) =>
-                                                          element['day'] ==
+                                                          (element) =>
+                                                              element['day'] ==
                                                               day);
                                                       dayss.add({
                                                         "day": day,
                                                         "وقت الإغلاق": newValue,
                                                         "وقت الإفتتاح": prevDay[
-                                                        "وقت الإفتتاح"]
+                                                            "وقت الإفتتاح"]
                                                       });
                                                     }
                                                     setState(() {});
                                                   },
                                                   buttonWidth: 80,
                                                   titleAlignment:
-                                                  CrossAxisAlignment.center,
+                                                      CrossAxisAlignment.center,
                                                   buttonSingleColor:
-                                                  const Color(0xFF6db881),
+                                                      const Color(0xFF6db881),
                                                   displayButtonIcon: false,
                                                   buttonTextStyle:
-                                                  const TextStyle(
-                                                      fontSize: 17),
+                                                      const TextStyle(
+                                                          fontSize: 17),
                                                   buttonText: 'حفظ',
                                                   use24hFormat: false,
                                                   minuteInterval: 15,
@@ -502,9 +496,9 @@ class CustomFormState extends State<CustomForm> {
                                                     minutes: 0,
                                                   ),
                                                   pickerTextStyle:
-                                                  const TextStyle(
-                                                      fontSize: 17,
-                                                      color: Colors.black),
+                                                      const TextStyle(
+                                                          fontSize: 17,
+                                                          color: Colors.black),
                                                 ).show(context);
                                               },
                                               child: Container(
@@ -517,16 +511,16 @@ class CustomFormState extends State<CustomForm> {
                                                     )),
                                                 child: Text(
                                                   dayss
-                                                      .where((element) =>
-                                                  element['day'] ==
-                                                      day)
-                                                      .isNotEmpty
+                                                          .where((element) =>
+                                                              element['day'] ==
+                                                              day)
+                                                          .isNotEmpty
                                                       ? dayss[dayss.indexWhere(
-                                                          (element) =>
-                                                      element[
-                                                      'day'] ==
-                                                          day)]
-                                                  ['وقت الإغلاق']
+                                                              (element) =>
+                                                                  element[
+                                                                      'day'] ==
+                                                                  day)]
+                                                          ['وقت الإغلاق']
                                                       : closeAt,
                                                   style: const TextStyle(
                                                       fontSize: 25),
@@ -536,7 +530,7 @@ class CustomFormState extends State<CustomForm> {
                                           ]),
                                       Column(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                              CrossAxisAlignment.center,
                                           children: [
                                             Text(
                                               "وقت الإفتتاح",
@@ -551,25 +545,25 @@ class CustomFormState extends State<CustomForm> {
                                               onTap: () {
                                                 BottomPicker.time(
                                                   title:
-                                                  'وقت الإفتتاح - ${day}',
+                                                      'وقت الإفتتاح - ${day}',
                                                   titleStyle: const TextStyle(
                                                       fontWeight:
-                                                      FontWeight.bold,
+                                                          FontWeight.bold,
                                                       fontSize: 15,
                                                       color: Color(0xFF6db881)),
                                                   onChange: (value) {
                                                     String newValue =
-                                                    DateFormat('hh:mm a')
-                                                        .format(value!);
+                                                        DateFormat('hh:mm a')
+                                                            .format(value!);
                                                     // setState(() {
                                                     //   openAt = newValue;
                                                     // });
                                                     if (userChecked
                                                         .contains(
-                                                        day)) if (dayss
+                                                            day)) if (dayss
                                                         .where((element) =>
-                                                    element['day'] ==
-                                                        day)
+                                                            element['day'] ==
+                                                            day)
                                                         .isEmpty) {
                                                       dayss.add({
                                                         "day": day,
@@ -578,19 +572,19 @@ class CustomFormState extends State<CustomForm> {
                                                       });
                                                     } else {
                                                       var prevDay = dayss[
-                                                      dayss.indexWhere(
+                                                          dayss.indexWhere(
                                                               (element) =>
-                                                          element[
-                                                          'day'] ==
-                                                              day)];
+                                                                  element[
+                                                                      'day'] ==
+                                                                  day)];
                                                       dayss.removeWhere(
-                                                              (element) =>
-                                                          element['day'] ==
+                                                          (element) =>
+                                                              element['day'] ==
                                                               day);
                                                       dayss.add({
                                                         "day": day,
                                                         "وقت الإغلاق": prevDay[
-                                                        "وقت الإغلاق"],
+                                                            "وقت الإغلاق"],
                                                         "وقت الإفتتاح": newValue
                                                       });
                                                     }
@@ -601,9 +595,9 @@ class CustomFormState extends State<CustomForm> {
                                                   },
                                                   buttonWidth: 80,
                                                   titleAlignment:
-                                                  CrossAxisAlignment.center,
+                                                      CrossAxisAlignment.center,
                                                   buttonSingleColor:
-                                                  const Color(0xFF6db881),
+                                                      const Color(0xFF6db881),
                                                   displayButtonIcon: false,
                                                   buttonText: 'حفظ',
                                                   use24hFormat: false,
@@ -623,16 +617,16 @@ class CustomFormState extends State<CustomForm> {
                                                     )),
                                                 child: Text(
                                                   dayss
-                                                      .where((element) =>
-                                                  element['day'] ==
-                                                      day)
-                                                      .isNotEmpty
+                                                          .where((element) =>
+                                                              element['day'] ==
+                                                              day)
+                                                          .isNotEmpty
                                                       ? dayss[dayss.indexWhere(
-                                                          (element) =>
-                                                      element[
-                                                      'day'] ==
-                                                          day)]
-                                                  ['وقت الإفتتاح']
+                                                              (element) =>
+                                                                  element[
+                                                                      'day'] ==
+                                                                  day)]
+                                                          ['وقت الإفتتاح']
                                                       : openAt,
                                                   style: const TextStyle(
                                                       fontSize: 25),
@@ -737,7 +731,7 @@ class CustomFormState extends State<CustomForm> {
               return AlertDialog(
                 title: const Text('خطأ'),
                 content:
-                const Text('تاريخ الانتهاء يجب أن يكون بعد تاريخ البدء'),
+                    const Text('تاريخ الانتهاء يجب أن يكون بعد تاريخ البدء'),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
@@ -758,7 +752,6 @@ class CustomFormState extends State<CustomForm> {
       }
     }
   }
-
 
   bool? hasReservation;
   List<String> servesOptions = ['فطور', 'غداء', 'عشاء'];
@@ -846,7 +839,10 @@ class CustomFormState extends State<CustomForm> {
             var uuid = const Uuid();
             place_id = uuid.v4();
             if (type1 == 'فعاليات و ترفيه') {
-              await FirebaseFirestore.instance.collection('PendingPlaces').doc(place_id).set({
+              await FirebaseFirestore.instance
+                  .collection('PendingPlaces')
+                  .doc(place_id)
+                  .set({
                 'place_id': place_id,
                 'User_id': userId,
                 'placeName': placeName.text,
@@ -861,15 +857,14 @@ class CustomFormState extends State<CustomForm> {
                 "hasReservation": hasReservation,
                 'isTemporary': isTemporary,
                 'WebLink': WebLink.text,
-
                 'startDate': startDate,
                 'finishDate': finishDate,
                 'latitude': startPosition?.geometry?.location?.lat,
                 'longitude': startPosition?.geometry?.location?.lng,
                 'reservationDetails': reservationDetails,
-                'typeEnt':typeEnt,
+                'typeEnt': typeEnt,
               });
-             /* await FirebaseFirestore.instance
+              /* await FirebaseFirestore.instance
                   .collection('users')
                   .doc(userId)
                   .update({
@@ -879,7 +874,10 @@ class CustomFormState extends State<CustomForm> {
                 HomePageState.isDownloadedData = false;
               });
             } else if (type1 == 'مطاعم') {
-              await FirebaseFirestore.instance.collection('PendingPlaces').doc(place_id).set({
+              await FirebaseFirestore.instance
+                  .collection('PendingPlaces')
+                  .doc(place_id)
+                  .set({
                 'place_id': place_id,
                 'User_id': userId,
                 'placeName': placeName.text,
@@ -899,7 +897,7 @@ class CustomFormState extends State<CustomForm> {
                 'latitude': startPosition?.geometry?.location?.lat,
                 'longitude': startPosition?.geometry?.location?.lng,
                 'allowChildren': allowChildren,
-                'reservationDetails':reservationDetails,
+                'reservationDetails': reservationDetails,
               });
               /*await FirebaseFirestore.instance
                   .collection('users')
@@ -911,7 +909,10 @@ class CustomFormState extends State<CustomForm> {
                 HomePageState.isDownloadedData = false;
               });
             } else if (type1 == 'مراكز تسوق') {
-              await FirebaseFirestore.instance.collection('PendingPlaces').doc(place_id).set({
+              await FirebaseFirestore.instance
+                  .collection('PendingPlaces')
+                  .doc(place_id)
+                  .set({
                 'place_id': place_id,
                 'User_id': userId,
                 'placeName': placeName.text,
@@ -930,7 +931,7 @@ class CustomFormState extends State<CustomForm> {
                 'hasSupermarket': hasSupermarket,
                 'latitude': startPosition?.geometry?.location?.lat,
                 'longitude': startPosition?.geometry?.location?.lng,
-               'shopType':shopType,
+                'shopType': shopType,
               });
               /*await FirebaseFirestore.instance
                   .collection('users')
@@ -1030,16 +1031,18 @@ class CustomFormState extends State<CustomForm> {
                       style: TextStyle(
                         fontSize: 18.0,
                         fontFamily: "Tajawal-b",
-                        color: Colors.black,  // Set the color for the non-red part of the text
+                        color: Colors
+                            .black, // Set the color for the non-red part of the text
                       ),
                       children: [
                         TextSpan(
                           text: ':اسم المكان',
                         ),
                         TextSpan(
-                          text: ' *',  // Added red asterisk
+                          text: ' *', // Added red asterisk
                           style: TextStyle(
-                            color: Colors.red,  // Set the color for the red asterisk
+                            color: Colors
+                                .red, // Set the color for the red asterisk
                           ),
                         ),
                       ],
@@ -1056,12 +1059,14 @@ class CustomFormState extends State<CustomForm> {
                     cursorColor: const Color(0xFF6db881),
                     decoration: InputDecoration(
                       filled: true,
-                      contentPadding: EdgeInsets.only(top: 0, bottom: 0, right: 10, left: 10),
+                      contentPadding: EdgeInsets.only(
+                          top: 0, bottom: 0, right: 10, left: 10),
                       fillColor: Colors.white,
                       hintText: 'اسم المكان',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(color: Color(0xFF6db881), width: 1),
+                        borderSide:
+                            BorderSide(color: Color(0xFF6db881), width: 1),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -1098,16 +1103,18 @@ class CustomFormState extends State<CustomForm> {
                       style: TextStyle(
                         fontSize: 18.0,
                         fontFamily: "Tajawal-b",
-                        color: Colors.black,  // Set the color for the non-red part of the text
+                        color: Colors
+                            .black, // Set the color for the non-red part of the text
                       ),
                       children: [
                         TextSpan(
                           text: ':تصنيف المكان',
                         ),
                         TextSpan(
-                          text: ' *',  // Added red asterisk
+                          text: ' *', // Added red asterisk
                           style: TextStyle(
-                            color: Colors.red,  // Set the color for the red asterisk
+                            color: Colors
+                                .red, // Set the color for the red asterisk
                           ),
                         ),
                       ],
@@ -1134,7 +1141,8 @@ class CustomFormState extends State<CustomForm> {
                           Icons.arrow_drop_down, // Set your desired icon
                           color: Color(0xFF6db881),
                         ),
-                        contentPadding: EdgeInsets.only(top: 15, bottom: 15, right: 10, left: 10),
+                        contentPadding: EdgeInsets.only(
+                            top: 15, bottom: 15, right: 10, left: 10),
                       ),
                       iconSize: 0,
                       hint: const Align(
@@ -1210,16 +1218,18 @@ class CustomFormState extends State<CustomForm> {
                       style: TextStyle(
                         fontSize: 18.0,
                         fontFamily: "Tajawal-b",
-                        color: Colors.black,  // Set the color for the non-red part of the text
+                        color: Colors
+                            .black, // Set the color for the non-red part of the text
                       ),
                       children: [
                         TextSpan(
                           text: ':المدينة',
                         ),
                         TextSpan(
-                          text: ' *',  // Added red asterisk
+                          text: ' *', // Added red asterisk
                           style: TextStyle(
-                            color: Colors.red,  // Set the color for the red asterisk
+                            color: Colors
+                                .red, // Set the color for the red asterisk
                           ),
                         ),
                       ],
@@ -1249,9 +1259,9 @@ class CustomFormState extends State<CustomForm> {
                       }).toList(),
                       onChanged: (_selectedValue) async {
                         var tempCity = await cities.where((element) =>
-                        (element['name_ar'] == _selectedValue));
+                            (element['name_ar'] == _selectedValue));
                         var tempArea = await areas.where((element) =>
-                        (element['city_id'] == tempCity.first['city_id']));
+                            (element['city_id'] == tempCity.first['city_id']));
                         _AddressKey.currentState?.reset();
                         areasList.clear();
                         areasList.addAll(tempArea);
@@ -1296,16 +1306,18 @@ class CustomFormState extends State<CustomForm> {
                       style: TextStyle(
                         fontSize: 18.0,
                         fontFamily: "Tajawal-b",
-                        color: Colors.black,  // Set the color for the non-red part of the text
+                        color: Colors
+                            .black, // Set the color for the non-red part of the text
                       ),
                       children: [
                         TextSpan(
                           text: ':الحي',
                         ),
                         TextSpan(
-                          text: ' *',  // Added red asterisk
+                          text: ' *', // Added red asterisk
                           style: TextStyle(
-                            color: Colors.red,  // Set the color for the red asterisk
+                            color: Colors
+                                .red, // Set the color for the red asterisk
                           ),
                         ),
                       ],
@@ -1429,7 +1441,7 @@ class CustomFormState extends State<CustomForm> {
                           margin: const EdgeInsets.only(top: 5),
                           decoration: BoxDecoration(
                             borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
+                                const BorderRadius.all(Radius.circular(10)),
                             color: Colors.white,
                             border: Border.all(
                               color: Colors.black54,
@@ -1525,7 +1537,7 @@ class CustomFormState extends State<CustomForm> {
                                 padding: const EdgeInsets.only(top: 8),
                                 child: Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceEvenly,
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Expanded(
                                       child: GestureDetector(
@@ -1537,8 +1549,8 @@ class CustomFormState extends State<CustomForm> {
                                               vertical: 5, horizontal: 7),
                                           decoration: BoxDecoration(
                                             borderRadius:
-                                            const BorderRadius.all(
-                                                Radius.circular(10)),
+                                                const BorderRadius.all(
+                                                    Radius.circular(10)),
                                             color: Colors.white,
                                             border: Border.all(
                                               color: Colors.black54,
@@ -1550,7 +1562,7 @@ class CustomFormState extends State<CustomForm> {
                                               Expanded(
                                                 child: Column(
                                                   mainAxisSize:
-                                                  MainAxisSize.min,
+                                                      MainAxisSize.min,
                                                   children: [
                                                     const Padding(
                                                       padding: EdgeInsets.only(
@@ -1560,7 +1572,7 @@ class CustomFormState extends State<CustomForm> {
                                                         style: TextStyle(
                                                             fontSize: 14.0,
                                                             fontFamily:
-                                                            'Tajawal-m'),
+                                                                'Tajawal-m'),
                                                       ),
                                                     ),
                                                     Text(
@@ -1570,12 +1582,12 @@ class CustomFormState extends State<CustomForm> {
                                                       style: TextStyle(
                                                           fontSize: 13.0,
                                                           color: finishDate !=
-                                                              ''
+                                                                  ''
                                                               ? const Color(
-                                                              0xFF6db881)
+                                                                  0xFF6db881)
                                                               : Colors.red,
                                                           fontFamily:
-                                                          'Tajawal-m'),
+                                                              'Tajawal-m'),
                                                     ),
                                                   ],
                                                 ),
@@ -1597,8 +1609,8 @@ class CustomFormState extends State<CustomForm> {
                                               vertical: 5, horizontal: 7),
                                           decoration: BoxDecoration(
                                             borderRadius:
-                                            const BorderRadius.all(
-                                                Radius.circular(10)),
+                                                const BorderRadius.all(
+                                                    Radius.circular(10)),
                                             color: Colors.white,
                                             border: Border.all(
                                               color: Colors.black54,
@@ -1610,7 +1622,7 @@ class CustomFormState extends State<CustomForm> {
                                               Expanded(
                                                 child: Column(
                                                   mainAxisSize:
-                                                  MainAxisSize.min,
+                                                      MainAxisSize.min,
                                                   children: [
                                                     const Padding(
                                                       padding: EdgeInsets.only(
@@ -1620,7 +1632,7 @@ class CustomFormState extends State<CustomForm> {
                                                         style: TextStyle(
                                                             fontSize: 14.0,
                                                             fontFamily:
-                                                            'Tajawal-m'),
+                                                                'Tajawal-m'),
                                                       ),
                                                     ),
                                                     Text(
@@ -1631,10 +1643,10 @@ class CustomFormState extends State<CustomForm> {
                                                           fontSize: 13.0,
                                                           color: startDate != ''
                                                               ? const Color(
-                                                              0xFF6db881)
+                                                                  0xFF6db881)
                                                               : Colors.red,
                                                           fontFamily:
-                                                          'Tajawal-m'),
+                                                              'Tajawal-m'),
                                                     ),
                                                   ],
                                                 ),
@@ -1693,8 +1705,6 @@ class CustomFormState extends State<CustomForm> {
                                 ),
                               ],
                             )
-
-
                           ],
                         ),
                         const SizedBox(height: 20),
@@ -1734,40 +1744,44 @@ class CustomFormState extends State<CustomForm> {
                             ),
                           ],
                         ),
-
-                          if (hasReservation == true)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10),
-                              child: TextFormField(
-                                textAlign: TextAlign.end,
-                                autovalidateMode: AutovalidateMode.onUserInteraction,
-                                cursorColor: const Color(0xFF6db881),
-                                onChanged: (value) {
-                                  // Update the reservationDetails variable when text changes
-                                  reservationDetails = value;
-                                },
-                                decoration: const InputDecoration(
-                                  filled: true,
-                                  contentPadding: EdgeInsets.only(top: 0, bottom: 0, right: 10, left: 10),
-                                  fillColor: Colors.white,
-                                  hintText: 'تفاصيل طريقة الحجز و رقم للتواصل إن وجد',
-                                  hintStyle: TextStyle(
-                                    color: Colors.black45,
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                                    borderSide: BorderSide(color: Color(0xFF6db881), width: 1),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                                    borderSide: BorderSide(
-                                      color: Color(0xFF6db881),
-                                    ),
+                        if (hasReservation == true)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: TextFormField(
+                              textAlign: TextAlign.end,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              cursorColor: const Color(0xFF6db881),
+                              onChanged: (value) {
+                                // Update the reservationDetails variable when text changes
+                                reservationDetails = value;
+                              },
+                              decoration: const InputDecoration(
+                                filled: true,
+                                contentPadding: EdgeInsets.only(
+                                    top: 0, bottom: 0, right: 10, left: 10),
+                                fillColor: Colors.white,
+                                hintText:
+                                    'تفاصيل طريقة الحجز و رقم للتواصل إن وجد',
+                                hintStyle: TextStyle(
+                                  color: Colors.black45,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                  borderSide: BorderSide(
+                                      color: Color(0xFF6db881), width: 1),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                  borderSide: BorderSide(
+                                    color: Color(0xFF6db881),
                                   ),
                                 ),
                               ),
                             ),
-
+                          ),
                       ],
                     ),
 
@@ -1788,7 +1802,7 @@ class CustomFormState extends State<CustomForm> {
                           margin: const EdgeInsets.only(top: 10),
                           decoration: BoxDecoration(
                             borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
+                                const BorderRadius.all(Radius.circular(10)),
                             color: Colors.white,
                             border: Border.all(
                               color: Colors.black54,
@@ -1850,7 +1864,7 @@ class CustomFormState extends State<CustomForm> {
                           margin: const EdgeInsets.only(top: 10),
                           decoration: BoxDecoration(
                             borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
+                                const BorderRadius.all(Radius.circular(10)),
                             color: Colors.white,
                             border: Border.all(
                               color: Colors.grey.shade300,
@@ -1887,7 +1901,7 @@ class CustomFormState extends State<CustomForm> {
                                   'اختر نطاق الأسعار',
                                 )),
                             items:
-                            ['مرتفع', 'متوسط', 'منخفض'].map((String value) {
+                                ['مرتفع', 'متوسط', 'منخفض'].map((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
                                 child: Align(
@@ -1955,13 +1969,13 @@ class CustomFormState extends State<CustomForm> {
                                       ),
                                       serves.contains(serve)
                                           ? const Icon(
-                                        Icons.check_rounded,
-                                        size: 16,
-                                        color: Color(0xFF6db881),
-                                      )
+                                              Icons.check_rounded,
+                                              size: 16,
+                                              color: Color(0xFF6db881),
+                                            )
                                           : const SizedBox(
-                                        width: 16,
-                                      ),
+                                              width: 16,
+                                            ),
                                       const SizedBox(
                                         width: 5,
                                       ),
@@ -2006,9 +2020,9 @@ class CustomFormState extends State<CustomForm> {
                                     color: Colors.white,
                                     border: Border.all(
                                       color:
-                                      atmosphere.contains(atmosphereOption)
-                                          ? const Color(0xFF6db881)
-                                          : Colors.black,
+                                          atmosphere.contains(atmosphereOption)
+                                              ? const Color(0xFF6db881)
+                                              : Colors.black,
                                       width: 1,
                                     ),
                                   ),
@@ -2027,13 +2041,13 @@ class CustomFormState extends State<CustomForm> {
                                       ),
                                       atmosphere.contains(atmosphereOption)
                                           ? const Icon(
-                                        Icons.check_rounded,
-                                        size: 16,
-                                        color: Color(0xFF6db881),
-                                      )
+                                              Icons.check_rounded,
+                                              size: 16,
+                                              color: Color(0xFF6db881),
+                                            )
                                           : const SizedBox(
-                                        width: 16,
-                                      ),
+                                              width: 16,
+                                            ),
                                       const SizedBox(
                                         width: 5,
                                       ),
@@ -2086,7 +2100,8 @@ class CustomFormState extends State<CustomForm> {
                               padding: const EdgeInsets.only(top: 10),
                               child: TextFormField(
                                 textAlign: TextAlign.end,
-                                autovalidateMode: AutovalidateMode.onUserInteraction,
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
                                 cursorColor: const Color(0xFF6db881),
                                 onChanged: (value) {
                                   // Update the reservationDetails variable when text changes
@@ -2094,18 +2109,23 @@ class CustomFormState extends State<CustomForm> {
                                 },
                                 decoration: const InputDecoration(
                                   filled: true,
-                                  contentPadding: EdgeInsets.only(top: 0, bottom: 0, right: 10, left: 10),
+                                  contentPadding: EdgeInsets.only(
+                                      top: 0, bottom: 0, right: 10, left: 10),
                                   fillColor: Colors.white,
-                                  hintText: 'تفاصيل طريقة الحجز و رقم للتواصل إن وجد',
+                                  hintText:
+                                      'تفاصيل طريقة الحجز و رقم للتواصل إن وجد',
                                   hintStyle: TextStyle(
                                     color: Colors.black45,
                                   ),
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                                    borderSide: BorderSide(color: Color(0xFF6db881), width: 1),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                    borderSide: BorderSide(
+                                        color: Color(0xFF6db881), width: 1),
                                   ),
                                   focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
                                     borderSide: BorderSide(
                                       color: Color(0xFF6db881),
                                     ),
@@ -2202,7 +2222,6 @@ class CustomFormState extends State<CustomForm> {
                             ),
                           ],
                         ),
-
                         const SizedBox(height: 20),
                         const Text(
                           'هل يوجد سينما؟',
@@ -2347,16 +2366,15 @@ class CustomFormState extends State<CustomForm> {
                             ),
                           ],
                         ),
-    const SizedBox(height: 20),
-    const Text(
-    'أنواع المحلات',
-    style: TextStyle(
-    fontSize: 20.0,
-    fontFamily: "Tajawal-b",
-    ),
-    ),
-    const SizedBox(height: 10),
-
+                        const SizedBox(height: 20),
+                        const Text(
+                          'أنواع المحلات',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontFamily: "Tajawal-b",
+                          ),
+                        ),
+                        const SizedBox(height: 10),
                         Wrap(
                           spacing: 10,
                           runSpacing: 7,
@@ -2401,13 +2419,13 @@ class CustomFormState extends State<CustomForm> {
                                       ),
                                       shopType.contains(ShopType)
                                           ? const Icon(
-                                        Icons.check_rounded,
-                                        size: 16,
-                                        color: Color(0xFF6db881),
-                                      )
+                                              Icons.check_rounded,
+                                              size: 16,
+                                              color: Color(0xFF6db881),
+                                            )
                                           : const SizedBox(
-                                        width: 16,
-                                      ),
+                                              width: 16,
+                                            ),
                                       const SizedBox(
                                         width: 5,
                                       ),
@@ -2416,9 +2434,10 @@ class CustomFormState extends State<CustomForm> {
                                 ));
                           }).toList(),
                         ),
-],),
+                      ],
+                    ),
 
-    const SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   const Text(
                     'هل توجد خدمة ركن السيارات؟',
                     style: TextStyle(
@@ -2474,7 +2493,8 @@ class CustomFormState extends State<CustomForm> {
                     cursorColor: const Color(0xFF6db881),
                     decoration: const InputDecoration(
                       filled: true,
-                      contentPadding: EdgeInsets.only(top: 0, bottom: 0, right: 10, left: 10),
+                      contentPadding: EdgeInsets.only(
+                          top: 0, bottom: 0, right: 10, left: 10),
                       fillColor: Colors.white,
                       hintText: 'رابط الموقع الالكتروني',
                       hintStyle: TextStyle(
@@ -2482,7 +2502,8 @@ class CustomFormState extends State<CustomForm> {
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(color: Color(0xFF6db881), width: 1),
+                        borderSide:
+                            BorderSide(color: Color(0xFF6db881), width: 1),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -2504,16 +2525,18 @@ class CustomFormState extends State<CustomForm> {
                       style: TextStyle(
                         fontSize: 18.0,
                         fontFamily: "Tajawal-b",
-                        color: Colors.black,  // Set the color for the non-red part of the text
+                        color: Colors
+                            .black, // Set the color for the non-red part of the text
                       ),
                       children: [
                         TextSpan(
                           text: ':الوصف',
                         ),
                         TextSpan(
-                          text: ' *',  // Added red asterisk
+                          text: ' *', // Added red asterisk
                           style: TextStyle(
-                            color: Colors.red,  // Set the color for the red asterisk
+                            color: Colors
+                                .red, // Set the color for the red asterisk
                           ),
                         ),
                       ],
@@ -2529,7 +2552,8 @@ class CustomFormState extends State<CustomForm> {
                     maxLines: null,
                     decoration: InputDecoration(
                       filled: true,
-                      contentPadding: EdgeInsets.only(top: 0, bottom: 0, right: 10, left: 10),
+                      contentPadding: EdgeInsets.only(
+                          top: 0, bottom: 0, right: 10, left: 10),
                       fillColor: Colors.white,
                       hintText: 'وصف المكان',
                       hintStyle: TextStyle(
@@ -2537,7 +2561,8 @@ class CustomFormState extends State<CustomForm> {
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(color: Color(0xFF6db881), width: 1),
+                        borderSide:
+                            BorderSide(color: Color(0xFF6db881), width: 1),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -2572,16 +2597,18 @@ class CustomFormState extends State<CustomForm> {
                       style: TextStyle(
                         fontSize: 18.0,
                         fontFamily: "Tajawal-b",
-                        color: Colors.black,  // Set the color for the non-red part of the text
+                        color: Colors
+                            .black, // Set the color for the non-red part of the text
                       ),
                       children: [
                         TextSpan(
                           text: ':الموقع',
                         ),
                         TextSpan(
-                          text: ' *',  // Added red asterisk
+                          text: ' *', // Added red asterisk
                           style: TextStyle(
-                            color: Colors.red,  // Set the color for the red asterisk
+                            color: Colors
+                                .red, // Set the color for the red asterisk
                           ),
                         ),
                       ],
@@ -2606,7 +2633,7 @@ class CustomFormState extends State<CustomForm> {
                         border: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                             borderSide:
-                            BorderSide(color: Color(0xFF6db881), width: 1)),
+                                BorderSide(color: Color(0xFF6db881), width: 1)),
                         focusedBorder: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                           borderSide: BorderSide(
@@ -2615,33 +2642,33 @@ class CustomFormState extends State<CustomForm> {
                         ),
                         prefixIcon: _startSearchFieldController.text.isNotEmpty
                             ? IconButton(
-                          onPressed: () {
-                            setState(() {
-                              predictions = [];
-                              _startSearchFieldController.clear();
-                            });
-                          },
-                          icon: const Icon(Icons.clear_outlined),
-                        )
+                                onPressed: () {
+                                  setState(() {
+                                    predictions = [];
+                                    _startSearchFieldController.clear();
+                                  });
+                                },
+                                icon: const Icon(Icons.clear_outlined),
+                              )
                             : GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MapView()))
-                                .then((value) => {
-                              print(value),
-                              setState(() {
-                                startPosition = value;
-                                _startSearchFieldController.text =
-                                    value.name;
-                                predictions = [];
-                              })
-                            });
-                          },
-                          child: const Icon(Icons.location_searching,
-                              color: Color(0xFF6db881)),
-                        )),
+                                onTap: () {
+                                  Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => MapView()))
+                                      .then((value) => {
+                                            print(value),
+                                            setState(() {
+                                              startPosition = value;
+                                              _startSearchFieldController.text =
+                                                  value.name;
+                                              predictions = [];
+                                            })
+                                          });
+                                },
+                                child: const Icon(Icons.location_searching,
+                                    color: Color(0xFF6db881)),
+                              )),
                     onChanged: (value) {
                       if (_debounce?.isActive ?? false) _debounce!.cancel();
                       _debounce = Timer(const Duration(milliseconds: 1000), () {
@@ -2662,106 +2689,106 @@ class CustomFormState extends State<CustomForm> {
                   if (_startSearchFieldController.text != '')
                     isLoadingPlaces
                         ? const Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                                width: 15,
-                                height: 15,
-                                child: CircularProgressIndicator(
-                                    color: Color(0xFF6db881))),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text('مكان البحث')
-                          ],
-                        ))
+                            child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                  width: 15,
+                                  height: 15,
+                                  child: CircularProgressIndicator(
+                                      color: Color(0xFF6db881))),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text('مكان البحث')
+                            ],
+                          ))
                         : Column(children: [
-                      startPosition != null
-                          ? SizedBox()
-                          : Card(
-                        child: ListTile(
-                          leading: const CircleAvatar(
-                            backgroundColor: Color(0xFF6db881),
-                            child: Icon(
-                              Icons.my_location_outlined,
-                              color: Colors.white,
-                            ),
-                          ),
-                          title: Text(
-                            'Select with Pin Drop',
-                          ),
-                          onTap: () async {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        MapView()))
-                                .then((value) => {
-                              setState(() {
-                                startPosition = value;
-                                _startSearchFieldController
-                                    .text = value.name;
-                                predictions = [];
-                              }),
-                              setState(() {})
-                            });
-                          },
-                        ),
-                      ),
-                      predictions.length > 0
-                          ? SizedBox(
-                        height: 200,
-                        child: ListView.builder(
-                            itemCount: predictions.length,
-                            itemBuilder: (context, index) {
-                              return Card(
-                                child: ListTile(
-                                  leading: const CircleAvatar(
-                                    backgroundColor:
-                                    Color(0xFF6db881),
-                                    child: Icon(
-                                      Icons.location_on_outlined,
-                                      color: Colors.white,
+                            startPosition != null
+                                ? SizedBox()
+                                : Card(
+                                    child: ListTile(
+                                      leading: const CircleAvatar(
+                                        backgroundColor: Color(0xFF6db881),
+                                        child: Icon(
+                                          Icons.my_location_outlined,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      title: Text(
+                                        'Select with Pin Drop',
+                                      ),
+                                      onTap: () async {
+                                        Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        MapView()))
+                                            .then((value) => {
+                                                  setState(() {
+                                                    startPosition = value;
+                                                    _startSearchFieldController
+                                                        .text = value.name;
+                                                    predictions = [];
+                                                  }),
+                                                  setState(() {})
+                                                });
+                                      },
                                     ),
                                   ),
-                                  title: Text(
-                                    predictions[index]
-                                        .description
-                                        .toString(),
-                                  ),
-                                  onTap: () async {
-                                    final placeId =
-                                    predictions[index].placeId!;
-                                    final details =
-                                    await googlePlace.details
-                                        .get(placeId);
-                                    if (details != null &&
-                                        details.result != null &&
-                                        mounted) {
-                                      setState(() {
-                                        startPosition =
-                                            details.result;
-                                        _startSearchFieldController
-                                            .text =
-                                        details.result!.name!;
+                            predictions.length > 0
+                                ? SizedBox(
+                                    height: 200,
+                                    child: ListView.builder(
+                                        itemCount: predictions.length,
+                                        itemBuilder: (context, index) {
+                                          return Card(
+                                            child: ListTile(
+                                              leading: const CircleAvatar(
+                                                backgroundColor:
+                                                    Color(0xFF6db881),
+                                                child: Icon(
+                                                  Icons.location_on_outlined,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              title: Text(
+                                                predictions[index]
+                                                    .description
+                                                    .toString(),
+                                              ),
+                                              onTap: () async {
+                                                final placeId =
+                                                    predictions[index].placeId!;
+                                                final details =
+                                                    await googlePlace.details
+                                                        .get(placeId);
+                                                if (details != null &&
+                                                    details.result != null &&
+                                                    mounted) {
+                                                  setState(() {
+                                                    startPosition =
+                                                        details.result;
+                                                    _startSearchFieldController
+                                                            .text =
+                                                        details.result!.name!;
 
-                                        predictions = [];
-                                      });
-                                    }
-                                  },
-                                ),
-                              );
-                            }),
-                      )
-                          : startPosition != null
-                          ? const SizedBox()
-                          : const Text(
-                        'لم يتم العثور على مكان',
-                        style: TextStyle(color: Colors.red),
-                        textAlign: TextAlign.right,
-                      ),
-                    ]),
+                                                    predictions = [];
+                                                  });
+                                                }
+                                              },
+                                            ),
+                                          );
+                                        }),
+                                  )
+                                : startPosition != null
+                                    ? const SizedBox()
+                                    : const Text(
+                                        'لم يتم العثور على مكان',
+                                        style: TextStyle(color: Colors.red),
+                                        textAlign: TextAlign.right,
+                                      ),
+                          ]),
                   // Upload images
                   Container(
                     margin: const EdgeInsets.only(top: 20),
@@ -2778,70 +2805,70 @@ class CustomFormState extends State<CustomForm> {
                     ),
                     child: selectedFiles.isEmpty
                         ? GestureDetector(
-                      onTap: () {
-                        selectImage();
-                      },
-                      child: const Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.add_circle_outline_rounded,
-                              color: Color(0xFF6db881)),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            'إرفق صور للمكان',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontFamily: "Tajawal-m",
-                              color: Color(0xFF6db881),
+                            onTap: () {
+                              selectImage();
+                            },
+                            child: const Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.add_circle_outline_rounded,
+                                    color: Color(0xFF6db881)),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  'إرفق صور للمكان',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontFamily: "Tajawal-m",
+                                    color: Color(0xFF6db881),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                    )
+                          )
                         : ListView(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      children: selectedFiles
-                          .map(
-                            (e) => Stack(
-                          alignment: AlignmentDirectional.topEnd,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(3.0),
-                              child: Container(
-                                color: Colors.grey,
-                                child: Image.file(
-                                  File(e.path),
-                                  fit: BoxFit.cover,
-                                  height: 100,
-                                  width: 100,
-                                ),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  selectedFiles.remove(e);
-                                });
-                              },
-                              child: const Padding(
-                                padding: EdgeInsets.all(.02),
-                                child: Icon(
-                                  Icons.cancel,
-                                  size: 15,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                          .toList(),
-                    ),
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            children: selectedFiles
+                                .map(
+                                  (e) => Stack(
+                                    alignment: AlignmentDirectional.topEnd,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(3.0),
+                                        child: Container(
+                                          color: Colors.grey,
+                                          child: Image.file(
+                                            File(e.path),
+                                            fit: BoxFit.cover,
+                                            height: 100,
+                                            width: 100,
+                                          ),
+                                        ),
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            selectedFiles.remove(e);
+                                          });
+                                        },
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(.02),
+                                          child: Icon(
+                                            Icons.cancel,
+                                            size: 15,
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                                .toList(),
+                          ),
                   ),
 
                   Center(
@@ -2859,15 +2886,19 @@ class CustomFormState extends State<CustomForm> {
                               startPosition?.geometry?.location?.lng == null) {
                             showInvalidFieldsDialog(context);
                           } else {
-                            double? latitude = startPosition?.geometry?.location?.lat; // Get latitude
-                            double? longitude = startPosition?.geometry?.location?.lng; // Get longitude
-                            String? placeNameValue = placeName.text; // Get the value of placeName
+                            double? latitude = startPosition
+                                ?.geometry?.location?.lat; // Get latitude
+                            double? longitude = startPosition
+                                ?.geometry?.location?.lng; // Get longitude
+                            String? placeNameValue =
+                                placeName.text; // Get the value of placeName
                             // Check for duplicate place before adding
-                            await checkForDuplicatePlace(latitude: latitude, longitude: longitude, placeName: placeNameValue);
+                            await checkForDuplicatePlace(
+                                latitude: latitude,
+                                longitude: longitude,
+                                placeName: placeNameValue);
                           }
                         },
-
-
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
                               const Color(0xFF6db881)),
@@ -2893,21 +2924,20 @@ class CustomFormState extends State<CustomForm> {
                   ),
                 ],
               ),
-
             ),
           ),
         ),
-  
-    ],
+      ],
     );
   }
 
-  Future<void> checkForDuplicatePlace({double? latitude, double? longitude, String? placeName}) async {
+  Future<void> checkForDuplicatePlace(
+      {double? latitude, double? longitude, String? placeName}) async {
     final firestore = FirebaseFirestore.instance;
     final duplicatePlaceQuery = await firestore
         .collection('ApprovedPlaces')
         .where('placeName', isEqualTo: placeName)
-        .where('latitude', isEqualTo:  startPosition?.geometry?.location?.lat)
+        .where('latitude', isEqualTo: startPosition?.geometry?.location?.lat)
         .where('longitude', isEqualTo: startPosition?.geometry?.location?.lng)
         .get();
 
@@ -2935,7 +2965,7 @@ class CustomFormState extends State<CustomForm> {
     try {
       final String fileName = userId + DateTime.now().toString();
       final Reference reference =
-      FirebaseStorage.instance.ref().child('images').child('$fileName.jpg');
+          FirebaseStorage.instance.ref().child('images').child('$fileName.jpg');
 
       final UploadTask uploadTask = reference.putFile(File(file.path));
       final TaskSnapshot downloadUrl = (await uploadTask);

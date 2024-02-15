@@ -10,7 +10,7 @@ import 'package:gp/pages/placeDetailsPage.dart';
 import 'package:gp/pages/placePage.dart';
 import 'dart:math';
 import 'package:gp/helper/PlaceDetailsWidget.dart';
-  import 'package:gp/pages/mapdetailspage.dart';
+import 'package:gp/pages/mapdetailspage.dart';
 
 class MapSample extends StatefulWidget {
   @override
@@ -20,7 +20,9 @@ class MapSample extends StatefulWidget {
 }
 
 class MapSampleState extends State<MapSample> {
-
+  late BitmapDescriptor restIcon;
+  late BitmapDescriptor mallIcon;
+  late BitmapDescriptor entIcon;
 
   late GoogleMapController _controller;
   String selectedCategory = 'الكل';
@@ -33,36 +35,50 @@ class MapSampleState extends State<MapSample> {
   final _firestore = FirebaseFirestore.instance;
   List<Marker> markers = [];
   static final TextEditingController _startSearchFieldController =
-  TextEditingController();
+      TextEditingController();
   DetailsResult? startPosition;
   late GooglePlace googlePlace;
   List<AutocompletePrediction> predictions = [];
   Timer? _debounce;
-
-
 
   @override
   void initState() {
     super.initState();
     //location permission
     _initializeCurrentLocation();
+    BitmapDescriptor.fromAssetImage(
+            ImageConfiguration(size: Size(48, 48)), 'assets/images/rest.png')
+        .then((onValue) {
+      restIcon = onValue;
+    });
 
+    BitmapDescriptor.fromAssetImage(
+            ImageConfiguration(size: Size(48, 48)), 'assets/images/mall.png')
+        .then((onValue) {
+      mallIcon = onValue;
+    });
+
+    BitmapDescriptor.fromAssetImage(
+            ImageConfiguration(size: Size(48, 48)), 'assets/images/marker.png')
+        .then((onValue) {
+      myIcon = onValue;
+    });
     //determine and  go to the current location
     _goToCurrentLocation();
 
     selectedCategory = 'الكل';
-    String apiKey = 'AIzaSyCOT8waQ9GpvCUwXotTCZD9kSPfN8JljNk';
+    String apiKey = 'AIzaSyCJ3yUvAXaEKXPoo5ngfht4se568rq3mBk';
     googlePlace = GooglePlace(apiKey);
     getMarkers();
 
     //Marker icon
     BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(size: Size(48,48)), 'assets/images/marker.png')
+            ImageConfiguration(size: Size(48, 48)), 'assets/images/ent.png')
         .then((onValue) {
-      myIcon = onValue;
+      entIcon = onValue;
     });
-
   }
+
   void _initializeCurrentLocation() async {
     LocationPermission permission = await Geolocator.checkPermission();
 
@@ -73,8 +89,8 @@ class MapSampleState extends State<MapSample> {
           permission == LocationPermission.deniedForever) {
         return;
       }
-    }}
-
+    }
+  }
 
   Future<void> _determinePosition() async {
     Position position = await Geolocator.getCurrentPosition();
@@ -83,9 +99,11 @@ class MapSampleState extends State<MapSample> {
     });
     return;
   }
+
   //Calculate the distance
   double calculateDistance(LatLng? point1, LatLng point2) {
-    const double earthRadius = 6371; // Radius of the earth in kilometers (use 3959 for miles)
+    const double earthRadius =
+        6371; // Radius of the earth in kilometers (use 3959 for miles)
 
     double toRadians(double degree) {
       return degree * (pi / 180.0);
@@ -113,33 +131,32 @@ class MapSampleState extends State<MapSample> {
     await _determinePosition();
     markers.clear();
     droppedPin = null;
-    _controller.animateCamera(
-        CameraUpdate.newCameraPosition(CameraPosition(target: currentLatLng!, zoom: 15)));
+    _controller.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(target: currentLatLng!, zoom: 15)));
     getMarkers();
   }
-
-
-
 
   Future<void> getMarkers() async {
     setState(() {
       filteredPlacesInfo.clear();
     });
 
-    await for (var snapshot in _firestore.collection('ApprovedPlaces').snapshots())
+    await for (var snapshot
+        in _firestore.collection('ApprovedPlaces').snapshots())
       for (var place in snapshot.docs) {
         setState(() {
           String category = place['category'] ?? '';
           if (selectedCategory == 'الكل' || category == selectedCategory) {
             LatLng placeLatLng = LatLng(place['latitude'], place['longitude']);
-            double distance = calculateDistance( droppedPin ?? currentLatLng  , placeLatLng);
+            double distance =
+                calculateDistance(droppedPin ?? currentLatLng, placeLatLng);
 
             // Display only markers within a certain distance (adjust the threshold as needed)
             if (distance <= 5.0) {
               markers.add(Marker(
                 markerId: MarkerId(place['placeName']),
                 position: placeLatLng,
-                icon: myIcon,
+                icon: getMarkerIcon(category),
                 infoWindow: InfoWindow(
                   title: place['placeName'],
                   onTap: () {
@@ -160,7 +177,6 @@ class MapSampleState extends State<MapSample> {
                             description: place['description'] ?? '',
                             latitude: place['latitude'] ?? 0.0,
                             longitude: place['longitude'] ?? 0.0,
-
                           ),
                         ),
                       ),
@@ -181,25 +197,22 @@ class MapSampleState extends State<MapSample> {
                 description: place['description'] ?? '',
                 latitude: place['latitude'] ?? 0.0,
                 longitude: place['longitude'] ?? 0.0,
-
               ));
             }
           }
         });
       }
     setState(() {
-      droppedPin=null;
+      droppedPin = null;
       displayFilteredPlacesList();
     });
-
   }
 
   changeLocation() async {
-
     double? lat = startPosition?.geometry?.location?.lat;
     double? lng = startPosition?.geometry?.location?.lng;
-    _controller.animateCamera(
-        CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(lat!, lng!), zoom: 14)));
+    _controller.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(target: LatLng(lat!, lng!), zoom: 14)));
     _startSearchFieldController.clear();
   }
 
@@ -223,27 +236,24 @@ class MapSampleState extends State<MapSample> {
             child: Icon(Icons.my_location),
             backgroundColor: Color.fromARGB(255, 109, 184, 129),
           ),
-          SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
           Container(
-
             child: FloatingActionButton(
               onPressed: () {
                 filterMap();
               },
               child: IconButton(
-
                 iconSize: 30,
-                icon: Icon(Icons.layers) ,
-
-                onPressed: (){showDropdownMenu(context);} ,
-
+                icon: Icon(Icons.layers),
+                onPressed: () {
+                  showDropdownMenu(context);
+                },
               ),
               backgroundColor: Color.fromARGB(255, 109, 184, 129),
             ),
-
           ),
-
-
           SizedBox(height: 16),
           FloatingActionButton(
             onPressed: () {
@@ -260,26 +270,27 @@ class MapSampleState extends State<MapSample> {
       ),
       body: Column(
         children: [
-
           Container(
             margin: EdgeInsets.only(top: 5, left: 0, right: 0),
             child: TextFormField(
               controller: _startSearchFieldController,
               decoration: InputDecoration(
                   hintText: 'ابحث عن مطعم أو مكان سياحي',
-                  hintStyle:
-                  TextStyle(fontSize: 16, color: Color.fromARGB(255, 202, 198, 198)),
+                  hintStyle: TextStyle(
+                      fontSize: 16, color: Color.fromARGB(255, 202, 198, 198)),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.black87, width: 2.0),
                   ),
                   suffixIcon: _startSearchFieldController.text.isEmpty
-                      ? Icon(Icons.search, color: Color.fromARGB(255, 109, 184, 129))
+                      ? Icon(Icons.search,
+                          color: Color.fromARGB(255, 109, 184, 129))
                       : IconButton(
-                    icon: Icon(Icons.search, color: Color.fromARGB(255, 109, 184, 129)),
-                    onPressed: () {
-                      changeLocation();
-                    },
-                  )),
+                          icon: Icon(Icons.search,
+                              color: Color.fromARGB(255, 109, 184, 129)),
+                          onPressed: () {
+                            changeLocation();
+                          },
+                        )),
               onChanged: (value) {
                 if (_debounce?.isActive ?? false) _debounce!.cancel();
                 _debounce = Timer(const Duration(milliseconds: 1000), () {
@@ -303,7 +314,7 @@ class MapSampleState extends State<MapSample> {
               itemBuilder: (context, index) {
                 return ListTile(
                   leading: CircleAvatar(
-                    backgroundColor:  Color.fromARGB(255, 109, 184, 129),
+                    backgroundColor: Color.fromARGB(255, 109, 184, 129),
                     child: Icon(
                       Icons.pin_drop,
                       color: Colors.white,
@@ -318,7 +329,8 @@ class MapSampleState extends State<MapSample> {
                     if (details != null && details.result != null && mounted) {
                       setState(() {
                         startPosition = details.result;
-                        _startSearchFieldController.text = details.result!.name!;
+                        _startSearchFieldController.text =
+                            details.result!.name!;
                         predictions = [];
                       });
                     }
@@ -327,11 +339,11 @@ class MapSampleState extends State<MapSample> {
               },
             ),
           ),
-
           Expanded(
             child: GoogleMap(
               gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
-                new Factory<OneSequenceGestureRecognizer>(() => new EagerGestureRecognizer()),
+                new Factory<OneSequenceGestureRecognizer>(
+                    () => new EagerGestureRecognizer()),
               ].toSet(),
               mapType: MapType.normal,
               onTap: (LatLng latLng) {
@@ -341,28 +353,27 @@ class MapSampleState extends State<MapSample> {
                   markers.add(Marker(
                     markerId: MarkerId('droppedPin'),
                     position: droppedPin!,
-
                     infoWindow: InfoWindow(title: 'Dropped Pin'),
                   ));
-                  _controller?.animateCamera(CameraUpdate.newLatLng(droppedPin!));
+                  _controller
+                      ?.animateCamera(CameraUpdate.newLatLng(droppedPin!));
                   getMarkers();
                 });
-
               },
               markers: markers.toSet(),
-              onMapCreated:(GoogleMapController controller) {
+              onMapCreated: (GoogleMapController controller) {
                 setState(() {
                   _controller = controller;
                 });
               },
-              initialCameraPosition: CameraPosition(target: currentLatLng!, zoom: 14),
+              initialCameraPosition:
+                  CameraPosition(target: currentLatLng!, zoom: 14),
               myLocationEnabled: true,
               zoomGesturesEnabled: true,
               zoomControlsEnabled: true,
               myLocationButtonEnabled: false,
             ),
           ),
-
         ],
       ),
     );
@@ -407,6 +418,7 @@ class MapSampleState extends State<MapSample> {
       ],
     );
   }
+
   void displayFilteredPlacesList() {
     showModalBottomSheet(
       context: context,
@@ -441,14 +453,14 @@ class MapSampleState extends State<MapSample> {
                           decoration: BoxDecoration(
                             image: place.images.isEmpty
                                 ? DecorationImage(
-                              image: NetworkImage(
-                                  'https://www.guardanthealthamea.com/wp-content/uploads/2019/09/no-image.jpg'),
-                              fit: BoxFit.cover,
-                            )
+                                    image: NetworkImage(
+                                        'https://www.guardanthealthamea.com/wp-content/uploads/2019/09/no-image.jpg'),
+                                    fit: BoxFit.cover,
+                                  )
                                 : DecorationImage(
-                              image: NetworkImage(place.images[0]),
-                              fit: BoxFit.cover,
-                            ),
+                                    image: NetworkImage(place.images[0]),
+                                    fit: BoxFit.cover,
+                                  ),
                           ),
                           child: Container(
                             padding: EdgeInsets.all(20),
@@ -468,7 +480,7 @@ class MapSampleState extends State<MapSample> {
                               children: [
                                 Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       '${place.placeName}',
@@ -525,6 +537,18 @@ class MapSampleState extends State<MapSample> {
     );
   }
 
+  BitmapDescriptor getMarkerIcon(String category) {
+    switch (category) {
+      case 'فعاليات و ترفيه':
+        return entIcon;
+      case 'مطاعم':
+        return restIcon;
+      case 'مراكز تسوق':
+        return mallIcon;
+      default:
+        return myIcon; // Use a default icon for unknown categories
+    }
+  }
 
   void showDropdownMenu(BuildContext context) {
     showDialog(
@@ -534,7 +558,10 @@ class MapSampleState extends State<MapSample> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(' تصنيف المكان', style: TextStyle(color:  Color.fromARGB(255, 109, 184, 129),)),
+              Text(' تصنيف المكان',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 109, 184, 129),
+                  )),
             ],
           ),
           content: Container(
@@ -556,7 +583,10 @@ class MapSampleState extends State<MapSample> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(value, style: TextStyle(color:  Color.fromARGB(255, 109, 184, 129),)),
+                          Text(value,
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 109, 184, 129),
+                              )),
                           // Add an icon based on the category
                         ],
                       ),
@@ -566,7 +596,6 @@ class MapSampleState extends State<MapSample> {
                     if (newValue != null) {
                       filterPlaces(newValue);
                       Navigator.pop(context); // Close the first dropdown
-
                     }
                   },
                 ),
@@ -578,11 +607,7 @@ class MapSampleState extends State<MapSample> {
     );
   }
 
-
-
-
   void _moveMapToPlace(placePage place) async {
-
     _controller.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
@@ -592,9 +617,7 @@ class MapSampleState extends State<MapSample> {
       ),
     );
   }
-
 }
-
 
 class PlaceInfo {
   final String placeName;

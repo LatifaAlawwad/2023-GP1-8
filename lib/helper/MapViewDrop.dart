@@ -13,7 +13,7 @@ class MapView extends StatefulWidget {
 
 class _MapViewState extends State<MapView> {
   LatLng startLocation = LatLng(24.7136, 46.6753); // Riyadh, Saudi Arabia
-  String googleApikey = "AIzaSyCOT8waQ9GpvCUwXotTCZD9kSPfN8JljNk";
+  String googleApikey = "AIzaSyCJ3yUvAXaEKXPoo5ngfht4se568rq3mBk";
   GoogleMapController? mapController; //contrller for Google map
   CameraPosition? cameraPosition;
   String location = "Location Name:";
@@ -21,13 +21,12 @@ class _MapViewState extends State<MapView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+      appBar: AppBar(
         title: Text(
-        'الخريطة',
+          'الخريطة',
         ),
-          backgroundColor: const Color.fromARGB(255, 109, 184, 129),
-    ),
-
+        backgroundColor: const Color.fromARGB(255, 109, 184, 129),
+      ),
       body: Stack(children: [
         GoogleMap(
           //Map widget from google_maps_flutter package
@@ -64,13 +63,13 @@ class _MapViewState extends State<MapView> {
           },
         ),
         Center(
-          //picker image on google map
+            //picker image on google map
             child: Icon(
-              Icons.location_on,
-              color: Colors.red,
-            )),
+          Icons.location_on,
+          color: Colors.red,
+        )),
         Positioned(
-          //widget to display location name
+            //widget to display location name
             bottom: 100,
             child: Padding(
               padding: EdgeInsets.all(15),
@@ -101,7 +100,7 @@ class _MapViewState extends State<MapView> {
                       },
                       style: ButtonStyle(
                         backgroundColor:
-                        MaterialStateProperty.all(const Color(0xFF6db881)),
+                            MaterialStateProperty.all(const Color(0xFF6db881)),
                         padding: MaterialStateProperty.all(
                           const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 10),

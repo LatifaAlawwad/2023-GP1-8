@@ -103,6 +103,9 @@ flutter:
   assets:
     - assets/images/logo.png
     - assets/images/marker.png
+    - assets/images/ent.png
+    - assets/images/mall.png
+    - assets/images/rest.png
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
 
