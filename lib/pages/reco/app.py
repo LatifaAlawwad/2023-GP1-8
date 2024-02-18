@@ -9,6 +9,7 @@ from math import sin, cos, sqrt, atan2, radians
 app = Flask(__name__)
 
 cred = credentials.Certificate("fir-hail-ec5a7-firebase-adminsdk-9d92w-d67984762b.json")
+
 firebase_admin.initialize_app(cred)
 
 
@@ -35,21 +36,15 @@ def model(id):
 
     df['cuisine'] = df['cuisine'].apply(lambda x: x[0] if isinstance(x, list) and x else None)
 
-    df_copy_without_coordinates = df.copy()
-    df_copy_without_coordinates = df_copy_without_coordinates.drop(columns=['latitude', 'longitude'])
-    encoded_dataa = pd.get_dummies(df_copy_without_coordinates, columns=['city', 'category', 'priceRange', 'typeEnt',  'cuisine'])
-    place2 = encoded_dataa.loc[encoded_dataa['place_id'] == id]
-    encoded_data_without_coordinates = encoded_dataa[encoded_dataa.place_id != id]
-
-
     df_copy = df.copy()
     encoded_data = pd.get_dummies(df_copy, columns=['city', 'category', 'priceRange', 'typeEnt',  'cuisine'])
+
     place1 = encoded_data.loc[encoded_data['place_id'] == id]
+
     encoded_data = encoded_data[encoded_data.place_id != id]
 
-
-    nbrs = NearestNeighbors(n_neighbors=5).fit(encoded_data_without_coordinates.drop(columns=['place_id']))
-    distances, indices = nbrs.kneighbors(place2.drop(columns=['place_id']))
+    nbrs = NearestNeighbors(n_neighbors=5).fit(encoded_data.drop(columns=['place_id']))
+    distances, indices = nbrs.kneighbors(place1.drop(columns=['place_id']))
 
     similarity = [(1 - dist) * 100 for dist in distances[0]]
 
@@ -75,14 +70,8 @@ def get_recommendations():
     return recommend_list
 
 
-
-
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
-
-
-
-
 
 
 
