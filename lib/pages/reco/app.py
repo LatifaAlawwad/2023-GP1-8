@@ -30,20 +30,26 @@ def model(id):
     df = pd.DataFrame(places_dict)
 
     df = df.drop(columns=['placeName', 'User_id', 'images', 'description', 'allowChildren', 'WorkedDays',
-                          'hasValetServiced', 'serves', 'atmosphere'])
+                          'hasValetServiced', 'serves', 'atmosphere','INorOUT'])
     df = df.drop(columns=['hasCinema', 'hasFoodCourt', 'hasPlayArea', 'hasSupermarket', 'startDate', 'neighbourhood', 'finishDate', 'WebLink', 'hasReservation', 'reservationDetails', 'shopType', 'isTemporary'])
 
     df['cuisine'] = df['cuisine'].apply(lambda x: x[0] if isinstance(x, list) and x else None)
 
+    df_copy_without_coordinates = df.copy()
+    df_copy_without_coordinates = df_copy_without_coordinates.drop(columns=['latitude', 'longitude'])
+    encoded_dataa = pd.get_dummies(df_copy_without_coordinates, columns=['city', 'category', 'priceRange', 'typeEnt',  'cuisine'])
+    place2 = encoded_dataa.loc[encoded_dataa['place_id'] == id]
+    encoded_data_without_coordinates = encoded_dataa[encoded_dataa.place_id != id]
+
+
     df_copy = df.copy()
-    encoded_data = pd.get_dummies(df_copy, columns=['city', 'category', 'priceRange', 'typeEnt', 'INorOUT', 'cuisine'])
-
+    encoded_data = pd.get_dummies(df_copy, columns=['city', 'category', 'priceRange', 'typeEnt',  'cuisine'])
     place1 = encoded_data.loc[encoded_data['place_id'] == id]
-
     encoded_data = encoded_data[encoded_data.place_id != id]
 
-    nbrs = NearestNeighbors(n_neighbors=5).fit(encoded_data.drop(columns=['place_id']))
-    distances, indices = nbrs.kneighbors(place1.drop(columns=['place_id']))
+
+    nbrs = NearestNeighbors(n_neighbors=5).fit(encoded_data_without_coordinates.drop(columns=['place_id']))
+    distances, indices = nbrs.kneighbors(place2.drop(columns=['place_id']))
 
     similarity = [(1 - dist) * 100 for dist in distances[0]]
 
