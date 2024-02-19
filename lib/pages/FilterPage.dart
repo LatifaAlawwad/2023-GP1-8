@@ -187,7 +187,7 @@ class CustomFormState extends State<CustomForm> {
   Set<String> price = Set<String>();
   Set<String> atmosphere = Set<String>();
   Set<String> shopType = Set<String>();
-  String INorOUT='';
+  String? INorOUT="";
   bool? hasReservation;
 
   String typeEnt='';
@@ -234,7 +234,7 @@ class CustomFormState extends State<CustomForm> {
 
   List<String> originalServesOptions = ['فطور', 'غداء', 'عشاء'];
   bool? originalHasReservation;
-String originalINorOUT='';
+String? originalINorOUT='';
 
 
 
@@ -651,7 +651,7 @@ void initState() {
                             CustomRadioButton(
                               onTap: () {
                                 setState(() {
-                                  INorOUT = 'كلاهما';
+                                  INorOUT = (INorOUT == 'كلاهما') ? null : 'كلاهما';
                                 });
                               },
                               text: 'خارجي وداخلي',
@@ -661,7 +661,7 @@ void initState() {
                             CustomRadioButton(
                               onTap: () {
                                 setState(() {
-                                  INorOUT = 'لا';
+                                  INorOUT = (INorOUT == 'لا') ? null : 'لا';
                                 });
                               },
                               text: 'داخلي',
@@ -671,7 +671,7 @@ void initState() {
                             CustomRadioButton(
                               onTap: () {
                                 setState(() {
-                                  INorOUT = 'نعم';
+                                  INorOUT = (INorOUT == 'نعم') ? null : 'نعم';
                                 });
                               },
                               text: 'خارجي',
@@ -1072,7 +1072,7 @@ void initState() {
                             CustomRadioButton(
                               onTap: () {
                                 setState(() {
-                                  INorOUT = 'كلاهما';
+                                  INorOUT = (INorOUT == 'كلاهما') ? null : 'كلاهما';
                                 });
                               },
                               text: 'خارجي وداخلي',
@@ -1082,7 +1082,7 @@ void initState() {
                             CustomRadioButton(
                               onTap: () {
                                 setState(() {
-                                  INorOUT = 'لا';
+                                  INorOUT = (INorOUT == 'لا') ? null : 'لا';
                                 });
                               },
                               text: 'داخلي',
@@ -1092,7 +1092,7 @@ void initState() {
                             CustomRadioButton(
                               onTap: () {
                                 setState(() {
-                                  INorOUT = 'نعم';
+                                  INorOUT = (INorOUT == 'نعم') ? null : 'نعم';
                                 });
                               },
                               text: 'خارجي',

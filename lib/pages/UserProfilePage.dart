@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../Registration/SignUp.dart';
-import "editUserProfilePage.dart";
+import "editProfile.dart";
 import 'MyPlacesPage.dart';
 import 'package:gp/Registration/logIn.dart';
 
@@ -89,7 +89,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => editUserProfilePage(),
+                                                builder: (context) => editProfile(),
                                               ),
                                             );
                                           },
@@ -103,7 +103,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => editUserProfilePage(),
+                                                builder: (context) => editProfile(),
                                               ),
                                             );
                                           },

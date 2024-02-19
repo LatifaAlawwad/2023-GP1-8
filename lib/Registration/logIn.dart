@@ -158,46 +158,49 @@ class _LogInState extends State<LogIn> {
                                     style: BorderStyle.none,
                                   ),
                                 ),
+
                               ),
                               validator: (value) {
-                                RegExp uper = RegExp(r"(?=.*[A-Z])");
+                                RegExp upper = RegExp(r"(?=.*[A-Z])");
                                 RegExp numb = RegExp(r"[0-9]");
                                 RegExp small = RegExp(r"(?=.*[a-z])");
                                 RegExp special = RegExp(r"(?=.*[!@#%^&*(),.?\\:{}|<>])");
 
                                 if (value!.isEmpty || password.text.trim() == "") {
                                   return "كلمة السر مطلوبة";
+
                                 }
 
                                 String errorMessage = "";
 
                                 if (value.length < 8) {
-                                  errorMessage += "كلمة المرور يجب ان تكون من 8 خانات و";
+                                  errorMessage += "\u2022 كلمة المرور يجب أن تكون من 8 خانات\n";
                                 }
 
-                                if (!uper.hasMatch(value)) {
-                                  errorMessage += "تحتوي على حرف كبير و";
+                                if (!upper.hasMatch(value)) {
+                                  errorMessage += "\u2022 تحتوي على حرف كبير\n";
                                 }
 
                                 if (!small.hasMatch(value)) {
-                                  errorMessage += "تحتوي على أحرف صغيرة و";
+                                  errorMessage += "\u2022 تحتوي على أحرف صغيرة\n";
                                 }
 
                                 if (!numb.hasMatch(value)) {
-                                  errorMessage += "تحتوي على أرقام و";
+                                  errorMessage += "\u2022 تحتوي على أرقام\n";
                                 }
 
                                 if (!special.hasMatch(value)) {
-                                  errorMessage += "تحتوي على رمز مميز و";
+                                  errorMessage += "\u2022 تحتوي على رمز مميز\n";
                                 }
 
                                 if (errorMessage.isNotEmpty) {
-                                  errorMessage = errorMessage.substring(0, errorMessage.length - 2); // Remove the trailing "و"
+                                  errorMessage = errorMessage.trim();
                                   return errorMessage;
                                 }
 
                                 return null;
                               },
+
                             ),
                           ),
                         ),

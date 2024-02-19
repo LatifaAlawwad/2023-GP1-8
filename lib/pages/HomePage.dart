@@ -111,7 +111,7 @@ class HomePageState extends State<HomePage> {
             if (filters["type"] == 1) {
               if (place.category =='فعاليات و ترفيه' &&
                   (filters["typeEntNames"].isEmpty || filters["typeEntNames"].contains(place.typeEnt)) &&
-                  (filters["INorOUT"] == '' || place.INorOUT == filters["INorOUT"]) &&
+                  (filters["INorOUT"] == '' ||filters["INorOUT"] == null || place.INorOUT == filters["INorOUT"]) &&
                   (filters["hasReservation"] == null || place.hasReservation == filters["hasReservation"])) {
                 filteredItems.add(_buildItem(
                       () {
@@ -153,7 +153,7 @@ class HomePageState extends State<HomePage> {
               if(place.category =='مراكز تسوق' &&
                   (filters["typeEntInMallsNames"].isEmpty ||
                       filters["typeEntInMallsNames"].any((name) => InMalls.contains(name)))
-                  && (filters["INorOUT"] == '' || place.INorOUT == filters["INorOUT"] ) &&
+                  && (filters["INorOUT"] == ''  ||filters["INorOUT"] == null|| place.INorOUT == filters["INorOUT"] ) &&
                   (filters["shopType"].isEmpty ||filters["shopType"].any((shoptype)=> place.shopType.contains(shoptype)))) {
                 filteredItems.add(_buildItem(
                       () {
