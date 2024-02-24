@@ -35,7 +35,7 @@ class placeDetailsPage extends StatefulWidget {
 
 class _placeDetailsState extends State<placeDetailsPage> {
   //List<placePage> recommendedPlaces = [];
-  bool hasRecommendations = true; // Set to true initially
+  bool hasRecommendations = true;
   late GoogleMapController myMapController;
   final Set<Marker> _markers = new Set();
   List<dynamic> output = [];
@@ -52,15 +52,9 @@ class _placeDetailsState extends State<placeDetailsPage> {
   }
 
 
-
-
-
-
-
   Set<Marker> myMarker() {
     setState(() {
       _markers.add(Marker(
-        // This marker id can be anything that uniquely identifies each marker.
         markerId: MarkerId(
             LatLng(widget.place.latitude, widget.place.longitude).toString()),
         position: LatLng(widget.place.latitude, widget.place.longitude),
@@ -73,14 +67,14 @@ class _placeDetailsState extends State<placeDetailsPage> {
 
   String url = '';
   var data;
-
+  bool isFavorite = false;
   late String id;
   final ScrollController _scrollController = ScrollController();
   double thumbWidth = 0.0;
   double thumbPosition = 0.0;
   final _formKey = GlobalKey<FormState>();
 
-//final ReviewService _reviewService = ReviewService();
+
   List<Review> reviews = [];
 
   @override
@@ -104,7 +98,84 @@ class _placeDetailsState extends State<placeDetailsPage> {
             (_scrollController.position.viewportDimension - thumbWidth);
       });
     });
+    _isFav();
   }
+
+
+
+
+
+
+
+
+
+void toggleFavorites()  {
+    if (FirebaseAuth.instance.currentUser == null) {
+      showguestDialog(context);
+    } else{
+
+      String userId = getuserId();
+
+    if (isFavorite) {
+
+      isFavorite = false;
+
+
+         FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .collection('Favorite')
+            .doc(widget.place.place_id)
+            .delete();
+
+    } else {
+
+      isFavorite = true;
+
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('Favorite')
+          .doc(widget.place.place_id)
+          .set({
+        "place_id": widget.place.place_id,
+      });
+
+    }
+
+    setState(() {});
+  }
+    }
+
+
+
+
+  void _isFav() async {
+    String userId = getuserId();
+    var doc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('Favorite')
+        .doc(widget.place.place_id)
+        .get();
+
+    if (doc.exists) {
+
+      print("موجوده");
+      isFavorite = true;
+    } else {
+
+      print("مش موجوده");
+      isFavorite = false;
+    }
+    setState(() {});
+  }
+
+
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -160,17 +231,37 @@ class _placeDetailsState extends State<placeDetailsPage> {
                 ),
               ),
             ),
-            SizedBox(
+       SizedBox(
               height: size.height * 0.35,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        GestureDetector(
+                          onTap: () {
+                            toggleFavorites();
+                          },
+                          child: Container(
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                              color: Color.fromARGB(255, 234, 250, 236),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Center(
+                              child: Icon(
+                                isFavorite ? Icons.favorite : Icons.favorite_border,
+                                color: isFavorite ? Colors.red : Color(0xFF6db881),
+                                size: 30,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 16),
                         GestureDetector(
                           onTap: () {
                             Navigator.pop(context);
@@ -478,6 +569,59 @@ class _placeDetailsState extends State<placeDetailsPage> {
                               ),
                             ],
                           ),
+
+                        const Divider(),
+                        SizedBox(height: 5),
+
+                        Padding(
+                          padding: EdgeInsets.only(left: 235, bottom: 16),
+                          child: Text(
+                            "أماكن مقترحة",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: "Tajawal-m",
+                            ),
+                          ),
+                        ),
+                        output.length != 0
+                            ? Directionality(
+                          textDirection: TextDirection.rtl,
+                          child: Container(
+                            height: 220,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 2, bottom: 24, right: 2),
+                              child: ListView.separated(
+                                physics: BouncingScrollPhysics(),
+                                scrollDirection: Axis.horizontal,
+                                separatorBuilder: (context, index) => SizedBox(width: 15),
+                                itemCount: output.length,
+                                itemBuilder: (context, index) {
+                                  for (int i = 0; i < HomePageState.allData.length; i++) {
+                                    if (HomePageState.allData[i] is placePage) {
+                                      placePage place = HomePageState.allData[i] as placePage;
+                                      if (place.place_id == output[index]) {
+                                        return _buildPlacePageWidget(context, place);
+                                      }
+                                    }
+                                  }
+                                  return Container();
+                                },
+                              ),
+                            ),
+                          ),
+                        )
+                            : Container(
+                          padding: EdgeInsets.only(left: 70, bottom: 20),
+                          child: const Text(
+                            '! لا يوجد لدينا حالياً أماكن مقترحة',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              fontFamily: "Tajawal-b",
+                              color: Color.fromARGB(255, 139, 139, 139),
+                            ),
+                          ),
+                        ),
                         const SizedBox(height: 10),
                         Divider(),
 
@@ -651,58 +795,8 @@ class _placeDetailsState extends State<placeDetailsPage> {
 
 /////////////////////////////////////////////////////////////////////////////////////////rec////////
 
-                        const Divider(),
-                        SizedBox(height: 5),
 
-                        Padding(
-                          padding: EdgeInsets.only(left: 235, bottom: 16),
-                          child: Text(
-                            "أماكن مقترحة",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: "Tajawal-m",
-                            ),
-                          ),
-                        ),
-                        output.length != 0
-                            ? Directionality(
-                          textDirection: TextDirection.rtl,
-                          child: Container(
-                            height: 220,
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 2, bottom: 24, right: 2),
-                              child: ListView.separated(
-                                physics: BouncingScrollPhysics(),
-                                scrollDirection: Axis.horizontal,
-                                separatorBuilder: (context, index) => SizedBox(width: 15),
-                                itemCount: output.length,
-                                itemBuilder: (context, index) {
-                                  for (int i = 0; i < HomePageState.allData.length; i++) {
-                                    if (HomePageState.allData[i] is placePage) {
-                                      placePage place = HomePageState.allData[i] as placePage;
-                                      if (place.place_id == output[index]) {
-                                        return _buildPlacePageWidget(context, place);
-                                      }
-                                    }
-                                  }
-                                  return Container();
-                                },
-                              ),
-                            ),
-                          ),
-                        )
-                            : Container(
-                          padding: EdgeInsets.only(left: 70, bottom: 20),
-                          child: const Text(
-                            '! لا يوجد لدينا حالياً أماكن مقترحة',
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              fontFamily: "Tajawal-b",
-                              color: Color.fromARGB(255, 139, 139, 139),
-                            ),
-                          ),
-                        ),
+
 
                       ],
                     ),
@@ -1149,7 +1243,7 @@ print(placeId);
 ////////////////////////////////////////////////////////////////////////////////////
   Future<void> deleteReview(BuildContext context, String placeId, String reviewId) async {
     try {
-      // Implement the logic to delete the review from Firebase
+
       await FirebaseFirestore.instance
           .collection('ApprovedPlaces')
           .doc(placeId)
@@ -1166,7 +1260,6 @@ print(placeId);
 
       );
 
-      // Optionally, you can perform additional actions after deletion
     } catch (error) {
       // Handle errors if any
       print('Error deleting review: $error');
@@ -1184,7 +1277,6 @@ print(placeId);
 
   Future<void> updateReviewText(
       String placeId, String reviewId, String newReviewText) async {
-    // Update the review text in Firebase
     await FirebaseFirestore.instance
         .collection('ApprovedPlaces')
         .doc(placeId)

@@ -22,7 +22,7 @@ class _myPlacesPage extends State<myPlacesPage> {
   String name = '';
   String selectedCategory = 'طلبات بانتظار الاعتماد ';
 
-  List<placePage> searchResults = [];
+
 
   Map<String, String> collectionNames = {
     'طلبات معتمدة': 'ApprovedPlaces',
@@ -165,7 +165,8 @@ class _myPlacesPage extends State<myPlacesPage> {
               ],
             ),
           ),
-          body: handleListItems(
+          body:
+          handleListItems(
             selectedCategory == 'طلبات معتمدة'
                 ? accepted
                 : selectedCategory == 'طلبات بانتظار الاعتماد'
