@@ -14,7 +14,7 @@ class FavoritePage extends StatefulWidget {
 
 class _FavoritePage extends State<FavoritePage> {
   List<placePage> favoriteList = [];
-
+  late String userId ;
 
   @override
   void initState() {
@@ -27,7 +27,7 @@ class _FavoritePage extends State<FavoritePage> {
   Future<void> fetchDataFromFirestore() async {
     try {
       favoriteList.clear();
-      String userId = getuser();
+      userId = getuser();
 
       // Fetch 'place_id' values from 'Favorite' collection
       QuerySnapshot<Map<String, dynamic>> favoriteSnapshot = await FirebaseFirestore.instance
@@ -120,6 +120,28 @@ class _FavoritePage extends State<FavoritePage> {
     );
   }
 
+
+
+
+
+
+
+
+  Future<QuerySnapshot<Map<String, dynamic>>> getFav(String id) {
+    Future<QuerySnapshot<Map<String, dynamic>>> snapshot =
+    FirebaseFirestore.instance.collection('users').doc(id).collection('Favorite').get();
+    return snapshot;
+  }
+
+
+
+
+
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
     final currentUser = FirebaseAuth.instance.currentUser;
@@ -146,9 +168,17 @@ class _FavoritePage extends State<FavoritePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
 
-            if (currentUser != null) handleListItems(favoriteList),
+            if (currentUser != null)
 
-            if (currentUser == null)
+              FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                future: getFav(userId),
+                builder: (BuildContext context,
+                    AsyncSnapshot<
+                        QuerySnapshot<Map<String, dynamic>>> snapshot,) {
+                  return handleListItems(favoriteList);
+                },
+              ),
+          if(currentUser == null)
               Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -226,7 +256,6 @@ class _FavoritePage extends State<FavoritePage> {
 
 
   Widget _buildItem(
-
       void Function()? onTap,
       placePage place,
       BuildContext context,
@@ -244,7 +273,6 @@ class _FavoritePage extends State<FavoritePage> {
         ),
         child: Stack(
           children: [
-
             Container(
               height: 210,
               decoration: BoxDecoration(
@@ -275,6 +303,99 @@ class _FavoritePage extends State<FavoritePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Favorite icon at the top left corner
+                    Positioned(
+                      top: 10,
+                      left: 10,
+
+                        child:Container(
+                          height: 40,
+                          width: 40,
+                          decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 234, 250, 236),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                            child: IconButton(
+                                alignment: Alignment.center,
+                                icon: (Icon(Icons.favorite,
+                                )
+                                ),
+                                color: Colors.red,
+
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+
+                                      title: Text(
+                                      "تأكيد الإزالة",
+                                     textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Color(0xff383737),
+                                        ),
+                                    ),
+                                      content: Container(
+                                        constraints: BoxConstraints(maxHeight: 30),
+                                        alignment: Alignment.center,
+
+                                        child: Text(
+                                          "هل تريد إزالة المكان من قائمة المفضلة",
+                                          style: TextStyle(
+                                            color: Color(0xff424242),
+                                          ),
+                                        ),
+
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          style: TextButton.styleFrom(
+                                            primary: Color(0xff11630e),
+                                          ),
+
+                                          child: Text("لا"),
+                                        ),
+                                        TextButton(
+                                          onPressed: () async {
+                                            Navigator.of(context).pop();
+                                            setState(() {
+                                              favoriteList.remove(place);
+                                            });
+
+                                            try {
+                                              // Delete from Firestore
+                                              await FirebaseFirestore.instance
+                                                  .collection('users')
+                                                  .doc(userId)
+                                                  .collection('Favorite')
+                                                  .doc(place.place_id)
+                                                  .delete();
+                                            } catch (e) {
+                                              // Handle any errors
+                                              debugPrint(e.toString());
+                                            }
+
+
+                                          },
+                                          style: TextButton.styleFrom(
+                                            primary: Color(0xff11630e),
+                                          ),
+                                          child: Text("نعم"),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                                ),
+                          ),
+                        ),
+                      ),
+
                     Expanded(child: Container()),
                     Column(
                       children: [
@@ -341,10 +462,12 @@ class _FavoritePage extends State<FavoritePage> {
                                             index < 5;
                                             index++)
                                               Padding(
-                                                padding: const EdgeInsets.symmetric(
+                                                padding:
+                                                const EdgeInsets.symmetric(
                                                     horizontal: 2.0),
                                                 child: Icon(
-                                                  index < averageRating.floor()
+                                                  index <
+                                                      averageRating.floor()
                                                       ? Icons.star
                                                       : index + 0.5 == averageRating
                                                       ? Icons.star_half
@@ -398,6 +521,8 @@ class _FavoritePage extends State<FavoritePage> {
       ),
     );
   }
+
+
 
   String getuser() {
     FirebaseAuth auth = FirebaseAuth.instance;
