@@ -1,0 +1,270 @@
+/* Sidebar styles */
+.sidenav-right {
+    z-index: 1;
+    width: 180px;
+    background-color: #6DB881;
+    color: white;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    right: -130px;
+    bottom: 0;
+    transition: right 0.3s;
+    opacity: 0.9;
+}
+
+.sidenav-right.active {
+    right: 0px;
+}
+
+.sidenav-right a {
+    visibility: hidden;
+    color: #ffffff;
+    text-decoration: none;
+    display: block;
+    margin: 10px 0;
+    padding: 15px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.sidenav-right.active a {
+    visibility: visible;
+    color: #ffffff;
+    text-decoration: none;
+    display: block;
+    margin: 10px 0;
+    padding: 15px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.sidenav-right a:hover {
+    background-color: #90c996;
+    color: #ffffff;
+}
+
+/* Add styles for the menu icon */
+.menu-icon
+{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.menu-icon span {
+    display: block;
+    width: 30px;
+    height: 4px;
+    background-color: white;
+    margin-bottom: 6px;
+    transition: transform 0.3s, opacity 0.3s;
+}
+
+.menu-icon.active span:nth-child(1) {
+    transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+.menu-icon.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-icon.active span:nth-child(3) {
+    transform: rotate(45deg) translate(-5px, -6px);
+}
+
+.background-update-place {
+    background: url('images/buildings.jpg') no-repeat fixed center center;
+    background-size: cover;
+}
+.background-manage-place {
+    background: url('images/balloon.png') no-repeat fixed center center;
+    background-size: cover;
+}
+.background-place-details {
+    background: url('images/desert2.png') no-repeat fixed center center;
+    background-size: cover;
+}
+.background-add-place {
+    background: url('images/ithra.png') no-repeat fixed center center;
+    background-size: cover;
+}
+.background-requested-places {
+    background: url('images/redsea.png') no-repeat fixed center center;
+    background-size: cover;
+}
+.background-shail-addings {
+    background: url('images/mountains.png') no-repeat fixed center center;
+    background-size: cover;
+}
+.background-home {
+    background: url('images/desert1.png') no-repeat fixed center center;
+    background-size: cover;
+}
+
+
+/* Responsive background styles */
+body {
+      font-family: 'Arial', sans-serif;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    opacity: 0.9;
+    transition: opacity 0.5s;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: -1;
+}
+
+.no-overlay::before {
+    display: none;
+    background: none;
+    content: none;
+}
+
+.placeType {
+    border-radius: 5px;
+    height: 20px;
+    width: 150px;
+}
+
+#cancelButton {
+      background-color: #ff6666;
+    width: 120px;
+}
+
+
+#saveButton {
+    width: 120px;
+    /*height: 40px;*/
+}
+
+
+button:hover {
+    transform: scale(1.1);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+button {
+    background-color: #90c996;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+    transition: transform 0.3s;
+}
+
+/* Style for the heading */
+#Heading {
+
+    font-size: 24px;
+    color: #1d5011;
+    text-align: center;
+
+}
+form {
+    text-align: right;
+}
+
+.content {
+    max-width: 100%;
+    width: 100%;
+    padding: 15px;
+    background: #F9FFF9;
+    box-shadow: 1px 2px 6px  #124304;
+    border-radius: 10px;
+}
+
+.form-content {
+    max-width: 100%;
+    width: 100%;
+    padding: 15px;
+    background: #F9FFF9;
+    box-shadow: 1px 2px 6px #124304;
+    border-radius: 10px;
+}
+
+/* For general content */
+.general-content {
+    flex-grow: 1;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Style for the details */
+label,
+p {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #1d5011;
+    font-weight: bold;
+}
+
+
+label{
+    text-align: right;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+
+
+
+textarea, input {
+    margin-bottom: 10px;
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+
+
+
+
+/* Add space between form elements */
+form > div > * {
+    margin-bottom: 15px;
+}
+
+.textarea-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.textarea-container label {
+    margin-bottom: 0;
+}
+
+.textarea-container textarea {
+    margin-bottom: 10px;
+}
+
+
+
+
+/* Style footer */
+.footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding:20px 0px;
+}

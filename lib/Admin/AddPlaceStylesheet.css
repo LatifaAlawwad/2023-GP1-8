@@ -1,0 +1,443 @@
+.container {
+    display: flex;
+    max-width: 700px;
+    min-width: 700px;
+    margin: 0 auto;
+    justify-content: flex-end;
+    align-items: center;
+    min-height: 80vh;
+    text-align: right;
+    margin-top: 3%;
+    margin-bottom: 120px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.content {
+    flex-grow: 1;
+    padding: 20px;
+    text-align: center;
+}
+
+
+p {
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: black;
+}
+
+.logo {
+    text-align: left;
+    padding: 10px;
+    width: 150px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.logo img {
+    width: 130px;
+    height: 130px;
+}
+
+#workingDaysTable input[type="time"] {
+    width: 150px;
+}
+
+.time-container {
+    max-width: 800px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-top: 20px;
+}
+
+#workingDaysTable th,
+#workingDaysTable td {
+    padding: 0px 30px;
+    text-align: center;
+    color: #4f4f4f;
+}
+
+.choice-btn {
+    border: 2px solid #ddd;
+    padding: 10px;
+    display: inline-block;
+    margin-right: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.choice-btn input[type="checkbox"]:checked + label {
+    border-color:  #6DB881;
+}
+
+.choice-btn label {
+    cursor: pointer;
+}
+
+ul.customCheckbox {
+    list-style: none;
+
+}
+
+ul.customCheckbox li {
+    display: inline-block;
+    position: relative;
+}
+
+ul.customCheckbox li label:hover {
+    background-color: #e1f0e5;
+}
+
+
+
+ul.customCheckbox li label {
+    display: inline-block;
+    background-color: rgba(255, 255, 255, .9);
+    border: 2px solid rgba(139, 139, 139, .3);
+    color: #adadad;
+    border-radius: 8px;
+    white-space: normal;
+    margin: 3px 0px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: all .2s;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+ul.customCheckbox li label::before {
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 900;
+    font-size: 12px;
+    padding: 2px 6px 2px 2px;
+}
+
+ul.customCheckbox li input[type="checkbox"]:checked + label {
+    border: 2px solid #62a574;
+    background-color: #7bbf8d;
+    color: #fff;
+    transition: all .2s;
+}
+
+ul.customCheckbox li input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+}
+
+
+
+#addImageButton.has-file {
+    background-color: #008686;
+    color: #ffffff;
+}
+
+
+
+
+input[type="text"],
+textarea,
+select {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+    color: #4f4f4f;
+}
+
+/* Style the submit button */
+button[type="submit"] {
+    padding: 10px 20px;
+    background-color:#416e4d;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color:#2b4933;
+}
+
+
+input[type="text"],
+textarea,
+select,
+button[type="submit"] {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Style labels */
+label {
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+
+    margin-bottom: 5px;
+}
+
+/* Style headings */
+h1, h2 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #1d5011;
+    margin-bottom: 15px;
+}
+
+/* Style footer */
+.footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+}
+
+
+.mandatory{color:#ff6666;}
+
+select {
+    direction: rtl;
+    text-align: right;
+    padding-left: 30px;
+    padding-right: 20px;
+font-size: 15px;
+}
+
+select option {
+    padding-bottom: 30px 0px;
+    font-size: 16px;
+}
+
+
+  .switch {
+     position: relative;
+     display: inline-block;
+     width: 50px;
+     height: 24px;
+   }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+
+
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 12px;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+
+    input:checked + .slider {
+      background-color: #6DB881;
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 1px #6DB881;
+    }
+
+    input:checked + .slider:before {
+      -webkit-transform: translateX(26px);
+      -ms-transform: translateX(26px);
+      transform: translateX(26px);
+    }
+
+
+    .slider.round {
+      border-radius: 34px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
+
+
+
+
+
+
+
+  .radio-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1px;
+  }
+
+  .radio-buttons input[type="radio"] {
+      display: none;
+  }
+
+  .radio-buttons label {
+      display: inline-block;
+      padding: 6px 15px;
+      background-color: #ccc;
+      color: #1d5011;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
+      transition: transform 0.2s ease; /* Add transition for bounce effect */
+  }
+
+  /* Style for selected radio button */
+  .radio-buttons input[type="radio"]:checked + label {
+      background-color: #6DB881;
+      color: #fff;
+  }
+
+  /* Bounce effect when radio button is selected */
+  .radio-buttons input[type="radio"]:checked + label {
+      transform: translateY(-2px); /* Move the label up by 2px */
+  }
+
+  .radio-buttons input[type="radio"]:checked + label:hover {
+      transform: translateY(-2px); /* Maintain the bounce effect on hover */
+  }
+
+.image-container {
+    position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    overflow-x: auto;
+    max-height: 200px;
+    min-height: 150px;
+     box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.1);
+}
+
+.image-container img {
+    max-height: 150px;
+    max-width: 150px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-right: 10px;
+    margin-bottom: 0px;
+    opacity: 1;
+}
+
+
+.large-image-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+}
+
+.large-image-container.active {
+    display: flex;
+}
+
+.large-image-container img {
+    max-width: 90%;
+    max-height: 90%;
+     opacity: 1;
+}
+
+
+.delete-icon {
+    position: absolute;
+
+   cursor: pointer;
+    background-color:  #ff6666;
+    padding: 5px;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    color:white;
+    display: flex; /* Use flexbox */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+}
+
+
+
+.upload {
+     position: relative;
+       margin: auto;
+       display: flex;
+       flex-direction: column;
+       align-items: center;
+}
+
+
+
+.upload p {
+    font-size: 1.1rem;
+    font-weight: 600;
+       color: #1d5011;
+        margin-right: 10px;
+}
+
+.upload-area label {
+    cursor: pointer;
+}
+
+.upload-area input {
+    display: none;
+}
+
+.upload-area span {
+   position: relative;
+       width: 60px;
+       height: 60px;
+       border: 1px dashed;
+       border-radius: 50%;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       transition: transform .4s;
+}
+
+.upload-area span i {
+    position: absolute;
+    font-size: 25px;
+}
+
+.upload-area span:hover {
+    transform: scale(0.8);
+}

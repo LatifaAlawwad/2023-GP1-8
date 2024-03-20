@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>مطاعم</title>
+</head>
+<script src="addPlace.js" type="module"></script>
+<body>
+
+
+
+
+<div id="cuisineDiv">
+    <label> <h2>:نوع الطعام</h2></label>
+    <ul class="customCheckbox">
+        <li><input type="checkbox" id="سعودي" name="cuisineValue" value="سعودي"><label for="سعودي">سعودي</label></li>
+        <li><input type="checkbox" id="إيطالي" name="cuisineValue" value="إيطالي"><label for="إيطالي">إيطالي</label></li>
+        <li><input type="checkbox" id="أمريكي" name="cuisineValue" value="أمريكي"><label for="أمريكي">أمريكي</label></li>
+        <li><input type="checkbox" id="آسيوي" name="cuisineValue" value="آسيوي"><label for="آسيوي">آسيوي</label></li>
+        <li><input type="checkbox" id="هندي" name="cuisineValue" value="هندي"><label for="هندي">هندي</label></li>
+        <li><input type="checkbox" id="مكسيكي" name="cuisineValue" value="مكسيكي"><label for="مكسيكي">مكسيكي</label></li>
+        <li><input type="checkbox" id="تركي" name="cuisineValue" value="تركي"><label for="تركي">تركي</label></li>
+        <li><input type="checkbox" id="بحري" name="cuisineValue" value="بحري"><label for="بحري">بحري</label></li>
+        <li><input type="checkbox" id="إسباني" name="cuisineValue" value="إسباني"><label for="إسباني">إسباني</label></li>
+        <li><input type="checkbox" id="شرقي" name="cuisineValue" value="شرقي"><label for="شرقي">شرقي</label></li>
+        <li><input type="checkbox" id="يوناني" name="cuisineValue" value="يوناني"><label for="يوناني">يوناني</label></li>
+        <li><input type="checkbox" id="مخبوزات" name="cuisineValue" value="مخبوزات"><label for="مخبوزات">مخبوزات</label></li>
+        <li><input type="checkbox" id="عالمي" name="cuisineValue" value="عالمي"><label for="عالمي">عالمي</label></li>
+        <li><input type="checkbox" id="صحي" name="cuisineValue" value="صحي"><label for="صحي">صحي</label></li>
+        <li><input type="checkbox" id="قهوة وحلى" name="cuisineValue" value="قهوة وحلى"><label for="قهوة وحلى">قهوة وحلى</label></li>
+    </ul>
+
+</div>
+
+<input type="hidden" id="cuisine" name="cuisine">
+<div>
+    <label for="priceRange"><h2>:نطاق الأسعار</h2></label>
+    <select id="priceRange" name="priceRange">
+        <option value="منخفض">منخفض</option>
+        <option value="متوسط">متوسط</option>
+        <option value="مرتفع">مرتفع</option>
+    </select>
+
+</div>
+
+
+
+<div id="servesDiv">
+    <label><h2>:الوجبات المقدمة</h2></label>
+    <ul class="customCheckbox">
+        <li><input type="checkbox" id="فطور" name="servesValue" value="فطور"><label for="فطور">فطور</label></li>
+        <li><input type="checkbox" id="غداء" name="servesValue" value="غداء"><label for="غداء">غداء</label></li>
+        <li><input type="checkbox" id="عشاء" name="servesValue" value="عشاء"><label for="عشاء">عشاء</label></li>
+    </ul>
+</div>
+
+<input type="hidden" id="serves" name="serves">
+
+<div id="atmosphereDiv">
+    <label> <h2>:الجو العام</h2></label>
+    <ul class="customCheckbox">
+        <li><input type="checkbox" id="يوجد موسيقى" name="atmosphereValue" value="يوجد موسيقى"><label for="يوجد موسيقى">يوجد موسيقى</label></li>
+        <li><input type="checkbox" id="بدون موسيقى" name="atmosphereValue" value="بدون موسيقى"><label for="بدون موسيقى">بدون موسيقى</label></li>
+        <li><input type="checkbox" id="على البحر" name="atmosphereValue" value="على البحر"><label for="على البحر">على البحر</label></li>
+        <li><input type="checkbox" id="داخلي" name="atmosphereValue" value="داخلي"><label for="داخلي">داخلي</label></li>
+        <li><input type="checkbox" id="خارجي" name="atmosphereValue" value="خارجي"><label for="خارجي">خارجي</label></li>
+    </ul>
+</div>
+
+<input type="hidden" id="atmosphere" name="atmosphere">
+
+<div>
+    <label><h2>:هل يتطلب حجز</h2></label>
+    <div class="radio-buttons">
+        <input type="radio" id="reservationYes" name="hasReservation" value="true">
+        <label for="reservationYes">نعم</label>
+
+        <input type="radio" id="reservationNo" name="hasReservation" value="false" >
+        <label for="reservationNo">لا</label>
+    </div>
+</div>
+
+
+<div id = "reservationDetailsDiv" style="display: none;">
+
+    <input id="reservationDetails" name="reservationDetails" placeholder="تفاصيل طريقة الحجز ورقم التواصل ان وجد" style="text-align: right;"/>
+
+</div>
+
+<div>
+    <label ><h2>:هل يسمح بدخول الأطفال</h2></label>
+    <div class="radio-buttons">
+        <input type="radio" id="allowChildrenYes" name="allowChildren" value="true">
+        <label for="allowChildrenYes">نعم</label>
+
+        <input type="radio" id="allowChildrenNo" name="allowChildren" value="false" >
+        <label for="allowChildrenNo">لا</label>
+    </div>
+</div>
+
+
+<div>
+    <label><h2>:هل توجد خدمة ركن السيارات</h2></label>
+    <div class="radio-buttons">
+        <input type="radio" id="hasValetServicedYes" name="hasValetServiced" value="true">
+        <label for="hasValetServicedYes">نعم</label>
+
+        <input type="radio" id="hasValetServicedNo" name="hasValetServiced" value="false" >
+        <label for="hasValetServicedNo">لا</label>
+    </div>
+</div>
+
+
+
+
+
+
+</body>
+</html>

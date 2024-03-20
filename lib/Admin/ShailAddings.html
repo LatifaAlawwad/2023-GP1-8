@@ -5,96 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Admin Dashboard">
     <title>إضافات سهيل</title>
+    <link rel="stylesheet" href="commonStyles.css">
     <style>
 
 
-  body {
-                     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-   background: url('images/mountains.png') no-repeat fixed center top;
-   background-size: 100%;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            opacity: 0.9;
-     transition: opacity 0.5s;
+
+
+ /* Style for the heading */
+        #Heading {
+
+            font-size: 24px;
+            color: #1d5011;
+            text-align: center;
+
         }
-
-
 
         /* Basic CSS for styling the layout */
         .container {
             display: flex;
             min-height: 100vh;
-        }
- .sidenav-right {
-            width: 150px; /* Set the width as needed */
-            background-color: #6DB881;
-            color: white;
-            padding: 20px;
-            text-align: left;
-            display: flex;
-            flex-direction: column;
-            position: absolute;
-            top: 0;
-            right: -150px; /* Initial position outside the container */
-            bottom: 0; /* Extend to the bottom of the container */
-            transition: right 0.3s; /* Add transition animation */
-        }
 
-        .sidenav-right.active {
-            right: 0; /* Move the sidebar to the right */
-        }
-
- .sidenav-right a {
-           visibility: hidden;
-            color: #ffffff;
-            text-decoration: none;
-            display: block;
-            margin: 10px 0;
-            padding: 15px;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .sidenav-right.active a {
-           visibility: visible;
-            color: #ffffff;
-            text-decoration: none;
-            display: block;
-            margin: 10px 0;
-            padding: 15px;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-
-        .sidenav-right a:hover {
-            background-color: #90c996;
-            color: #ffffff;
-        }
-
-        .content {
-            flex-grow: 1;
-            padding: 20px;
-            text-align: center;
         }
 
 
 
-          .footer {
-
-    transition: opacity 0.5s;
-    background-color: #DEDEDE;
-    color: white;
-    text-align: center;
-    padding: 10px;
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-
-}
-
-             .logo {
+        .logo {
   text-align: left;
   padding: 10px;
   width: 150px;
@@ -105,42 +40,137 @@
 
 .logo img {
   width: 130px;
-  height:130px;
+  height: 130px;
 }
 
 
+
+        /* Style for the container */
+        #placesList {
+
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+
+
+   /* Style for each place container */
+.place-container {
+    border: 1px solid #dcdcdc;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #f2f2f2;
+    text-align: right;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+
+        /* Style for buttons */
+       .button {
+
+    background-color: #90c996;
+    color: white;
+    padding: 6px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.button:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+#delete {
+            background-color: #ff6666;
+        }
+
+        .place-buttons {
+         margin: 10px 0;
+            text-align:right ;
+        }
+
          /* Add styles for the menu icon */
-        .menu-icon {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-            z-index: 1;
-        }
 
-        .menu-icon span {
-            display: block;
-            width: 30px;
-            height: 4px;
-            background-color: white;
-            margin-bottom: 6px;
-            transition: transform 0.3s, opacity 0.3s;
-        }
+    .search-bar {
+    margin-top: 20px;
+}
 
-        .menu-icon.active span:nth-child(1) {
-            transform: rotate(-45deg) translate(-5px, 6px);
-        }
+.search-bar input {
+    width: 50%;
+    padding: 10px;
+    font-size: 16px;
+    text-align: right;
+}
 
-        .menu-icon.active span:nth-child(2) {
-            opacity: 0;
-        }
+.search-bar button {
+    padding: 10px 20px;
+    font-size: 16px;
+}
 
-        .menu-icon.active span:nth-child(3) {
-            transform: rotate(45deg) translate(-5px, -6px);
-        }
+
+
+.tab-bar {
+    width: 57%;
+    margin: 5px auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #6DB881;
+    border-radius: 5px;
+    padding: 10px 0;
+}
+
+.tab {
+    position: relative;
+    color: white;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+
+.tab:hover {
+    color: #357a38;
+}
+
+.tab:after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color:#357a38;
+
+    transition: width 0.3s ease-in-out, left 0.3s ease-in-out;
+}
+
+.tab:hover:after,
+.tab.selected:after {
+    width: 100%;
+    left: 0;
+
+}
+
+.tab.selected {
+    color: #357a38;
+}
+
     </style>
 </head>
-<body>
+<body class="background-shail-addings">
 <div class="container">
     <!-- Logo on the left side without background -->
     <div class="logo">
@@ -150,25 +180,40 @@
 
 
 
-    <!-- Content of the Homepage -->
-    <div class="content">
-        <!-- Add your admin dashboard content here -->
+    <div class="general-content">
+        <h1 id="Heading">أضافات سهيل</h1>
+        <div class="search-bar">
+            <input type="text" placeholder="...ابحث عن اسم المكان">
+            <button type="button" onclick="searchPlaces();">بحث</button>
+        </div>
+
+        <div class="tab-bar">
+            <div class="tab" data-category="مراكز تسوق">مراكز التسوق</div>
+            <div class="tab" data-category="مطاعم">المطاعم</div>
+            <div class="tab" data-category="فعاليات و ترفيه" >فعاليات و ترفيه</div>
+            <div class="tab" data-category="all">الكل</div>
+        </div>
+
+        <div id="placesList">
+
+        </div>
+
     </div>
 </div>
 
-<!-- Footer with space between navigation and footer -->
+
 <div class="footer">
     &copy; 2023 Admin Dashboard
 </div>
 <!-- Menu Icon -->
-<div class="menu-icon" onclick="toggleSideNav()"> <!-- Add the onclick event -->
+<div class="menu-icon" onclick="toggleSideNav()">
     <span></span>
     <span></span>
     <span></span>
 </div>
-<!-- Vertical navigation bar on the right -->
-<div class="sidenav-right" id="navbar"> <!-- Add the id "navbar" -->
-    <!-- Navigation links -->
+
+<div class="sidenav-right" id="navbar">
+
     <span>  </span>
     <a href="home.html">الصفحة الرئيسية</a>
     <a href="ManagePlaces.html">إدارة الأماكن</a>
@@ -188,6 +233,196 @@
         menuIcon.classList.toggle('active');
     }
 </script>
+<script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-app.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+        import { getFirestore, doc, collection, getDocs, getDoc, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-auth.js";
 
+        // Function to handle the "View Details" button click
+        window.viewDetails = function (placeId) {
+
+        };
+             const firebaseConfig = {
+
+     apiKey: "AIzaSyDror2apOXVOmcr7O3bswc-KhZpBFnmuiw",
+       authDomain: "fir-hail-ec5a7.firebaseapp.com",
+        projectId: "fir-hail-ec5a7",
+          storageBucket: "fir-hail-ec5a7.appspot.com",
+            messagingSenderId: "652061667089",
+              appId: "1:652061667089:web:1103ef9a5c45ea6d1c26b0",
+              messagingSenderId: "652061667089",
+  };
+
+        document.addEventListener('DOMContentLoaded', async () => {
+
+
+
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
+
+
+            const ApprovedPlacesRef = collection(db, 'ApprovedPlacesWeb');
+            const tabItems = document.querySelectorAll('.tab');
+
+            tabItems.forEach((tab) => {
+                tab.addEventListener('click', () => {
+                    // Remove the 'selected' class from all tabs
+                    tabItems.forEach((t) => t.classList.remove('selected'));
+
+                    // Add the 'selected' class to the clicked tab
+                    tab.classList.add('selected');
+
+                    const selectedCategory = tab.getAttribute('data-category');
+
+                    // Call a function to filter the results based on the selected category
+                    displayPlaces(selectedCategory);
+                });
+            });
+
+
+const displayPlaces = async (selectedCategory, searchTerm = '') => {
+    try {
+        console.log('Selected Category:', selectedCategory);
+        const querySnapshot = await getDocs(ApprovedPlacesRef);
+        const placesList = document.getElementById('placesList');
+
+        // Clear existing content in the placesList element
+        placesList.innerHTML = '';
+
+        const places = [];
+
+        querySnapshot.forEach((doc) => {
+
+            const placeData = doc.data();
+            if( placeData.User_id==="Admin"){
+            const placeCategory = placeData.category;
+            const placeName = placeData.placeName;
+            const searchName = placeName.toLowerCase();
+            const city = placeData.city;
+            const neighborhood = placeData.neighbourhood;
+            const placeId = doc.id;
+
+            if (
+                (selectedCategory === 'all' || selectedCategory === placeCategory) &&
+                (searchTerm === '' || searchName.includes(searchTerm.toLowerCase()))
+            ) {
+                places.push({
+                    placeId,
+                    placeName,
+                    city,
+                    neighborhood,
+                });
+            }}
+        });
+
+        // Sort places based on the search term match
+        places.sort((a, b) => {
+            const searchTermLower = searchTerm.toLowerCase();
+            const aStartsWith = a.placeName.toLowerCase().startsWith(searchTermLower);
+            const bStartsWith = b.placeName.toLowerCase().startsWith(searchTermLower);
+
+            if (aStartsWith && !bStartsWith) {
+                return -1;
+            } else if (!aStartsWith && bStartsWith) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+
+        // Create and append place containers to the places list
+        places.forEach((place) => {
+            const placeContainer = document.createElement('div');
+            placeContainer.classList.add('place-container');
+            placeContainer.setAttribute('data-place-id', place.placeId);
+
+            placeContainer.innerHTML = `
+                <h3>${place.placeName}</h3>
+                <p>المدينة: ${place.city}</p>
+                <p>الحي: ${place.neighborhood}</p>
+                <a class='button' href='UpdatePlace.html?placeId=${place.placeId}&db=approved'>تحديث البيانات</a>
+                <a class='button' href='placeDetails.html?placeId=${place.placeId}&db=approved'>مشاهدة التفاصيل</a>
+                <div class='place-buttons'>
+                    <button class='button' id='delete' onclick='deletePlace("${place.placeId}")'>حذف</button>
+                </div>
+            `;
+
+            placesList.appendChild(placeContainer);
+        });
+    } catch (error) {
+        console.error('Error getting places: ', error);
+    }
+};
+
+ window.searchPlaces = function () {
+    const searchInput = document.querySelector('.search-bar input');
+    const searchTerm = searchInput.value.trim().toLowerCase();
+
+    // Get the selected category
+    const selectedTab = document.querySelector('.tab.selected');
+    const selectedCategory = selectedTab ? selectedTab.getAttribute('data-category') : 'all';
+
+    // Call the displayPlaces function with the selected category and search term
+    displayPlaces(selectedCategory, searchTerm);
+};
+
+
+// Function to calculate relevance score
+const calculateRelevance = (searchTerm, placeName) => {
+    const searchTokens = searchTerm.split(' ');
+    const placeTokens = placeName.split(' ');
+
+    let relevance = 0;
+
+    searchTokens.forEach((searchToken) => {
+        placeTokens.forEach((placeToken) => {
+            if (placeToken.includes(searchToken)) {
+                relevance += searchToken.length / placeToken.length;
+            }
+        });
+    });
+
+    return relevance;
+};
+
+            // Function to handle the "delete" button click
+            window.deletePlace = function (placeId) {
+                // Display a confirmation dialog
+                const confirmation = confirm("هل أنت متأكد من حذف هذا المكان؟");
+                if (confirmation) {
+                    DeletePlace(placeId);
+                }
+            };
+
+            async function DeletePlace(placeId) {
+                try {
+                    const ApprovedPlacesRef = doc(db, 'ApprovedPlaces', placeId);
+
+                    // Get the place data from the "ApprovedPlaces" collection
+                    const placeSnapshot = await getDoc(ApprovedPlacesRef);
+                    if (placeSnapshot.exists()) {
+                        // Delete the place from the "ApprovedPlaces" collection
+                        await deleteDoc(ApprovedPlacesRef);
+
+                        // Remove the container from the page
+                        const placeContainer = document.querySelector(`[data-place-id="${placeId}"]`);
+                        if (placeContainer) {
+                            placeContainer.remove();
+                        }
+                    } else {
+                        console.error('Place not found in "ApprovedPlaces"');
+                    }
+                } catch (error) {
+                    console.error('Error Deleting place: ', error);
+                }
+            };
+
+            // Call the displayPlaces function to retrieve and display places
+            displayPlaces('all');
+        });
+    </script>
 </body>
 </html>

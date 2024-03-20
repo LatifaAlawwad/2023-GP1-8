@@ -4,26 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Admin Dashboard">
-    <title>تفاصيل الطلب</title>
+    <title>تفاصيل المكان</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css"/>
+    <link rel="stylesheet" href="commonStyles.css">
     <style>
-        /* Reset some default margin and padding for consistency */
-       body {
-       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: url('images/desert2.png') no-repeat fixed center top;
-   background-size: 105%;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    opacity: 0.9;
-     transition: opacity 0.5s;
-}
 
 
 
         #Heading {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             font-size: 24px;
             color: #1d5011;
             text-align: center;
@@ -35,76 +23,12 @@
             min-height: 100vh;
 
         }
- .sidenav-right {
-            width: 150px;
-            background-color: #6DB881;
-            color: white;
-            padding: 20px;
-            text-align: left;
-            display: flex;
-            flex-direction: column;
-            position: absolute;
-            top: 0;
-            right: -150px;
-            bottom: 0;
-            transition: right 0.3s;
-        }
-
-        .sidenav-right.active {
-            right: 0;
-        }
-
- .sidenav-right a {
-
-           visibility: hidden;
-            color: #ffffff;
-            text-decoration: none;
-            display: block;
-            margin: 10px 0;
-            padding: 15px;
-
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .sidenav-right.active a {
-
-           visibility: visible;
-            color: #ffffff;
-            text-decoration: none;
-            display: block;
-            margin: 10px 0;
-            padding: 15px;
-
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-
-        .sidenav-right a:hover {
-            background-color: #90c996;
-            color: #ffffff;
-        }
 
         .content {
             flex-grow: 1;
             padding: 20px;
             text-align: center;
         }
-
-
-
-          .footer {
-
-    transition: opacity 0.5s;
-    background-color: #DEDEDE;
-    color: white;
-    text-align: center;
-    padding: 10px;
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-
-}
 
 
 
@@ -175,26 +99,32 @@
             margin-bottom: 8px;
             color: black;
         }
+.image-container {
+    position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    overflow-x: auto;
+    max-height: 200px;
+    min-height: 150px;
+     box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.1);
+}
 
-          .image-container {
-            width: 100%;
-            height: 150px;
-            overflow-x: auto;
-            white-space: nowrap;
-            margin: 0 auto;
-            display: flex;
-            border: 4px solid #ccc;
-            border-radius: 10px;
-        }
+.image-container img {
+    max-height: 150px;
+    max-width: 150px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-right: 10px;
+    margin-bottom: 0px;
+    opacity: 1;
+}
 
-        .image-container img {
-            height: 100%;
-            max-width: none;
-            object-fit: cover;
-            display: inline-block;
-            border-right: 1px solid #ccc;
-            border-radius: 10px;
-        }
 
       /* Add this style for the enlarged image */
 .large-image-container {
@@ -224,43 +154,11 @@
     display: none;
 }
 
-
-         /* Add styles for the menu icon */
-        .menu-icon {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-            z-index: 1;
-        }
-
-        .menu-icon span {
-            display: block;
-            width: 30px;
-            height: 4px;
-            background-color: white;
-            margin-bottom: 6px;
-            transition: transform 0.3s, opacity 0.3s;
-        }
-
-        .menu-icon.active span:nth-child(1) {
-            transform: rotate(-45deg) translate(-5px, 6px);
-        }
-
-        .menu-icon.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .menu-icon.active span:nth-child(3) {
-            transform: rotate(45deg) translate(-5px, -6px);
-        }
-
-
 #workingDaysTable {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
-    overflow: hidden; /* Add overflow: hidden to hide content that goes beyond the rounded corners */
+    overflow: hidden;
 }
 
 #workingDaysTable th, #workingDaysTable td {
@@ -305,7 +203,7 @@
 
     </style>
 </head>
-<body>
+<body class="background-place-details">
 <!-- Header with navigation links -->
 <div class="header">
     <!-- Logo on the left side without background -->
@@ -328,18 +226,18 @@
         </div>
     </div>
 
-<!-- Footer -->
-<div class="footer">
-    &copy; 2023 S'hail Admin
-</div>
+    <!-- Footer -->
+    <div class="footer">
+        &copy; 2023 S'hail Admin
+    </div>
     <!-- Menu Icon -->
-    <div class="menu-icon" onclick="toggleSideNav()"> <!-- Add the onclick event -->
+    <div class="menu-icon" onclick="toggleSideNav()">
         <span></span>
         <span></span>
         <span></span>
     </div>
     <!-- Vertical navigation bar on the right -->
-    <div class="sidenav-right" id="navbar"> <!-- Add the id "navbar" -->
+    <div class="sidenav-right" id="navbar">
         <!-- Navigation links -->
 
         <a href="home.html">الصفحة الرئيسية</a>
@@ -350,7 +248,7 @@
         <a class="logout" href="logout.html">تسجيل الخروج</a>
     </div>
 </div>
-    <script >
+<script >
     // Toggle the side navigation bar
     function toggleSideNav() {
         const sideNav = document.getElementById('navbar'); // Change the id to "navbar"
@@ -370,13 +268,14 @@
     import { getFirestore, doc, collection, getDoc } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-firestore.js";
 
     document.addEventListener('DOMContentLoaded', async () => {
-        // Initialize Firebase with your configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyBKCStEljQdADcPTDJPG49jPYdj65Ld-aE",
+
+       const firebaseConfig = {
+          apiKey: "AIzaSyBKCStEljQdADcPTDJPG49jPYdj65Ld-aE",
             appId: "1:652061667089:web:1103ef9a5c45ea6d1c26b0",
-            messagingSenderId: "652061667089",
-            projectId: "fir-hail-ec5a7"
+             messagingSenderId: "652061667089",
+           projectId: "fir-hail-ec5a7"
         };
+
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
@@ -396,9 +295,11 @@ console.log("dbplace:", dbplace);
          placeDocRef = doc(addedPlacesRef, placeId);
 }else {
 // Reference to the "ApprovedPlaces" collection and the specific place document
-        const addedPlacesRef = collection(db, 'ApprovedPlaces');
+        const addedPlacesRef = collection(db, 'ApprovedPlacesWeb');
          placeDocRef = doc(addedPlacesRef, placeId);
         }
+
+
 
 
 
@@ -409,7 +310,6 @@ console.log("dbplace:", dbplace);
                 if (placeDoc.exists()) {
                     const placeData = placeDoc.data();
                     const placeName = placeData.placeName;
-                    const location = placeData.Location;
                     const description = placeData.description;
                     const neighbourhood = placeData.neighbourhood;
                     const city = placeData.city;
@@ -418,22 +318,16 @@ console.log("dbplace:", dbplace);
                     let hasValet = placeData.hasValetServiced;
                     const images = placeData.images;
 
-
-
-
-
-
-
-
-
-
-
-if (!hasValet){hasValet='لا';}else {hasValet='نعم';}
+   if(hasValet== null ){ hasValet='لم يتم التحديد';}else {
+if (!hasValet){hasValet='لا';}else {hasValet='نعم';}  }
 
 let weblinkHtml = '';
 
 if (!WebLink || WebLink === '') {
-    weblinkHtml = '';
+   weblinkHtml = `<p>
+       لم يتم التحديد
+        <strong style="color: #1d5011; font-size: 18px; display: inline-block; margin-right: 5px;">:رابط الموقع الإلكتروني</strong>
+    </p>`;
 } else {
     weblinkHtml = `<p>
         <a href="${WebLink}" style="color: blue; text-decoration: underline;" target="_blank">${WebLink}</a>
@@ -457,7 +351,7 @@ if (!workedDaysArray || workedDaysArray.length === 0) {
         const openingTime = dayObject['وقت الإفتتاح'];
         const closingTime = dayObject['وقت الإغلاق'];
 
-        const isOpen24Hours = openingTime === '00:00 AM';
+        const isOpen24Hours = openingTime === '00:00 AM' && closingTime=== '12:59 PM' ;
 
 
         if (isOpen24Hours) {
@@ -487,7 +381,7 @@ if (!workedDaysArray || workedDaysArray.length === 0) {
 
 
 if (category == "مراكز تسوق") {
-    let isOutdoor = placeData.INorOUT;
+    let INorOUT = placeData.INorOUT;
     let hasFoodCourt = placeData.hasFoodCourt;
     let hasPlayArea = placeData.hasPlayArea;
     let hasSupermarket = placeData.hasSupermarket;
@@ -495,13 +389,28 @@ if (category == "مراكز تسوق") {
 
 
 
+      if(INorOUT== null ){ INorOUT='لم يتم التحديد';}
+
+    if(hasFoodCourt== null ){ hasFoodCourt='لم يتم التحديد';}else {
+if (!hasFoodCourt){hasFoodCourt='لا';}else {hasFoodCourt='نعم';}    }
 
 
-if (!hasFoodCourt){hasFoodCourt='لا';}else {hasFoodCourt='نعم';}
-if (!hasPlayArea){hasPlayArea='لا';}else {hasPlayArea='نعم';}
-if (!hasSupermarket){hasSupermarket='لا';}else {hasSupermarket='نعم';}
-if (!hasCinema){hasCinema='لا';}else {hasCinema='نعم';}
-if (!isOutdoor){isOutdoor='خارجي';}else {isOutdoor='داخلي';}
+
+
+if(hasPlayArea== null ){ hasPlayArea='لم يتم التحديد';}else {
+if (!hasPlayArea){hasPlayArea='لا';}else {hasPlayArea='نعم';}  }
+
+
+
+
+if(hasSupermarket== null ){ hasSupermarket='لم يتم التحديد';}else {
+if (!hasSupermarket){hasSupermarket='لا';}else {hasSupermarket='نعم';}}
+
+
+
+if(hasCinema== null ){ hasCinema='لم يتم التحديد';}else {
+if (!hasCinema){hasCinema='لا';}else {hasCinema='نعم';}   }
+
 
 
 
@@ -527,14 +436,14 @@ if (!shopOptions || shopOptions.length === 0) {
     const placeDetails = document.getElementById('placeDetails');
     placeDetails.innerHTML = `
         <p><span style="color: black; font-size: 16px; margin-right: 5px;">${placeName}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:اسم المكان</strong></p>
-
-
-        <p><span style="color: black; font-size: 16px; margin-right: 5px;">${neighbourhood}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:الحي</strong></p>
-        <p><span style="color: black; font-size: 16px; margin-right: 5px;">${city}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:المدينة</strong></p>
+        <p>
+         <span style="color: black; font-size: 16px; margin-right: 5px;">${city}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block; margin-right:10px;">:الحي</strong>
+        <span style="color: black; font-size: 16px; margin-right: 5px;">${neighbourhood}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block; ">:المدينة</strong>
+        </p>
         <p><span style="color: black; font-size: 16px; margin-right: 5px;">${category}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:الفئة</strong></p>
          <div style="display: flex; justify-content: flex-end; align-items: baseline;">
     <span style="color: black; font-size: 16px; margin-right: 5px;">${description}</span>
-    <strong style="color: #1d5011; font-size: 18px; margin-right: 5px;">:الوصف</strong>
+    <strong style="color: #1d5011; font-size: 18px; margin-right: 5px;">:وصف المكان</strong>
     </div>
     ${weblinkHtml}
 
@@ -547,12 +456,12 @@ if (!shopOptions || shopOptions.length === 0) {
 
 <p><span style="color: black; font-size: 16px; margin-right: 5px;"></span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:خيارات المتجر</strong></p>
     <ul style="list-style-type: none; margin-right: 20px; padding-inline-start: 0;">${shopOptionsHTML}</ul>
-        <p><span style="color: black; font-size: 16px; margin-right: 5px;">${hasValet}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:هل يوجد خدمة ركن السيارات</strong></p>
-        <p><span style="color: black; font-size: 16px; margin-right: 5px;">${hasPlayArea}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:هل يوجد منطقة ألعاب</strong></p>
-        <p><span style="color: black; font-size: 16px; margin-right: 5px;">${hasFoodCourt}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:هل يوجد منطقة مطاعم</strong></p>
-        <p><span style="color: black; font-size: 16px; margin-right: 5px;">${hasSupermarket}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:هل يوجد سوبرماركت</strong></p>
+        <p><span style="color: black; font-size: 16px; margin-right: 5px;">${hasValet}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:هل توجد خدمة ركن السيارات</strong></p>
+        <p><span style="color: black; font-size: 16px; margin-right: 5px;">${hasPlayArea}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:هل توجد منطقة ألعاب</strong></p>
+        <p><span style="color: black; font-size: 16px; margin-right: 5px;">${hasFoodCourt}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:هل توجد منطقة مطاعم</strong></p>
+        <p><span style="color: black; font-size: 16px; margin-right: 5px;">${hasSupermarket}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:هل توجد سوبرماركت</strong></p>
         <p><span style="color: black; font-size: 16px; margin-right: 5px;">${hasCinema}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:هل يوجد سينما</strong></p>
-        <p><span style="color: black; font-size: 16px; margin-right: 5px;">${isOutdoor}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:هل المكان داخلي أم خارجي</strong></p>
+        <p><span style="color: black; font-size: 16px; margin-right: 5px;">${INorOUT}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:هل المكان داخلي أم خارجي</strong></p>
                         <p><span style="color: black; font-size: 16px; margin-right: 5px;"></span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:الصور</strong></p>
     `;
 
@@ -570,28 +479,20 @@ if (!shopOptions || shopOptions.length === 0) {
     let isTemporary = placeData.isTemporary;
     const startDate = placeData.startDate;
     const finishDate = placeData.finishDate;
-    let isOutdoor = placeData.INorOUT;
+    let INorOUT = placeData.INorOUT;
     const shopOptions=placeData.shopOptions;
     let hasReservation = placeData.hasReservation;
     const reservationDetails = placeData.reservationDetails;
     const typeEnt=placeData.typeEnt;
 let hasreservation='';
 let istemporary='';
+       if(isTemporary== null ){ istemporary='لم يتم التحديد';} else{
+if (!isTemporary){istemporary='لا';}else {istemporary='نعم';}}
 
-if (!isTemporary){istemporary='لا';}else {istemporary='نعم';}
-if (!hasReservation){hasreservation='لا';}else {hasreservation='نعم';}
-if (!isOutdoor){isOutdoor='لا';}else {isOutdoor='نعم';}
+ if(hasReservation== null ){ hasreservation='لم يتم التحديد';} else{
+if (!hasReservation){hasreservation='لا';}else {hasreservation='نعم';} }
 
-
-
-
-
-
-
-
-
-
-
+   if(INorOUT== null ){ INorOUT='لم يتم التحديد';}
 
 
 
@@ -601,8 +502,10 @@ if (!isOutdoor){isOutdoor='لا';}else {isOutdoor='نعم';}
            <p><span style="color: black; font-size: 16px; margin-right: 5px;">${placeName}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:اسم المكان</strong></p>
 
 
-        <p><span style="color: black; font-size: 16px; margin-right: 5px;">${neighbourhood}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:الحي</strong></p>
-        <p><span style="color: black; font-size: 16px; margin-right: 5px;">${city}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:المدينة</strong></p>
+ <p>
+         <span style="color: black; font-size: 16px; margin-right: 5px;">${city}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block; margin-right:10px;">:الحي</strong>
+        <span style="color: black; font-size: 16px; margin-right: 5px;">${neighbourhood}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block; ">:المدينة</strong>
+        </p>
         <p><span style="color: black; font-size: 16px; margin-right: 5px;">${category}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:الفئة</strong></p>
           <div style="display: flex; justify-content: flex-end; align-items: baseline;">
     <span style="color: black; font-size: 16px; margin-right: 5px;">${description}</span>
@@ -617,12 +520,20 @@ if (!isOutdoor){isOutdoor='لا';}else {isOutdoor='نعم';}
         <p><span style="color: black; font-size: 16px; margin-right: 5px;">${istemporary}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:هل الفعالية موقتة</strong></p>
         ${isTemporary ? `<p><span style="color: black; font-size: 16px; margin-right: 5px;">${startDate}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:تاريخ البداية</strong></p>` : ''}
         ${isTemporary ? `<p><span style="color: black; font-size: 16px; margin-right: 5px;">${finishDate}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:تاريخ النهاية</strong></p>` : ''}
-        <p><span style="color: black; font-size: 16px; margin-right: 5px;">${isOutdoor}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:هل المكان داخلي أم خارجي</strong></p>
-                <p><span style="color: black; font-size: 16px; margin-right: 5px;">${hasValet}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:هل يوجد خدمة ركن السيارات</strong></p>
+        <p><span style="color: black; font-size: 16px; margin-right: 5px;">${INorOUT}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:هل المكان داخلي أم خارجي</strong></p>
+                <p><span style="color: black; font-size: 16px; margin-right: 5px;">${hasValet}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:هل توجد خدمة ركن السيارات</strong></p>
         <p><span style="color: black; font-size: 16px; margin-right: 5px;">${hasreservation}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:هل يتطلب حجز</strong></p>
         ${hasReservation ? `<p><span style="color: black; font-size: 16px; margin-right: 5px;">${reservationDetails}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:تفاصيل الحجز</strong></p>` : ''}
                         <p><span style="color: black; font-size: 16px; margin-right: 5px;"></span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:الصور</strong></p>
     `;
+
+
+
+
+
+
+
+
 } else {
     const priceRange = placeData.priceRange;
     const cuisine = placeData.cuisine;
@@ -632,8 +543,15 @@ if (!isOutdoor){isOutdoor='لا';}else {isOutdoor='نعم';}
     let hasReservation = placeData.hasReservation;
     const reservationDetails = placeData.reservationDetails;
 let hasreservation='';
-if (!hasReservation){hasreservation='لا';}else {hasreservation='نعم';}
-if (!allowChildren){allowChildren='لا';}else {allowChildren='نعم';}
+
+
+ if(hasReservation== null ){ hasreservation='لم يتم التحديد';} else{
+
+if (!hasReservation){hasreservation='لا';}else {hasreservation='نعم';} }
+
+
+  if(allowChildren== null ){ allowChildren='لم يتم التحديد';} else{
+if (!allowChildren){allowChildren='لا';}else {allowChildren='نعم';}  }
 
 
 
@@ -647,8 +565,10 @@ if (!allowChildren){allowChildren='لا';}else {allowChildren='نعم';}
          <p><span style="color: black; font-size: 16px; margin-right: 5px;">${placeName}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:اسم المكان</strong></p>
 
 
-        <p><span style="color: black; font-size: 16px; margin-right: 5px;">${neighbourhood}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:الحي</strong></p>
-        <p><span style="color: black; font-size: 16px; margin-right: 5px;">${city}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:المدينة</strong></p>
+        <p>
+         <span style="color: black; font-size: 16px; margin-right: 5px;">${city}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block; margin-right:10px;">:الحي</strong>
+        <span style="color: black; font-size: 16px; margin-right: 5px;">${neighbourhood}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block; ">:المدينة</strong>
+        </p>
         <p><span style="color: black; font-size: 16px; margin-right: 5px;">${category}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:الفئة</strong></p>
           <div style="display: flex; justify-content: flex-end; align-items: baseline;">
     <span style="color: black; font-size: 16px; margin-right: 5px;">${description}</span>
@@ -667,7 +587,7 @@ if (!allowChildren){allowChildren='لا';}else {allowChildren='نعم';}
 
     <p> <span style="color: black; font-size: 16px;margin-right: 5px; ">${atmosphere}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block; ">:الجو العام</strong></p>
     <p><span style="color: black; font-size: 16px; margin-right: 5px;">${allowChildren}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:هل يسمح بدخول الأطفال</strong></p>
-    <p><span style="color: black; font-size: 16px; margin-right: 5px;">${hasValet}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:هل يوجد خدمة ركن السيارات</strong></p>
+    <p><span style="color: black; font-size: 16px; margin-right: 5px;">${hasValet}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:هل توجد خدمة ركن السيارات</strong></p>
     <p> <span style="color: black; font-size: 16px;margin-right: 5px; ">${hasreservation}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block; ">:هل هناك حجز</strong></p>
      ${hasReservation ? `<p><span style="color: black; font-size: 16px; margin-right: 5px;">${reservationDetails}</span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:تفاصيل الحجز</strong></p>` : ''}
                 <p><span style="color: black; font-size: 16px; margin-right: 5px;"></span><strong style="color: #1d5011; font-size: 18px; display: inline-block;">:الصور</strong></p>
@@ -687,14 +607,26 @@ if (!allowChildren){allowChildren='لا';}else {allowChildren='نعم';}
                     const imageContainer = document.getElementById('imageContainer');
                     imageContainer.innerHTML = ''; // Clear previous images
 
-                    if (images && images.length > 0) {
-                        images.forEach((imageUrl) => {
-                            const image = document.createElement('img');
-                            image.src = imageUrl;
-                            image.alt = "Place Image";
-                            imageContainer.appendChild(image);
-                        });
-                    }
+                      if (images && images.length > 0) {
+                images.forEach((imageUrl) => {
+                    const image = document.createElement('img');
+                    image.src = imageUrl;
+                    image.alt = "Place Image";
+                    // Set a fixed size for all images
+                    image.style.width = "150px";
+                    image.style.height = "150px";
+                    imageContainer.appendChild(image);
+                });
+            } else {
+                // If no images are available, display a message
+                 const noImageMessage = document.createElement('p');
+                noImageMessage.textContent = "لا توجد صور لهذا المكان";
+                noImageMessage.style.color = "#1d5011";
+                noImageMessage.style.textAlign = "center";
+                noImageMessage.style.marginLeft = '40%';
+                 noImageMessage.style.marginRight = '40%';
+                imageContainer.appendChild(noImageMessage);
+            }
                 } else {
                     console.error('Place not found.');
                 }
@@ -705,36 +637,43 @@ if (!allowChildren){allowChildren='لا';}else {allowChildren='نعم';}
 
 
 
+
+
+
+
+
+
 const imageContainer = document.getElementById('imageContainer');
-    const largeImageContainer = document.createElement('div');
-    largeImageContainer.className = 'large-image-container';
-    document.body.appendChild(largeImageContainer);
+        const largeImageContainer = document.createElement('div');
+        largeImageContainer.className = 'large-image-container';
+        document.body.appendChild(largeImageContainer);
 
     // Add a click event listener to each image
-    imageContainer.addEventListener('click', (event) => {
-        if (event.target.tagName === 'IMG') {
-            const imageUrl = event.target.src;
+   imageContainer.addEventListener('click', (event) => {
+          if (event.target.tagName === 'IMG') {
+              const imageUrl = event.target.src;
 
-            // Create an enlarged image element
-            const largeImage = document.createElement('img');
-            largeImage.src = imageUrl;
-            largeImage.alt = 'Enlarged Image';
+              // Create an enlarged image element
+              const largeImage = document.createElement('img');
+              largeImage.src = imageUrl;
+              largeImage.alt = 'Enlarged Image';
 
-            // Add the enlarged image to the large image container
-            largeImageContainer.innerHTML = '';
-            largeImageContainer.appendChild(largeImage);
+              largeImageContainer.innerHTML = '';
+              largeImageContainer.appendChild(largeImage);
 
-            // Toggle classes to show the enlarged image and hide the original image container
-            largeImageContainer.classList.add('active');
-            imageContainer.classList.add('active');
-        }
-    });
+              largeImageContainer.classList.add('active');
+              imageContainer.classList.add('active');
+          }
+      });
 
-    // Add a click event listener to the large image container to close it
-    largeImageContainer.addEventListener('click', () => {
-        largeImageContainer.classList.remove('active');
-        imageContainer.classList.remove('active');
-    });
+      // Function to hide the enlarged image container when clicked outside
+      largeImageContainer.addEventListener('click', () => {
+          largeImageContainer.classList.remove('active');
+          imageContainer.classList.remove('active');
+      });
+
+
+
         // Call the displayPlaceDetails function to retrieve and display place details with images
         displayPlaceDetails();
     });

@@ -5,437 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Admin Dashboard">
-    <title>تفاصيل الطلب</title>
+    <title>تحديث المكان</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link rel="stylesheet" href="commonStyles.css">
+    <link rel="stylesheet" href="AddPlaceStylesheet.css">
     <style>
-      /* Basic CSS for styling the header and footer */
 
 
 
 
 
-
-body{
-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-   background: url('images/buildings.jpg') no-repeat fixed center top;
-   background-size:100%;
-      margin: 0;
-    display: flex;
-    flex-direction: column;
-    position: relative;
- opacity: 0.9;
-    transition: opacity 0.5s;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  /* Style for the heading */
-        #Heading {
-            font-size: 24px;
-            color: #1d5011;
-            text-align: center;
-        }
-
-
- .container {
-            display: flex;
-            min-height: 100vh;
-
-        }
- .sidenav-right {
-            width: 150px;
-            background-color: #6DB881;
-            color: white;
-            padding: 20px;
-            text-align: left;
-            display: flex;
-            flex-direction: column;
-            position: absolute;
-            top: 0;
-            right: -150px;
-            bottom: 0;
-            transition: right 0.3s;
-        }
-
-        .sidenav-right.active {
-            right: 0;
-        }
-
- .sidenav-right a {
-           visibility: hidden;
-            color: #ffffff;
-            text-decoration: none;
-            display: block;
-            margin: 10px 0;
-            padding: 15px;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .sidenav-right.active a {
-           visibility: visible;
-            color: #ffffff;
-            text-decoration: none;
-            display: block;
-            margin: 10px 0;
-            padding: 15px;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-
-        .sidenav-right a:hover {
-            background-color: #90c996;
-            color: #ffffff;
-        }
-
-        .content {
-            flex-grow: 1;
-            padding: 20px;
-            text-align: center;
-        }
-
-
-
-          .footer {
-
-    transition: opacity 0.5s;
-    background-color: #DEDEDE;
-    color: white;
-    text-align: center;
-    padding: 10px;
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-
-}
-
-.logo {
-    text-align: left;
-    padding: 10px;
-    width: 150px;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-.logo img {
-    width: 130px;
-    height: 130px;
-}
-
-/* Text style */
-.header-text {
-    margin-left: 60px;
-}
-
-.header-text a {
-    color: white;
-    text-decoration: none;
-    padding: 10px;
-}
-
-.header-text a:hover {
-    background-color: #f2f2f2;
-    color: #90c996;
-}
-
-/* Container style */
-.container {
-
-    display: flex;
-    max-width: 700px;
-    margin: 0 auto;
-    justify-content: flex-end; /* Align container to the right */
-    align-items: center;
-    min-height: 80vh;
-    text-align: right;
-    margin-top:3%;
-      margin-bottom: 120px;
-}
-
-.content {
-    max-width: 80%;
-    width: 90%;
-    padding: 20px;
-    background: #F9FFF9;
-    box-shadow: 1px 2px 6px  #124304;
-    border-radius: 10px;
-}
-
-/* Style for the details */
-label, p {
-    font-size: 20px;
-    margin-bottom: 10px;
-    color: #1d5011;
-    font-weight: bold;
-}
-
-/* Add space between label and input */
-label {
- text-align: right;
- margin-right: 10px;
-    margin-bottom: 10px;
-    display: inline-block;
-}
-
-textarea, input {
-    margin-bottom: 10px;
-    width: 100%; /* Make form elements 100% width */
-    padding: 8px; /* Add padding for better spacing inside form elements */
-    box-sizing: border-box; /* Include padding and border in element's total width and height */
-}
-
-/* Add space between lines */
-br {
-    margin-bottom: 20px;
-}
-
-
-/* Add space between form elements */
-form > div > * {
-    margin-bottom: 15px;
-}
-
-.textarea-container {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.textarea-container label {
-    margin-bottom: 0;
-}
-
-.textarea-container textarea {
-    margin-bottom: 10px;
-}
-/* Style for the images */
-.image-container {
-
-    width: 100%;
-    height: 150px;
-    overflow-x: auto;
-    white-space: nowrap;
-    margin: 0 auto;
-    display: flex;
-    border: 4px solid #ccc;
-    border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0.1); /* Adjust the opacity as needed */
- z-index: 1; /* Place it behind the images */
-
-}
-
-
-
-.image-container img {
-
-
-    height: 100%;
-    max-width: none;
-    object-fit: cover;
-    display: inline-block;
-    border-right: 1px solid #ccc;
-    border-radius: 10px;
- opacity: 1 !important;
-  z-index: 2;
-}
-
-
-.large-image-container {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    justify-content: center;
-    align-items: center;
-    z-index: 2;
-}
-
-.large-image-container.active {
-    display: flex;
-}
-
-.large-image-container img {
-    max-width: 90%;
-    max-height: 90%;
-}
-
-
-.image-container.active {
-    display: none;
-}
-
-/* Add styles for the menu icon */
-.menu-icon {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-    z-index: 1;
-}
-
-.menu-icon span {
-    display: block;
-    width: 30px;
-    height: 4px;
-    background-color: white;
-    margin-bottom: 6px;
-    transition: transform 0.3s, opacity 0.3s;
-}
-
-.menu-icon.active span:nth-child(1) {
-    transform: rotate(-45deg) translate(-5px, 6px);
-}
-
-.menu-icon.active span:nth-child(2) {
-    opacity: 0;
-}
-
-.menu-icon.active span:nth-child(3) {
-    transform: rotate(45deg) translate(-5px, -6px);
-}
-
-/* Style for the form */
-form {
-    text-align: right;
-}
-/* Style for buttons */
-button {
-    background-color: #90c996;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 5px;
-    transition: transform 0.3s;
-}
-
-/* Apply the bounce effect on hover */
-button:hover {
-    transform: scale(1.1);
-}
-
-button:active {
-    transform: translateY(0);
-    box-shadow: none;
-}
-
-
-#updatePlaceForm {
-opacity:1;
-}
-
-
-
-
-#updatePlaceForm button + button {
-    margin-left: 10px;
-}
-
-
-
-
-.delete-icon {
-    cursor: pointer;
-    color: white;
-    font-size: 24px;
-    font-weight: bold;
-    text-align:center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    background-color: #ff6666;
-    transition: background-color 0.3s;
-}
-
-
-.delete-icon span{
- font-weight: bold;
-    text-align:center;
-    margin-bottom:4px;
-
-}
-
-
-
-
-
-
-
-
-
-.delete-icon:hover {
-    background-color: #ff3333;
-    text-decoration: none;
-}
-
-
-/* Style for the "إضافة صورة" button */
-#addImageButton {
-    white-space: nowrap;
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #ffffff;
-    color: #90c996;
-    border: 1px solid #90c996;
-    border-radius: 5px;
-    cursor: pointer;
-
-}
-
-#addImageButton.has-file {
-    background-color: #90c996;
-    color: #ffffff;
-}
-
-
-
-.time-container {
-    max-width: 600px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
-    margin-bottom: 0; /* Set margin-bottom to 0 */
-}
-
-#timeContainer {
-    margin-bottom: 0;
-}
-
-#workingDaysTable th,
-#workingDaysTable td {
-    padding: 0px 40px;
- text-align: center;
- color: #4f4f4f;
-
-}
-
-#workingDaysTable {
-    margin-bottom: 20px;
-}
 
 
 
@@ -444,67 +24,114 @@ opacity:1;
 
     </style>
 </head>
-
-<body>
+<script src="updatePlace.js" type="module"></script>
+<body class="background-update-place">
 <div class="bodyy">
-<div class="header">
-    <div class="logo">
-        <img src="images/logowithname.png" alt="Logo">
-    </div>
+    <div class="header">
+        <div class="logo">
+            <img src="images/logowithname.png" alt="Logo">
+        </div>
 
-    <div class="container">
-        <div class="content">
-            <form id="updatePlaceForm">
-                <h1 id="Heading">تحديث البيانات</h1>
-                <div id='form'>
-                    <label for="placeName">:اسم المكان</label>
-                    <input type="text" id="placeName" name="placeName" value=''>
-                    <br>
+        <div class="container">
+            <div class="content">
+                <form id="updatePlaceForm">
+                    <h1 id="Heading">تحديث البيانات</h1>
+                    <div id='form'>
+                        <label for="placeName"><h2>:اسم المكان</h2></label>
+                        <input type="text" id="placeName" name="placeName" value='' style="border-radius: 5px; text-align: right;">
+                        <br>
 
-                    <label for="description">:الوصف</label>
-                    <div class="textarea-container">
-                        <textarea id="description" name="description" style="max-width: 100%; min-width: 100px; min-height: 100px; height: 100px; max-height: 200px; overflow-y: auto;"></textarea>
+                        <label for="description"><h2>:وصف المكان</h2></label>
+                        <div class="textarea-container">
+                        <textarea id="description" name="description"
+                                  style="
+                                  max-width:100%;
+                                  min-width: 100px;
+                                  min-height: 100px;
+                                  height: 100px;
+                                  border-radius: 5px;
+                                  max-height: 200px;
+                                  overflow-y: auto;
+                               text-align: right;">
+
+                        </textarea>
+                        </div>
+                        <br>
+
+
+
+                        <label for="description"><h2>:ساعات العمل</h2></label>
+                        <div class="time-container" id="timeContainer">
+                            <table id="workingDaysTable">
+                                <thead>
+                                <tr>
+
+
+                                    <th>وقت الإغلاق</th>
+                                    <th>وقت الإفتتاح</th>
+                                    <th>متاح 24 ساعة</th>
+                                    <th>اليوم</th>
+
+                                </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                </tbody>
+                            </table>
+
+                        </div>
+
+
+
+                        <label for="imageContainer">الصور</label>
+                        <div id="imageContainer" class="image-container">
+                            <!-- Upload button container -->
+                            <div class="upload">
+                                <p >Upload Image</p>
+                                <label class="upload-area">
+                                    <input type="file" id="uploadInput" accept="image/*" multiple>
+                                    <span class="upload-button">
+                <i class="fas fa-arrow-up"></i>
+            </span>
+                                </label>
+                            </div>
+                        </div>
+
+
+
+
+                        <button type="submit" id="saveButton" >حفظ</button>
+
+                        <button type="button"
+                                id="cancelButton"
+                                onclick="cancelUpdate()">
+                            إلغاء
+                        </button>
                     </div>
-                    <br>
+                </form>
+            </div>
+        </div>
 
-                    <label for="description">:ساعات العمل</label>
-                    <div class="time-container" id="timeContainer">
-                    </div>
-
-
-                    <label for="imageContainer">:الصور</label>
-                    <div id="imageContainer" class="image-container" ></div>
-
-                    <div style="display: flex; align-items: center;">
-                        <input type="file" id="imageInput" accept="image/*" multiple>
-                        <span id="addImageButton" class="add-image-link" onclick="addImages()">إضافة صورة</span>
-                    </div>
-
-                    <button type="submit" onclick="saveChanges()">حفظ</button>
-                    <button type="button" id="cancelButton" onclick="cancelUpdate()">إلغاء</button>
-                </div>
-            </form>
+        <div class="footer">
+            &copy; 2023 S'hail Admin
+        </div>
+        <div class="menu-icon" onclick="toggleSideNav()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="sidenav-right" id="navbar">
+            <a href="home.html">الصفحة الرئيسية</a>
+            <a href="ManagePlaces.html">إدارة الأماكن</a>
+            <a href="RequestedPlaces.html">طلبات الإضافة</a>
+            <a href="AddPlace.html">إضافة مكان</a>
+            <a href="ShailAddings.html">إضافات سهيل</a>
+            <a class="logout" href="logout.html">تسجيل الخروج</a>
         </div>
     </div>
-
-    <div class="footer">
-        &copy; 2023 S'hail Admin
-    </div>
-    <div class="menu-icon" onclick="toggleSideNav()">
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
-    <div class="sidenav-right" id="navbar">
-        <a href="home.html">الصفحة الرئيسية</a>
-        <a href="ManagePlaces.html">إدارة الأماكن</a>
-        <a href="RequestedPlaces.html">طلبات الإضافة</a>
-        <a href="AddPlace.html">إضافة مكان</a>
-        <a href="ShailAddings.html">إضافات سهيل</a>
-        <a class="logout" href="logout.html">تسجيل الخروج</a>
-    </div>
-</div>
-<script>
+    <script>
 
  function toggleSideNav() {
         const sideNav = document.getElementById('navbar'); // Change the id to "navbar"
@@ -525,447 +152,7 @@ function cancelUpdate() {
     </script>
 
 
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
-<script type="module">
- // Import the functions you need from the SDKs you need
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-app.js";
-import { getFirestore, doc, collection, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-storage.js";
 
-
-
-
-
-
-
-document.addEventListener('DOMContentLoaded', async () => {
-
-
-
-
-
-
-
-    // Initialize Firebase with your configuration
-    const firebaseConfig = {
-        apiKey: "AIzaSyBKCStEljQdADcPTDJPG49jPYdj65Ld-aE",
-        appId: "1:652061667089:web:1103ef9a5c45ea6d1c26b0",
-        storageBucket:"gs://fir-hail-ec5a7.appspot.com",
-        messagingSenderId: "652061667089",
-        projectId: "fir-hail-ec5a7"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    // Get the place ID from the URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const placeId = urlParams.get("placeId");
-       const dbplace = urlParams.get("db");
-console.log("placeId:", placeId);
-console.log("dbplace:", dbplace);
-
-
- let placeDocRef="";
-        if (dbplace == "pending"){
-        // Reference to the "PendingPlaces" collection and the specific place document
-         const addedPlacesRef = collection(db, 'PendingPlaces');
-         placeDocRef = doc(addedPlacesRef, placeId);
-}else {
-// Reference to the "ApprovedPlaces" collection and the specific place document
-        const addedPlacesRef = collection(db, 'ApprovedPlaces');
-         placeDocRef = doc(addedPlacesRef, placeId);
-        }
-
-
-let images = [];
-let deletedImageIndexes = [];
-
-
-
-    const updatePlaceInDatabase = async (updatedData) => {
-            try {
-                await updateDoc(placeDocRef, updatedData);
-            } catch (error) {
-                console.error('Error updating place details in the database: ', error);
-            }
-        };
-
-
-
-
-        const updateImagesInDatabase = async (updatedImages) => {
-    try {
-        await updateDoc(placeDocRef, {
-            images: updatedImages,
-        });
-    } catch (error) {
-        console.error('Error updating images in the database: ', error);
-    }
-};
-
-
-
-function convertToHTMLTimeFormat(databaseTime) {
-    if (databaseTime) {
-        const [hours, minutes, ampm] = databaseTime.split(/[:\s]+/);
-        const isAM = ampm && ampm.toUpperCase() === 'AM';
-        const formattedHours = (isAM ? hours % 12 : (parseInt(hours) % 12) + 12).toString().padStart(2, '0');
-        const formattedMinutes = minutes.toString().padStart(2, '0');
-        return `${formattedHours}:${formattedMinutes}`;
-    }
-    return '';
-}
-
-
-
-
-     const displayPlaceDetails = async () => {
-    try {
-        const placeDoc = await getDoc(placeDocRef);
-        if (placeDoc.exists()) {
-            const placeData = placeDoc.data();
-            const placeName = placeData.placeName;
-            const description = placeData.description;
-            const existingImages = placeData.images || []; // Existing images from the database
-
-            // Preserve existing images by adding them to the images array
-            images = existingImages.slice(); // Create a copy to avoid direct modification
-
-            const workedDaysArray = placeData.WorkedDays;
-
-            const timeContainer = document.getElementById('timeContainer');
-
-            // Clear existing time containers
-            timeContainer.innerHTML = '';
-
-            const workingDaysTable = document.createElement('table');
-            workingDaysTable.id = 'workingDaysTable';
-
-            const tableHeader = workingDaysTable.createTHead();
-            const headerRow = tableHeader.insertRow(0);
-            headerRow.innerHTML = '<th>وقت الإغلاق</th><th>وقت الإفتتاح</th><th>اليوم</th><br><br><br>';
-
-            timeContainer.appendChild(workingDaysTable);
-
-            workedDaysArray.forEach((dayObject, index) => {
-                const day = dayObject.day;
-                const openingTime = dayObject['وقت الإفتتاح'];
-                const closingTime = dayObject['وقت الإغلاق'];
-
-                const row = workingDaysTable.insertRow(index + 1);
-
-                const timeInputClosing = document.createElement('input');
-                timeInputClosing.type = 'time';
-                timeInputClosing.id = `timeInputClosing${index}`;
-                timeInputClosing.value = convertToHTMLTimeFormat(closingTime);
-                timeInputClosing.style.width = '40%';
-                const closingCell = row.insertCell(0);
-                closingCell.appendChild(timeInputClosing);
-                timeInputClosing.style.width = '120px';
-                timeInputClosing.style.marginBottom = '10px';
-
-                const timeInputOpening = document.createElement('input');
-                timeInputOpening.type = 'time';
-                timeInputOpening.id = `timeInputOpening${index}`;
-                timeInputOpening.value = convertToHTMLTimeFormat(openingTime);
-                timeInputOpening.style.width = '40%';
-                const openingCell = row.insertCell(1);
-                openingCell.appendChild(timeInputOpening);
-                timeInputOpening.style.width = '120px';
-                timeInputOpening.style.marginBottom = '10px';
-
-                const dayCell = row.insertCell(2);
-                const dayText = document.createTextNode(day);
-                dayCell.appendChild(dayText);
-                dayCell.style.textAlign = 'center';
-            });
-
-            document.getElementById('placeName').value = placeName;
-            document.getElementById('description').value = description;
-
-            const imageContainer = document.getElementById('imageContainer');
-            imageContainer.innerHTML = ''; // Clear previous images
-
-            // Add existing images to the imageContainer
-            existingImages.forEach((imageUrl, index) => {
-                const imageContainerDiv = createImageContainerDiv(imageUrl, index);
-                imageContainer.appendChild(imageContainerDiv);
-            });
-
-            updateAddImageButtonStyle();
-        } else {
-            console.error('Place not found.');
-        }
-    } catch (error) {
-        console.error('Error getting place details: ', error);
-    }
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-        const createImageContainerDiv = (imageUrl, index) => {
-            const imageContainerDiv = document.createElement('div');
-            imageContainerDiv.style.position = 'relative';
-
-            const deleteIcon = document.createElement('span');
-            deleteIcon.innerHTML = '<span>×<span>';
-            deleteIcon.className = 'delete-icon';
-            deleteIcon.style.position = 'absolute';
-            deleteIcon.style.top = '5px';
-            deleteIcon.style.right = '5px';
-            deleteIcon.style.cursor = 'pointer';
-
-
- deleteIcon.onclick = () => {
-    const isConfirmed = confirm("هل أنت متأكد أنك تريد حذف هذه الصورة؟");
-    if (isConfirmed) {
-        deletedImageIndexes.push(index);
-        imageContainer.removeChild(imageContainerDiv);
-    }
-};
-
-            const image = document.createElement('img');
-            image.src = imageUrl;
-            image.alt = 'Place Image';
-            image.style.opacity = '1';
-
-
-            imageContainerDiv.appendChild(deleteIcon);
-            imageContainerDiv.appendChild(image);
-
-            return imageContainerDiv;
-        };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-let saveChangesInProgress = false;
-
-const saveChanges = async () => {
-    if (saveChangesInProgress) {
-        console.log('Save Changes function is already in progress, skipping.');
-        return;
-    }
-
-    saveChangesInProgress = true;
-
-    try {
-        console.log('Save Changes function called!');
-
-        const updatedPlaceName = document.getElementById('placeName').value;
-        const updatedDescription = document.getElementById('description').value;
-
-        const updatedData = {
-            placeName: updatedPlaceName,
-            description: updatedDescription,
-        };
-
-        const workingDaysTable = document.getElementById('workingDaysTable');
-        const rows = workingDaysTable.querySelectorAll('tr');
-
-        const updatedWorkedDays = [];
-
-        rows.forEach((row, index) => {
-            if (index > 0) {
-                const day = row.cells[2].innerText;
-                const openingTime = document.getElementById(`timeInputOpening${index - 1}`).value;
-                const closingTime = document.getElementById(`timeInputClosing${index - 1}`).value;
-
-                // Format the times to 12-hour clock format
-                const formattedOpeningTime = new Date(`2022-01-01 ${openingTime}`).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-                const formattedClosingTime = new Date(`2022-01-01 ${closingTime}`).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-
-                updatedWorkedDays.push({
-                    day: day,
-                    'وقت الإفتتاح': formattedOpeningTime,
-                    'وقت الإغلاق': formattedClosingTime,
-                });
-            }
-        });
-
-        updatedData['WorkedDays'] = updatedWorkedDays;
-
-        await updatePlaceInDatabase(updatedData);
-
-        if (deletedImageIndexes.length > 0) {
-            const remainingImages = images.filter((_, index) => !deletedImageIndexes.includes(index));
-            await updateImagesInDatabase(remainingImages);
-            deletedImageIndexes = []; // Clear the array after deletion
-        } else {
-            await updateImagesInDatabase(images);
-        }
-
-        displayPlaceDetails();
-        showToast('تم تحديث البيانات بنجاح!');
-    } finally {
-        saveChangesInProgress = false;
-    }
-};
-window.saveChanges = saveChanges;
-
-function showToast(message) {
-    alert(message);
-}
-
-
-
-
-
-
-
-  const imageInput = document.getElementById('imageInput');
-
- const updateAddImageButtonStyle = () => {
-    const addImageButton = document.getElementById('addImageButton');
-    const imageInput = document.getElementById('imageInput');
-
-    if (imageInput.files.length > 0 || images.length > 0) {
-        addImageButton.classList.add('has-file');
-        addImageButton.classList.add('green-style'); // Add the green style
-    } else {
-        addImageButton.classList.remove('has-file');
-        addImageButton.classList.remove('green-style'); // Remove the green style
-    }
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-const storage = getStorage(app);
-
-const uploadImage = async (imageFile) => {
-    const storageRef = ref(storage, 'images/' + imageFile.name);
-    await uploadBytes(storageRef, imageFile);
-
-    // Get the permanent download URL
-    const downloadURL = await getDownloadURL(storageRef);
-    return downloadURL;
-};
-
-const addImages = async () => {
-    const imageInput = document.getElementById('imageInput');
-    const imageContainer = document.getElementById('imageContainer');
-
-    const imageFiles = imageInput.files;
-
-    if (imageFiles.length > 0) {
-        for (let i = 0; i < imageFiles.length; i++) {
-            const imageFile = imageFiles[i];
-            const imageUrl = await uploadImage(imageFile);
-            const imageContainerDiv = createImageContainerDiv(imageUrl, images.length + i);
-            imageContainer.appendChild(imageContainerDiv);
-            images.push(imageUrl);
-        }
-
-
-        updateAddImageButtonStyle();
-    } else {
-        alert('الرجاء اختيار الصور.');
-    }
-
-    imageInput.value = null;
-};
-    updateAddImageButtonStyle();
-
- window.addImages = addImages;
-
-
-
-
-
-
-
-
-
-
-
-        const updatePlaceForm = document.getElementById('updatePlaceForm');
-        updatePlaceForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            await saveChanges();
-        });
-
-
-
-
-
-
-  const imageContainer = document.getElementById('imageContainer');
-    const largeImageContainer = document.createElement('div');
-    largeImageContainer.className = 'large-image-container';
-    document.body.appendChild(largeImageContainer);
-
-    imageContainer.addEventListener('click', (event) => {
-        if (event.target.tagName === 'IMG') {
-            const imageUrl = event.target.src;
-
-            // Create an enlarged image element
-            const largeImage = document.createElement('img');
-            largeImage.src = imageUrl;
-            largeImage.alt = 'Enlarged Image';
-
-            largeImageContainer.innerHTML = '';
-            largeImageContainer.appendChild(largeImage);
-
-            largeImageContainer.classList.add('active');
-            imageContainer.classList.add('active');
-        }
-    });
-
-    largeImageContainer.addEventListener('click', () => {
-        largeImageContainer.classList.remove('active');
-        imageContainer.classList.remove('active');
-    });
-
-
-
-
-        displayPlaceDetails();
-    });
-
-
-    </script>
 </div>
 </body>
 

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>فعاليات و ترفيه</title>
+</head>
+<body>
+
+<div>
+
+</div>
+
+<div id="typeEntDiv">
+    <label > <h2>:نوع الفعالية</h2></label>
+    <select id="typeEntSelect" name="typeEntSelect">
+        <option value="رياضة و مغامرات">رياضة و مغامرات</option>
+        <option value="فنون">فنون</option>
+        <option value="معالم تاريخية">معالم تاريخية</option>
+        <option value="ثقافة">ثقافة</option>
+        <option value="حدائق و منتزهات">حدائق و منتزهات</option>
+        <option value="مدينة ملاهي">مدينة ملاهي</option>
+        <option value="معارض">معارض</option>
+    </select>
+
+</div>
+
+
+<div >
+    <label><h2>:هل الفعالية مؤقتة</h2></label>
+    <div class="radio-buttons">
+
+        <input type="radio" id="temporaryYes" name="isTemporary" value="true">
+        <label for="temporaryYes">نعم</label>
+
+        <input type="radio" id="temporaryNo" name="isTemporary" value="false" >
+        <label for="temporaryNo">لا</label>
+    </div>
+</div>
+
+
+<div id="startDateContainer"   style="display: none;">
+
+    <label for="startDate">:تاريخ البداية</label>
+    <input id="startDate" name="startDate" type="date" style="text-align: right;"/>
+</div>
+<div id="finishDateContainer"    style="display: none;">
+    <label for="finishDate">:تاريخ النهاية</label>
+    <input id="finishDate" name="finishDate" type="date" style="text-align: right;"/>
+</div>
+
+
+
+<div>
+    <label><h2>:هل هو مكان خارجي أم داخلي</h2></label>
+    <div class="radio-buttons">
+        <input type="radio" id="bothRadio" name="INorOUT" value="كلاهما">
+        <label for="bothRadio">كلاهما</label>
+
+        <input type="radio" id="indoorRadio" name="INorOUT" value="داخلي">
+        <label for="indoorRadio">داخلي</label>
+
+        <input type="radio" id="outdoorRadio" name="INorOUT" value="خارجي" >
+        <label for="outdoorRadio">خارجي</label>
+
+
+    </div>
+</div>
+
+
+
+
+
+
+
+<div>
+    <label><h2>:هل يتطلب حجز</h2></label>
+    <div class="radio-buttons">
+        <input type="radio" id="reservationYes" name="hasReservation" value="true">
+        <label for="reservationYes">نعم</label>
+
+        <input type="radio" id="reservationNo" name="hasReservation" value="false" >
+        <label for="reservationNo">لا</label>
+    </div>
+</div>
+
+<div id = "reservationDetailsDiv" style="display: none;">
+
+    <input id="reservationDetails" name="reservationDetails" placeholder="تفاصيل طريقة الحجز ورقم التواصل ان وجد" style="text-align: right;"/>
+</div>
+
+
+
+
+<div>
+    <label><h2>:هل توجد خدمة ركن السيارات</h2></label>
+    <div class="radio-buttons">
+        <input type="radio" id="hasValetServicedYes" name="hasValetServiced" value="true">
+        <label for="hasValetServicedYes">نعم</label>
+
+        <input type="radio" id="hasValetServicedNo" name="hasValetServiced" value="false" >
+        <label for="hasValetServicedNo">لا</label>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

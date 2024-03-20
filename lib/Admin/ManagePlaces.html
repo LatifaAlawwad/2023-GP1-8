@@ -5,24 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Admin Dashboard">
     <title>إدارة الأماكن</title>
+    <link rel="stylesheet" href="commonStyles.css">
     <style>
 
-       body {
-       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: url('images/balloon.png') no-repeat fixed center top;
-   background-size: 105%;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    opacity: 0.9;
-     transition: opacity 0.5s;
-}
+/*       body {*/
+/*       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;*/
+/*    background: url('images/balloon.png') no-repeat fixed center top;*/
+/*   background-size: 105%;*/
+/*    margin: 0;*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    position: relative;*/
+/*    opacity: 0.9;*/
+/*     transition: opacity 0.5s;*/
+/*}*/
 
 
  /* Style for the heading */
         #Heading {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
             font-size: 24px;
             color: #1d5011;
             text-align: center;
@@ -35,72 +36,8 @@
             min-height: 100vh;
 
         }
- .sidenav-right {
-            width: 150px;
-            background-color: #6DB881;
-            color: white;
-            padding: 20px;
-            text-align: left;
-            display: flex;
-            flex-direction: column;
-            position: absolute;
-            top: 0;
-            right: -150px;
-            bottom: 0;
-            transition: right 0.3s;
-        }
-
-        .sidenav-right.active {
-            right: 0;
-        }
-
- .sidenav-right a {
-           visibility: hidden;
-            color: #ffffff;
-            text-decoration: none;
-            display: block;
-            margin: 10px 0;
-            padding: 15px;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .sidenav-right.active a {
-           visibility: visible;
-            color: #ffffff;
-            text-decoration: none;
-            display: block;
-            margin: 10px 0;
-            padding: 15px;
-            transition: background-color 0.3s, color 0.3s;
-        }
 
 
-        .sidenav-right a:hover {
-            background-color: #90c996;
-            color: #ffffff;
-        }
-
-        .content {
-            flex-grow: 1;
-            padding: 20px;
-            text-align: center;
-        }
-
-
-
-          .footer {
-
-    transition: opacity 0.5s;
-    background-color: #DEDEDE;
-    color: white;
-    text-align: center;
-    padding: 10px;
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-
-}
 
         .logo {
   text-align: left;
@@ -142,7 +79,7 @@
 
         /* Style for buttons */
        .button {
-       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
     background-color: #90c996;
     color: white;
     padding: 6px 12px;
@@ -166,7 +103,7 @@
 }
 
 #delete {
-            background-color: #ff9999;
+            background-color: #ff6666;
         }
 
         .place-buttons {
@@ -175,34 +112,6 @@
         }
 
          /* Add styles for the menu icon */
-        .menu-icon {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-            z-index: 1;
-        }
-
-        .menu-icon span {
-            display: block;
-            width: 30px;
-            height: 4px;
-            background-color: white;
-            margin-bottom: 6px;
-            transition: transform 0.3s, opacity 0.3s;
-        }
-
-        .menu-icon.active span:nth-child(1) {
-            transform: rotate(-45deg) translate(-5px, 6px);
-        }
-
-        .menu-icon.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .menu-icon.active span:nth-child(3) {
-            transform: rotate(45deg) translate(-5px, -6px);
-        }
 
     .search-bar {
     margin-top: 20px;
@@ -271,7 +180,7 @@
 
     </style>
 </head>
-<body>
+<body class="background-manage-place">
 <div class="container">
     <!-- Logo on the left side without background -->
     <div class="logo">
@@ -281,27 +190,12 @@
 
 
 
-    <div class="content">
+    <div class="general-content">
         <h1 id="Heading">إدارة الأماكن</h1>
         <div class="search-bar">
             <input type="text" placeholder="...ابحث عن اسم المكان">
             <button type="button" onclick="searchPlaces();">بحث</button>
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         <div class="tab-bar">
             <div class="tab" data-category="مراكز تسوق">مراكز التسوق</div>
@@ -363,22 +257,24 @@
         };
 
         document.addEventListener('DOMContentLoaded', async () => {
-            // Initialize Firebase with your configuration
-            const firebaseConfig = {
-                apiKey: "AIzaSyBKCStEljQdADcPTDJPG49jPYdj65Ld-aE",
-                appId: "1:652061667089:web:1103ef9a5c45ea6d1c26b0",
-                messagingSenderId: "652061667089",
-                projectId: "fir-hail-ec5a7"
-            };
+         const firebaseConfig = {
+
+     apiKey: "AIzaSyDror2apOXVOmcr7O3bswc-KhZpBFnmuiw",
+       authDomain: "fir-hail-ec5a7.firebaseapp.com",
+        projectId: "fir-hail-ec5a7",
+          storageBucket: "fir-hail-ec5a7.appspot.com",
+            messagingSenderId: "652061667089",
+              appId: "1:652061667089:web:1103ef9a5c45ea6d1c26b0",
+              messagingSenderId: "652061667089",
+  };
+
 
             const app = initializeApp(firebaseConfig);
             const db = getFirestore(app);
 
             // Reference to the "ApprovedPlaces" collection
-            const ApprovedPlacesRef = collection(db, 'ApprovedPlaces');
+            const ApprovedPlacesRef = collection(db, 'ApprovedPlacesWeb');
             const tabItems = document.querySelectorAll('.tab');
-
-
 
             tabItems.forEach((tab) => {
                 tab.addEventListener('click', () => {
@@ -394,18 +290,6 @@
                     displayPlaces(selectedCategory);
                 });
             });
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 const displayPlaces = async (selectedCategory, searchTerm = '') => {
@@ -480,11 +364,6 @@ const displayPlaces = async (selectedCategory, searchTerm = '') => {
     }
 };
 
-
-
-
-
-
  window.searchPlaces = function () {
     const searchInput = document.querySelector('.search-bar input');
     const searchTerm = searchInput.value.trim().toLowerCase();
@@ -496,12 +375,6 @@ const displayPlaces = async (selectedCategory, searchTerm = '') => {
     // Call the displayPlaces function with the selected category and search term
     displayPlaces(selectedCategory, searchTerm);
 };
-
-
-
-
-
-
 
 
 // Function to calculate relevance score
@@ -521,11 +394,6 @@ const calculateRelevance = (searchTerm, placeName) => {
 
     return relevance;
 };
-
-
-
-
-
 
             // Function to handle the "delete" button click
             window.deletePlace = function (placeId) {

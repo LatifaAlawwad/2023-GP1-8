@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>مراكز تسوق</title>
+</head>
+<script src="addPlace.js" type="module"></script>
+<body>
+
+
+<div>
+    <label><h2>:هل هو مكان خارجي أم داخلي</h2></label>
+    <div class="radio-buttons">
+        <input type="radio" id="indoorRadio" name="INorOUT" value="داخلي">
+        <label for="indoorRadio">داخلي</label>
+
+        <input type="radio" id="outdoorRadio" name="INorOUT" value="خارجي" >
+        <label for="outdoorRadio">خارجي</label>
+
+        <input type="radio" id="bothRadio" name="INorOUT" value="كلاهما">
+        <label for="bothRadio">كلاهما</label>
+    </div>
+</div>
+
+<div>
+    <label ><h2>:هل يوجد سينما</h2></label>
+    <div class="radio-buttons">
+        <input type="radio" id="cinemaYes" name="hasCinema" value="true">
+        <label for="cinemaYes">نعم</label>
+
+        <input type="radio" id="cinemaNo" name="hasCinema" value="false" >
+        <label for="cinemaNo">لا</label>
+    </div>
+</div>
+
+<div>
+    <label ><h2>:هل يوجد منطقة ألعاب</h2></label>
+    <div class="radio-buttons">
+        <input type="radio" id="playAreaYes" name="hasPlayArea" value="true">
+        <label for="playAreaYes">نعم</label>
+
+        <input type="radio" id="playAreaNo" name="hasPlayArea" value="false" >
+        <label for="playAreaNo">لا</label>
+    </div>
+</div>
+
+<div>
+    <label ><h2>:هل يوجد منطقة مطاعم</h2></label>
+    <div class="radio-buttons">
+        <input type="radio" id="foodCourtYes" name="hasFoodCourt" value="true">
+        <label for="foodCourtYes">نعم</label>
+
+        <input type="radio" id="foodCourtNo" name="hasFoodCourt" value="false" >
+        <label for="foodCourtNo">لا</label>
+    </div>
+</div>
+
+<div>
+    <label ><h2>:هل يوجد سوبرماركت</h2></label>
+    <div class="radio-buttons">
+        <input type="radio" id="supermarketYes" name="hasSupermarket" value="true">
+        <label for="supermarketYes">نعم</label>
+
+        <input type="radio" id="supermarketNo" name="hasSupermarket" value="false" >
+        <label for="supermarketNo">لا</label>
+    </div>
+</div>
+
+
+<div>
+    <label><h2>:هل توجد خدمة ركن السيارات</h2></label>
+    <div class="radio-buttons">
+        <input type="radio" id="hasValetServicedYes" name="hasValetServiced" value="true">
+        <label for="hasValetServicedYes">نعم</label>
+
+        <input type="radio" id="hasValetServicedNo" name="hasValetServiced" value="false" >
+        <label for="hasValetServicedNo">لا</label>
+    </div>
+</div>
+<div id="shopDiv">
+    <label> <h2>:أنواع المحلات</h2></label>
+    <ul class="customCheckbox">
+        <li><input type="checkbox" id="ملابس" name="shopOptionsValue" value="ملابس"><label for="ملابس">ملابس</label></li>
+        <li><input type="checkbox" id="أحذية" name="shopOptionsValue" value="أحذية"><label for="أحذية">أحذية</label></li>
+        <li><input type="checkbox" id="حقائب" name="shopOptionsValue" value="حقائب"><label for="حقائب">حقائب</label></li>
+        <li><input type="checkbox" id="أثاث" name="shopOptionsValue" value="أثاث"><label for="أثاث">أثاث</label></li>
+        <li><input type="checkbox" id="الكترونيات" name="shopOptionsValue" value="الكترونيات"><label for="الكترونيات">الكترونيات</label></li>
+        <li><input type="checkbox" id="أواني" name="shopOptionsValue" value="أواني"><label for="أواني">أواني</label></li>
+        <li><input type="checkbox" id="عطور" name="shopOptionsValue" value="عطور"><label for="عطور">عطور</label></li>
+        <li><input type="checkbox" id="عبايات" name="shopOptionsValue" value="عبايات"><label for="عبايات">عبايات</label></li>
+        <li><input type="checkbox" id="مجوهرات" name="shopOptionsValue" value="مجوهرات"><label for="مجوهرات">مجوهرات</label></li>
+        <li><input type="checkbox" id="ملابس أطفال" name="shopOptionsValue" value="ملابس أطفال"><label for="ملابس أطفال">ملابس أطفال</label></li>
+        <li><input type="checkbox" id="مستحضرات تجميل" name="shopOptionsValue" value="مستحضرات تجميل"><label for="مستحضرات تجميل">مستحضرات تجميل</label></li>
+        <li><input type="checkbox" id="صيدليات" name="shopOptionsValue" value="صيدليات"><label for="صيدليات">صيدليات</label></li>
+        <li><input type="checkbox" id="أخرى" name="shopOptionsValue" value="أخرى"><label for="أخرى">أخرى</label></li>
+    </ul>
+</div>
+
+
+
+<input type="hidden" id="shopOptions" name="shopOptions">
+
+</body>
+</html>

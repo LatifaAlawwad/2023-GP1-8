@@ -498,27 +498,87 @@ class _editProfileState extends State<editProfile> {
                                                 if (currentPasswordController.text.isNotEmpty){
 
                                                   if(isCurrentPasswordValid){
+                                                  if (newPasswordController.text != currentPasswordController.text) {
+                                                    if (newPasswordController
+                                                        .text ==
+                                                        confirmPasswordController
+                                                            .text) {
+                                                      try {
+                                                        FirebaseFirestore
+                                                            .instance
+                                                            .collection('users')
+                                                            .doc(curentId)
+                                                            .update({
+                                                          'name': nameControlar
+                                                              .text,
+                                                        });
+                                                        await auth.currentUser!
+                                                            .updatePassword(
+                                                            newPasswordController
+                                                                .text);
 
-                                                if (newPasswordController.text == confirmPasswordController.text) {
-                                                  try {
+                                                        Fluttertoast.showToast(
+                                                          msg: "تم التحديث بنجاح",
+                                                          toastLength: Toast
+                                                              .LENGTH_SHORT,
+                                                          gravity: ToastGravity
+                                                              .CENTER,
+                                                          timeInSecForIosWeb: 2,
+                                                          backgroundColor: Color
+                                                              .fromARGB(
+                                                              255, 109, 184,
+                                                              129),
+                                                          textColor: Color
+                                                              .fromARGB(
+                                                              255, 248, 249,
+                                                              250),
+                                                          fontSize: 18.0,
+                                                        );
+                                                      } on FirebaseAuthException catch (e) {
+                                                        Fluttertoast.showToast(
+                                                          msg: "خطأ في تحديث كلمة المرور: ${e
+                                                              .message}",
+                                                          toastLength: Toast
+                                                              .LENGTH_SHORT,
+                                                          gravity: ToastGravity
+                                                              .CENTER,
+                                                          timeInSecForIosWeb: 5,
+                                                          backgroundColor: Color
+                                                              .fromARGB(
+                                                              255, 109, 184,
+                                                              129),
+                                                          textColor: Color
+                                                              .fromARGB(
+                                                              255, 252, 253,
+                                                              255),
+                                                          fontSize: 18.0,
+                                                        );
+                                                      }
+                                                    }
 
-                                                    FirebaseFirestore.instance.collection('users').doc(curentId).update({
-                                                      'name': nameControlar.text,
-                                                    });
-                                                    await auth.currentUser!.updatePassword(newPasswordController.text);
+
+                                                    else {
+                                                      Fluttertoast.showToast(
+                                                        msg: "كلمة المرور الجديدة وتأكيد كلمة المرور غير متطابقتين",
+                                                        toastLength: Toast
+                                                            .LENGTH_SHORT,
+                                                        gravity: ToastGravity
+                                                            .CENTER,
+                                                        timeInSecForIosWeb: 5,
+                                                        backgroundColor: Color
+                                                            .fromARGB(
+                                                            255, 109, 184, 129),
+                                                        textColor: Color
+                                                            .fromARGB(
+                                                            255, 252, 253, 255),
+                                                        fontSize: 18.0,
+                                                      );
+                                                    }
+                                                  }else {
+
 
                                                     Fluttertoast.showToast(
-                                                      msg: "تم التحديث بنجاح",
-                                                      toastLength: Toast.LENGTH_SHORT,
-                                                      gravity: ToastGravity.CENTER,
-                                                      timeInSecForIosWeb: 2,
-                                                      backgroundColor: Color.fromARGB(255, 109, 184, 129),
-                                                      textColor: Color.fromARGB(255, 248, 249, 250),
-                                                      fontSize: 18.0,
-                                                    );
-                                                  } on FirebaseAuthException catch (e) {
-                                                    Fluttertoast.showToast(
-                                                      msg: "خطأ في تحديث كلمة المرور: ${e.message}",
+                                                      msg: "يجب ان تكون كلمة المرور الحالية و الجديدة غير متطابقتين",
                                                       toastLength: Toast.LENGTH_SHORT,
                                                       gravity: ToastGravity.CENTER,
                                                       timeInSecForIosWeb: 5,
@@ -527,20 +587,6 @@ class _editProfileState extends State<editProfile> {
                                                       fontSize: 18.0,
                                                     );
                                                   }
-                                                }
-                                                else {
-                                                  Fluttertoast.showToast(
-                                                    msg: "كلمة المرور الجديدة وتأكيد كلمة المرور غير متطابقتين",
-                                                    toastLength: Toast.LENGTH_SHORT,
-                                                    gravity: ToastGravity.CENTER,
-                                                    timeInSecForIosWeb: 5,
-                                                    backgroundColor: Color.fromARGB(255, 109, 184, 129),
-                                                    textColor: Color.fromARGB(255, 252, 253, 255),
-                                                    fontSize: 18.0,
-                                                  );
-                                                }
-
-
 
                                                   } else {
                                                     Fluttertoast.showToast(
