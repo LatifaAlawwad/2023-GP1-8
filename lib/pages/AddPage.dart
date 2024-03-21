@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:bottom_picker/bottom_picker.dart';
-import 'package:bottom_picker/resources/arrays.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -10,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:gp/Registration/logIn.dart';
 import 'package:gp/helper/CustomRadioButton.dart';
 import 'package:gp/helper/MapViewDrop.dart';
-import 'package:gp/pages/MapView.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:io';
@@ -18,10 +16,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:csc_picker/csc_picker.dart';
 import 'neighbourhood.dart';
 import 'cities.dart';
-import 'MyPlacesPage.dart';
 import 'HomePage.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_place/google_place.dart';
 
 class AddPage extends StatefulWidget {

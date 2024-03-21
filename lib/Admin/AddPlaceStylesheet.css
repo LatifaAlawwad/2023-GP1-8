@@ -93,6 +93,15 @@ ul.customCheckbox li label:hover {
 }
 
 
+#map {
+ border-radius: 15px;
+   margin: 20px auto;
+  width: 90%;
+ height: 300px;
+   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+
+}
+
 
 ul.customCheckbox li label {
     display: inline-block;

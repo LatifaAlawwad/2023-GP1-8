@@ -10,8 +10,12 @@
 
     <link rel="stylesheet" href="commonStyles.css">
     <link rel="stylesheet" href="AddPlaceStylesheet.css">
+    <script async  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFcIlnfFcBbj5KaHBN_G-fZK3hi_WLum0&libraries=places">
+    </script>
+    <script src="addPlace.js" type="module"></script>
+
 </head>
-<script src="addPlace.js" type="module"></script>
+
 
 <body class="background-add-place">
 <div class="container">
@@ -100,6 +104,7 @@
 
 
 
+
             <label for="description"><h2>:وصف المكان<span class="mandatory"> * </span></h2></label>
             <div class="textarea-container">
                         <textarea id="description" name="description"
@@ -116,14 +121,13 @@
                         </textarea>
             </div>
 
+            <label ><h2>:الموقع<span class="mandatory"> * </span></h2></label>
+            <input type="text" id="search_input" name="search_input" value='' placeholder="ابحث عن الموقع هنا"style="border-radius: 5px; text-align: right;">
+            <span style="color:grey; font-size:13px; margin:0 30%;"> أو يمكنك اختيار المكان على الخريطة من خلال تحريك المؤشر</span>
+            <div id="map"  style="height: 400px;"></div>
 
 
-
-
-
-
-
-            <label for="imageContainer">الصور</label>
+            <label for="imageContainer"><h2>:الصور</h2></label>
             <div id="imageContainer" class="image-container">
                 <!-- Upload button container -->
                 <div class="upload">
@@ -168,15 +172,19 @@
 </div>
 
 <script >
-    // Toggle the side navigation bar
-    function toggleSideNav() {
-        const sideNav = document.getElementById('navbar'); // Change the id to "navbar"
-        sideNav.classList.toggle('active');
 
+    function toggleSideNav() {
+        const sideNav = document.getElementById('navbar');
+        sideNav.classList.toggle('active');
         const menuIcon = document.querySelector('.menu-icon');
         menuIcon.classList.toggle('active');
     }
 
+
+
+
+
 </script>
+</body>
 </body>
 </html>
