@@ -7,21 +7,19 @@ import 'placePage.dart';
 import 'placeDetailsPage.dart';
 
 class FavoritePage extends StatefulWidget {
-
   @override
   State<FavoritePage> createState() => _FavoritePage();
 }
 
 class _FavoritePage extends State<FavoritePage> {
   List<placePage> favoriteList = [];
-  late String userId ;
+  late String userId;
 
   @override
   void initState() {
     super.initState();
 
     fetchDataFromFirestore();
-
   }
 
   Future<void> fetchDataFromFirestore() async {
@@ -30,21 +28,23 @@ class _FavoritePage extends State<FavoritePage> {
       userId = getuser();
 
       // Fetch 'place_id' values from 'Favorite' collection
-      QuerySnapshot<Map<String, dynamic>> favoriteSnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .collection('Favorite')
-          .get();
+      QuerySnapshot<Map<String, dynamic>> favoriteSnapshot =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(userId)
+              .collection('Favorite')
+              .get();
 
       List<String> favoritePlaceIds = favoriteSnapshot.docs
           .map((element) => element.data()["place_id"] as String)
           .toList();
 
       // Fetch places from 'ApprovedPlaces' collection that match 'place_id'
-      QuerySnapshot<Map<String, dynamic>> approvedPlacesSnapshot = await FirebaseFirestore.instance
-          .collection('ApprovedPlaces')
-          .where('place_id', whereIn: favoritePlaceIds)
-          .get();
+      QuerySnapshot<Map<String, dynamic>> approvedPlacesSnapshot =
+          await FirebaseFirestore.instance
+              .collection('ApprovedPlaces')
+              .where('place_id', whereIn: favoritePlaceIds)
+              .get();
 
       // Identify the place_ids that no longer exist in 'ApprovedPlaces'
       List<String> existingPlaceIds = approvedPlacesSnapshot.docs
@@ -52,9 +52,11 @@ class _FavoritePage extends State<FavoritePage> {
           .toList();
 
       // Remove non-existing place_ids from 'Favorite' collection
-      List<QueryDocumentSnapshot<Map<String, dynamic>>> nonExistingPlaces = favoriteSnapshot.docs
-          .where((element) => !existingPlaceIds.contains(element.data()["place_id"] as String))
-          .toList();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> nonExistingPlaces =
+          favoriteSnapshot.docs
+              .where((element) => !existingPlaceIds
+                  .contains(element.data()["place_id"] as String))
+              .toList();
 
       // Delete non-existing places from 'Favorite' collection
       nonExistingPlaces.forEach((document) {
@@ -84,63 +86,51 @@ class _FavoritePage extends State<FavoritePage> {
   Widget handleListItems(List<placePage> listItem) {
     return listItem.isNotEmpty
         ? Expanded(
-      child: ListView.separated(
-        itemCount: listItem.length,
-        separatorBuilder: (BuildContext context, int index) {
-          return SizedBox(height: 0);
-        },
-        itemBuilder: (BuildContext context, int index) {
-          if (listItem[index] is placePage) {
-            return _buildItem(
-                  () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        placeDetailsPage(place: listItem[index]),
-                  ),
-                );
+            child: ListView.separated(
+              itemCount: listItem.length,
+              separatorBuilder: (BuildContext context, int index) {
+                return SizedBox(height: 0);
               },
-              listItem[index] as placePage,
-              context,
-            );
-          }
-          return Container();
-        },
-      ),
-    )
+              itemBuilder: (BuildContext context, int index) {
+                if (listItem[index] is placePage) {
+                  return _buildItem(
+                    () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              placeDetailsPage(place: listItem[index]),
+                        ),
+                      );
+                    },
+                    listItem[index] as placePage,
+                    context,
+                  );
+                }
+                return Container();
+              },
+            ),
+          )
         : Center(
-      child: Text(
-        "لم يتم العثور على نتائج",
-        style: TextStyle(
-          color: Color(0xFF6db881),
-          fontSize: 16,
-        ),
-      ),
-    );
+            child: Text(
+              "لم يتم العثور على نتائج",
+              style: TextStyle(
+                color: Color(0xFF6db881),
+                fontSize: 16,
+              ),
+            ),
+          );
   }
-
-
-
-
-
-
-
 
   Future<QuerySnapshot<Map<String, dynamic>>> getFav(String id) {
-    Future<QuerySnapshot<Map<String, dynamic>>> snapshot =
-    FirebaseFirestore.instance.collection('users').doc(id).collection('Favorite').get();
+    Future<QuerySnapshot<Map<String, dynamic>>> snapshot = FirebaseFirestore
+        .instance
+        .collection('users')
+        .doc(id)
+        .collection('Favorite')
+        .get();
     return snapshot;
   }
-
-
-
-
-
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -167,18 +157,17 @@ class _FavoritePage extends State<FavoritePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-
             if (currentUser != null)
-
               FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 future: getFav(userId),
-                builder: (BuildContext context,
-                    AsyncSnapshot<
-                        QuerySnapshot<Map<String, dynamic>>> snapshot,) {
+                builder: (
+                  BuildContext context,
+                  AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
+                ) {
                   return handleListItems(favoriteList);
                 },
               ),
-          if(currentUser == null)
+            if (currentUser == null)
               Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -205,8 +194,8 @@ class _FavoritePage extends State<FavoritePage> {
                         );
                       },
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                            Color(0xFF6db881)),
+                        backgroundColor:
+                            MaterialStateProperty.all(Color(0xFF6db881)),
                         padding: MaterialStateProperty.all(
                           EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                         ),
@@ -230,37 +219,11 @@ class _FavoritePage extends State<FavoritePage> {
     );
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   Widget _buildItem(
-      void Function()? onTap,
-      placePage place,
-      BuildContext context,
-      ) {
-
+    void Function()? onTap,
+    placePage place,
+    BuildContext context,
+  ) {
     return GestureDetector(
       onTap: onTap,
       child: Card(
@@ -278,14 +241,14 @@ class _FavoritePage extends State<FavoritePage> {
               decoration: BoxDecoration(
                 image: place.images.isEmpty
                     ? DecorationImage(
-                  image: NetworkImage(
-                      'https://www.guardanthealthamea.com/wp-content/uploads/2019/09/no-image.jpg'),
-                  fit: BoxFit.cover,
-                )
+                        image: NetworkImage(
+                            'https://www.guardanthealthamea.com/wp-content/uploads/2019/09/no-image.jpg'),
+                        fit: BoxFit.cover,
+                      )
                     : DecorationImage(
-                  image: NetworkImage(place.images[0]),
-                  fit: BoxFit.cover,
-                ),
+                        image: NetworkImage(place.images[0]),
+                        fit: BoxFit.cover,
+                      ),
               ),
               child: Container(
                 padding: EdgeInsets.all(20),
@@ -307,94 +270,87 @@ class _FavoritePage extends State<FavoritePage> {
                     Positioned(
                       top: 10,
                       left: 10,
-
-                        child:Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 234, 250, 236),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Center(
-                            child: IconButton(
-                                alignment: Alignment.center,
-                                icon: (Icon(Icons.favorite,
-                                )
-                                ),
-                                color: Colors.red,
-
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-
-                                      title: Text(
+                      child: Container(
+                        height: 40,
+                        width: 40,
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 234, 250, 236),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: IconButton(
+                            alignment: Alignment.center,
+                            icon: (Icon(
+                              Icons.favorite,
+                            )),
+                            color: Colors.red,
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text(
                                       "تأكيد الإزالة",
-                                     textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: Color(0xff383737),
-                                        ),
-                                    ),
-                                      content: Container(
-                                        constraints: BoxConstraints(maxHeight: 30),
-                                        alignment: Alignment.center,
-
-                                        child: Text(
-                                          "هل تريد إزالة المكان من قائمة المفضلة",
-                                          style: TextStyle(
-                                            color: Color(0xff424242),
-                                          ),
-                                        ),
-
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Color(0xff383737),
                                       ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          style: TextButton.styleFrom(
-                                            primary: Color(0xff11630e),
-                                          ),
-
-                                          child: Text("لا"),
+                                    ),
+                                    content: Container(
+                                      constraints:
+                                          BoxConstraints(maxHeight: 30),
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        "هل تريد إزالة المكان من قائمة المفضلة",
+                                        style: TextStyle(
+                                          color: Color(0xff424242),
                                         ),
-                                        TextButton(
-                                          onPressed: () async {
-                                            Navigator.of(context).pop();
-                                            setState(() {
-                                              favoriteList.remove(place);
-                                            });
-
-                                            try {
-                                              // Delete from Firestore
-                                              await FirebaseFirestore.instance
-                                                  .collection('users')
-                                                  .doc(userId)
-                                                  .collection('Favorite')
-                                                  .doc(place.place_id)
-                                                  .delete();
-                                            } catch (e) {
-                                              // Handle any errors
-                                              debugPrint(e.toString());
-                                            }
-
-
-                                          },
-                                          style: TextButton.styleFrom(
-                                            primary: Color(0xff11630e),
-                                          ),
-                                          child: Text("نعم"),
+                                      ),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        style: TextButton.styleFrom(
+                                          primary: Color(0xff11630e),
                                         ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
-                                ),
+                                        child: Text("لا"),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          Navigator.of(context).pop();
+                                          setState(() {
+                                            favoriteList.remove(place);
+                                          });
+
+                                          try {
+                                            // Delete from Firestore
+                                            await FirebaseFirestore.instance
+                                                .collection('users')
+                                                .doc(userId)
+                                                .collection('Favorite')
+                                                .doc(place.place_id)
+                                                .delete();
+                                          } catch (e) {
+                                            // Handle any errors
+                                            debugPrint(e.toString());
+                                          }
+                                        },
+                                        style: TextButton.styleFrom(
+                                          primary: Color(0xff11630e),
+                                        ),
+                                        child: Text("نعم"),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
                           ),
                         ),
                       ),
+                    ),
 
                     Expanded(child: Container()),
                     Column(
@@ -440,38 +396,38 @@ class _FavoritePage extends State<FavoritePage> {
                                         }
 
                                         List<double> ratings =
-                                        List<double>.from(
+                                            List<double>.from(
                                           snapshot.data!.docs.map((doc) {
-                                            final commentData =
-                                            doc.data() as Map<String, dynamic>;
+                                            final commentData = doc.data()
+                                                as Map<String, dynamic>;
                                             return commentData["rating"]
-                                                .toDouble() ??
+                                                    .toDouble() ??
                                                 0.0;
                                           }),
                                         );
 
-                                        double averageRating =
-                                        ratings.isNotEmpty
+                                        double averageRating = ratings
+                                                .isNotEmpty
                                             ? ratings.reduce((a, b) => a + b) /
-                                            ratings.length
+                                                ratings.length
                                             : 0.0;
 
                                         return Row(
                                           children: [
                                             for (int index = 0;
-                                            index < 5;
-                                            index++)
+                                                index < 5;
+                                                index++)
                                               Padding(
                                                 padding:
-                                                const EdgeInsets.symmetric(
-                                                    horizontal: 2.0),
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 2.0),
                                                 child: Icon(
-                                                  index <
-                                                      averageRating.floor()
+                                                  index < averageRating.floor()
                                                       ? Icons.star
-                                                      : index + 0.5 == averageRating
-                                                      ? Icons.star_half
-                                                      : Icons.star_border,
+                                                      : index + 0.5 ==
+                                                              averageRating
+                                                          ? Icons.star_half
+                                                          : Icons.star_border,
                                                   color: const Color.fromARGB(
                                                       255, 109, 184, 129),
                                                   size: 20.0,
@@ -521,8 +477,6 @@ class _FavoritePage extends State<FavoritePage> {
       ),
     );
   }
-
-
 
   String getuser() {
     FirebaseAuth auth = FirebaseAuth.instance;
