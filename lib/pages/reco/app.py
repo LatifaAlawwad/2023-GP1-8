@@ -1,6 +1,5 @@
 from flask import Flask, jsonify, request
 import firebase_admin
-from firebase_admin import credentials, firestore
 import pandas as pd
 from sklearn.neighbors import NearestNeighbors
 import json

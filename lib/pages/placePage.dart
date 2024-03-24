@@ -224,3 +224,4 @@ class placePage {
   bool get getisTemporary => isTemporary;
 
 }
+
