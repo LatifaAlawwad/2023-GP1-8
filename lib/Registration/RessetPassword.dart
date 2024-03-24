@@ -1,4 +1,3 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,7 +24,7 @@ class _RessetPasswordState extends State<RessetPassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF6db881), // Use your sign-in color here
+        backgroundColor: Color(0xFF6db881),
         automaticallyImplyLeading: false,
         elevation: 0,
         title: Padding(
@@ -82,7 +81,7 @@ class _RessetPasswordState extends State<RessetPassword> {
                 decoration: InputDecoration(
                   prefixIcon: Icon(
                     Icons.mail,
-                    color: Color(0xFF6db881), // Use your sign-in color here
+                    color: Color(0xFF6db881),
                   ),
                   labelText: "البريد الإلكتروني:",
                   labelStyle: TextStyle(fontFamily: "Tajawal-m"),
@@ -123,7 +122,7 @@ class _RessetPasswordState extends State<RessetPassword> {
                   toastLength: Toast.LENGTH_SHORT,
                   gravity: ToastGravity.CENTER,
                   timeInSecForIosWeb: 4,
-                  backgroundColor: Color(0xFF6db881), // Use your sign-in color here
+                  backgroundColor: Color(0xFF6db881),
                   textColor: Color(0xFFF8F9FA),
                   fontSize: 18.0,
                 );
@@ -136,14 +135,14 @@ class _RessetPasswordState extends State<RessetPassword> {
                   toastLength: Toast.LENGTH_SHORT,
                   gravity: ToastGravity.CENTER,
                   timeInSecForIosWeb: 5,
-                  backgroundColor: Color(0xFF6db881), // Use your sign-in color here
+                  backgroundColor: Color(0xFF6db881),
                   textColor: Color(0xFFF8F9FA),
                   fontSize: 18.0,
                 );
               }
             },
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Color(0xFF6db881)), // Use your sign-in color here
+              backgroundColor: MaterialStateProperty.all(Color(0xFF6db881)),
               padding: MaterialStateProperty.all(
                 EdgeInsets.symmetric(horizontal: 50, vertical: 10),
               ),

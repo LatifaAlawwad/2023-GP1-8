@@ -67,6 +67,32 @@
 }
 
 
+
+
+
+
+
+.no-results-message {
+    text-align: center;
+    font-size: 18px;
+    color: #1d5011;
+    margin-top: 20px;
+    background-color: #f2f2f2;
+    padding: 10px;
+    border-radius: 10px;
+
+
+}
+
+
+
+
+
+
+
+
+
+
         /* Style for buttons */
        .button {
 
@@ -317,6 +343,17 @@ const displayPlaces = async (selectedCategory, searchTerm = '') => {
                 });
             }}
         });
+
+
+
+ if (places.length === 0) {
+            // Append the message for no search results
+    placesList.innerHTML = `<p class="no-results-message">لم يتم العثور على نتائج</p>`;
+            return;
+        }
+
+
+
 
         // Sort places based on the search term match
         places.sort((a, b) => {
