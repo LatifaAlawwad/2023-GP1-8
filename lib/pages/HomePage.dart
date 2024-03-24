@@ -4,15 +4,10 @@ import 'FilterPage.dart';
 import 'citiesPage.dart';
 import 'placePage.dart';
 import 'placeDetailsPage.dart';
-import 'AddPage.dart';
-import 'neighbourhood.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:uuid/uuid.dart';
-import 'package:photo_view/photo_view.dart';
-import 'package:photo_view/photo_view_gallery.dart';
-import 'Review.dart';
+
 
 class HomePage extends StatefulWidget {
   final String cityName;
@@ -108,7 +103,7 @@ class HomePageState extends State<HomePage> {
           print('Recommendations are null.');
           return;
         }
-        bool showRecommendations = true;
+
         List<dynamic> recommendations = parsedResponse['api'];
 
         // Extracting place_id and storing it in the output list
@@ -688,7 +683,7 @@ class HomePageState extends State<HomePage> {
     }
   }
 
-  ScrollController _scrollController = ScrollController();
+
 /////////////////////////////////////////////////////////////////////////////////////
   ///@override
   Widget build(BuildContext context) {
@@ -799,7 +794,9 @@ class HomePageState extends State<HomePage> {
                     ),
                   ),
                 ],
+                elevation: 8, // Add elevation for the shadow
               ),
+
             ),
             Container(
               color: Colors.white,
@@ -818,7 +815,7 @@ class HomePageState extends State<HomePage> {
                                 padding: EdgeInsets.only(
                                     top: 50.0, left: 8.0, right: 8.0),
                                 child: SizedBox(
-                                  height: 130.0, // Adjust height of the box
+                                  height: 130.0,
 
                                   child: _buildPlacePageWidget2(context, place),
                                 ),
@@ -856,7 +853,7 @@ class HomePageState extends State<HomePage> {
                 labelStyle: TextStyle(
                   fontFamily: "Tajawal-b",
                   fontWeight: FontWeight.w100,
-                  color: Color(0xFF6db881),
+
                 ),
                 labelPadding: EdgeInsets.symmetric(horizontal: 1.0),
                 onTap: (index) {
@@ -881,16 +878,37 @@ class HomePageState extends State<HomePage> {
                 indicatorColor: Color(0xFF6db881),
                 tabs: [
                   Tab(
-                    text: 'الكل',
+                    child: Text(
+                      'الكل',
+                      style: TextStyle(
+                        color: Color(0xFF6db881), // Set the text color to match the labelStyle
+                      ),
+                    ),
+
                   ),
                   Tab(
-                    text: 'فعاليات و ترفيه',
+                    child: Text(
+                      'فعاليات و ترفيه',
+                      style: TextStyle(
+                        color: Color(0xFF6db881), // Set the text color to match the labelStyle
+                      ),
+                    ),
                   ),
                   Tab(
-                    text: 'مطاعم',
+                    child: Text(
+                      'مطاعم',
+                      style: TextStyle(
+                        color: Color(0xFF6db881), // Set the text color to match the labelStyle
+                      ),
+                    ),
                   ),
                   Tab(
-                    text: 'مراكز تسوق',
+                    child: Text(
+                      'مراكز تسوق',
+                      style: TextStyle(
+                        color: Color(0xFF6db881), // Set the text color to match the labelStyle
+                      ),
+                    ),
                   ),
                 ],
               ),
