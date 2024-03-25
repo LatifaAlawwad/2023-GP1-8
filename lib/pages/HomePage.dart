@@ -813,7 +813,7 @@ class HomePageState extends State<HomePage> {
                             if (place.place_id == placeId) {
                               return Padding(
                                 padding: EdgeInsets.only(
-                                    top: 50.0, left: 8.0, right: 8.0),
+                                    top: 30.0, left: 8.0, right: 8.0),
                                 child: SizedBox(
                                   height: 130.0,
 
@@ -828,7 +828,7 @@ class HomePageState extends State<HomePage> {
                     ),
                   ),
                   Positioned(
-                    top: 0,
+                    top: 10.0,
                     right: 0,
                     child: Container(
                       child: Padding(
