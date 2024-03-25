@@ -698,22 +698,24 @@ void initState() {
                             CustomRadioButton(
                                 onTap: () {
                                   setState(() {
-                                    hasReservation = false;
+
+                                    hasReservation =  (hasReservation == false) ? null : false;
                                   });
                                 },
                                 text: 'لا يتطلب حجز',
-                                value: !(hasReservation ?? true)),
+                                value: hasReservation== false ),
                             const SizedBox(
                               width: 10,
                             ),
                             CustomRadioButton(
                                 onTap: () {
                                   setState(() {
-                                    hasReservation = true;
+
+                                    hasReservation =   (hasReservation == true) ? null : true;
                                   });
                                 },
                                 text: 'يتطلب حجز',
-                                value: hasReservation ?? false),
+                                value: hasReservation==true),
                             const SizedBox(
                               width: 10,
                             ),
@@ -1019,22 +1021,24 @@ void initState() {
                             CustomRadioButton(
                                 onTap: () {
                                   setState(() {
-                                    hasReservation = false;
+
+                                    hasReservation =  (hasReservation == false) ? null : false;
                                   });
                                 },
                                 text: 'لا يتطلب حجز',
-                                value: !(hasReservation ?? true)),
+                                value: hasReservation== false ),
                             const SizedBox(
                               width: 10,
                             ),
                             CustomRadioButton(
                                 onTap: () {
                                   setState(() {
-                                    hasReservation = true;
+
+                                    hasReservation =   (hasReservation == true) ? null : true;
                                   });
                                 },
                                 text: 'يتطلب حجز',
-                                value: hasReservation ?? false),
+                                value: hasReservation==true),
                             const SizedBox(
                               width: 10,
                             ),

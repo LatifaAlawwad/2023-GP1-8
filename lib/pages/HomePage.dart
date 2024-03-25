@@ -815,7 +815,7 @@ class HomePageState extends State<HomePage> {
                                 padding: EdgeInsets.only(
                                     top: 30.0, left: 8.0, right: 8.0),
                                 child: SizedBox(
-                                  height: 130.0,
+                                  height: 150.0,
 
                                   child: _buildPlacePageWidget2(context, place),
                                 ),
