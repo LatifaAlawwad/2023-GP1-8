@@ -279,21 +279,6 @@ class _editProfileState extends State<editProfile> {
                                   ),
                                 ),
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                                 SizedBox(
                                   height: 10,
                                 ),
@@ -375,9 +360,6 @@ class _editProfileState extends State<editProfile> {
                                 ),
 
 
-
-
-
                                 Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 8),
                                   child: Directionality(
@@ -434,15 +416,6 @@ class _editProfileState extends State<editProfile> {
                                     ],
                                   ),
                                 ),
-
-
-
-
-
-
-
-
-
 
                                 SizedBox(
                                   height: 100,
@@ -717,13 +690,6 @@ class _editProfileState extends State<editProfile> {
     }
   }
 
-
-
-
-
-
-
-
   Future<void>  _isConfirmed()async  {
     if (confirmPasswordController.text.isNotEmpty) {
 
@@ -741,35 +707,7 @@ class _editProfileState extends State<editProfile> {
 
     }
   }
-
-
-
-
-
-
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 Future getCurrentUser() async {
   final FirebaseAuth auth = FirebaseAuth.instance;

@@ -11,6 +11,7 @@ import 'package:gp/pages/placePage.dart';
 import 'dart:math';
 import 'package:gp/helper/PlaceDetailsWidget.dart';
 import 'package:gp/pages/mapdetailspage.dart';
+import 'package:flutter/services.dart';
 
 class MapSample extends StatefulWidget {
   @override
@@ -47,19 +48,19 @@ class MapSampleState extends State<MapSample> {
     //location permission
     _initializeCurrentLocation();
     BitmapDescriptor.fromAssetImage(
-            ImageConfiguration(size: Size(48, 48)), 'assets/images/rest.png')
+        ImageConfiguration(size: Size(48, 48)), 'assets/images/rest.png')
         .then((onValue) {
       restIcon = onValue;
     });
 
     BitmapDescriptor.fromAssetImage(
-            ImageConfiguration(size: Size(48, 48)), 'assets/images/mall.png')
+        ImageConfiguration(size: Size(48, 48)), 'assets/images/mall.png')
         .then((onValue) {
       mallIcon = onValue;
     });
 
     BitmapDescriptor.fromAssetImage(
-            ImageConfiguration(size: Size(48, 48)), 'assets/images/marker.png')
+        ImageConfiguration(size: Size(48, 48)), 'assets/images/marker.png')
         .then((onValue) {
       myIcon = onValue;
     });
@@ -73,11 +74,13 @@ class MapSampleState extends State<MapSample> {
 
     //Marker icon
     BitmapDescriptor.fromAssetImage(
-            ImageConfiguration(size: Size(48, 48)), 'assets/images/ent.png')
+        ImageConfiguration(size: Size(48, 48)), 'assets/images/ent.png')
         .then((onValue) {
       entIcon = onValue;
     });
   }
+
+
 
   void _initializeCurrentLocation() async {
     LocationPermission permission = await Geolocator.checkPermission();

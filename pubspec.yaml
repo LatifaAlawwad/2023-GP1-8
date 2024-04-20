@@ -31,6 +31,7 @@ dependencies:
   uuid: ^4.2.1
   http: ^0.13.4
   shared_preferences: ^2.0.10
+  hijri: ^3.0.0
 
 
 
@@ -57,6 +58,8 @@ dependencies:
   bottom_picker: ^2.3.2
   geocoding: ^2.1.1
   expandable: ^5.0.1
+  table_calendar: ^3.0.1
+
 
 
 
@@ -106,6 +109,9 @@ flutter:
     - assets/images/ent.png
     - assets/images/mall.png
     - assets/images/rest.png
+    - assets/images/mall_2.png
+
+
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
 

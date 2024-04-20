@@ -282,6 +282,7 @@ class HomePageState extends State<HomePage> {
       }
     }
 
+
     if (filteredItems.isEmpty) {
       return Center(
         child: Text(
@@ -661,7 +662,7 @@ class HomePageState extends State<HomePage> {
       return Container();
     }
   }
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////
   void performSearch(String query) {
     searchResults.clear();
 

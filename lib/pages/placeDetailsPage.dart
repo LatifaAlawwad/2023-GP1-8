@@ -15,7 +15,7 @@ import 'package:photo_view/photo_view_gallery.dart';
 import 'Review.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
+import 'Calendar/TripPlanningPage.dart';
 
 
 
@@ -68,6 +68,7 @@ class _placeDetailsState extends State<placeDetailsPage> {
   String url = '';
   var data;
   bool isFavorite = false;
+  bool isCalendar= false;
   late String id;
   final ScrollController _scrollController = ScrollController();
   double thumbWidth = 0.0;
@@ -233,168 +234,207 @@ void toggleFavorites()  {
             ),
        SizedBox(
               height: size.height * 0.35,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            toggleFavorites();
-                          },
-                          child: Container(
-                            height: 40,
-                            width: 40,
-                            decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 234, 250, 236),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Center(
-                              child: Icon(
-                                isFavorite ? Icons.favorite : Icons.favorite_border,
-                                color: isFavorite ? Colors.red : Color(0xFF6db881),
-                                size: 30,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 16),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Container(
-                            height: 40,
-                            width: 40,
-                            decoration: const BoxDecoration(
-                              color: Color(0xFF6db881),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Center(
-                              child: Icon(
-                                Icons.arrow_forward_ios,
-                                color: Colors.white,
-                                size: 20,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 26,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          ' ${widget.place.placeName}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: "Tajawal-m",
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          '${widget.place.neighbourhood} ، ${widget.place.city}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: "Tajawal-l",
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 4,
-                        ),
-                        const Icon(
-                          Icons.location_pin,
-                          color: Colors.white,
-                          size: 18,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                    ),
-                    child: StreamBuilder<QuerySnapshot>(
-                      stream: FirebaseFirestore.instance
-                          .collection('ApprovedPlaces')
-                          .doc(widget.place.place_id)
-                          .collection('Reviews')
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        }
+         child: Column(
+           crossAxisAlignment: CrossAxisAlignment.end,
+           children: [
+             Padding(
+               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+               child: Row(
+                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                 children: [
+                   GestureDetector(
+                     onTap: () {
+                       toggleFavorites();
+                     },
+                     child: Container(
+                       height: 40,
+                       width: 40,
+                       decoration: BoxDecoration(
+                         color: Color.fromARGB(255, 234, 250, 236),
+                         shape: BoxShape.circle,
+                       ),
+                       child: Center(
+                         child: Icon(
+                           isFavorite ? Icons.favorite : Icons.favorite_border,
+                           color: isFavorite ? Colors.red : Color(0xFF6db881),
+                           size: 30,
+                         ),
+                       ),
+                     ),
+                   ),
+                   SizedBox(width: 180),
+                   GestureDetector(
+                     onTap: () {
+                       Navigator.pop(context);
+                     },
+                     child: Container(
+                       height: 40,
+                       width: 40,
+                       decoration: const BoxDecoration(
+                         color: Color(0xFF6db881),
+                         shape: BoxShape.circle,
+                       ),
+                       child: const Center(
+                         child: Icon(
+                           Icons.arrow_forward_ios,
+                           color: Colors.white,
+                           size: 20,
+                         ),
+                       ),
+                     ),
+                   ),
+                 ],
+               ),
+             ),
 
-                        List<double> ratings = List<double>.from(
-                          snapshot.data!.docs.map((doc) {
-                            final commentData =
-                            doc.data() as Map<String, dynamic>;
-                            return commentData["rating"].toDouble() ?? 0.0;
-                          }),
-                        );
+             Row(
+               mainAxisAlignment: MainAxisAlignment.start,
+               children: [
+                 SizedBox(width: 23), // Add some space between the icons
+                 GestureDetector(
+                   onTap: () {
+                     Navigator.push(
+                       context,
+                       MaterialPageRoute(
+                         builder: (context) => TripPlanningPage(
+                           showConversation: true,
+                           place_id:widget.place.place_id,
+                           placeName:widget.place.placeName,
+                         ),
+                       ),
+                     );
+                   },
+                   child: Container(
+                     height: 40,
+                     width: 40,
+                     decoration: BoxDecoration(
+                       color: Color.fromARGB(255, 234, 250, 236),
+                       shape: BoxShape.circle,
+                     ),
+                     child: Center(
+                       child: Icon(
+                         Icons.calendar_month_outlined,
+                         color: Color(0xFF6db881),
+                         size: 30,
+                       ),
 
-                        // Calculate the average rating
-                        double averageRating = ratings.isNotEmpty
-                            ? ratings.reduce((a, b) => a + b) / ratings.length
-                            : 0.0;
+                     ),
+                   ),
+                 ),
+               ],
+             ),
 
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            for (int index = 0; index < 5; index++)
-                              Padding(
-                                padding:
-                                const EdgeInsets.symmetric(horizontal: 2.0),
-                                child: Icon(
-                                  index < averageRating.floor()
-                                      ? Icons.star
-                                      : index + 0.5 == averageRating
-                                      ? Icons.star_half
-                                      : Icons.star_border,
-                                  color:
-                                  const Color.fromARGB(255, 109, 184, 129),
-                                  size: 22.0,
-                                ),
-                              ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
+             Expanded(
+               child: Container(),
+             ),
+             Padding(
+               padding: const EdgeInsets.symmetric(
+                 horizontal: 26,
+               ),
+               child: Row(
+                 mainAxisAlignment: MainAxisAlignment.end,
+                 children: [
+                   Text(
+                     ' ${widget.place.placeName}',
+                     style: const TextStyle(
+                       color: Colors.white,
+                       fontSize: 24,
+                       fontWeight: FontWeight.bold,
+                       fontFamily: "Tajawal-m",
+                     ),
+                   ),
+                 ],
+               ),
+             ),
+             const SizedBox(
+               height: 5,
+             ),
+             Padding(
+               padding: const EdgeInsets.symmetric(
+                 horizontal: 24,
+               ),
+               child: Row(
+                 mainAxisAlignment: MainAxisAlignment.end,
+                 children: [
+                   Text(
+                     '${widget.place.neighbourhood} ، ${widget.place.city}',
+                     style: const TextStyle(
+                       color: Colors.white,
+                       fontSize: 17,
+                       fontWeight: FontWeight.bold,
+                       fontFamily: "Tajawal-l",
+                     ),
+                   ),
+                   const SizedBox(
+                     width: 4,
+                   ),
+                   const Icon(
+                     Icons.location_pin,
+                     color: Colors.white,
+                     size: 18,
+                   ),
+                 ],
+               ),
+             ),
+             const SizedBox(
+               height: 5,
+             ),
+             Padding(
+               padding: const EdgeInsets.symmetric(
+                 horizontal: 24,
+               ),
+               child: StreamBuilder<QuerySnapshot>(
+                 stream: FirebaseFirestore.instance
+                     .collection('ApprovedPlaces')
+                     .doc(widget.place.place_id)
+                     .collection('Reviews')
+                     .snapshots(),
+                 builder: (context, snapshot) {
+                   if (snapshot.connectionState ==
+                       ConnectionState.waiting) {
+                     return const CircularProgressIndicator();
+                   }
+
+                   List<double> ratings = List<double>.from(
+                     snapshot.data!.docs.map((doc) {
+                       final commentData =
+                       doc.data() as Map<String, dynamic>;
+                       return commentData["rating"].toDouble() ?? 0.0;
+                     }),
+                   );
+
+                   // Calculate the average rating
+                   double averageRating = ratings.isNotEmpty
+                       ? ratings.reduce((a, b) => a + b) / ratings.length
+                       : 0.0;
+
+                   return Row(
+                     mainAxisAlignment: MainAxisAlignment.end,
+                     children: [
+                       for (int index = 0; index < 5; index++)
+                         Padding(
+                           padding:
+                           const EdgeInsets.symmetric(horizontal: 2.0),
+                           child: Icon(
+                             index < averageRating.floor()
+                                 ? Icons.star
+                                 : index + 0.5 == averageRating
+                                 ? Icons.star_half
+                                 : Icons.star_border,
+                             color:
+                             const Color.fromARGB(255, 109, 184, 129),
+                             size: 22.0,
+                           ),
+                         ),
+                     ],
+                   );
+                 },
+               ),
+             ),
+           ],
+         ),
+
+       ),
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(

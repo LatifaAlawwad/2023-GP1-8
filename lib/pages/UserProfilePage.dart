@@ -1,11 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../Registration/SignUp.dart';
 import "editProfile.dart";
 import 'MyPlacesPage.dart';
 import 'package:gp/Registration/logIn.dart';
-
+import 'Calendar/TripPlanningPage.dart'; // Import the TripPlanningPage
+import 'package:cloud_firestore/cloud_firestore.dart';
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({Key? key}) : super(key: key);
 
@@ -71,122 +71,44 @@ class _UserProfilePageState extends State<UserProfilePage> {
                               return Column(
                                 children: [
                                   SizedBox(height: 40),
-                                  Container(
-                                    width: 350,
-                                    height: 62,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Color.fromARGB(119, 110, 110, 110),
-                                        width: 1,
-                                      ),
-                                      color: Color.fromARGB(33, 215, 215, 218),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        IconButton(
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => editProfile(),
-                                              ),
-                                            );
-                                          },
-                                          icon: const Icon(Icons.keyboard_arrow_left),
-                                          color: Colors.grey,
-                                          iconSize: 30,
+                                  buildProfileOption(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => editProfile(),
                                         ),
-                                        SizedBox(width: 30),
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => editProfile(),
-                                              ),
-                                            );
-                                          },
-                                          child: Text(
-                                            "تعديل المعلومات الشخصية",
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              color: Color.fromARGB(255, 109, 184, 129),
-                                              fontFamily: "Tajawal-b",
-                                            ),
-                                          ),
-                                        ),
-                                        Icon(
-                                          Icons.edit,
-                                          size: 20,
-                                          color: Color.fromARGB(255, 137, 139, 145),
-                                        ),
-                                      ],
-                                    ),
+                                      );
+                                    },
+                                    title: "تعديل المعلومات الشخصية",
+                                    icon: Icons.edit,
                                   ),
                                   SizedBox(height: 25),
-                                  Container(
-                                    width: 350,
-                                    height: 62,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Color.fromARGB(119, 110, 110, 110),
-                                        width: 1,
-                                      ),
-                                      color: Color.fromARGB(33, 215, 215, 218),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        IconButton(
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => myPlacesPage(),
-                                              ),
-                                            );
-                                          },
-                                          icon: const Icon(Icons.keyboard_arrow_left),
-                                          color: Colors.grey,
-                                          iconSize: 30,
+                                  buildProfileOption(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => myPlacesPage(),
                                         ),
-                                        SizedBox(width: 30),
-                                        Expanded(
-                                          child: TextButton(
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) => myPlacesPage(),
-                                                ),
-                                              );
-                                            },
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.end,
-                                              children: [
-                                                Text(
-                                                  "طلبات الإضافة  ",
-                                                  style: TextStyle(
-                                                    fontSize: 18,
-                                                    color: Color.fromARGB(255, 109, 184, 129),
-                                                    fontFamily: "Tajawal-b",
-                                                  ),
-                                                ),
-                                                Icon(
-                                                  Icons.edit_location,
-                                                  size: 20,
-                                                  color: Color.fromARGB(255, 137, 139, 145),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-
-                                      ],
-                                    ),
+                                      );
+                                    },
+                                    title: "طلبات الإضافة",
+                                    icon: Icons.edit_location,
                                   ),
-                                  SizedBox(height: 120),
+                                  SizedBox(height: 25),
+                                  buildProfileOption(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => TripPlanningPage(),
+                                        ),
+                                      );
+                                    },
+                                    title: "تخطيط الرحلات",
+                                    icon: Icons.calendar_month_sharp,
+                                  ),
                                 ],
                               );
                             } else {
@@ -249,9 +171,56 @@ class _UserProfilePageState extends State<UserProfilePage> {
     );
   }
 
-
-
-
+  Widget buildProfileOption({required VoidCallback onPressed, required String title, required IconData icon}) {
+    return Container(
+      width: 350,
+      height: 62,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Color.fromARGB(119, 110, 110, 110),
+          width: 1,
+        ),
+        color: Color.fromARGB(33, 215, 215, 218),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Row(
+        children: [
+          IconButton(
+            onPressed: () {
+              Navigator.pop(context); // Navigate back if needed
+            },
+            icon: const Icon(Icons.keyboard_arrow_left),
+            color: Colors.grey,
+            iconSize: 30,
+          ),
+          SizedBox(width: 30),
+          Expanded(
+            child: TextButton(
+              onPressed: onPressed,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Color.fromARGB(255, 109, 184, 129),
+                      fontFamily: "Tajawal-b",
+                    ),
+                  ),
+                  Icon(
+                    icon,
+                    size: 20,
+                    color: Color.fromARGB(255, 137, 139, 145),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   Future getCurrentUser() async {
     final FirebaseAuth auth = FirebaseAuth.instance;
