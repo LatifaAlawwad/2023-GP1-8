@@ -426,8 +426,10 @@ void toggleFavorites()  {
                              size: 22.0,
                            ),
                          ),
+                       SizedBox(height:40),
                      ],
                    );
+
                  },
                ),
              ),
@@ -435,6 +437,7 @@ void toggleFavorites()  {
          ),
 
        ),
+
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(

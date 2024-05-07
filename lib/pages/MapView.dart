@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_place/google_place.dart';
-import 'package:gp/pages/placeDetailsPage.dart';
+
 import 'package:gp/pages/placePage.dart';
 import 'dart:math';
-import 'package:gp/helper/PlaceDetailsWidget.dart';
+
 import 'package:gp/pages/mapdetailspage.dart';
 import 'package:flutter/services.dart';
 
