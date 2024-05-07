@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../Registration/SignUp.dart';
 import "editProfile.dart";
 import 'MyPlacesPage.dart';
 import 'package:gp/Registration/logIn.dart';
 import 'Calendar/TripPlanningPage.dart'; // Import the TripPlanningPage
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gp/Registration/Welcome.dart';
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({Key? key}) : super(key: key);
 
@@ -109,6 +111,79 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                     title: "تخطيط الرحلات",
                                     icon: Icons.calendar_month_sharp,
                                   ),
+                                  SizedBox(height: 25),
+                                  buildProfileOption(
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Align(
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                "تأكيد حذف الحساب",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold, // Make the text bold
+                                                ),
+                                              ),
+
+                                            ),
+                                            content: SizedBox(
+                                              width: double.maxFinite,
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    alignment: Alignment.center,
+                                                    child: Text(
+                                                      "هل أنت متأكد من أنك تريد حذف الحساب ",
+                                                      style: TextStyle(
+                                                        color: Color(0xff424242),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 20), // Added space between text and buttons
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(context); // Close the dialog
+                                                        },
+                                                        style: TextButton.styleFrom(
+                                                          primary: Color(0xff11630e),
+                                                        ),
+                                                        child: Text("إلغاء"),
+                                                      ),
+                                                      SizedBox(width: 20), // Added space between buttons
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(context); // Close the confirmation dialog
+                                                          _showDeleteConfirmationDialog();
+                                                        },
+                                                        style: TextButton.styleFrom(
+                                                          primary: Color(0xff11630e),
+                                                        ),
+                                                        child: Text("حذف"),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                    title: "حذف الحساب",
+                                    icon: Icons.delete,
+                                  ),
+
+
+
                                 ],
                               );
                             } else {
@@ -170,6 +245,130 @@ class _UserProfilePageState extends State<UserProfilePage> {
       ),
     );
   }
+  void _showDeleteConfirmationDialog() {
+    String email = '';
+    String password = '';
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Directionality(
+          textDirection: TextDirection.rtl,
+          child: AlertDialog(
+            title: Text(
+              "أدخل بريدك الإلكتروني وكلمة المرور لحذف حسابك:",
+              style: TextStyle(
+                fontSize: 20, // Adjust the font size as needed
+              ),
+            ),
+
+
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                TextField(
+                  onChanged: (value) => email = value,
+                  decoration: InputDecoration(
+                    labelText: 'البريد الإلكتروني',
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xff11630e)), // Change color of underline without focus
+                    ),
+                  ),
+                ),
+                TextField(
+                  onChanged: (value) => password = value,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: 'كلمة المرور',
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xff11630e)), // Change color of underline without focus
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10), // Add some space between text fields and buttons
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context); // Close the confirmation dialog
+                        _deleteAccount(email, password); // Call method to delete account
+                      },
+                      style: TextButton.styleFrom(
+                        primary: Color(0xff11630e), // Change text color
+                      ),
+                      child: Text("حذف"),
+                    ),
+
+                    SizedBox(width: 20), // Add some space between buttons
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context); // Close the dialog
+                      },
+                      style: TextButton.styleFrom(
+                        primary: Color(0xff11630e), // Change text color
+                      ),
+                      child: Text("إلغاء"),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+
+  void _deleteAccount(String email, String password) async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      // If signInWithEmailAndPassword doesn't throw an exception, the email and password are correct
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await user.delete();
+        // Account deleted successfully
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Welcome()),
+        );
+      } else {
+        throw Exception("User is null");
+      }
+    } catch (e) {
+      String errorMessage = '';
+
+      if (e is FirebaseAuthException) {
+        if (e.code == 'wrong-password') {
+          errorMessage = 'كلمة المرور غير صحيحة';
+        } else if (e.code == 'user-not-found') {
+          errorMessage = 'البريد الإلكتروني غير مسجل';
+        } else {
+          errorMessage = 'حدث خطأ غير معروف: ${e.code}';
+        }
+      } else {
+        errorMessage = 'حدث خطأ أثناء حذف الحساب';
+      }
+
+      // Show error message using Fluttertoast
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM_LEFT,
+        timeInSecForIosWeb: 2,
+        backgroundColor: Color(0xFF6db881),
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+  }
+
 
   Widget buildProfileOption({required VoidCallback onPressed, required String title, required IconData icon}) {
     return Container(

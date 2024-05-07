@@ -192,7 +192,7 @@ class _SearchPlacesPageState extends State<SearchPlacesPage> {
                                 if (placeExists) {
                                   // Show toast message indicating that the place is already added
                                   Fluttertoast.showToast(
-                                    msg: 'المكان مضاف بالفعل لهذا اليوم',
+                                    msg: 'المكان مضاف بالفعل لهذا التاريخ',
                                     toastLength: Toast.LENGTH_SHORT,
                                     gravity: ToastGravity.BOTTOM,
                                     timeInSecForIosWeb: 1,

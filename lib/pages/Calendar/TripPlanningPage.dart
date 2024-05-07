@@ -74,17 +74,21 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
 
     );
   }
-
   Widget _buildTableCalendar() {
+    DateTime today = DateTime.now();
+    DateTime yesterday = today.subtract(Duration(days: 365));
+    // Determine the first day based on showConversation condition
+
+    DateTime firstDay = widget.showConversation ? today : yesterday;
+
     return Directionality(
       textDirection: ui.TextDirection.rtl,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start, // Align widgets at top and bottom
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SizedBox(height: 50),
           TableCalendar(
-            // Your TableCalendar properties here
-            firstDay: _firstDay,
+            firstDay: firstDay,
             lastDay: _lastDay,
             focusedDay: _focusedDay,
             calendarFormat: _calendarFormat,
@@ -96,6 +100,8 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
               return isSameDay(_selectedDay, day);
             },
             calendarStyle: CalendarStyle(
+              // Weekday text style
+
               todayDecoration: BoxDecoration(
                 color: Color.fromARGB(255, 197, 241, 207), // Color for today
                 shape: BoxShape.circle,
@@ -112,7 +118,6 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
               leftChevronIcon: Icon(Icons.chevron_left),
               rightChevronIcon: Icon(Icons.chevron_right),
               titleTextFormatter: (date, locale) {
-                // Custom formatting for the header title (month name + year)
                 final arabicMonthNames = [
                   'يناير',
                   'فبراير',
@@ -127,17 +132,15 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
                   'نوفمبر',
                   'ديسمبر',
                 ];
-
-                final monthName = arabicMonthNames[date.month - 1]; // Subtract 1 to match index
+                final monthName = arabicMonthNames[date.month - 1];
                 final year = date.year.toString();
-
-                return '$monthName $year'; // Combine month name and year
+                return '$monthName $year';
               },
             ),
             calendarBuilders: CalendarBuilders(
               dowBuilder: (context, day) {
                 final arabicDays = {
-                  DateTime.saturday: 'س', // Replace with your desired Arabic day names
+                  DateTime.saturday: 'س',
                   DateTime.sunday: 'أ',
                   DateTime.monday: 'ن',
                   DateTime.tuesday: 'ث',
@@ -145,32 +148,31 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
                   DateTime.thursday: 'خ',
                   DateTime.friday: 'ج',
                 };
-
                 final weekday = day.weekday;
                 final arabicDayName = arabicDays[weekday];
-
                 return Center(
-                  // Adjust the bottom padding as needed
                   child: Text(
                     arabicDayName ?? '',
                     style: TextStyle(
                       fontSize: 14,
                       fontFamily: 'Tajawal-b',
-                      color: const Color.fromARGB(255, 109, 184, 129), // Text color for days
-                      fontWeight: FontWeight.bold, // Make the text bold
+                     // Weekday text color
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 );
               },
+            ),
+            daysOfWeekStyle: DaysOfWeekStyle(
+              weekendStyle: TextStyle().copyWith(color: Colors.transparent), // Hide weekends
+              weekdayStyle: TextStyle().copyWith(color: Colors.black), // Show weekdays
             ),
             onDaySelected: (selectedDay, focusedDay) {
               if (!isSameDay(_selectedDay, selectedDay)) {
                 setState(() {
                   _selectedDay = DateTime(selectedDay.year, selectedDay.month, selectedDay.day);
                 });
-
                 if (widget.showConversation) {
-                  // Handle showing message conversation
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
@@ -202,51 +204,68 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
                         ),
                       ),
                       actions: [
-                        Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center, // Align buttons in the center horizontally
-                            children: [
-                              TextButton(
-                                onPressed: () async {
-                                  Navigator.of(context).pop(); // Close the dialog
-                                  String formattedDate = DateFormat('yyyy-MM-dd').format(_selectedDay!);
-
-                                  await FirebaseFirestore.instance
-                                      .collection('users')
-                                      .doc(userId)
-                                      .collection('calendar')
-                                      .doc(widget.place_id!) // Access place_id from widget object
-                                      .set({
-                                    'SelectedDay': formattedDate,
-                                    'place_id': widget.place_id,
-                                  });
-                                  // Show toast message
-                                  Fluttertoast.showToast(
-                                    msg: 'تمت إضافة المكان بنجاح',
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.green,
-                                    textColor: Colors.white,
-                                    fontSize: 16.0,
-                                  );
-                                },
-                                child: Text('إضافة'),
-                                style: TextButton.styleFrom(
-                                  primary: Color(0xff11630e),
-                                ),
-                              ),
-                              SizedBox(width: 16), // Add spacing between buttons if needed
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop(); // Close the dialog
-                                },
-                                child: Text('إلغاء'),
-                                style: TextButton.styleFrom(
-                                  primary: Color(0xff11630e),
-                                ),
-                              ),
-                            ],
+                        TextButton(
+                          onPressed: () async {
+                            Navigator.of(context).pop(); // Close the dialog
+                            final currentDate = DateTime.now();
+                            if (_selectedDay!.isBefore(currentDate)) {
+                              Fluttertoast.showToast(
+                                msg: 'لا يمكنك إضافة المكان لتاريخ سابق',
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: const Color.fromARGB(255, 109, 184, 129),
+                                textColor: Colors.white,
+                                fontSize: 16.0,
+                              );
+                            } else {
+                              String formattedDate = DateFormat('yyyy-MM-dd').format(_selectedDay!);
+                              bool placeAlreadyAdded = await checkIfPlaceAlreadyAdded(formattedDate);
+                              if (placeAlreadyAdded) {
+                                Fluttertoast.showToast(
+                                  msg: 'المكان مضاف بالفعل في هذا التاريخ',
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: const Color.fromARGB(255, 109, 184, 129),
+                                  textColor: Colors.white,
+                                  fontSize: 16.0,
+                                );
+                              } else {
+                                await FirebaseFirestore.instance
+                                    .collection('users')
+                                    .doc(userId)
+                                    .collection('calendar')
+                                    .doc(widget.place_id!)
+                                    .set({
+                                  'SelectedDay': formattedDate,
+                                  'place_id': widget.place_id,
+                                });
+                                Fluttertoast.showToast(
+                                  msg: 'تمت إضافة المكان بنجاح',
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.green,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0,
+                                );
+                              }
+                            }
+                          },
+                          child: Text('إضافة'),
+                          style: TextButton.styleFrom(
+                            primary: Color(0xff11630e),
+                          ),
+                        ),
+                        SizedBox(width: 16),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(); // Close the dialog
+                          },
+                          child: Text('إلغاء'),
+                          style: TextButton.styleFrom(
+                            primary: Color(0xff11630e),
                           ),
                         ),
                       ],
@@ -270,6 +289,7 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
             onPageChanged: (focusedDay) {
               setState(() {
                 _focusedDay = focusedDay;
+
               });
             },
           ),
@@ -279,9 +299,16 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
   }
 
 
+  Future<bool> checkIfPlaceAlreadyAdded(String formattedDate) async {
+    var snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('calendar')
+        .where('SelectedDay', isEqualTo: formattedDate)
+        .get();
 
-
-
+    return snapshot.docs.isNotEmpty;
+  }
 
   String getuser() {
     FirebaseAuth auth = FirebaseAuth.instance;
@@ -290,3 +317,4 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
     return cpuid;
   }
 }
+

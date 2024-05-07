@@ -179,7 +179,7 @@ class _FavoritePage extends State<FavoritePage> {
                         "عذراً لابد من تسجيل الدخول",
                         style: TextStyle(
                           fontSize: 18,
-                          fontFamily: "Tajawal-b",
+
                           color: Color(0xFF6db881),
                         ),
                         textAlign: TextAlign.center,

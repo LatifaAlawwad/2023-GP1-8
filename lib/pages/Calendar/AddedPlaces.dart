@@ -6,9 +6,9 @@ import 'SearchPlacesPage.dart';
 import '../placePage.dart';
 import '../placeDetailsPage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+
 class AddPlacesMessagePage extends StatefulWidget {
   final DateTime selectedDay;
-
 
   const AddPlacesMessagePage({Key? key, required this.selectedDay}) : super(key: key);
 
@@ -25,15 +25,21 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
     super.initState();
     userId = getuser(); // Initialize the userId using the getuser method
   }
+
   @override
   Widget build(BuildContext context) {
     DateTime dateOnly = DateTime(
-        widget.selectedDay.year, widget.selectedDay.month,
-        widget.selectedDay.day);
+      widget.selectedDay.year,
+      widget.selectedDay.month,
+      widget.selectedDay.day,
+    );
+    final now = DateTime.now();
+    final currentDate = DateTime(now.year, now.month, now.day);
+    bool isPastDate = dateOnly.isBefore(currentDate);
+    bool isTodayOrFuture = !isPastDate;
 
     Timestamp startTimestamp = Timestamp.fromDate(dateOnly);
-    Timestamp endTimestamp = Timestamp.fromDate(dateOnly.add(
-        Duration(days: 1)));
+    Timestamp endTimestamp = Timestamp.fromDate(dateOnly.add(Duration(days: 1)));
 
     return Scaffold(
       appBar: AppBar(
@@ -66,13 +72,14 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
         ],
         toolbarHeight: 60,
       ),
-      body: StreamBuilder<QuerySnapshot>(
+      body: isTodayOrFuture
+          ? StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('users')
             .doc(FirebaseAuth.instance.currentUser?.uid)
             .collection('calendar')
-            .where('SelectedDay', isEqualTo: DateFormat('yyyy-MM-dd').format(
-            dateOnly))
+            .where('SelectedDay',
+            isEqualTo: DateFormat('yyyy-MM-dd').format(dateOnly))
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -88,9 +95,9 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
           }
 
           if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
-            selectedPlaces =
-                snapshot.data!.docs.map((doc) => doc['place_id'].toString())
-                    .toList();
+            selectedPlaces = snapshot.data!.docs
+                .map((doc) => doc['place_id'].toString())
+                .toList();
 
             return ListView.builder(
               itemCount: selectedPlaces.length,
@@ -98,10 +105,12 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
                 return FutureBuilder<QuerySnapshot>(
                   future: FirebaseFirestore.instance
                       .collection('ApprovedPlaces')
-                      .where('place_id', isEqualTo: selectedPlaces[index])
+                      .where('place_id',
+                      isEqualTo: selectedPlaces[index])
                       .get(),
                   builder: (context, placeSnapshot) {
-                    if (placeSnapshot.connectionState == ConnectionState.waiting) {
+                    if (placeSnapshot.connectionState ==
+                        ConnectionState.waiting) {
                       return CircularProgressIndicator();
                     }
 
@@ -109,23 +118,25 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
                       return Text('Error fetching place details');
                     }
 
-                    if (placeSnapshot.hasData && placeSnapshot.data!.docs.isNotEmpty) {
+                    if (placeSnapshot.hasData &&
+                        placeSnapshot.data!.docs.isNotEmpty) {
                       var document = placeSnapshot.data!.docs.first;
 
                       return InkWell(
                         onTap: () {
-                          // Navigate to place details page when tapped
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => placeDetailsPage(
-                                place: placePage.fromMap(document.data() as Map<String, dynamic>),
+                                place: placePage.fromMap(
+                                    document.data() as Map<String, dynamic>),
                               ),
                             ),
                           );
                         },
                         child: _buildItem(
-                          placePage.fromMap(document.data() as Map<String, dynamic>),
+                          placePage.fromMap(
+                              document.data() as Map<String, dynamic>),
                           context,
                         ),
                       );
@@ -150,30 +161,46 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
                     style: TextStyle(fontSize: 18),
                   ),
                   SizedBox(height: 20),
-
                 ],
               ),
             );
           }
         },
+      )
+          : Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'لا يوجد لديك أماكن مضافة',
+              style: TextStyle(fontSize: 18),
+            ),
+          ],
+        ),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: isTodayOrFuture
+          ? FloatingActionButton(
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => SearchPlacesPage(dateonly: widget.selectedDay),
+              builder: (context) =>
+                  SearchPlacesPage(dateonly: widget.selectedDay),
             ),
           );
         },
-        backgroundColor: Color.fromARGB(255, 109, 184, 129), // Set the background color
+        backgroundColor:
+        Color.fromARGB(255, 109, 184, 129), // Set the background color
         child: Icon(Icons.add, color: Colors.white), // Set the icon color
-      ),
+      )
+          : null, // Disable the FAB if it's a past date
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
-  Widget _buildItem(placePage place, BuildContext context) {
+
+
+Widget _buildItem(placePage place, BuildContext context) {
     return Card(
       margin: EdgeInsets.fromLTRB(12, 12, 12, 6),
       clipBehavior: Clip.antiAlias,
@@ -432,8 +459,6 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
     );
 
   }
-
-
 }
 
 String getuser() {
