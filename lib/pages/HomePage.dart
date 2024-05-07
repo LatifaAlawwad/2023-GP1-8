@@ -817,9 +817,9 @@ class HomePageState extends State<HomePage> {
                             if (place.place_id == placeId) {
                               return Padding(
                                 padding: EdgeInsets.only(
-                                    top: 50.0, left: 8.0, right: 8.0),
+                                    top: 30.0, left: 8.0, right: 8.0),
                                 child: SizedBox(
-                                  height: 130.0, // Adjust height of the box
+                                  height: 150.0, // Adjust height of the box
 
                                   child: _buildPlacePageWidget2(context, place),
                                 ),
@@ -832,7 +832,7 @@ class HomePageState extends State<HomePage> {
                     ),
                   ),
                   Positioned(
-                    top: 0,
+                    top: 10.0,
                     right: 0,
                     child: Container(
                       child: Padding(
@@ -849,6 +849,7 @@ class HomePageState extends State<HomePage> {
                     ),
                   ),
                 ],
+
               ),
             ),
             Container(
@@ -882,16 +883,41 @@ class HomePageState extends State<HomePage> {
                 indicatorColor: Color(0xFF6db881),
                 tabs: [
                   Tab(
-                    text: 'الكل',
+
+                    child: Text(
+                      'الكل',
+                      style: TextStyle(
+                        color: Color(0xFF6db881), // Set the text color to match the labelStyle
+                      ),
+                    ),
+
                   ),
                   Tab(
-                    text: 'فعاليات و ترفيه',
+
+                    child: Text(
+                      'فعاليات و ترفيه',
+                      style: TextStyle(
+                        color: Color(0xFF6db881), // Set the text color to match the labelStyle
+                      ),
+                    ),
                   ),
                   Tab(
-                    text: 'مطاعم',
+
+                    child: Text(
+                      'مطاعم',
+                      style: TextStyle(
+                        color: Color(0xFF6db881), // Set the text color to match the labelStyle
+                      ),
+                    ),
                   ),
                   Tab(
-                    text: 'مراكز تسوق',
+
+                    child: Text(
+                      'مراكز تسوق',
+                      style: TextStyle(
+                        color: Color(0xFF6db881), // Set the text color to match the labelStyle
+                      ),
+                    ),
                   ),
                 ],
               ),
