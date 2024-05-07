@@ -2887,7 +2887,7 @@ class CustomFormState extends State<CustomForm> {
                             String? placeNameValue =
                                 placeName.text; // Get the value of placeName
                             // Check for duplicate place before adding
-                            await checkForDuplicatePlace(
+                             checkForDuplicatePlace(
                                 latitude: latitude,
                                 longitude: longitude,
                                 placeName: placeNameValue);
@@ -2983,11 +2983,16 @@ class CustomFormState extends State<CustomForm> {
           ),
           actions: [
             TextButton(
-              child: const Text("موافق"),
+              child: Text(
+                "موافق",
+                style: TextStyle(
+                  color: Colors.green, // Set the color to green
+                ),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
-            ),
+            )
           ],
         );
       },
@@ -3000,13 +3005,18 @@ class CustomFormState extends State<CustomForm> {
       builder: (BuildContext context) {
         return AlertDialog(
           content: const Text("المكان موجود مسبقا"),
-          actions: <Widget>[
+          actions: [
             TextButton(
-              child: const Text("موافق"),
+              child: Text(
+                "موافق",
+                style: TextStyle(
+                  color: Colors.green, // Set the color to green
+                ),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
-            ),
+            )
           ],
         );
       },
