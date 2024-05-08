@@ -4,6 +4,7 @@ import '../placePage.dart'; // Import placePage.dart if necessary
 import '../placeDetailsPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+
 class SearchPlacesPage extends StatefulWidget {
   final DateTime dateonly;
 
@@ -19,100 +20,22 @@ class _SearchPlacesPageState extends State<SearchPlacesPage> {
   bool isSearching = false;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 109, 184, 129), // Custom color
-        automaticallyImplyLeading: false, // Remove back button
-        title: Row(
-          children: [
-            IconButton(
-              icon: Icon(Icons.search, color: Colors.white), // Search icon
-              onPressed: () {
-                setState(() {
-                  isSearching = !isSearching; // Toggle search mode
-                  searchController.clear(); // Clear the search text field
-                  suggestions.clear(); // Clear search suggestions
-                });
-              },
-            ),
-            Expanded(
-              child: isSearching
-                  ? TextField(
-                controller: searchController,
-                onChanged: (value) {
-                  _getSuggestions(value);
-                },
-                decoration: InputDecoration(
-                  hintText: 'ابحث عن اسم المكان',
-                  border: InputBorder.none,
-                  hintStyle: TextStyle(color: Colors.white),
-                ),
-                style: TextStyle(color: Colors.white),
-              )
-                  : Padding(
-                padding: const EdgeInsets.only(left: 70),
-                child: Text(
-                  "البحث عن الأماكن",
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontFamily: "Tajawal-b",
-                    color: Colors.white, // Text color added
-                  ),
-                ),
-              ),
-            ),
+  void initState() {
+    super.initState();
+    _getAllPlaces();
+  }
 
-          ],
-        ),
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 20.0),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pop(context); // Handle navigation action
-              },
-              child: Icon(
-                Icons.arrow_forward_ios,
-                color: Colors.white,
-                size: 28,
-              ),
-            ),
-          ),
-        ],
-      ),
-
-
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Add search results widget here
-          if (suggestions.isNotEmpty)
-            Expanded(
-              child: ListView.builder(
-                itemCount: suggestions.length,
-                itemBuilder: (context, index) {
-                  return _buildItem(
-                        () {
-                      // Navigate to place details page on tap
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => placeDetailsPage(
-                            place: suggestions[index],
-                          ),
-                        ),
-                      );
-                    },
-                    suggestions[index],
-                    context,
-                  );
-                },
-              ),
-            ),
-        ],
-      ),
-    );
+  void _getAllPlaces() {
+    FirebaseFirestore.instance
+        .collection('ApprovedPlaces')
+        .get()
+        .then((snapshot) {
+      setState(() {
+        suggestions = snapshot.docs
+            .map((doc) => placePage.fromMap(doc.data() as Map<String, dynamic>))
+            .toList();
+      });
+    });
   }
 
   Widget _buildItem(
@@ -365,24 +288,44 @@ class _SearchPlacesPageState extends State<SearchPlacesPage> {
     var cpuid = user!.uid;
     return cpuid;
   }
-
   void _getSuggestions(String query) {
     query = query.trim();
     suggestions.clear();
 
-    FirebaseFirestore.instance
-        .collection('ApprovedPlaces')
-        .where('placeName', isGreaterThanOrEqualTo: query)
-        .get()
-        .then((snapshot) {
-      setState(() {
-        suggestions = snapshot.docs
-            .map((doc) => placePage.fromMap(doc.data() as Map<String, dynamic>))
-            .toList();
+    if (query.isEmpty) {
+      // Fetch all places if the search query is empty
+      _getAllPlaces();
+    } else {
+      FirebaseFirestore.instance
+          .collection('ApprovedPlaces')
+          .get()
+          .then((snapshot) {
+        setState(() {
+          suggestions = snapshot.docs
+              .map((doc) => placePage.fromMap(doc.data() as Map<String, dynamic>))
+              .where((place) =>
+              place.placeName.toLowerCase().contains(query.toLowerCase()))
+              .toList();
+
+          // Sort the suggestions based on the order of letters.
+          suggestions.sort((a, b) {
+            final formattedA = a.placeName.replaceAll(' ', '').toLowerCase();
+            final formattedB = b.placeName.replaceAll(' ', '').toLowerCase();
+            final formattedQuery = query.toLowerCase();
+            return formattedA.indexOf(formattedQuery) -
+                formattedB.indexOf(formattedQuery);
+          });
+        });
       });
-    });
+    }
   }
-  Future<bool> checkIfPlaceExists(String userId, String placeId, String selectedDate) async {
+
+
+
+
+
+  Future<bool> checkIfPlaceExists(
+      String userId, String placeId, String selectedDate) async {
     bool placeExists = false;
     try {
       // Check if the place document exists for the selected day
@@ -406,4 +349,106 @@ class _SearchPlacesPageState extends State<SearchPlacesPage> {
     return placeExists;
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 109, 184, 129),
+        automaticallyImplyLeading: false,
+        title: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: searchController,
+                onChanged: (value) {
+                  _getSuggestions(value);
+                },
+                decoration: InputDecoration(
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color.fromARGB(255, 17, 99, 14)),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                  alignLabelWithHint: true,
+                  hintText: 'ابحث عن مطعم أو مكان سياحي',
+                  hintStyle: TextStyle(
+                    color: Color.fromARGB(143, 255, 255, 255),
+                    fontFamily: "Tajawal-m",
+                  ),
+                ),
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: Icon(
+                Icons.search,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(right: 20.0),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(
+                Icons.arrow_forward_ios,
+                color: Colors.white,
+                size: 28,
+              ),
+            ),
+          ),
+        ],
+      ),
+
+
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (suggestions.isNotEmpty)
+            Expanded(
+              child: ListView.builder(
+                itemCount: suggestions.length,
+                itemBuilder: (context, index) {
+                  return _buildItem(
+                        () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => placeDetailsPage(
+                            place: suggestions[index],
+                          ),
+                        ),
+                      );
+                    },
+                    suggestions[index],
+                    context,
+                  );
+                },
+              ),
+            ),
+          if (suggestions.isEmpty)
+            Expanded(
+              child: Center(
+                child: Text(
+                  "لم يتم العثور على نتائج",
+                  style: TextStyle(
+                    color: Color(0xFF6db881),
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+
+
+    );
+  }
 }
+

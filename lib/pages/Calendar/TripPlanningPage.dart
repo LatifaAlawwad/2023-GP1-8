@@ -78,8 +78,7 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
     DateTime today = DateTime.now();
     DateTime yesterday = today.subtract(Duration(days: 365));
     // Determine the first day based on showConversation condition
-
-    DateTime firstDay = widget.showConversation ? today : yesterday;
+   DateTime firstDay = widget.showConversation ? today : yesterday;
 
     return Directionality(
       textDirection: ui.TextDirection.rtl,
@@ -101,7 +100,6 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
             },
             calendarStyle: CalendarStyle(
               // Weekday text style
-
               todayDecoration: BoxDecoration(
                 color: Color.fromARGB(255, 197, 241, 207), // Color for today
                 shape: BoxShape.circle,
@@ -156,7 +154,7 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
                     style: TextStyle(
                       fontSize: 14,
                       fontFamily: 'Tajawal-b',
-                     // Weekday text color
+                      // Weekday text color
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -164,53 +162,65 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
               },
             ),
             daysOfWeekStyle: DaysOfWeekStyle(
-              weekendStyle: TextStyle().copyWith(color: Colors.transparent), // Hide weekends
+              weekendStyle: TextStyle().copyWith(color: Colors.black), // Hide weekends
               weekdayStyle: TextStyle().copyWith(color: Colors.black), // Show weekdays
             ),
             onDaySelected: (selectedDay, focusedDay) {
-              if (!isSameDay(_selectedDay, selectedDay)) {
-                setState(() {
-                  _selectedDay = DateTime(selectedDay.year, selectedDay.month, selectedDay.day);
-                });
-                if (widget.showConversation) {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text(
-                        'تأكيد الإضافة',
-                        textAlign: TextAlign.center,
+              setState(() {
+                _selectedDay = selectedDay;
+              });
+              if (widget.showConversation) {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text(
+                      'تأكيد الإضافة',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Color(0xff383737),
+                      ),
+                    ),
+                    content: RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
                         style: TextStyle(
                           color: Color(0xff383737),
+                          fontSize: 16,
                         ),
-                      ),
-                      content: RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                          style: TextStyle(
-                            color: Color(0xff383737),
-                            fontSize: 16,
+                        children: [
+                          TextSpan(
+                            text: '${widget.placeName} هل تريد إضافة \n',
                           ),
-                          children: [
-                            TextSpan(
-                              text: '${widget.placeName} هل تريد إضافة \n',
+                          TextSpan(
+                            text: '${DateFormat('yyyy-MM-dd').format(_selectedDay!)} لرحلتك في ',
+                            style: TextStyle(
+                              color: Color(0xff424242),
                             ),
-                            TextSpan(
-                              text: '${DateFormat('yyyy-MM-dd').format(_selectedDay!)} لرحلتك في ',
-                              style: TextStyle(
-                                color: Color(0xff424242),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      actions: [
-                        TextButton(
-                          onPressed: () async {
-                            Navigator.of(context).pop(); // Close the dialog
-                            final currentDate = DateTime.now();
-                            if (_selectedDay!.isBefore(currentDate)) {
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () async {
+                          Navigator.of(context).pop(); // Close the dialog
+                          final currentDate = DateTime.now();
+                          if (_selectedDay!.isBefore(currentDate)) {
+                            Fluttertoast.showToast(
+                              msg: 'لا يمكنك إضافة المكان لتاريخ سابق',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: const Color.fromARGB(255, 109, 184, 129),
+                              textColor: Colors.white,
+                              fontSize: 16.0,
+                            );
+                          } else {
+                            String formattedDate = DateFormat('yyyy-MM-dd').format(_selectedDay!);
+                            bool placeAlreadyAdded = await checkIfPlaceAlreadyAdded(formattedDate);
+                            if (placeAlreadyAdded) {
                               Fluttertoast.showToast(
-                                msg: 'لا يمكنك إضافة المكان لتاريخ سابق',
+                                msg: 'المكان مضاف بالفعل في هذا التاريخ',
                                 toastLength: Toast.LENGTH_SHORT,
                                 gravity: ToastGravity.BOTTOM,
                                 timeInSecForIosWeb: 1,
@@ -219,64 +229,50 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
                                 fontSize: 16.0,
                               );
                             } else {
-                              String formattedDate = DateFormat('yyyy-MM-dd').format(_selectedDay!);
-                              bool placeAlreadyAdded = await checkIfPlaceAlreadyAdded(formattedDate);
-                              if (placeAlreadyAdded) {
-                                Fluttertoast.showToast(
-                                  msg: 'المكان مضاف بالفعل في هذا التاريخ',
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: const Color.fromARGB(255, 109, 184, 129),
-                                  textColor: Colors.white,
-                                  fontSize: 16.0,
-                                );
-                              } else {
-                                await FirebaseFirestore.instance
-                                    .collection('users')
-                                    .doc(userId)
-                                    .collection('calendar')
-                                    .doc(widget.place_id!)
-                                    .set({
-                                  'SelectedDay': formattedDate,
-                                  'place_id': widget.place_id,
-                                });
-                                Fluttertoast.showToast(
-                                  msg: 'تمت إضافة المكان بنجاح',
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: Colors.green,
-                                  textColor: Colors.white,
-                                  fontSize: 16.0,
-                                );
-                              }
+                              await FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc(userId)
+                                  .collection('calendar')
+                                  .doc(widget.place_id!)
+                                  .set({
+                                'SelectedDay': formattedDate,
+                                'place_id': widget.place_id,
+                              });
+                              Fluttertoast.showToast(
+                                msg: 'تمت إضافة المكان بنجاح',
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.green,
+                                textColor: Colors.white,
+                                fontSize: 16.0,
+                              );
                             }
-                          },
-                          child: Text('إضافة'),
-                          style: TextButton.styleFrom(
-                            primary: Color(0xff11630e),
-                          ),
+                          }
+                        },
+                        child: Text('إضافة'),
+                        style: TextButton.styleFrom(
+                          primary: Color(0xff11630e),
                         ),
-                        SizedBox(width: 16),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(); // Close the dialog
-                          },
-                          child: Text('إلغاء'),
-                          style: TextButton.styleFrom(
-                            primary: Color(0xff11630e),
-                          ),
+                      ),
+                      SizedBox(width: 16),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Close the dialog
+                        },
+                        child: Text('إلغاء'),
+                        style: TextButton.styleFrom(
+                          primary: Color(0xff11630e),
                         ),
-                      ],
-                    ),
-                  );
-                } else {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AddPlacesMessagePage(selectedDay: _selectedDay!)),
-                  );
-                }
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddPlacesMessagePage(selectedDay: _selectedDay!)),
+                );
               }
             },
             onFormatChanged: (format) {
@@ -287,16 +283,14 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
               }
             },
             onPageChanged: (focusedDay) {
-              setState(() {
-                _focusedDay = focusedDay;
-
-              });
+              // Don't update _focusedDay here to avoid changing the focused day unexpectedly
             },
           ),
         ],
       ),
     );
   }
+
 
 
   Future<bool> checkIfPlaceAlreadyAdded(String formattedDate) async {
