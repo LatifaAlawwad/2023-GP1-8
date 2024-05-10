@@ -763,7 +763,7 @@ class HomePageState extends State<HomePage> {
                             borderSide: BorderSide(color: Colors.white),
                           ),
                           alignLabelWithHint: true,
-                          hintText: translation(context).search,
+                          hintText: 'ابحث عن مطعم أو مكان سياحي',
                           hintStyle: TextStyle(
                             color: Color.fromARGB(143, 255, 255, 255),
                             fontFamily: "Tajawal-m",
@@ -804,53 +804,59 @@ class HomePageState extends State<HomePage> {
               ),
             ),
             Container(
-              color: Colors.white,
-              child: Stack(
-                children: [
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: output.map((placeId) {
-                        for (int i = 0; i < HomePageState.allData.length; i++) {
-                          if (HomePageState.allData[i] is placePage) {
-                            placePage place =
+              child: Visibility(
+                visible: searchResults.isEmpty && FilterValue == false,
+                child: Container(
+                  color: Colors.white,
+                  child: Stack(
+                    children: [
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: output.map((placeId) {
+                            for (int i = 0;
+                            i < HomePageState.allData.length;
+                            i++) {
+                              if (HomePageState.allData[i] is placePage) {
+                                placePage place =
                                 HomePageState.allData[i] as placePage;
-                            if (place.place_id == placeId) {
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                    top: 30.0, left: 8.0, right: 8.0),
-                                child: SizedBox(
-                                  height: 150.0, // Adjust height of the box
+                                if (place.place_id == placeId) {
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                        top: 30.0, left: 8.0, right: 8.0),
+                                    child: SizedBox(
+                                      height: 150.0,
 
-                                  child: _buildPlacePageWidget2(context, place),
-                                ),
-                              );
+                                      child: _buildPlacePageWidget2(context, place),
+                                    ),
+                                  );
+                                }
+                              }
                             }
-                          }
-                        }
-                        return Container();
-                      }).toList(),
-                    ),
-                  ),
-                  Positioned(
-                    top: 10.0,
-                    right: 0,
-                    child: Container(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          translation(context).like,
-                          style: TextStyle(
-                            fontFamily: "Tajawal-m",
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                            return Container();
+                          }).toList(),
+                        ),
+                      ),
+                      Positioned(
+                        top: 10,
+                        right: 0,
+                        child: Container(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'قد تعجبك',
+                              style: TextStyle(
+                                fontFamily: "Tajawal-m",
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-
+                ),
               ),
             ),
             Container(
@@ -883,38 +889,34 @@ class HomePageState extends State<HomePage> {
                 },
                 indicatorColor: Color(0xFF6db881),
                 tabs: [
+
                   Tab(
-
                     child: Text(
-                      translation(context).all,
-                      style: TextStyle(
-                        color: Color(0xFF6db881), // Set the text color to match the labelStyle
-                      ),
-                    ),
-
-                  ),
-                  Tab(
-
-                    child: Text(
-                      translation(context).ent,
+                      'الكل',
                       style: TextStyle(
                         color: Color(0xFF6db881), // Set the text color to match the labelStyle
                       ),
                     ),
                   ),
                   Tab(
-
                     child: Text(
-                      translation(context).rest,
+                      'فعاليات و ترفيه',
                       style: TextStyle(
                         color: Color(0xFF6db881), // Set the text color to match the labelStyle
                       ),
                     ),
                   ),
                   Tab(
-
                     child: Text(
-                      translation(context).mall,
+                      'مطاعم',
+                      style: TextStyle(
+                        color: Color(0xFF6db881), // Set the text color to match the labelStyle
+                      ),
+                    ),
+                  ),
+                  Tab(
+                    child: Text(
+                      'مراكز تسوق',
                       style: TextStyle(
                         color: Color(0xFF6db881), // Set the text color to match the labelStyle
                       ),
@@ -927,21 +929,21 @@ class HomePageState extends State<HomePage> {
               child: handleListItems(
                 name.isEmpty && FilterValue == false
                     ? selectedCategory == 'فعاليات و ترفيه'
-                        ? attractions
-                        : selectedCategory == 'مطاعم'
-                            ? restaurants
-                            : selectedCategory == 'مراكز تسوق'
-                                ? malls
-                                : allData.cast<placePage>()
+                    ? attractions
+                    : selectedCategory == 'مطاعم'
+                    ? restaurants
+                    : selectedCategory == 'مراكز تسوق'
+                    ? malls
+                    : allData.cast<placePage>()
                     : name.isEmpty && FilterValue == true
-                        ? selectedCategory == 'فعاليات و ترفيه'
-                            ? FilterForAtt
-                            : selectedCategory == 'مطاعم'
-                                ? FilterForRes
-                                : selectedCategory == 'مراكز تسوق'
-                                    ? FilterForMall
-                                    : FilteredItems
-                        : searchResults.cast<placePage>(),
+                    ? selectedCategory == 'فعاليات و ترفيه'
+                    ? FilterForAtt
+                    : selectedCategory == 'مطاعم'
+                    ? FilterForRes
+                    : selectedCategory == 'مراكز تسوق'
+                    ? FilterForMall
+                    : FilteredItems
+                    : searchResults.cast<placePage>(),
                 filters,
               ),
             ),
@@ -950,6 +952,8 @@ class HomePageState extends State<HomePage> {
       ),
     );
   }
+
+
 
   /////////////////////////////////////////////////////////////////////////////
   Widget _buildPlacePageWidget(BuildContext context, placePage place) {
