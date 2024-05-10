@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'MapView.dart';
 import 'FavoritePage.dart';
 import 'HomePage.dart';
 import 'addpage.dart';
 import 'UserProfilePage.dart';
-import '../Registration/logIn.dart';
+
 import 'package:gp/language_constants.dart';
 
 class NavigationBarPage extends StatefulWidget {
@@ -31,9 +29,9 @@ class _NavigationBarPageState extends State<NavigationBarPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-         // Navigator.of(context).push(
-           // MaterialPageRoute(builder: (context) => AddPage()),
-          //);
+          Navigator.of(context).push(
+           MaterialPageRoute(builder: (context) => AddPage()),
+          );
         },
         child: Icon(Icons.add),
         backgroundColor: Color(0xFF6db881),
@@ -105,7 +103,7 @@ class _NavigationBarPageState extends State<NavigationBarPage> {
       case 0:
         return HomePage(cityName: widget.selectedCity, cityId: 3);
       case 1:
-        return MapSample(); // Replace with your actual map page.
+        return MapSample();
       case 2:
         return FavoritePage();
       case 3:

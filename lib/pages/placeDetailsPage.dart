@@ -889,7 +889,7 @@ void toggleFavorites()  {
           ),
           child: Container(
             height: 220,
-            width: 180,
+            width: 200,
             decoration: BoxDecoration(
 
               image: place.images.isEmpty

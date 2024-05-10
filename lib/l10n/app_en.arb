@@ -123,7 +123,7 @@
   "coffee_and_desserts": "Coffee & Desserts",
   "addReq": "Add Requests",
   "approvedReq": "Approved Requests",
-  "waitingReq": "Applications awaiting approval",
+  "waitingReq": "Awaiting approval",
   "rejectedReq": "Rejected Requests",
   "conDelete": "Confirm deletion",
   "deletePlace": "Do you want to delete the following place?",

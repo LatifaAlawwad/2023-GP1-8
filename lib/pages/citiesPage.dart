@@ -93,7 +93,7 @@ class CityButton extends StatelessWidget {
           InkWell(
             onTap: () {
               // Determine which city was selected and pass it to NavigationBarPage.
-              String selectedCity = cityName; // You can update this as needed.
+              String selectedCity = cityName;
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                   builder: (context) {

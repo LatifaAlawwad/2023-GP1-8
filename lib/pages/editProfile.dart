@@ -66,7 +66,7 @@ class _editProfileState extends State<editProfile> {
         backgroundColor: Color.fromARGB(255, 109, 184, 129),
         automaticallyImplyLeading: false,
         title: Padding(
-          padding: const EdgeInsets.only(left: 70),
+          padding: const EdgeInsets.only(left:0),
           child: Text(
             translation(context).modifyPerInfo,
             style: TextStyle(
