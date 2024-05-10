@@ -1,13 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import '../Language.dart';
 import '../Registration/SignUp.dart';
+import '../main.dart';
 import "editProfile.dart";
 import 'MyPlacesPage.dart';
 import 'package:gp/Registration/logIn.dart';
 import 'Calendar/TripPlanningPage.dart'; // Import the TripPlanningPage
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gp/Registration/Welcome.dart';
+import 'package:gp/language_constants.dart';
+import 'SwitchLanguage.dart';
+
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({Key? key}) : super(key: key);
 
@@ -32,7 +37,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
         title: Padding(
           padding: const EdgeInsets.only(left: 155),
           child: Text(
-            "حسابي",
+            translation(context).profilePage,
             style: TextStyle(
               fontSize: 17,
               fontFamily: "Tajawal-b",
@@ -82,9 +87,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                         ),
                                       );
                                     },
-                                    title: "تعديل المعلومات الشخصية",
+                                    title: translation(context).modifyPerInfo,
                                     icon: Icons.edit,
                                   ),
+
                                   SizedBox(height: 25),
                                   buildProfileOption(
                                     onPressed: () {
@@ -95,7 +101,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                         ),
                                       );
                                     },
-                                    title: "طلبات الإضافة",
+                                    title: translation(context).addRequest,
                                     icon: Icons.edit_location,
                                   ),
                                   SizedBox(height: 25),
@@ -108,7 +114,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                         ),
                                       );
                                     },
-                                    title: "تخطيط الرحلات",
+                                    title: translation(context).plans,
                                     icon: Icons.calendar_month_sharp,
                                   ),
                                   SizedBox(height: 25),
@@ -121,7 +127,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                             title: Align(
                                               alignment: Alignment.center,
                                               child: Text(
-                                                "تأكيد حذف الحساب",
+                                                translation(context).accountDeleteCon,
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
                                                   fontSize: 16,
@@ -139,7 +145,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                                   Container(
                                                     alignment: Alignment.center,
                                                     child: Text(
-                                                      "هل أنت متأكد من أنك تريد حذف الحساب ",
+                                                      translation(context).sureDleteAcc,
                                                       style: TextStyle(
                                                         color: Color(0xff424242),
                                                       ),
@@ -156,7 +162,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                                         style: TextButton.styleFrom(
                                                           primary: Color(0xff11630e),
                                                         ),
-                                                        child: Text("إلغاء"),
+                                                        child: Text(translation(context).cancel),
                                                       ),
                                                       SizedBox(width: 20), // Added space between buttons
                                                       TextButton(
@@ -167,7 +173,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                                         style: TextButton.styleFrom(
                                                           primary: Color(0xff11630e),
                                                         ),
-                                                        child: Text("حذف"),
+                                                        child: Text(translation(context).delete),
                                                       ),
                                                     ],
                                                   ),
@@ -178,9 +184,23 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                         },
                                       );
                                     },
-                                    title: "حذف الحساب",
+                                    title: translation(context).deleteAcc,
                                     icon: Icons.delete,
                                   ),
+                                  SizedBox(height: 40),
+                                  buildProfileOption(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SwitchLanguage(),
+                                        ),
+                                      );
+                                    },
+                                    title: translation(context).lang,
+                                    icon: Icons.language,
+                                  ),
+
 
 
 
@@ -195,7 +215,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                     Padding(
                                       padding: EdgeInsets.symmetric(horizontal: 79),
                                       child: Text(
-                                        "عذراً لابد من تسجيل الدخول",
+                                        translation(context).reqLogin,
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontFamily: "Tajawal-b",
@@ -224,7 +244,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                         ),
                                       ),
                                       child: Text(
-                                        "تسجيل الدخول",
+                                        translation(context).login,
                                         style: TextStyle(fontSize: 20, fontFamily: "Tajawal-m"),
                                       ),
                                     ),
@@ -256,7 +276,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
           textDirection: TextDirection.rtl,
           child: AlertDialog(
             title: Text(
-              "أدخل بريدك الإلكتروني وكلمة المرور لحذف حسابك:",
+              translation(context).eneterInfo,
               style: TextStyle(
                 fontSize: 20, // Adjust the font size as needed
               ),
@@ -270,7 +290,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 TextField(
                   onChanged: (value) => email = value,
                   decoration: InputDecoration(
-                    labelText: 'البريد الإلكتروني',
+                    labelText: translation(context).email,
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Color(0xff11630e)), // Change color of underline without focus
                     ),
@@ -280,7 +300,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   onChanged: (value) => password = value,
                   obscureText: true,
                   decoration: InputDecoration(
-                    labelText: 'كلمة المرور',
+                    labelText: translation(context).password,
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Color(0xff11630e)), // Change color of underline without focus
                     ),
@@ -298,7 +318,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                       style: TextButton.styleFrom(
                         primary: Color(0xff11630e), // Change text color
                       ),
-                      child: Text("حذف"),
+                      child: Text(translation(context).delete),
                     ),
 
                     SizedBox(width: 20), // Add some space between buttons
@@ -309,7 +329,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                       style: TextButton.styleFrom(
                         primary: Color(0xff11630e), // Change text color
                       ),
-                      child: Text("إلغاء"),
+                      child: Text(translation(context).cancel),
                     ),
                   ],
                 ),
@@ -346,14 +366,14 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
       if (e is FirebaseAuthException) {
         if (e.code == 'wrong-password') {
-          errorMessage = 'كلمة المرور غير صحيحة';
+          errorMessage = translation(context).wrongPass;
         } else if (e.code == 'user-not-found') {
-          errorMessage = 'البريد الإلكتروني غير مسجل';
+          errorMessage = translation(context).notRegEmail;
         } else {
-          errorMessage = 'حدث خطأ غير معروف: ${e.code}';
+          errorMessage = "${translation(context).error} ${e.code}";
         }
       } else {
-        errorMessage = 'حدث خطأ أثناء حذف الحساب';
+        errorMessage = translation(context).errorOcurDelete;
       }
 
       // Show error message using Fluttertoast

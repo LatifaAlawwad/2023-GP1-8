@@ -8,11 +8,14 @@ import 'package:gp/Registration/Welcome.dart';
 import 'package:gp/Registration/SignUp.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:gp/Registration/logIn.dart';
+import 'package:gp/language_constants.dart';
 import 'package:gp/pages/NavigationBarPage.dart';
 import 'package:gp/pages/citiesPage.dart';
-
-
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:gp/language_constants.dart';
 import 'pages/MapView.dart';
+
 
 
 
@@ -24,10 +27,40 @@ void main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+
+  static void setLocale (BuildContext context, Locale newLocale){
+    _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
+    state?.setLocale(newLocale);
+
+  }
+}
+
+
+class _MyAppState extends State<MyApp> {
+  Locale? _locale;
+
+  setLocale(Locale locale) {
+    setState(() {
+      _locale = locale;
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    getLocale().then((locale) => setLocale(locale));
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: _locale,
+
       debugShowCheckedModeBanner: false,
       initialRoute: '/first',
       routes: {
@@ -37,15 +70,17 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LogIn(),
         '/RessetPassword': (context) => RessetPassword(),
         '/citiesPage': (context) => CitiesPage(),
-        // Use 'CitiesPage' here and pass 'selectedCity' as needed
-        '/MapPage': (context) =>  MapSample(),
-
+        '/MapPage': (context) => MapSample(),
         '/NavigationBarPage': (context) {
-          String selectedCity ='';
+          String selectedCity = '';
           return NavigationBarPage(selectedCity: selectedCity);
         },
+
+
+
 
       },
     );
   }
 }
+

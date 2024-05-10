@@ -1,3 +1,5 @@
+
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:uuid/uuid.dart';
@@ -15,6 +17,7 @@ import 'package:photo_view/photo_view_gallery.dart';
 import 'Review.dart';
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gp/language_constants.dart';
 import 'package:http/http.dart' as http;
 
 
@@ -286,8 +289,8 @@ class _mapdetailspage extends State<mapdetailspage> {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            const Text(
-                              "الوصف",
+                             Text(
+                              translation(context).description,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -307,8 +310,8 @@ class _mapdetailspage extends State<mapdetailspage> {
                               ),
                             ),
 
-                            const Text(
-                              "المزيد من الصور",
+                             Text(
+                             translation(context).morePhotos,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -326,7 +329,7 @@ class _mapdetailspage extends State<mapdetailspage> {
                                   padding: const EdgeInsets.only(
                                       left: 20, bottom: 24, right: 20),
                                   child: Text(
-                                    'لا توجد صور متاحة',
+                                    translation(context).noAVPhotos,
                                     style: TextStyle(
                                       fontSize: 16,
                                       color: Colors.grey[500],
@@ -420,9 +423,9 @@ class _mapdetailspage extends State<mapdetailspage> {
                                                   if (hasPreviousReview) {
                                                     // User has a previous review, show a message indicating they can update
                                                     ScaffoldMessenger.of(context).showSnackBar(
-                                                      const SnackBar(
+                                                       SnackBar(
                                                         content: Text(
-                                                          'لديك تقييم وتعليق سابق، يمكنك تحديثه من قسم التعليقات.',
+                                                          translation(context).existComment,
                                                         ),
                                                         duration: Duration(seconds: 5),
                                                       ),
@@ -444,8 +447,8 @@ class _mapdetailspage extends State<mapdetailspage> {
                                                   ),
                                                 ),
                                               ),
-                                              child: const Text(
-                                                'قيّم وشارك تجربتك',
+                                              child:  Text(
+                                                translation(context).rate,
                                                 style: TextStyle(
                                                   fontSize: 16.0,
                                                   fontFamily: "Tajawal-m",
@@ -455,8 +458,8 @@ class _mapdetailspage extends State<mapdetailspage> {
                                             ),
                                           ),
                                           const SizedBox(width: 10),
-                                          const Text(
-                                            ':التعليقات',
+                                           Text(
+                                            translation(context).comment,
                                             style: TextStyle(
                                               fontSize: 18,
                                               fontWeight: FontWeight.bold,
@@ -479,11 +482,11 @@ class _mapdetailspage extends State<mapdetailspage> {
                                               child: CircularProgressIndicator(),
                                             );
                                           } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                                            return const Center(
+                                            return  Center(
                                               child: Padding(
                                                 padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
                                                 child: Text(
-                                                  'لا يوجد أي تعليق حتى الان ',
+                                                  translation(context).noComment,
                                                   style: TextStyle(
                                                     fontSize: 18,
                                                     fontFamily: "Tajawal-m",
@@ -688,9 +691,9 @@ class _mapdetailspage extends State<mapdetailspage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                const Center(
+                 Center(
                   child: Text(
-                    "شارك تجربتك",
+                    translation(context).rate,
                     style: TextStyle(
                       fontSize: 24.0,
                       fontFamily: "Tajawal-m",
@@ -741,8 +744,8 @@ class _mapdetailspage extends State<mapdetailspage> {
                       ),
                       const SizedBox(width: 1.0),
                       // Add spacing between the RatingBar and the text
-                      const Text(
-                        "قيّم تجربتك",
+                       Text(
+                         translation(context).rate,
                         style: TextStyle(
                           fontFamily: "Tajawal-m",
                         ),
@@ -777,8 +780,8 @@ class _mapdetailspage extends State<mapdetailspage> {
                         reviewText = text;
                       },
                       controller: TextEditingController(text: initialComment),
-                      decoration: const InputDecoration(
-                        hintText: 'اكتب تعليقك هنا...',
+                      decoration:  InputDecoration(
+                        hintText: translation(context).writeComment,
                         hintStyle: TextStyle(
                           fontFamily: "Tajawal-m",
                         ),
@@ -804,8 +807,8 @@ class _mapdetailspage extends State<mapdetailspage> {
                               bottomLeft: Radius.circular(32.0),
                             ),
                           ),
-                          child: const Text(
-                            "ارسال",
+                          child:  Text(
+                            translation(context).sent,
                             style: TextStyle(
                                 color: Colors.white, fontFamily: "Tajawal-m"),
                             textAlign: TextAlign.center,
@@ -842,8 +845,8 @@ class _mapdetailspage extends State<mapdetailspage> {
                               bottomRight: Radius.circular(32.0),
                             ),
                           ),
-                          child: const Text(
-                            "إلغاء",
+                          child:  Text(
+                            translation(context).cancel,
                             style: TextStyle(
                                 color: Colors.white, fontFamily: "Tajawal-m"),
                             textAlign: TextAlign.center,
@@ -894,7 +897,7 @@ class _mapdetailspage extends State<mapdetailspage> {
 
       // Show a toast message to indicate successful deletion
       Fluttertoast.showToast(
-        msg: 'تم حذف التقييم بنجاح',
+        msg: translation(context).deleteComm,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Color.fromARGB(255, 109, 184, 129),
@@ -908,7 +911,7 @@ class _mapdetailspage extends State<mapdetailspage> {
 
       // Show an error toast message
       Fluttertoast.showToast(
-          msg: 'يوجد هناك مشكلة في حذف التقييم حاول مرة أخرى',
+          msg: translation(context).issueComm,
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Color.fromARGB(255, 109, 184, 129)
@@ -1045,14 +1048,14 @@ Future<void> _saveReviewToFirebase(String reviewText, double rating, String user
     });
 
     // Display a success message or perform additional actions if needed
-    Fluttertoast.showToast(
-      msg: 'تم تحديث التقييم بنجاح',
+   /* Fluttertoast.showToast(
+      msg: translation(context as BuildContext).updateComm,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 1,
       backgroundColor: Color(0xFF6db881),
       textColor: Colors.white,
-    );
+    );*/
   } else {
     // User does not have a previous review and rate, proceed to save the new review and rate
     var uuid = Uuid();
@@ -1069,14 +1072,14 @@ Future<void> _saveReviewToFirebase(String reviewText, double rating, String user
       'timestamp': Timestamp.now(), // Firestore server timestamp
     }).then((value) {
       // Display a success message or perform additional actions if needed
-      Fluttertoast.showToast(
-        msg: 'تم إضافة التقييم بنجاح',
+     /* Fluttertoast.showToast(
+        msg: translation(context as BuildContext).addComm,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 1,
         backgroundColor: Color(0xFF6db881),
         textColor: Colors.white,
-      );
+      );*/
     }).catchError((error) {
       // Handle any errors that occur
       print('Error saving review: $error');
@@ -1104,10 +1107,10 @@ showguestDialog(BuildContext context) async {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const SizedBox(height: 30),
-                    const Padding(
+                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 79),
                       child: Text(
-                        "عذراً لابد من تسجيل الدخول",
+                        translation(context).reqLogin,
                         style: TextStyle(
                           fontSize: 18,
                           fontFamily: "Tajawal-b",
@@ -1138,8 +1141,8 @@ showguestDialog(BuildContext context) async {
                           ),
                         ),
                       ),
-                      child: const Text(
-                        "تسجيل الدخول",
+                      child:  Text(
+                        translation(context).login,
                         style: TextStyle(fontSize: 20, fontFamily: "Tajawal-m"),
                       ),
                     ),

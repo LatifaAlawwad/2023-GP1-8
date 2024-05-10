@@ -6,6 +6,7 @@ import 'SearchPlacesPage.dart';
 import '../placePage.dart';
 import '../placeDetailsPage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gp/language_constants.dart';
 
 class AddPlacesMessagePage extends StatefulWidget {
   final DateTime selectedDay;
@@ -47,8 +48,7 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
         automaticallyImplyLeading: false,
         title: Padding(
           padding: const EdgeInsets.only(left: 50),
-          child: Text(
-            " الأماكن المضافة في ${DateFormat('yyyy-MM-dd').format(dateOnly)}",
+          child: Text("${translation(context).placesADD} ${DateFormat('yyyy-MM-dd').format(dateOnly)}",
             style: TextStyle(
               fontSize: 17,
               fontFamily: "Tajawal-b",
@@ -153,11 +153,11 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'لا توجد أماكن مضافة',
+                    translation(context).noADDplaces,
                     style: TextStyle(fontSize: 18),
                   ),
                   Text(
-                    'بإمكانك إضافة الأماكن التي تريدها',
+                    translation(context).addWantedPlaces,
                     style: TextStyle(fontSize: 18),
                   ),
                   SizedBox(height: 20),
@@ -172,7 +172,7 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'لا يوجد لديك أماكن مضافة',
+              translation(context).noADDplaces,
               style: TextStyle(fontSize: 18),
             ),
           ],
@@ -264,7 +264,7 @@ Widget _buildItem(placePage place, BuildContext context) {
                               builder: (BuildContext context) {
                                 return AlertDialog(
                                   title: Text(
-                                    "تأكيد الإزالة",
+                                    translation(context).conRemove,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: Color(0xff383737),
@@ -274,7 +274,7 @@ Widget _buildItem(placePage place, BuildContext context) {
                                     constraints: BoxConstraints(maxHeight: 30),
                                     alignment: Alignment.center,
                                     child: Text(
-                                      "هل تريد إزالة المكان من القائمة ",
+                                      translation(context).removeList,
                                       style: TextStyle(
                                         color: Color(0xff424242),
                                       ),
@@ -291,7 +291,7 @@ Widget _buildItem(placePage place, BuildContext context) {
                                           style: TextButton.styleFrom(
                                             primary: Color(0xff11630e),
                                           ),
-                                          child: Text("لا"),
+                                          child: Text(translation(context).no),
                                         ),
                                         SizedBox(width: 20),
                                         TextButton(
@@ -308,7 +308,7 @@ Widget _buildItem(placePage place, BuildContext context) {
                                                   .delete();
 
                                               Fluttertoast.showToast(
-                                                msg: 'تم حذف المكان بنجاح',
+                                                msg: translation(context).succDeletePlace,
                                                 toastLength: Toast.LENGTH_SHORT,
                                                 gravity: ToastGravity.BOTTOM,
                                                 timeInSecForIosWeb: 1,
@@ -323,7 +323,7 @@ Widget _buildItem(placePage place, BuildContext context) {
                                           style: TextButton.styleFrom(
                                             primary: Color(0xff11630e),
                                           ),
-                                          child: Text("نعم"),
+                                          child: Text(translation(context).yes),
                                         ),
                                       ],
                                     ),

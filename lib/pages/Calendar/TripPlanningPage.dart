@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'AddedPlaces.dart'; // Import the AddPlacesMessagePage
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:ui' as ui;
+import 'package:gp/language_constants.dart';
 
 
 class TripPlanningPage extends StatefulWidget {
@@ -45,7 +46,7 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
         title: Padding(
           padding: const EdgeInsets.only(left: 110),
           child: Text(
-            (widget.showConversation ? 'اختر يوم لإضافة المكان  ' : 'تخطيط الرحلات'),
+            (widget.showConversation ? translation(context).chooseDay : translation(context).plans),
             style: TextStyle(
               fontSize: 17,
               fontFamily: "Tajawal-b",
@@ -117,18 +118,19 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
               rightChevronIcon: Icon(Icons.chevron_right),
               titleTextFormatter: (date, locale) {
                 final arabicMonthNames = [
-                  'يناير',
-                  'فبراير',
-                  'مارس',
-                  'ابريل',
-                  'مايو',
-                  'يونيو',
-                  'يوليو',
-                  'أغسطس',
-                  'سبتمبر',
-                  'أكتوبر',
-                  'نوفمبر',
-                  'ديسمبر',
+                  translation(context).jan,
+                  translation(context).feb,
+                  translation(context).march,
+                  translation(context).april,
+                  translation(context).may,
+                  translation(context).june,
+                  translation(context).july,
+                  translation(context).aug,
+                  translation(context).sep,
+                  translation(context).oct,
+                  translation(context).nov,
+                  translation(context).dec,
+
                 ];
                 final monthName = arabicMonthNames[date.month - 1];
                 final year = date.year.toString();
@@ -138,13 +140,13 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
             calendarBuilders: CalendarBuilders(
               dowBuilder: (context, day) {
                 final arabicDays = {
-                  DateTime.saturday: 'س',
-                  DateTime.sunday: 'أ',
-                  DateTime.monday: 'ن',
-                  DateTime.tuesday: 'ث',
-                  DateTime.wednesday: 'ب',
-                  DateTime.thursday: 'خ',
-                  DateTime.friday: 'ج',
+                  DateTime.saturday: translation(context).sat,
+                  DateTime.sunday: translation(context).sun,
+                  DateTime.monday: translation(context).mon,
+                  DateTime.tuesday: translation(context).tue,
+                  DateTime.wednesday: translation(context).wed,
+                  DateTime.thursday: translation(context).thu,
+                  DateTime.friday: translation(context).fri,
                 };
                 final weekday = day.weekday;
                 final arabicDayName = arabicDays[weekday];
@@ -174,7 +176,7 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
                   context: context,
                   builder: (context) => AlertDialog(
                     title: Text(
-                      'تأكيد الإضافة',
+                      translation(context).conAdd,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Color(0xff383737),
@@ -189,10 +191,10 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
                         ),
                         children: [
                           TextSpan(
-                            text: '${widget.placeName} هل تريد إضافة \n',
+                              text: ('${widget.placeName} ${translation(context).wantToAdd} \n')
                           ),
                           TextSpan(
-                            text: '${DateFormat('yyyy-MM-dd').format(_selectedDay!)} لرحلتك في ',
+                              text:('${DateFormat('yyyy-MM-dd').format(_selectedDay!)} ${translation(context).yourTrip} '),
                             style: TextStyle(
                               color: Color(0xff424242),
                             ),
@@ -207,7 +209,7 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
                           final currentDate = DateTime.now();
                           if (_selectedDay!.isBefore(currentDate)) {
                             Fluttertoast.showToast(
-                              msg: 'لا يمكنك إضافة المكان لتاريخ سابق',
+                              msg: translation(context).cantAdd,
                               toastLength: Toast.LENGTH_SHORT,
                               gravity: ToastGravity.BOTTOM,
                               timeInSecForIosWeb: 1,
@@ -220,7 +222,7 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
                             bool placeAlreadyAdded = await checkIfPlaceAlreadyAdded(formattedDate);
                             if (placeAlreadyAdded) {
                               Fluttertoast.showToast(
-                                msg: 'المكان مضاف بالفعل في هذا التاريخ',
+                                msg: translation(context).existedPlace,
                                 toastLength: Toast.LENGTH_SHORT,
                                 gravity: ToastGravity.BOTTOM,
                                 timeInSecForIosWeb: 1,
@@ -239,7 +241,7 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
                                 'place_id': widget.place_id,
                               });
                               Fluttertoast.showToast(
-                                msg: 'تمت إضافة المكان بنجاح',
+                                msg: translation(context).succAdded,
                                 toastLength: Toast.LENGTH_SHORT,
                                 gravity: ToastGravity.BOTTOM,
                                 timeInSecForIosWeb: 1,
@@ -250,7 +252,7 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
                             }
                           }
                         },
-                        child: Text('إضافة'),
+                        child: Text(translation(context).add),
                         style: TextButton.styleFrom(
                           primary: Color(0xff11630e),
                         ),
@@ -260,7 +262,7 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
                         onPressed: () {
                           Navigator.of(context).pop(); // Close the dialog
                         },
-                        child: Text('إلغاء'),
+                        child: Text(translation(context).cancel),
                         style: TextButton.styleFrom(
                           primary: Color(0xff11630e),
                         ),

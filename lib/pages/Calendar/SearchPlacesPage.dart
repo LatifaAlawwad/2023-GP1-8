@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gp/language_constants.dart';
 import '../placePage.dart'; // Import placePage.dart if necessary
 import '../placeDetailsPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gp/language_constants.dart';
+
 
 class SearchPlacesPage extends StatefulWidget {
   final DateTime dateonly;
@@ -115,7 +118,7 @@ class _SearchPlacesPageState extends State<SearchPlacesPage> {
                                 if (placeExists) {
                                   // Show toast message indicating that the place is already added
                                   Fluttertoast.showToast(
-                                    msg: 'المكان مضاف بالفعل لهذا التاريخ',
+                                    msg: translation(context).alreadyAdded,
                                     toastLength: Toast.LENGTH_SHORT,
                                     gravity: ToastGravity.BOTTOM,
                                     timeInSecForIosWeb: 1,
@@ -138,7 +141,7 @@ class _SearchPlacesPageState extends State<SearchPlacesPage> {
 
                                   // Show toast message indicating successful addition
                                   Fluttertoast.showToast(
-                                    msg: 'تمت إضافة المكان بنجاح',
+                                    msg: translation(context).succAdded,
                                     toastLength: Toast.LENGTH_SHORT,
                                     gravity: ToastGravity.BOTTOM,
                                     timeInSecForIosWeb: 1,
@@ -371,7 +374,7 @@ class _SearchPlacesPageState extends State<SearchPlacesPage> {
                     borderSide: BorderSide(color: Colors.white),
                   ),
                   alignLabelWithHint: true,
-                  hintText: 'ابحث عن مطعم أو مكان سياحي',
+                  hintText: translation(context).search,
                   hintStyle: TextStyle(
                     color: Color.fromARGB(143, 255, 255, 255),
                     fontFamily: "Tajawal-m",
@@ -436,7 +439,7 @@ class _SearchPlacesPageState extends State<SearchPlacesPage> {
             Expanded(
               child: Center(
                 child: Text(
-                  "لم يتم العثور على نتائج",
+                  translation(context).noResults,
                   style: TextStyle(
                     color: Color(0xFF6db881),
                     fontSize: 16,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gp/Registration/logIn.dart';
+import 'package:gp/language_constants.dart';
 
 class RessetPassword extends StatefulWidget {
   const RessetPassword({Key? key}) : super(key: key);
@@ -30,7 +31,7 @@ class _RessetPasswordState extends State<RessetPassword> {
         title: Padding(
           padding: const EdgeInsets.only(left: 115),
           child: Text(
-            'استعادة كلمة المرور',
+            translation(context).restorePass,
             style: TextStyle(
               fontSize: 16,
               fontFamily: "Tajawal-b",
@@ -59,7 +60,7 @@ class _RessetPasswordState extends State<RessetPassword> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              "أدخل البريد الإلكتروني ليتم ارسال رابط استعادة كلمة المرور",
+              translation(context).eneterEmail,
               style: TextStyle(
                 fontSize: 18,
                 fontFamily: "Tajawal-b",
@@ -83,7 +84,7 @@ class _RessetPasswordState extends State<RessetPassword> {
                     Icons.mail,
                     color: Color(0xFF6db881),
                   ),
-                  labelText: "البريد الإلكتروني:",
+                  labelText: translation(context).email,
                   labelStyle: TextStyle(fontFamily: "Tajawal-m"),
                   hintText: "example@gmail.com",
                   hintStyle: TextStyle(fontSize: 10),
@@ -99,11 +100,11 @@ class _RessetPasswordState extends State<RessetPassword> {
                 ),
                 validator: (value) {
                   if (value!.isEmpty || email.text.trim() == "") {
-                    return "البريد الإلكتروني مطلوب";
+                    return translation(context).reqEmail;
                   } else if (!RegExp(
                       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
                       .hasMatch(value)) {
-                    return 'أدخل البريد الإلكتروني بالشكل الصحيح (example@gmail.com)';
+                    return translation(context).correctEmail;
                   }
                 },
               ),
@@ -118,7 +119,7 @@ class _RessetPasswordState extends State<RessetPassword> {
                 await FirebaseAuth.instance
                     .sendPasswordResetEmail(email: email.text);
                 Fluttertoast.showToast(
-                  msg: "تم إرسال الرابط",
+                  msg: translation(context).sentLink,
                   toastLength: Toast.LENGTH_SHORT,
                   gravity: ToastGravity.CENTER,
                   timeInSecForIosWeb: 4,
@@ -131,7 +132,7 @@ class _RessetPasswordState extends State<RessetPassword> {
                 }));
               } on FirebaseAuthException catch (e) {
                 Fluttertoast.showToast(
-                  msg: "البريد الإلكتروني غير مسجل ",
+                  msg: translation(context).notRegEmail,
                   toastLength: Toast.LENGTH_SHORT,
                   gravity: ToastGravity.CENTER,
                   timeInSecForIosWeb: 5,
@@ -153,7 +154,7 @@ class _RessetPasswordState extends State<RessetPassword> {
               ),
             ),
             child: Text(
-              "إرسال",
+              translation(context).sent,
               style: TextStyle(fontSize: 20, fontFamily: "Tajawal-l"),
             ),
           ),

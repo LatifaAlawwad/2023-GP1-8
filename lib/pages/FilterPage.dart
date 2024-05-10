@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gp/helper/CustomRadioButton.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:gp/language_constants.dart';
 
 
 
@@ -35,7 +36,7 @@ class _FilterPageState extends State<FilterPage>  {
         title: Padding(
           padding: const EdgeInsets.only(left: 150),
           child: Text(
-            "تصفية",
+            translation(context).filter,
             style: TextStyle(
               fontSize: 22,
               fontFamily: "Tajawal-b",
@@ -121,30 +122,18 @@ class CustomFormState extends State<CustomForm> {
 
 
 
-
+  List<String> isThereInMalls = [];
+  List<String> shopOptions = [];
+  List<String> atmosphereOptions = [];
+  List<String> servesOptions = [];
+  List<String> priceRange = [];
 
 
 
 
   List<String> userChecked = [];
   List<String> cuisine = [];
-  List<String> cuisineOptions = [
-    'سعودي',
-    'إيطالي',
-    'أمريكي',
-    'آسيوي',
-    'هندي',
-    'مكسيكي',
-    'تركي',
-    ' بحري',
-    'إسباني',
-    'شرقي',
-    'يوناني',
-    'مخبوزات',
-    'عالمي',
-    'صحي',
-    'قهوة وحلى',
-  ];
+
 
   List<bool> checkedOptionsatt = [false, false, false,false,false,false,false];
   List<bool> checkedOptionsmalls = [false, false, false,false];
@@ -155,34 +144,12 @@ class CustomFormState extends State<CustomForm> {
   List<bool> ocheckedOptionsmalls = [false, false, false,false];
   List<bool> ocheckedOptionsres = [false, false, false,false,false,false,false,false,false,false,false,false,false,false,false];
 
-  List<String> isThereInMalls=['سينما','منطقة ألعاب','منطقة مطاعم','سوبرماركت']  ;
-  List<String> typeEntOptions = [
-    'رياضة و مغامرات',
-    'فنون',
-    'معالم تاريخية',
-    'ثقافة',
-    'حدائق و منتزهات',
-    'مدينة  ملاهي',
-    'معارض',
-  ];
 
 
 
-  List<String> shopOptions = [
-    'ملابس',
-    'أحذية',
-    'حقائب',
-    'أثاث',
-    'الكترونيات',
-    'أواني',
-    'عطور',
-    'عبايات',
-    'مجوهرات',
-    'ملابس أطفال',
-    'مستحضرات تجميل',
-    'صيدليات',
-    'أخرى'
-  ];
+
+
+
   Set<String> serves = Set<String>();
   Set<String> price = Set<String>();
   Set<String> atmosphere = Set<String>();
@@ -195,17 +162,11 @@ class CustomFormState extends State<CustomForm> {
 
 
 
-  List<String> servesOptions = ['فطور', 'غداء', 'عشاء'];
-  List<String> priceRange = ['مرتفع','متوسط','منخفض'];
 
 
-  List<String> atmosphereOptions = [
-    'يوجد موسيقى',
-    'بدون موسيقى',
-    'على البحر',
-    'داخلي',
-    'خارجي'
-  ];
+
+
+
 
   List<String> originalShopOptions = [
     'ملابس',
@@ -389,6 +350,12 @@ void initState() {
 
 
  void resetFilterState() {
+   List<String> isThereInMalls = [
+     translation(context).cinema,
+     translation(context).play_area,
+     translation(context).restaurant_area,
+     translation(context).supermarket,
+   ];
    print("insiiiideee reset");
     setState(() {
       switch (type) {
@@ -441,6 +408,73 @@ void initState() {
 
   @override
   Widget build(BuildContext context) {
+    List<String> cuisineOptions = [
+      translation(context).saudi,
+      translation(context).italian,
+      translation(context).american,
+      translation(context).asian,
+      translation(context).indian,
+    translation(context).mexican,
+    translation(context).turkish,
+    translation(context).seafood,
+    translation(context).spanish,
+    translation(context).middle_eastern,
+    translation(context).greek,
+    translation(context).bakery,
+    translation(context).international,
+    translation(context).healthy,
+    translation(context).coffee_and_desserts,
+    ];
+    List<String> isThereInMalls = [
+      translation(context).cinema,
+      translation(context).play_area,
+      translation(context).restaurant_area,
+      translation(context).supermarket,
+    ];
+    List<String> typeEntOptions = [
+      translation(context).sports_and_adventure,
+      translation(context).arts,
+      translation(context).historical_sites,
+      translation(context).culture,
+      translation(context).gardens_and_parks,
+      translation(context).amusement_park,
+      translation(context).exhibitions,
+    ];
+    List<String> shopOptions = [
+      translation(context).clothing,
+      translation(context).shoes,
+      translation(context).bags,
+      translation(context).furniture,
+      translation(context).electronics,
+      translation(context).utensils,
+      translation(context).perfumes,
+      translation(context).abayas,
+      translation(context).jewelry,
+      translation(context).children_clothing,
+      translation(context).cosmetics,
+      translation(context).pharmacies,
+      translation(context).other,
+    ];
+    List<String> atmosphereOptions = [
+      translation(context).music,
+      translation(context).no_music,
+      translation(context).by_the_sea,
+      translation(context).indoor,
+      translation(context).outdoor,
+    ];
+    List<String> servesOptions = [
+      translation(context).breakfast,
+      translation(context).lunch,
+      translation(context).dinner,
+    ];
+    List<String> priceRange = [
+      translation(context).high,
+      translation(context).medium,
+      translation(context).low,
+    ];
+
+
+
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -471,15 +505,21 @@ void initState() {
                   ),
 
 
-                  const Text(
-                    ':تصنيف المكان ',
+
+                  Text(
+                    translation(context).placeClass,
                     style: TextStyle(
                       fontSize: 18.0,
                       fontFamily: "Tajawal-b",
                     ),
                   ),
+
+
+
+
                   Container(
                     margin: const EdgeInsets.only(top: 10),
+
                     // Adjust top and left values
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -501,10 +541,11 @@ void initState() {
                         contentPadding: EdgeInsets.only(top: 15, bottom: 15, right: 10, left: 10),
                       ),
                       iconSize: 0,
-                      hint: const Align(
+                      hint:  Align(
                         alignment: Alignment.centerRight,
+
                         child: Text(
-                          'اختر تصنيف المكان',
+                          translation(context).category,
                         ),
                       ),
                       isExpanded: true,
@@ -514,7 +555,7 @@ void initState() {
                           child: Align(
                             alignment: Alignment.centerRight,
                             child: Text(
-                              "فعاليات و ترفيه",
+                              translation(context).ent,
                               style: TextStyle(
                                 fontSize: 17.0,
                                 fontFamily: "Tajawal-m",
@@ -529,7 +570,7 @@ void initState() {
                           child: Align(
                             alignment: Alignment.centerRight,
                             child: Text(
-                              "مطاعم",
+                              translation(context).rest,
                               style: TextStyle(
                                 fontSize: 17.0,
                                 fontFamily: "Tajawal-m",
@@ -544,7 +585,7 @@ void initState() {
                           child: Align(
                             alignment: Alignment.centerRight,
                             child: Text(
-                              "مراكز تسوق",
+                              translation(context).mall,
                               style: TextStyle(
                                 fontSize: 17.0,
                                 fontFamily: "Tajawal-m",
@@ -585,8 +626,8 @@ void initState() {
                       children: [
 
                         const SizedBox(height: 10),
-                        const Text(
-                          'نوع الفعالية',
+                         Text(
+                          translation(context).actType,
                           style: TextStyle(
                             fontSize: 18.0,
                             fontFamily: "Tajawal-b",
@@ -636,8 +677,8 @@ void initState() {
 
                         Divider(height:50, color: Colors.grey),
 
-                        const Text(
-                          'طبيعة الفعالية',
+                         Text(
+                          translation(context).actVen,
                           style: TextStyle(
                             fontSize: 18.0,
                             fontFamily: "Tajawal-b",
@@ -654,7 +695,7 @@ void initState() {
                                   INorOUT = (INorOUT == 'كلاهما') ? null : 'كلاهما';
                                 });
                               },
-                              text: 'خارجي وداخلي',
+                              text: translation(context).inANDout,
                               value: INorOUT == 'كلاهما',
                             ),
                             const SizedBox(width: 10),
@@ -664,7 +705,7 @@ void initState() {
                                   INorOUT = (INorOUT == 'لا') ? null : 'لا';
                                 });
                               },
-                              text: 'داخلي',
+                              text: translation(context).indoor,
                               value: INorOUT == 'لا',
                             ),
                             const SizedBox(width: 10),
@@ -674,7 +715,7 @@ void initState() {
                                   INorOUT = (INorOUT == 'نعم') ? null : 'نعم';
                                 });
                               },
-                              text: 'خارجي',
+                              text: translation(context).outdoor,
                               value: INorOUT == 'نعم',
                             ),
                           ],
@@ -683,8 +724,8 @@ void initState() {
 
                         Divider(height:50, color: Colors.grey),
 
-                        const Text(
-                          'الحجز',
+                         Text(
+                          translation(context).book,
                           style: TextStyle(
                             fontSize: 18.0,
                             fontFamily: "Tajawal-b",
@@ -701,7 +742,7 @@ void initState() {
                                     hasReservation = false;
                                   });
                                 },
-                                text: 'لا يتطلب حجز',
+                                text: translation(context).noBook,
                                 value: !(hasReservation ?? true)),
                             const SizedBox(
                               width: 10,
@@ -712,7 +753,7 @@ void initState() {
                                     hasReservation = true;
                                   });
                                 },
-                                text: 'يتطلب حجز',
+                                text: translation(context).needBook,
                                 value: hasReservation ?? false),
                             const SizedBox(
                               width: 10,
@@ -732,8 +773,8 @@ void initState() {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         const SizedBox(height: 10),
-                        const Text(
-                          ': نوع الطعام',
+                         Text(
+                           translation(context).cuisine,
                           style: TextStyle(
                             fontSize: 20.0,
                             fontFamily: "Tajawal-b",
@@ -783,8 +824,8 @@ void initState() {
 
                         Divider(height:50, color: Colors.grey),
 
-                        const Text(
-                          ': نطاق الأسعار',
+                         Text(
+                          translation(context).priceRange,
                           style: TextStyle(
                             fontSize: 20.0,
                             fontFamily: "Tajawal-b",
@@ -853,8 +894,8 @@ void initState() {
 
 
 
-                        const Text(
-                          ': الوجبات المقدمة ',
+                         Text(
+                          translation(context).meals,
                           style: TextStyle(
                             fontSize: 18.0,
                             fontFamily: "Tajawal-b",
@@ -929,8 +970,8 @@ void initState() {
 
 
 
-                        const Text(
-                          ' : الجو العام',
+                         Text(
+                          translation(context).atmosphere,
                           style: TextStyle(
                             fontSize: 18.0,
                             fontFamily: "Tajawal-b",
@@ -1004,8 +1045,8 @@ void initState() {
 
 
 
-                        const Text(
-                          'هل يتطلب حجز ؟ ',
+                         Text(
+                           translation(context).reservation,
                           style: TextStyle(
                             fontSize: 18.0,
                             fontFamily: "Tajawal-b",
@@ -1022,7 +1063,7 @@ void initState() {
                                     hasReservation = false;
                                   });
                                 },
-                                text: 'لا يتطلب حجز',
+                                text: translation(context).noBook,
                                 value: !(hasReservation ?? true)),
                             const SizedBox(
                               width: 10,
@@ -1033,7 +1074,7 @@ void initState() {
                                     hasReservation = true;
                                   });
                                 },
-                                text: 'يتطلب حجز',
+                                text: translation(context).needBook,
                                 value: hasReservation ?? false),
                             const SizedBox(
                               width: 10,
@@ -1057,8 +1098,8 @@ void initState() {
                         const SizedBox(height: 10),
 
 
-                        const Text(
-                          'طبيعة المركز',
+                         Text(
+                          translation(context).mallVen,
                           style: TextStyle(
                             fontSize: 18.0,
                             fontFamily: "Tajawal-b",
@@ -1075,7 +1116,7 @@ void initState() {
                                   INorOUT = (INorOUT == 'كلاهما') ? null : 'كلاهما';
                                 });
                               },
-                              text: 'خارجي وداخلي',
+                              text: translation(context).inANDout,
                               value: INorOUT == 'كلاهما',
                             ),
                             const SizedBox(width: 10),
@@ -1085,7 +1126,7 @@ void initState() {
                                   INorOUT = (INorOUT == 'لا') ? null : 'لا';
                                 });
                               },
-                              text: 'داخلي',
+                              text: translation(context).indoor,
                               value: INorOUT == 'لا',
                             ),
                             const SizedBox(width: 10),
@@ -1095,7 +1136,7 @@ void initState() {
                                   INorOUT = (INorOUT == 'نعم') ? null : 'نعم';
                                 });
                               },
-                              text: 'خارجي',
+                              text: translation(context).outdoor,
                               value: INorOUT == 'نعم',
                             ),
                           ],
@@ -1103,8 +1144,8 @@ void initState() {
 
                         Divider(height:50, color: Colors.grey),
 
-                        const Text(
-                         'يوجد في مراكز التسوق',
+                         Text(
+                          translation(context).foundMall,
                           style: TextStyle(
                             fontSize: 18.0,
                             fontFamily: "Tajawal-b",
@@ -1156,8 +1197,8 @@ void initState() {
 
                         Divider(height:50, color: Colors.grey),
 
-                        const Text(
-                          'أنواع المحلات',
+                         Text(
+                           translation(context).storeType,
                           style: TextStyle(
                             fontSize: 20.0,
                             fontFamily: "Tajawal-b",
@@ -1257,8 +1298,8 @@ void initState() {
                                 ),
                               ),
                             ),
-                            child: const Text(
-                              'مسح الكل',
+                            child:  Text(
+                              translation(context).clear,
                               style: TextStyle(
                                 fontSize: 18.0,
                                 fontFamily: "Tajawal-m",
@@ -1302,8 +1343,8 @@ void initState() {
                                 ),
                               ),
                             ),
-                            child: const Text(
-                              'عرض النتائج',
+                            child:  Text(
+                              translation(context).showR,
                               style: TextStyle(
                                 fontSize: 18.0,
                                 fontFamily: "Tajawal-m",

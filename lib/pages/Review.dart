@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-
+import 'package:gp/language_constants.dart';
 
 class Review extends StatelessWidget {
   final String id;
@@ -113,11 +113,11 @@ class Review extends StatelessWidget {
                         itemBuilder: (context) => [
                           PopupMenuItem<String>(
                             value: 'update',
-                            child: Text('تحديث'),
+                            child: Text(translation(context).update),
                           ),
                           PopupMenuItem<String>(
                             value: 'delete',
-                            child: Text('حذف'),
+                            child: Text(translation(context).delete),
                           ),
                         ],
                         onSelected: (value) {

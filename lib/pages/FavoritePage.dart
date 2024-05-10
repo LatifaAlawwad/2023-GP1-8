@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../Registration/logIn.dart';
 import 'placePage.dart';
 import 'placeDetailsPage.dart';
+import 'package:gp/language_constants.dart';
 
 class FavoritePage extends StatefulWidget {
   @override
@@ -113,7 +114,7 @@ class _FavoritePage extends State<FavoritePage> {
           )
         : Center(
             child: Text(
-              "لم يتم العثور على نتائج",
+             translation(context).noResults,
               style: TextStyle(
                 color: Color(0xFF6db881),
                 fontSize: 16,
@@ -143,7 +144,7 @@ class _FavoritePage extends State<FavoritePage> {
         title: Padding(
           padding: const EdgeInsets.only(left: 155),
           child: Text(
-            "المفضلة",
+            translation(context).favPage,
             style: TextStyle(
               fontSize: 17,
               fontFamily: "Tajawal-b",
@@ -176,7 +177,7 @@ class _FavoritePage extends State<FavoritePage> {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 79),
                       child: Text(
-                        "عذراً لابد من تسجيل الدخول",
+                        translation(context).reqLogin,
                         style: TextStyle(
                           fontSize: 18,
 
@@ -206,7 +207,7 @@ class _FavoritePage extends State<FavoritePage> {
                         ),
                       ),
                       child: Text(
-                        "تسجيل الدخول",
+                        translation(context).login,
                         style: TextStyle(fontSize: 20, fontFamily: "Tajawal-m"),
                       ),
                     ),
@@ -290,7 +291,7 @@ class _FavoritePage extends State<FavoritePage> {
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     title: Text(
-                                      "تأكيد الإزالة",
+                                      translation(context).conRemove,
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: Color(0xff383737),
@@ -301,7 +302,7 @@ class _FavoritePage extends State<FavoritePage> {
                                           BoxConstraints(maxHeight: 30),
                                       alignment: Alignment.center,
                                       child: Text(
-                                        "هل تريد إزالة المكان من قائمة المفضلة",
+                                        translation(context).removeFavList,
                                         style: TextStyle(
                                           color: Color(0xff424242),
                                         ),
@@ -315,7 +316,7 @@ class _FavoritePage extends State<FavoritePage> {
                                         style: TextButton.styleFrom(
                                           primary: Color(0xff11630e),
                                         ),
-                                        child: Text("لا"),
+                                        child: Text(translation(context).no),
                                       ),
                                       TextButton(
                                         onPressed: () async {
@@ -340,7 +341,7 @@ class _FavoritePage extends State<FavoritePage> {
                                         style: TextButton.styleFrom(
                                           primary: Color(0xff11630e),
                                         ),
-                                        child: Text("نعم"),
+                                        child: Text(translation(context).yes),
                                       ),
                                     ],
                                   );

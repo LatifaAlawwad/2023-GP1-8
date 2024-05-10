@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'HomePage.dart';
 import 'NavigationBarPage.dart';
-
+import 'package:gp/language_constants.dart';
 
 class CitiesPage extends StatelessWidget {
   @override
@@ -14,7 +14,7 @@ class CitiesPage extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(left: 50),
             child: Text(
-              "اختر مدينة",
+              translation(context).selectCity,
               style: TextStyle(
                 fontSize: 17,
                 fontFamily: "Tajawal-b",
@@ -44,28 +44,28 @@ class CitiesPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CityButton(
-              cityName: 'الرياض',
+              cityName: translation(context).riyadh,
               imageLink: 'https://omrania.com/wp-content/uploads/Kingdom-Centre-Riyadh-KSA-Bin-Mahdi-cover.jpg',
               cityId: 3,
             ),
             CityButton(
-              cityName: 'جدة',
+              cityName: translation(context).jeddah,
               imageLink: 'https://preview.redd.it/ckmkqajqdf161.jpg?auto=webp&s=441bbb3504fb1dd698371b74b1b1e8033bdec3ec',
               cityId: 18,
             ),
             CityButton(
-              cityName: 'أبها',
+              cityName: translation(context).abha,
               imageLink: 'https://sa.aqar.fm/blog/wp-content/uploads/2023/02/%D8%B1%D8%AC%D8%A7%D9%84-%D8%A3%D9%84%D9%85%D8%B9-950x500.jpg',
               cityId: 15,
             ),
             CityButton(
-              cityName: 'العلا',
+              cityName: translation(context).alula,
               imageLink: 'https://www.vision2030.gov.sa/media/mtukxauc/elephant-rock.jpg?width=1920&format=webp',
               cityId: 13,
             ),
 
             CityButton(
-              cityName: 'المنطقة الشرقية',
+              cityName: translation(context).east,
               imageLink: 'https://welcomesaudi.com/uploads/0000/1/2021/07/23/85-dammam-corniche-eastern-province-900.jpg',
               cityId: 3,
             ),
@@ -122,7 +122,9 @@ class CityButton extends StatelessWidget {
                       ),
                       Positioned(
                         top: 10,
-                        right: 10,
+                        right: isArabic()? 0:20,
+                        left: isArabic()? 20:0,
+
                         child: Text(
                           cityName,
                           style: const TextStyle(

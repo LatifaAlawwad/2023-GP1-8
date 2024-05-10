@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'placePage.dart';
 import 'placeDetailsPage.dart';
 import 'UserProfilePage.dart';
+import 'package:gp/language_constants.dart';
 
 class myPlacesPage extends StatefulWidget {
    String? selectedCategory;
@@ -103,7 +104,7 @@ class _myPlacesPage extends State<myPlacesPage> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 50),
                 child: Text(
-                  "طلبات الإضافة",
+                  translation(context).addRequest,
                   style: TextStyle(
                     fontSize: 17,
                     fontFamily: "Tajawal-b",
@@ -154,13 +155,13 @@ class _myPlacesPage extends State<myPlacesPage> {
               indicatorColor: Colors.white,
               tabs: [
                 Tab(
-                  text: 'طلبات معتمدة',
+                  text: translation(context).approvedReq,
                 ),
                 Tab(
-                  text: 'طلبات بانتظار الاعتماد',
+                  text: translation(context).waitingReq,
                 ),
                 Tab(
-                  text: 'طلبات مرفوضة',
+                  text: translation(context).rejectedReq,
                 ),
               ],
             ),
@@ -208,7 +209,7 @@ class _myPlacesPage extends State<myPlacesPage> {
     )
         : Center(
       child: Text(
-        "لم يتم العثور على نتائج",
+        translation(context).noResults,
         style: TextStyle(
           color: Color(0xFF6db881),
           fontSize: 16,
@@ -411,12 +412,12 @@ class _myPlacesPage extends State<myPlacesPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("تأكيد الحذف"),
-          content: Text("هل تريد حذف المكان التالي؟\n\n${place.placeName}"),
+          title: Text(translation(context).conDelete),
+          content: Text("${translation(context).deletePlace}\n\n${place.placeName}"),
 
           actions: <Widget>[
             TextButton(
-              child: Text("إلغاء"),
+              child: Text(translation(context).cancel),
               style: buttonStyle,
               onPressed: () {
                 Navigator.of(context).pop(false);
@@ -424,7 +425,7 @@ class _myPlacesPage extends State<myPlacesPage> {
             ),
             if (selectedCategory == 'طلبات بانتظار الاعتماد')
               TextButton(
-                child: Text("حذف"),
+                child: Text(translation(context).delete),
                 style: buttonStyle,
                 onPressed: () {
                   Navigator.of(context).pop(true);

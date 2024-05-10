@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
+import 'package:gp/language_constants.dart';
 import '../Registration/SignUp.dart';
 import '../Registration/logIn.dart';
 
@@ -68,7 +68,7 @@ class _editProfileState extends State<editProfile> {
         title: Padding(
           padding: const EdgeInsets.only(left: 70),
           child: Text(
-            "تعديل المعلومات الشخصية ",
+            translation(context).modifyPerInfo,
             style: TextStyle(
               fontSize: 17,
               fontFamily: "Tajawal-b",
@@ -129,7 +129,7 @@ class _editProfileState extends State<editProfile> {
                                 Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 16),
                                   child: Text(
-                                    "المعلومات الشخصية",
+                                    translation(context).personalInfo,
                                     style: TextStyle(
                                       fontSize: 18,
                                       color: Color.fromARGB(255, 109, 184, 129),
@@ -165,10 +165,10 @@ class _editProfileState extends State<editProfile> {
                                       ),
                                       validator: (value) {
                                         if (value!.length < 2) {
-                                          return "الأسم يجب ان يكون خانتين فأكثر ";
+                                          return translation(context).nameCon;
                                         }
                                         if (RegExp(r'[0-9]').hasMatch(value)) {
-                                          return 'الرجاء إدخال أحرف فقط';
+                                          return translation(context).onlyletters;
                                         }
                                       },
                                     ),
@@ -210,7 +210,7 @@ class _editProfileState extends State<editProfile> {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       Text(
-                                        "تحديث كلمة المرور",
+                                        translation(context).updatePass,
                                         style: TextStyle(
                                           fontSize: 16,
                                           color: Color.fromARGB(255, 134, 134, 134),
@@ -234,7 +234,7 @@ class _editProfileState extends State<editProfile> {
                                       autovalidateMode: AutovalidateMode.onUserInteraction,
                                       focusNode: currentPasswordFocusNode,
                                       decoration: InputDecoration(
-                                        hintText: 'كلمة المرور الحالية',
+                                        hintText: translation(context).currentPass,
                                         prefixIcon: Icon(
                                           Icons.lock_open,
                                           color: Color.fromARGB(255, 109, 184, 129),
@@ -264,7 +264,7 @@ class _editProfileState extends State<editProfile> {
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(horizontal:30),
                                           child: Text(
-                                            "كلمة المرور الحالية غير صحيحة",
+                                            translation(context).wrongCurPass,
                                             style: TextStyle(
                                               color: Color.fromARGB(
                                                   255, 196, 51, 51),
@@ -291,7 +291,7 @@ class _editProfileState extends State<editProfile> {
                                       controller: newPasswordController,
                                       autovalidateMode: AutovalidateMode.onUserInteraction,
                                       decoration: InputDecoration(
-                                        hintText: 'كلمة المرور الجديدة',
+                                        hintText: translation(context).newPass,
                                         prefixIcon: Icon(
                                           Icons.password_rounded,
                                           color: Color.fromARGB(255, 109, 184, 129),
@@ -325,23 +325,23 @@ class _editProfileState extends State<editProfile> {
                                         String errorMessage = "";
 
                                         if (value.length < 8) {
-                                          errorMessage += "\u2022 كلمة المرور يجب أن تكون من 8 خانات\n";
+                                          errorMessage += translation(context).eightchar;
                                         }
 
                                         if (!uper.hasMatch(value)) {
-                                          errorMessage += "\u2022 تحتوي على حرف كبير\n";
+                                          errorMessage += translation(context).capletter;
                                         }
 
                                         if (!small.hasMatch(value)) {
-                                          errorMessage += "\u2022 تحتوي على أحرف صغيرة\n";
+                                          errorMessage += translation(context).smaletter;
                                         }
 
                                         if (!numb.hasMatch(value)) {
-                                          errorMessage += "\u2022 تحتوي على أرقام\n";
+                                          errorMessage += translation(context).conNum;
                                         }
 
                                         if (!special.hasMatch(value)) {
-                                          errorMessage += "\u2022 تحتوي على رمز مميز\n";
+                                          errorMessage += translation(context).specialchar;
                                         }
 
                                         if (errorMessage.isNotEmpty) {
@@ -370,7 +370,7 @@ class _editProfileState extends State<editProfile> {
                                       autovalidateMode: AutovalidateMode.onUserInteraction,
                                       focusNode: confirmedPasswordFocusNode,
                                       decoration: InputDecoration(
-                                        hintText: 'تأكيد كلمة المرور',
+                                        hintText: translation(context).conPass,
                                         prefixIcon: Icon(
                                           Icons.lock,
                                           color: Color.fromARGB(255, 109, 184, 129),
@@ -402,7 +402,7 @@ class _editProfileState extends State<editProfile> {
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(horizontal:30),
                                           child: Text(
-                                            "كلمة المرور غير متطابقة",
+                                            translation(context).unmatchPass,
                                             style: TextStyle(
                                               color: Color.fromARGB(
                                                   255, 196, 51, 51),
@@ -441,7 +441,7 @@ class _editProfileState extends State<editProfile> {
                                               });
 
                                               Fluttertoast.showToast(
-                                                msg: "تم التحديث بنجاح",
+                                                msg: translation(context).succUpdate,
                                                 toastLength: Toast.LENGTH_SHORT,
                                                 gravity: ToastGravity.CENTER,
                                                 timeInSecForIosWeb: 2,
@@ -451,7 +451,7 @@ class _editProfileState extends State<editProfile> {
                                               );
                                             } catch (e, stack) {
                                               Fluttertoast.showToast(
-                                                msg: "حدث خطأ أثناء تحديث المعلومات الشخصية",
+                                                msg: translation(context).errorOcur,
                                                 toastLength: Toast.LENGTH_SHORT,
                                                 gravity: ToastGravity.CENTER,
                                                 timeInSecForIosWeb: 5,
@@ -491,7 +491,7 @@ class _editProfileState extends State<editProfile> {
                                                                 .text);
 
                                                         Fluttertoast.showToast(
-                                                          msg: "تم التحديث بنجاح",
+                                                          msg: translation(context).succUpdate,
                                                           toastLength: Toast
                                                               .LENGTH_SHORT,
                                                           gravity: ToastGravity
@@ -509,8 +509,7 @@ class _editProfileState extends State<editProfile> {
                                                         );
                                                       } on FirebaseAuthException catch (e) {
                                                         Fluttertoast.showToast(
-                                                          msg: "خطأ في تحديث كلمة المرور: ${e
-                                                              .message}",
+                                                          msg: "${translation(context).errorUpPass} ${e.message}",
                                                           toastLength: Toast
                                                               .LENGTH_SHORT,
                                                           gravity: ToastGravity
@@ -532,7 +531,7 @@ class _editProfileState extends State<editProfile> {
 
                                                     else {
                                                       Fluttertoast.showToast(
-                                                        msg: "كلمة المرور الجديدة وتأكيد كلمة المرور غير متطابقتين",
+                                                        msg: translation(context).newAndconPassUNMATH,
                                                         toastLength: Toast
                                                             .LENGTH_SHORT,
                                                         gravity: ToastGravity
@@ -551,7 +550,7 @@ class _editProfileState extends State<editProfile> {
 
 
                                                     Fluttertoast.showToast(
-                                                      msg: "يجب ان تكون كلمة المرور الحالية و الجديدة غير متطابقتين",
+                                                      msg: translation(context).curANDnewPass,
                                                       toastLength: Toast.LENGTH_SHORT,
                                                       gravity: ToastGravity.CENTER,
                                                       timeInSecForIosWeb: 5,
@@ -563,7 +562,7 @@ class _editProfileState extends State<editProfile> {
 
                                                   } else {
                                                     Fluttertoast.showToast(
-                                                    msg: "لتغيير كلمة المرور، يجب ان تكون كلمة المرور الحالية صحيحة",
+                                                    msg: translation(context).rightCurrPass,
                                                     toastLength: Toast.LENGTH_SHORT,
                                                     gravity: ToastGravity.CENTER,
                                                     timeInSecForIosWeb: 5,
@@ -574,7 +573,7 @@ class _editProfileState extends State<editProfile> {
                                                 }else {
 
                                                   Fluttertoast.showToast(
-                                                    msg: "لتغيير كلمة المرور، يجب ملء حقل كلمة المرور الحالية",
+                                                    msg: translation(context).fillCurrPass,
                                                     toastLength: Toast.LENGTH_SHORT,
                                                     gravity: ToastGravity.CENTER,
                                                     timeInSecForIosWeb: 5,
@@ -586,7 +585,7 @@ class _editProfileState extends State<editProfile> {
                                               }else if (confirmPasswordController.text.isEmpty && newPasswordController.text.isNotEmpty){
 
                                                 Fluttertoast.showToast(
-                                                  msg: "لتغيير كلمة المرور، يجب ملء حقل تأكيد كلمة المرور",
+                                                  msg: translation(context).fillConPass,
                                                   toastLength: Toast.LENGTH_SHORT,
                                                   gravity: ToastGravity.CENTER,
                                                   timeInSecForIosWeb: 5,
@@ -597,7 +596,7 @@ class _editProfileState extends State<editProfile> {
 
                                               }else if( confirmPasswordController.text.isNotEmpty && newPasswordController.text.isEmpty){
                                                 Fluttertoast.showToast(
-                                                  msg: "لتغيير كلمة المرور، يجب ملء حقل كلمة المرور الجديدة",
+                                                  msg: translation(context).fillNewPass,
                                                   toastLength: Toast.LENGTH_SHORT,
                                                   gravity: ToastGravity.CENTER,
                                                   timeInSecForIosWeb: 5,
@@ -607,7 +606,7 @@ class _editProfileState extends State<editProfile> {
                                                 );
                                               }else{
                                                 Fluttertoast.showToast(
-                                                  msg: "لتغيير كلمة المرور، يجب ملء حقل كلمة المرور الجديدة وتأكيد كلمة المرور",
+                                                  msg: translation(context).newPassCondition,
                                                   toastLength: Toast.LENGTH_SHORT,
                                                   gravity: ToastGravity.CENTER,
                                                   timeInSecForIosWeb: 5,
@@ -620,7 +619,7 @@ class _editProfileState extends State<editProfile> {
                                             }
 
                                         }else {  Fluttertoast.showToast(
-                                          msg: "لتغيير كلمة المرور، يجب ان تكون كلمة المرور تطابق الشروط",
+                                          msg: translation(context).newPassMatch,
                                           toastLength: Toast.LENGTH_SHORT,
                                           gravity: ToastGravity.CENTER,
                                           timeInSecForIosWeb: 5,
@@ -643,7 +642,7 @@ class _editProfileState extends State<editProfile> {
                                         ),
                                       ),
                                       child: Text(
-                                        "حفظ التغيرات",
+                                        translation(context).saveChanges,
                                         style: TextStyle(fontSize: 18, fontFamily: "Tajawal-m"),
                                       ),
                                     ),

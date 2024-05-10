@@ -5,6 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gp/Registration/Welcome.dart';
 import 'package:gp/pages/NavigationBarPage.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:gp/language_constants.dart';
 
 import '../pages/citiesPage.dart';
 
@@ -53,7 +56,7 @@ class _SignUpState extends State<SignUp> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                              "إنشاء حساب",
+                              translation(context).signup,
                               style: TextStyle(
                                   fontSize: 26,
                                   fontFamily: "Tajawal-b",
@@ -102,7 +105,7 @@ class _SignUpState extends State<SignUp> {
                                     Icons.person,
                                     color: Color(0xFF6db881),
                                   ),
-                                  labelText: "  الأسم  :",
+                                  labelText: translation(context).name,
                                   labelStyle: TextStyle(fontFamily: "Tajawal-m"),
                                   fillColor: Color(0xFFdff1e0),
                                   filled: true,
@@ -113,10 +116,10 @@ class _SignUpState extends State<SignUp> {
                                 ),
                                 validator: (value) {
                                   if (value!.isEmpty || _usernameController.text.trim() == "") {
-                                    return "الأسم مطلوب ";
+                                    return translation(context).reqName;
                                   }
                                   if (RegExp(r'[0-9]').hasMatch(value)) {
-                                    return 'الرجاء إدخال أحرف فقط';
+                                    return translation(context).onlyletters;
                                   }
                                 },
                               ),
@@ -136,7 +139,7 @@ class _SignUpState extends State<SignUp> {
                                     Icons.mail,
                                     color: Color(0xFF6db881),
                                   ),
-                                  labelText: " البريد الإلكتروني :",
+                                  labelText: translation(context).email,
                                   labelStyle: TextStyle(fontFamily: "Tajawal-m"),
                                   hintText: "exampel@gmail.com",
                                   hintStyle: TextStyle(fontSize: 10),
@@ -149,13 +152,13 @@ class _SignUpState extends State<SignUp> {
                                 ),
                                   validator: (value) {
                                     if (value!.isEmpty || _emailController.text.trim() == "") {
-                                      return "البريد الإلكتروني مطلوب";
+                                      return translation(context).reqEmail;
                                     }
 
                                     final emailPattern = RegExp(r'^[a-z0-9A-Z_.-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,3}$');
 
                                     if (!emailPattern.hasMatch(value)) {
-                                      return 'أدخل البريد الإلكتروني بالشكل الصحيح (example@example.com)';
+                                      return translation(context).correctEmail;
                                     }
 
                                     return null;
@@ -183,10 +186,10 @@ class _SignUpState extends State<SignUp> {
                                   color: Color(0xFF6db881),
                                   size: 19,
                                 ),
-                                labelText: "كلمة المرور:",
+                                labelText: translation(context).password,
                                 labelStyle: TextStyle(fontFamily: "Tajawal-m"),
                                 hintText:
-                                "كلمة المرور يجب ان تكون من 8 خانات وتشمل على حرف كبير ورمز مميز ",
+                                translation(context).passConditions,
                                 hintStyle: TextStyle(fontSize: 10),
                                 fillColor: Color(0xFFdff1e0),
                                 filled: true,
@@ -202,30 +205,30 @@ class _SignUpState extends State<SignUp> {
                                 RegExp special = RegExp(r"(?=.*[!@#%^&*(),.?\\:{}|<>])");
 
                                 if (value!.isEmpty || _passwordController.text.trim() == "") {
-                                  return "كلمة السر مطلوبة";
+                                  return translation(context).reqPass;
                                 }
 
 
                                 String errorMessage = "";
 
                                 if (value.length < 8) {
-                                  errorMessage += "\u2022 كلمة المرور يجب أن تكون من 8 خانات\n";
+                                  errorMessage += translation(context).eightchar;
                                 }
 
                                 if (!uper.hasMatch(value)) {
-                                  errorMessage += "\u2022 تحتوي على حرف كبير\n";
+                                  errorMessage += translation(context).capletter;
                                 }
 
                                 if (!small.hasMatch(value)) {
-                                  errorMessage += "\u2022 تحتوي على أحرف صغيرة\n";
+                                  errorMessage += translation(context).smaletter;
                                 }
 
                                 if (!numb.hasMatch(value)) {
-                                  errorMessage += "\u2022 تحتوي على أرقام\n";
+                                  errorMessage += translation(context).conNum;
                                 }
 
                                 if (!special.hasMatch(value)) {
-                                  errorMessage += "\u2022 تحتوي على رمز مميز\n";
+                                  errorMessage += translation(context).specialchar;
                                 }
 
                                 if (errorMessage.isNotEmpty) {
@@ -260,7 +263,7 @@ class _SignUpState extends State<SignUp> {
                                       color: Color(0xFF6db881),
                                       size: 19,
                                     ),
-                                    labelText: "تأكيد كلمة المرور:",
+                                    labelText: translation(context).conPass,
                                     labelStyle: TextStyle(fontFamily: "Tajawal-m"),
                                     fillColor: Color(0xFFdff1e0),
                                     filled: true,
@@ -271,9 +274,9 @@ class _SignUpState extends State<SignUp> {
                                   ),
                                   validator: (value) {
                                     if (value!.isEmpty) {
-                                      return "تأكيد كلمة المرور مطلوب ";
+                                      return translation(context).conPassReq;
                                     } else if (value != _passwordController.text.trim()) {
-                                      return "كلمة المرور غير مطابقة ";
+                                      return translation(context).unmatchPass;
                                     }
                                   }),
                             )),
@@ -294,7 +297,7 @@ class _SignUpState extends State<SignUp> {
                                     email: _emailController.text,
                                   ); //creat user in database
                                   Fluttertoast.showToast(
-                                    msg: "تم تسجيل حسابك بنجاح",
+                                    msg: translation(context).successfulAcc,
                                     toastLength: Toast.LENGTH_SHORT,
                                     gravity: ToastGravity.CENTER,
                                     timeInSecForIosWeb: 2,
@@ -313,7 +316,7 @@ class _SignUpState extends State<SignUp> {
                                   builder: (BuildContext context) {
                                     return AlertDialog(
                                       content: Text(
-                                        "البريد الألكتروني موجود مسبقاً",
+                                        translation(context).existedEmail,
                                         style: TextStyle(fontFamily: "Tajawal-m", fontSize: 17),
                                         textDirection: TextDirection.rtl,
                                       ),
@@ -323,7 +326,7 @@ class _SignUpState extends State<SignUp> {
                                       actions: <Widget>[
                                         TextButton(
                                           child: Text(
-                                            "حسناً",
+                                            translation(context).ok,
                                             style: TextStyle(
                                               fontFamily: "Tajawal-m",
                                               fontSize: 17,
@@ -348,7 +351,7 @@ class _SignUpState extends State<SignUp> {
                                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(27))),
                           ),
                           child: Text(
-                            "إنشاء حساب",
+                            translation(context).signup,
                             style: TextStyle(fontSize: 20, fontFamily: "Tajawal-m"),
                           ),
                         ),
@@ -368,7 +371,7 @@ class _SignUpState extends State<SignUp> {
                                   Navigator.pushNamed(context, "/login");
                                 },
                                 child: Text(
-                                  "تسجيل الدخول",
+                                  translation(context).login,
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontFamily: "Tajawal-b",
@@ -377,7 +380,7 @@ class _SignUpState extends State<SignUp> {
                                 ),
                               ),
                               Text(
-                                "  لديك حساب ؟     ",
+                                translation(context).haveAccount,
                                 style: TextStyle(fontSize: 14, fontFamily: "Tajawal-l"),
                               ),
                             ],

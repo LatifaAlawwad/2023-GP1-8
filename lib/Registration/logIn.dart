@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gp/pages/NavigationBarPage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
+import 'package:gp/language_constants.dart';
 
 import '../pages/citiesPage.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +51,7 @@ class _LogInState extends State<LogIn> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                              "تسجيل الدخول ",
+                              translation(context).login,
                               style: TextStyle(
                                 fontSize: 26,
                                 fontFamily: "Tajawal-b",
@@ -98,7 +98,7 @@ class _LogInState extends State<LogIn> {
                                   Icons.mail,
                                   color: Color(0xFF6db881),
                                 ),
-                                labelText: "البريد الإلكتروني:",
+                                labelText: translation(context).email,
                                 labelStyle: TextStyle(fontFamily: "Tajawal-m"),
                                 hintText: "example@gmail.com",
                                 hintStyle: TextStyle(fontSize: 10),
@@ -114,13 +114,13 @@ class _LogInState extends State<LogIn> {
                               ),
                               validator: (value) {
                                 if (value!.isEmpty || email.text.trim() == "") {
-                                  return "البريد الإلكتروني مطلوب";
+                                  return translation(context).reqEmail;
                                 }
 
                                 final emailPattern = RegExp(r'^[a-z0-9A-Z_.-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,3}$');
 
                                 if (!emailPattern.hasMatch(value)) {
-                                  return 'يجب أن يكون البريد الالكتروني بالشكل الصحيح (example@example.com)';
+                                  return translation(context).correctEmail;
                                 }
 
                                 return null;
@@ -145,9 +145,9 @@ class _LogInState extends State<LogIn> {
                                   color: Color(0xFF6db881),
                                   size: 19,
                                 ),
-                                labelText: "كلمة المرور:",
+                                labelText: translation(context).password,
                                 labelStyle: TextStyle(fontFamily: "Tajawal-m"),
-                                hintText: "كلمة المرور يجب ان تكون من 8 خانات وتشمل على حرف كبير ورمز مميز ورقم",
+                                hintText: translation(context).passConditions,
                                 hintStyle: TextStyle(fontSize: 10),
                                 fillColor: Color(0xFFdff1e0),
                                 filled: true,
@@ -167,30 +167,30 @@ class _LogInState extends State<LogIn> {
                                 RegExp special = RegExp(r"(?=.*[!@#%^&*(),.?\\:{}|<>])");
 
                                 if (value!.isEmpty || password.text.trim() == "") {
-                                  return "كلمة السر مطلوبة";
+                                  return translation(context).reqPass;
 
                                 }
 
                                 String errorMessage = "";
 
                                 if (value.length < 8) {
-                                  errorMessage += "\u2022 كلمة المرور يجب أن تكون من 8 خانات\n";
+                                  errorMessage += translation(context).eightchar;
                                 }
 
                                 if (!upper.hasMatch(value)) {
-                                  errorMessage += "\u2022 تحتوي على حرف كبير\n";
+                                  errorMessage += translation(context).capletter;
                                 }
 
                                 if (!small.hasMatch(value)) {
-                                  errorMessage += "\u2022 تحتوي على أحرف صغيرة\n";
+                                  errorMessage += translation(context).smaletter;
                                 }
 
                                 if (!numb.hasMatch(value)) {
-                                  errorMessage += "\u2022 تحتوي على أرقام\n";
+                                  errorMessage += translation(context).conNum;
                                 }
 
                                 if (!special.hasMatch(value)) {
-                                  errorMessage += "\u2022 تحتوي على رمز مميز\n";
+                                  errorMessage += translation(context).specialchar;
                                 }
 
                                 if (errorMessage.isNotEmpty) {
@@ -217,7 +217,7 @@ class _LogInState extends State<LogIn> {
                                   Navigator.pushNamed(context, "/RessetPassword");
                                 },
                                 child: Text(
-                                  "نسيت كلمة المرور؟",
+                                  translation(context).forgetPass,
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontFamily: "Tajawal-b",
@@ -252,7 +252,7 @@ class _LogInState extends State<LogIn> {
                                 } else {
                                   // Set an error message when login fails
                                   Fluttertoast.showToast(
-                                    msg: "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+                                    msg: translation(context).incorrect,
                                     toastLength: Toast.LENGTH_SHORT,
                                     gravity: ToastGravity.CENTER,
                                     timeInSecForIosWeb: 2,
@@ -265,7 +265,7 @@ class _LogInState extends State<LogIn> {
                                 // Handle any other exceptions that may occur during login
                                 print("Error: $e");
                                 Fluttertoast.showToast(
-                                  msg: "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+                                  msg: translation(context).incorrect,
                                   toastLength: Toast.LENGTH_SHORT,
                                   gravity: ToastGravity.CENTER,
                                   timeInSecForIosWeb: 2,
@@ -287,7 +287,7 @@ class _LogInState extends State<LogIn> {
                             ),
                           ),
                           child: Text(
-                            "تسجيل الدخول",
+                            translation(context).login,
                             style: TextStyle(fontSize: 18, fontFamily: "Tajawal-m"),
                           ),
                         ),
@@ -312,7 +312,7 @@ class _LogInState extends State<LogIn> {
                                   Navigator.pushNamed(context, "/signup");
                                 },
                                 child: Text(
-                                  "إنشاء حساب   ",
+                                  translation(context).signup,
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontFamily: "Tajawal-b",
@@ -321,7 +321,7 @@ class _LogInState extends State<LogIn> {
                                 ),
                               ),
                               Text(
-                                " ليس لديك حساب؟",
+                                translation(context).noAccount,
                                 style: TextStyle(fontSize: 14, fontFamily: "Tajawal-l"),
                               ),
                             ],

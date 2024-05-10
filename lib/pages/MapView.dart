@@ -9,7 +9,7 @@ import 'package:google_place/google_place.dart';
 
 import 'package:gp/pages/placePage.dart';
 import 'dart:math';
-
+import 'package:gp/language_constants.dart';
 import 'package:gp/pages/mapdetailspage.dart';
 import 'package:flutter/services.dart';
 
@@ -278,7 +278,7 @@ class MapSampleState extends State<MapSample> {
             child: TextFormField(
               controller: _startSearchFieldController,
               decoration: InputDecoration(
-                  hintText: 'ابحث عن مطعم أو مكان سياحي',
+                  hintText: translation(context).search,
                   hintStyle: TextStyle(
                       fontSize: 16, color: Color.fromARGB(255, 202, 198, 198)),
                   border: OutlineInputBorder(
@@ -405,7 +405,7 @@ class MapSampleState extends State<MapSample> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'فئة المكان',
+                translation(context).placeCategory,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               // Add your form elements here for selecting the category
@@ -561,7 +561,7 @@ class MapSampleState extends State<MapSample> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(' تصنيف المكان',
+              Text(translation(context).placeClass,
                   style: TextStyle(
                     color: Color.fromARGB(255, 109, 184, 129),
                   )),
@@ -576,10 +576,10 @@ class MapSampleState extends State<MapSample> {
                   isExpanded: true,
                   value: selectedCategory,
                   items: <String>[
-                    'الكل',
-                    'فعاليات و ترفيه',
-                    'مطاعم',
-                    'مراكز تسوق'
+                translation(context).all,
+              translation(context).ent,
+              translation(context).rest,
+              translation(context).mall
                   ].map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,

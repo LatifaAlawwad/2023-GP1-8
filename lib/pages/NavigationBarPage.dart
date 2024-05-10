@@ -7,6 +7,7 @@ import 'HomePage.dart';
 import 'addpage.dart';
 import 'UserProfilePage.dart';
 import '../Registration/logIn.dart';
+import 'package:gp/language_constants.dart';
 
 class NavigationBarPage extends StatefulWidget {
    final String selectedCity; // Add selectedCity property
@@ -30,9 +31,9 @@ class _NavigationBarPageState extends State<NavigationBarPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => AddPage()),
-          );
+         // Navigator.of(context).push(
+           // MaterialPageRoute(builder: (context) => AddPage()),
+          //);
         },
         child: Icon(Icons.add),
         backgroundColor: Color(0xFF6db881),
@@ -46,11 +47,11 @@ class _NavigationBarPageState extends State<NavigationBarPage> {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildIconButtonWithLabel(Icons.home, 'الرئيسة', 0),
-              _buildIconButtonWithLabel(Icons.map, 'الخريطة', 1),
+              _buildIconButtonWithLabel(Icons.home, translation(context).mainPage  , 0),
+              _buildIconButtonWithLabel(Icons.map, translation(context).mapPage , 1),
               SizedBox(width: 48.0),
-              _buildIconButtonWithLabel(Icons.favorite, 'المفضلة', 2),
-              _buildIconButtonWithLabel(Icons.person, 'حسابي', 3),
+              _buildIconButtonWithLabel(Icons.favorite, translation(context).favPage , 2),
+              _buildIconButtonWithLabel(Icons.person, translation(context).profilePage , 3),
             ],
           ),
         ),
