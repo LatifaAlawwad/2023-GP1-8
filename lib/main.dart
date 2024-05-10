@@ -15,7 +15,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:gp/language_constants.dart';
 import 'pages/MapView.dart';
-
+import 'package:gp/pages/pref.dart';
 
 
 
@@ -64,6 +64,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       initialRoute: '/first',
       routes: {
+        '/pref': (context) => pref(),
         '/first': (context) => First(),
         '/welcome': (context) => Welcome(),
         '/signup': (context) => SignUp(),

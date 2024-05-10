@@ -8,8 +8,7 @@ import 'package:gp/pages/NavigationBarPage.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:gp/language_constants.dart';
-
-import '../pages/citiesPage.dart';
+import '../pages/pref.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -305,9 +304,12 @@ class _SignUpState extends State<SignUp> {
                                     textColor: Color.fromARGB(255, 248, 249, 250),
                                     fontSize: 18.0,
                                   );
-                                  createSuhailuser(suser);
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) => CitiesPage()));
+                                  createSuhailuser(
+                                      suser, context); // Pass the context here
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => pref()));
                                 });
                               }
                             } on FirebaseAuthException catch (error) {
@@ -403,7 +405,7 @@ class _SignUpState extends State<SignUp> {
 }
 
 
-Future createSuhailuser(SUser suser) async {
+Future<void> createSuhailuser(SUser suser, BuildContext context) async {
   final FirebaseAuth auth = FirebaseAuth.instance;
   final User? user = auth.currentUser;
   final Uid = user!.uid;
@@ -411,6 +413,7 @@ Future createSuhailuser(SUser suser) async {
   final json = suser.toJson();
   final docsuser = FirebaseFirestore.instance.collection('users').doc(Uid);
   await docsuser.set(json);
+
 }
 
 
@@ -425,17 +428,15 @@ class SUser {
     required this.email,
   });
 
-  Map<String, dynamic> toJson() =>
-      {
-        'userId': userid,
-        'name': name,
-        'Email': email,
-      };
+  Map<String, dynamic> toJson() => {
+    'userId': userid,
+    'name': name,
+    'Email': email,
+  };
 
-  static SUser fromJson(Map<String, dynamic> json) =>
-      SUser(
-        userid: json['userId'],
-        name: json['name'],
-        email: json['Email'],
-      );
+  static SUser fromJson(Map<String, dynamic> json) => SUser(
+    userid: json['userId'],
+    name: json['name'],
+    email: json['Email'],
+  );
 }
