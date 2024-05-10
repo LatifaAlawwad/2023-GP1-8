@@ -12,6 +12,9 @@ import 'dart:math';
 import 'package:gp/language_constants.dart';
 import 'package:gp/pages/mapdetailspage.dart';
 import 'package:flutter/services.dart';
+import 'dart:async';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 class MapSample extends StatefulWidget {
   @override
@@ -21,68 +24,40 @@ class MapSample extends StatefulWidget {
 }
 
 class MapSampleState extends State<MapSample> {
+
   late BitmapDescriptor restIcon;
   late BitmapDescriptor mallIcon;
   late BitmapDescriptor entIcon;
+  late BitmapDescriptor myIcon;
 
   late GoogleMapController _controller;
   String selectedCategory = 'الكل';
   List<placePage> allPlaces = [];
   late LatLng currentLatLng = LatLng(24.7136, 46.6753);
   List<placePage> filteredPlacesInfo = [];
-  LatLng? droppedPin = null;
-// icon for the marker
-  late BitmapDescriptor myIcon;
+  LatLng? droppedPin;
   final _firestore = FirebaseFirestore.instance;
-  List<Marker> markers = [];
   static final TextEditingController _startSearchFieldController =
-      TextEditingController();
+  TextEditingController();
   DetailsResult? startPosition;
   late GooglePlace googlePlace;
   List<AutocompletePrediction> predictions = [];
   Timer? _debounce;
+  List<Marker> markers = [];
 
   @override
   void initState() {
     super.initState();
-    //location permission
     _initializeCurrentLocation();
-    BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(size: Size(48, 48)), 'assets/images/rest.png')
-        .then((onValue) {
-      restIcon = onValue;
-    });
-
-    BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(size: Size(48, 48)), 'assets/images/mall.png')
-        .then((onValue) {
-      mallIcon = onValue;
-    });
-
-    BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(size: Size(48, 48)), 'assets/images/marker.png')
-        .then((onValue) {
-      myIcon = onValue;
-    });
-    //determine and  go to the current location
+    _loadCustomMarkerIcons();
     _goToCurrentLocation();
-
     selectedCategory = 'الكل';
-    String apiKey = 'AIzaSyCJ3yUvAXaEKXPoo5ngfht4se568rq3mBk';
+    String apiKey = 'YOUR_GOOGLE_MAPS_API_KEY';
     googlePlace = GooglePlace(apiKey);
     getMarkers();
-
-    //Marker icon
-    BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(size: Size(48, 48)), 'assets/images/ent.png')
-        .then((onValue) {
-      entIcon = onValue;
-    });
   }
 
-
-
-  void _initializeCurrentLocation() async {
+  Future<void> _initializeCurrentLocation() async {
     LocationPermission permission = await Geolocator.checkPermission();
 
     if (permission == LocationPermission.denied ||
@@ -95,41 +70,6 @@ class MapSampleState extends State<MapSample> {
     }
   }
 
-  Future<void> _determinePosition() async {
-    Position position = await Geolocator.getCurrentPosition();
-    setState(() {
-      currentLatLng = LatLng(position.latitude, position.longitude);
-    });
-    return;
-  }
-
-  //Calculate the distance
-  double calculateDistance(LatLng? point1, LatLng point2) {
-    const double earthRadius =
-        6371; // Radius of the earth in kilometers (use 3959 for miles)
-
-    double toRadians(double degree) {
-      return degree * (pi / 180.0);
-    }
-
-    double lat1 = toRadians(point1!.latitude);
-    double lon1 = toRadians(point1!.longitude);
-    double lat2 = toRadians(point2.latitude);
-    double lon2 = toRadians(point2.longitude);
-
-    double dLat = lat2 - lat1;
-    double dLon = lon2 - lon1;
-
-    double a = sin(dLat / 2) * sin(dLat / 2) +
-        cos(lat1) * cos(lat2) * sin(dLon / 2) * sin(dLon / 2);
-
-    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-
-    double distance = earthRadius * c; // Distance in kilometers
-
-    return distance;
-  }
-
   Future<void> _goToCurrentLocation() async {
     await _determinePosition();
     markers.clear();
@@ -139,20 +79,48 @@ class MapSampleState extends State<MapSample> {
     getMarkers();
   }
 
+  Future<void> _determinePosition() async {
+    Position position = await Geolocator.getCurrentPosition();
+    setState(() {
+      currentLatLng = LatLng(position.latitude, position.longitude);
+    });
+    return;
+  }
+
+  Future<void> _loadCustomMarkerIcons() async {
+    restIcon = await _resizeImage('assets/images/rest.png', 160, 160);
+    mallIcon = await _resizeImage('assets/images/mall.png', 160, 160);
+    entIcon = await _resizeImage('assets/images/ent.png', 210, 210);
+    myIcon = await _resizeImage('assets/images/marker.png', 160, 160);
+  }
+  Future<BitmapDescriptor> _resizeImage(String imagePath, int width, int height) async {
+    ByteData imageData = await rootBundle.load(imagePath);
+    Uint8List bytes = imageData.buffer.asUint8List();
+    ui.Codec codec = await ui.instantiateImageCodec(bytes, targetWidth: width, targetHeight: height);
+    ui.FrameInfo frameInfo = await codec.getNextFrame();
+    ui.Image image = frameInfo.image;
+
+    ByteData? resizedImageData = await image.toByteData(format: ui.ImageByteFormat.png);
+    Uint8List resizedBytes = resizedImageData!.buffer.asUint8List();
+
+    return BitmapDescriptor.fromBytes(resizedBytes);
+  }
+
+
   Future<void> getMarkers() async {
     setState(() {
       filteredPlacesInfo.clear();
     });
 
     await for (var snapshot
-        in _firestore.collection('ApprovedPlaces').snapshots())
+    in _firestore.collection('ApprovedPlaces').snapshots()) {
       for (var place in snapshot.docs) {
         setState(() {
           String category = place['category'] ?? '';
           if (selectedCategory == 'الكل' || category == selectedCategory) {
             LatLng placeLatLng = LatLng(place['latitude'], place['longitude']);
             double distance =
-                calculateDistance(droppedPin ?? currentLatLng, placeLatLng);
+            calculateDistance(droppedPin ?? currentLatLng, placeLatLng);
 
             // Display only markers within a certain distance (adjust the threshold as needed)
             if (distance <= 5.0) {
@@ -205,11 +173,44 @@ class MapSampleState extends State<MapSample> {
           }
         });
       }
+    }
+
+
     setState(() {
       droppedPin = null;
       displayFilteredPlacesList();
     });
   }
+
+  //Calculate the distance
+  double calculateDistance(LatLng? point1, LatLng point2) {
+    const double earthRadius =
+        6371; // Radius of the earth in kilometers (use 3959 for miles)
+
+    double toRadians(double degree) {
+      return degree * (pi / 180.0);
+    }
+
+    double lat1 = toRadians(point1!.latitude);
+    double lon1 = toRadians(point1!.longitude);
+    double lat2 = toRadians(point2.latitude);
+    double lon2 = toRadians(point2.longitude);
+
+    double dLat = lat2 - lat1;
+    double dLon = lon2 - lon1;
+
+    double a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(lat1) * cos(lat2) * sin(dLon / 2) * sin(dLon / 2);
+
+    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+
+    double distance = earthRadius * c; // Distance in kilometers
+
+    return distance;
+  }
+
+
+
 
   changeLocation() async {
     double? lat = startPosition?.geometry?.location?.lat;

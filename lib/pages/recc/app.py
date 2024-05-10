@@ -1,4 +1,4 @@
-lfrom flask import Flask, request, jsonify
+from flask import Flask, request, jsonify
 from firebase_admin import credentials, firestore, initialize_app
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
