@@ -10,7 +10,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:gp/Registration/logIn.dart';
 import 'package:gp/pages/NavigationBarPage.dart';
 import 'package:gp/pages/citiesPage.dart';
-
+import 'package:gp/pages/pref.dart';
 
 import 'pages/MapView.dart';
 
@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/first',
       routes: {
+        '/pref': (context) => pref(),
         '/first': (context) => First(),
         '/welcome': (context) => Welcome(),
         '/signup': (context) => SignUp(),

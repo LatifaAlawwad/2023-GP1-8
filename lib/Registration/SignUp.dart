@@ -1,16 +1,13 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gp/Registration/Welcome.dart';
 import 'package:gp/pages/NavigationBarPage.dart';
-
-import '../pages/citiesPage.dart';
+import '../pages/pref.dart';
 
 class SignUp extends StatefulWidget {
-  const SignUp({super.key});
-
+  const SignUp({Key? key});
   @override
   State<SignUp> createState() => _SignUpState();
 }
@@ -68,7 +65,8 @@ class _SignUpState extends State<SignUp> {
                                 onTap: () {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => Welcome()),
+                                    MaterialPageRoute(
+                                        builder: (context) => Welcome()),
                                   );
                                 },
                                 child: Icon(
@@ -91,81 +89,85 @@ class _SignUpState extends State<SignUp> {
                           height: 25,
                         ),
                         Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 30),
-                            child: Directionality(
-                              textDirection: TextDirection.rtl,
-                              child: TextFormField(
-                                controller: _usernameController,
-                                autovalidateMode: AutovalidateMode.onUserInteraction,
-                                decoration: InputDecoration(
-                                  prefixIcon: Icon(
-                                    Icons.person,
-                                    color: Color(0xFF6db881),
-                                  ),
-                                  labelText: "  الأسم  :",
-                                  labelStyle: TextStyle(fontFamily: "Tajawal-m"),
-                                  fillColor: Color(0xFFdff1e0),
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(66.0),
-                                      borderSide:
-                                      const BorderSide(width: 0, style: BorderStyle.none)),
+                          padding: EdgeInsets.symmetric(horizontal: 30),
+                          child: Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: TextFormField(
+                              controller: _usernameController,
+                              autovalidateMode:
+                              AutovalidateMode.onUserInteraction,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.person,
+                                  color: Color(0xFF6db881),
                                 ),
-                                validator: (value) {
-                                  if (value!.isEmpty || _usernameController.text.trim() == "") {
-                                    return "الأسم مطلوب ";
-                                  }
-                                  if (RegExp(r'[0-9]').hasMatch(value)) {
-                                    return 'الرجاء إدخال أحرف فقط';
-                                  }
-                                },
+                                labelText: "  الأسم  :",
+                                labelStyle: TextStyle(fontFamily: "Tajawal-m"),
+                                fillColor: Color(0xFFdff1e0),
+                                filled: true,
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(66.0),
+                                    borderSide: const BorderSide(
+                                        width: 0, style: BorderStyle.none)),
                               ),
-                            )),
+                              validator: (value) {
+                                if (value!.isEmpty ||
+                                    _usernameController.text.trim() == "") {
+                                  return "الأسم مطلوب ";
+                                }
+                                if (RegExp(r'[0-9]').hasMatch(value)) {
+                                  return 'الرجاء إدخال أحرف فقط';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ),
                         SizedBox(
                           height: 23,
                         ),
                         Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 30),
-                            child: Directionality(
-                              textDirection: TextDirection.rtl,
-                              child: TextFormField(
-                                controller: _emailController,
-                                autovalidateMode: AutovalidateMode.onUserInteraction,
-                                decoration: InputDecoration(
-                                  prefixIcon: Icon(
-                                    Icons.mail,
-                                    color: Color(0xFF6db881),
-                                  ),
-                                  labelText: " البريد الإلكتروني :",
-                                  labelStyle: TextStyle(fontFamily: "Tajawal-m"),
-                                  hintText: "exampel@gmail.com",
-                                  hintStyle: TextStyle(fontSize: 10),
-                                  fillColor: Color(0xFFdff1e0),
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(66.0),
-                                      borderSide:
-                                      const BorderSide(width: 0, style: BorderStyle.none)),
+                          padding: EdgeInsets.symmetric(horizontal: 30),
+                          child: Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: TextFormField(
+                              controller: _emailController,
+                              autovalidateMode:
+                              AutovalidateMode.onUserInteraction,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.mail,
+                                  color: Color(0xFF6db881),
                                 ),
-                                  validator: (value) {
-                                    if (value!.isEmpty || _emailController.text.trim() == "") {
-                                      return "البريد الإلكتروني مطلوب";
-                                    }
-
-                                    final emailPattern = RegExp(r'^[a-z0-9A-Z_.-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,3}$');
-
-                                    if (!emailPattern.hasMatch(value)) {
-                                      return 'أدخل البريد الإلكتروني بالشكل الصحيح (example@example.com)';
-                                    }
-
-                                    return null;
-                                  }
-
-
-
+                                labelText: " البريد الإلكتروني :",
+                                labelStyle: TextStyle(fontFamily: "Tajawal-m"),
+                                hintText: "example@gmail.com",
+                                hintStyle: TextStyle(fontSize: 10),
+                                fillColor: Color(0xFFdff1e0),
+                                filled: true,
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(66.0),
+                                    borderSide: const BorderSide(
+                                        width: 0, style: BorderStyle.none)),
                               ),
-                            )),
+                              validator: (value) {
+                                if (value!.isEmpty ||
+                                    _emailController.text.trim() == "") {
+                                  return "البريد الإلكتروني مطلوب";
+                                }
 
+                                final emailPattern = RegExp(
+                                    r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+');
+
+                                if (!emailPattern.hasMatch(value)) {
+                                  return 'أدخل البريد الإلكتروني بالشكل الصحيح (example@example.com)';
+                                }
+
+                                return null;
+                              },
+                            ),
+                          ),
+                        ),
                         SizedBox(
                           height: 23,
                         ),
@@ -176,7 +178,8 @@ class _SignUpState extends State<SignUp> {
                             child: TextFormField(
                               obscureText: true,
                               controller: _passwordController,
-                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                              autovalidateMode:
+                              AutovalidateMode.onUserInteraction,
                               decoration: InputDecoration(
                                 prefixIcon: Icon(
                                   Icons.lock,
@@ -192,24 +195,27 @@ class _SignUpState extends State<SignUp> {
                                 filled: true,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(66.0),
-                                  borderSide: const BorderSide(width: 0, style: BorderStyle.none),
+                                  borderSide: const BorderSide(
+                                      width: 0, style: BorderStyle.none),
                                 ),
                               ),
                               validator: (value) {
                                 RegExp uper = RegExp(r"(?=.*[A-Z])");
                                 RegExp numb = RegExp(r"[0-9]");
                                 RegExp small = RegExp(r"(?=.*[a-z])");
-                                RegExp special = RegExp(r"(?=.*[!@#%^&*(),.?\\:{}|<>])");
+                                RegExp special =
+                                RegExp(r"(?=.[!@#%^&(),.?\\:{}|<>])");
 
-                                if (value!.isEmpty || _passwordController.text.trim() == "") {
+                                if (value!.isEmpty ||
+                                    _passwordController.text.trim() == "") {
                                   return "كلمة السر مطلوبة";
                                 }
-
 
                                 String errorMessage = "";
 
                                 if (value.length < 8) {
-                                  errorMessage += "\u2022 كلمة المرور يجب أن تكون من 8 خانات\n";
+                                  errorMessage +=
+                                  "\u2022 كلمة المرور يجب أن تكون من 8 خانات\n";
                                 }
 
                                 if (!uper.hasMatch(value)) {
@@ -217,7 +223,8 @@ class _SignUpState extends State<SignUp> {
                                 }
 
                                 if (!small.hasMatch(value)) {
-                                  errorMessage += "\u2022 تحتوي على أحرف صغيرة\n";
+                                  errorMessage +=
+                                  "\u2022 تحتوي على أحرف صغيرة\n";
                                 }
 
                                 if (!numb.hasMatch(value)) {
@@ -238,73 +245,78 @@ class _SignUpState extends State<SignUp> {
                             ),
                           ),
                         ),
-
                         SizedBox(
                           height: 23,
                         ),
                         Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 30),
-                            child: Directionality(
-                              textDirection: TextDirection.rtl,
-                              child: TextFormField(
-                                  obscureText: true,
-                                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                                  decoration: InputDecoration(
-                                    //suffix: Icon(
-                                    // Icons.visibility,
-                                    // color: Color.fromARGB(
-                                    // 255, 127, 166, 233),
-                                    //  ),
-                                    prefixIcon: Icon(
-                                      Icons.lock,
-                                      color: Color(0xFF6db881),
-                                      size: 19,
-                                    ),
-                                    labelText: "تأكيد كلمة المرور:",
-                                    labelStyle: TextStyle(fontFamily: "Tajawal-m"),
-                                    fillColor: Color(0xFFdff1e0),
-                                    filled: true,
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(66.0),
-                                        borderSide:
-                                        const BorderSide(width: 0, style: BorderStyle.none)),
-                                  ),
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return "تأكيد كلمة المرور مطلوب ";
-                                    } else if (value != _passwordController.text.trim()) {
-                                      return "كلمة المرور غير مطابقة ";
-                                    }
-                                  }),
-                            )),
+                          padding: EdgeInsets.symmetric(horizontal: 30),
+                          child: Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: TextFormField(
+                              obscureText: true,
+                              autovalidateMode:
+                              AutovalidateMode.onUserInteraction,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.lock,
+                                  color: Color(0xFF6db881),
+                                  size: 19,
+                                ),
+                                labelText: "تأكيد كلمة المرور:",
+                                labelStyle: TextStyle(fontFamily: "Tajawal-m"),
+                                fillColor: Color(0xFFdff1e0),
+                                filled: true,
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(66.0),
+                                    borderSide: const BorderSide(
+                                        width: 0, style: BorderStyle.none)),
+                              ),
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return "تأكيد كلمة المرور مطلوب ";
+                                } else if (value !=
+                                    _passwordController.text.trim()) {
+                                  return "كلمة المرور غير مطابقة ";
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ),
                         SizedBox(
                           height: 25,
                         ),
-                       ElevatedButton(
+                        ElevatedButton(
                           onPressed: () async {
                             try {
                               if (signformkey.currentState!.validate()) {
                                 await FirebaseAuth.instance
                                     .createUserWithEmailAndPassword(
                                     email: _emailController.text.trim(),
-                                    password: _passwordController.text.trim())
+                                    password:
+                                    _passwordController.text.trim())
                                     .then((value) {
                                   final suser = SUser(
                                     name: _usernameController.text,
                                     email: _emailController.text,
-                                  ); //creat user in database
+                                  ); //create user in database
                                   Fluttertoast.showToast(
                                     msg: "تم تسجيل حسابك بنجاح",
                                     toastLength: Toast.LENGTH_SHORT,
                                     gravity: ToastGravity.CENTER,
                                     timeInSecForIosWeb: 2,
-                                    backgroundColor: Color.fromARGB(255, 109, 184, 129),
-                                    textColor: Color.fromARGB(255, 248, 249, 250),
+                                    backgroundColor:
+                                    Color.fromARGB(255, 109, 184, 129),
+                                    textColor:
+                                    Color.fromARGB(255, 248, 249, 250),
                                     fontSize: 18.0,
                                   );
-                                  createSuhailuser(suser);
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) => CitiesPage()));
+                                  createSuhailuser(
+                                      suser, context); // Pass the context here
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => pref()));
                                 });
                               }
                             } on FirebaseAuthException catch (error) {
@@ -314,7 +326,9 @@ class _SignUpState extends State<SignUp> {
                                     return AlertDialog(
                                       content: Text(
                                         "البريد الألكتروني موجود مسبقاً",
-                                        style: TextStyle(fontFamily: "Tajawal-m", fontSize: 17),
+                                        style: TextStyle(
+                                            fontFamily: "Tajawal-m",
+                                            fontSize: 17),
                                         textDirection: TextDirection.rtl,
                                       ),
                                       shape: RoundedRectangleBorder(
@@ -343,18 +357,18 @@ class _SignUpState extends State<SignUp> {
                             backgroundColor:
                             MaterialStateProperty.all(Color(0xFF6db881)),
                             padding: MaterialStateProperty.all(
-                                EdgeInsets.symmetric(horizontal: 40, vertical: 10)),
+                                EdgeInsets.symmetric(
+                                    horizontal: 40, vertical: 10)),
                             shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(borderRadius: BorderRadius.circular(27))),
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(27))),
                           ),
                           child: Text(
                             "إنشاء حساب",
-                            style: TextStyle(fontSize: 20, fontFamily: "Tajawal-m"),
+                            style: TextStyle(
+                                fontSize: 20, fontFamily: "Tajawal-m"),
                           ),
                         ),
-
-
-
                         SizedBox(
                           height: 25,
                         ),
@@ -378,7 +392,8 @@ class _SignUpState extends State<SignUp> {
                               ),
                               Text(
                                 "  لديك حساب ؟     ",
-                                style: TextStyle(fontSize: 14, fontFamily: "Tajawal-l"),
+                                style: TextStyle(
+                                    fontSize: 14, fontFamily: "Tajawal-l"),
                               ),
                             ],
                           ),
@@ -399,8 +414,7 @@ class _SignUpState extends State<SignUp> {
   }
 }
 
-
-Future createSuhailuser(SUser suser) async {
+Future<void> createSuhailuser(SUser suser, BuildContext context) async {
   final FirebaseAuth auth = FirebaseAuth.instance;
   final User? user = auth.currentUser;
   final Uid = user!.uid;
@@ -408,8 +422,12 @@ Future createSuhailuser(SUser suser) async {
   final json = suser.toJson();
   final docsuser = FirebaseFirestore.instance.collection('users').doc(Uid);
   await docsuser.set(json);
+  // Navigate to preference page after signing up
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(builder: (context) => pref()),
+  );
 }
-
 
 class SUser {
   late String userid;
@@ -422,17 +440,15 @@ class SUser {
     required this.email,
   });
 
-  Map<String, dynamic> toJson() =>
-      {
-        'userId': userid,
-        'name': name,
-        'Email': email,
-      };
+  Map<String, dynamic> toJson() => {
+    'userId': userid,
+    'name': name,
+    'Email': email,
+  };
 
-  static SUser fromJson(Map<String, dynamic> json) =>
-      SUser(
-        userid: json['userId'],
-        name: json['name'],
-        email: json['Email'],
-      );
+  static SUser fromJson(Map<String, dynamic> json) => SUser(
+    userid: json['userId'],
+    name: json['name'],
+    email: json['Email'],
+  );
 }
