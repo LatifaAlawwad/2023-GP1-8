@@ -763,7 +763,7 @@ class HomePageState extends State<HomePage> {
                             borderSide: BorderSide(color: Colors.white),
                           ),
                           alignLabelWithHint: true,
-                          hintText: 'ابحث عن مطعم أو مكان سياحي',
+                          hintText: translation(context).search,
                           hintStyle: TextStyle(
                             color: Color.fromARGB(143, 255, 255, 255),
                             fontFamily: "Tajawal-m",
@@ -844,7 +844,7 @@ class HomePageState extends State<HomePage> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              'قد تعجبك',
+                              translation(context).like,
                               style: TextStyle(
                                 fontFamily: "Tajawal-m",
                                 fontSize: 16,
@@ -892,7 +892,7 @@ class HomePageState extends State<HomePage> {
 
                   Tab(
                     child: Text(
-                      'الكل',
+                      translation(context).all,
                       style: TextStyle(
                         color: Color(0xFF6db881), // Set the text color to match the labelStyle
                       ),
@@ -900,7 +900,7 @@ class HomePageState extends State<HomePage> {
                   ),
                   Tab(
                     child: Text(
-                      'فعاليات و ترفيه',
+                      translation(context).ent,
                       style: TextStyle(
                         color: Color(0xFF6db881), // Set the text color to match the labelStyle
                       ),
@@ -908,7 +908,7 @@ class HomePageState extends State<HomePage> {
                   ),
                   Tab(
                     child: Text(
-                      'مطاعم',
+                      translation(context).rest,
                       style: TextStyle(
                         color: Color(0xFF6db881), // Set the text color to match the labelStyle
                       ),
@@ -916,7 +916,7 @@ class HomePageState extends State<HomePage> {
                   ),
                   Tab(
                     child: Text(
-                      'مراكز تسوق',
+                      translation(context).mall,
                       style: TextStyle(
                         color: Color(0xFF6db881), // Set the text color to match the labelStyle
                       ),
