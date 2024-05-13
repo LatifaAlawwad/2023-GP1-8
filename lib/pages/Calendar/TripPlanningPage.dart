@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gp/language_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'AddedPlaces.dart'; // Import the AddPlacesMessagePage
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:ui' as ui;
-import 'package:gp/language_constants.dart';
-
+import 'package:gp/Registration/logIn.dart';
 
 class TripPlanningPage extends StatefulWidget {
   final DateTime? selectedDay;
@@ -34,11 +34,12 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
   void initState() {
     super.initState();
     _selectedDay = widget.selectedDay ?? DateTime.now();
-    userId = getuser();
+    getUser();
   }
 
   @override
   Widget build(BuildContext context) {
+    final currentUser = FirebaseAuth.instance.currentUser;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 109, 184, 129),
@@ -73,9 +74,55 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
 
         toolbarHeight: 60,
       ),
+      body: Center(
+        child: currentUser != null ? _buildTableCalendar() : _buildLoginWidget(context),
+      ),
+    );
+  }
 
-      body: _buildTableCalendar(),
-
+  Widget _buildLoginWidget(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(height: 20),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 79),
+            child: Text(
+              translation(context).reqLogin,
+              style: TextStyle(
+                fontSize: 18,
+                color: Color(0xFF6db881),
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LogIn()),
+              );
+            },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(Color(0xFF6db881)),
+              padding: MaterialStateProperty.all(
+                EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              ),
+              shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(27),
+                ),
+              ),
+            ),
+            child: Text(
+              translation(context).login,
+              style: TextStyle(fontSize: 20, fontFamily: "Tajawal-m"),
+            ),
+          ),
+        ],
+      ),
     );
   }
   Widget _buildTableCalendar() {
@@ -117,7 +164,10 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
               titleCentered: true,
               formatButtonVisible: false,
               titleTextStyle: TextStyle(fontSize: 20),
-              leftChevronIcon: Icon(Icons.chevron_left),
+              leftChevronIcon: Icon(
+                Icons.chevron_left,
+                color: widget.showConversation ? Colors.transparent : Colors.black, // Grey color for the previous arrow based on showConversation
+              ),
               rightChevronIcon: Icon(Icons.chevron_right),
               titleTextFormatter: (date, locale) {
                 final arabicMonthNames = [
@@ -140,6 +190,7 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
                 return '$monthName $year';
               },
             ),
+
             calendarBuilders: CalendarBuilders(
               dowBuilder: (context, day) {
                 final arabicDays = {
@@ -166,10 +217,7 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
                 );
               },
             ),
-            daysOfWeekStyle: DaysOfWeekStyle(
-              weekendStyle: TextStyle().copyWith(color: Colors.black), // Hide weekends
-              weekdayStyle: TextStyle().copyWith(color: Colors.black), // Show weekdays
-            ),
+
             onDaySelected: (selectedDay, focusedDay) {
               setState(() {
                 _selectedDay = selectedDay;
@@ -309,11 +357,13 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
     return snapshot.docs.isNotEmpty;
   }
 
-  String getuser() {
+  Future<void> getUser() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user = auth.currentUser;
-    var cpuid = user!.uid;
-    return cpuid;
+    if (user != null) {
+      userId = user.uid;
+    }
   }
+
 }
 

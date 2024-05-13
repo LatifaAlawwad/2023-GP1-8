@@ -103,13 +103,22 @@ class _placeDetailsState extends State<placeDetailsPage> {
     _isFav();
   }
 
-
-
-
-
-
-
-
+  void toggleCalendar() {
+    if (FirebaseAuth.instance.currentUser == null) {
+      showguestDialog(context as BuildContext);
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TripPlanningPage(
+            showConversation: true,
+            place_id: widget.place.place_id,
+            placeName: widget.place.placeName,
+          ),
+        ),
+      );
+    }
+  }
 
 void toggleFavorites()  {
     if (FirebaseAuth.instance.currentUser == null) {
@@ -294,16 +303,7 @@ void toggleFavorites()  {
                         SizedBox(width: 23), // Add some space between the icons
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => TripPlanningPage(
-                                  showConversation: true,
-                                  place_id:widget.place.place_id,
-                                  placeName:widget.place.placeName,
-                                ),
-                              ),
-                            );
+                            toggleCalendar();
                           },
                           child: Container(
                             height: 40,
@@ -1300,6 +1300,7 @@ print(placeId);
         );
       },
     );
+
   }
 ////////////////////////////////////////////////////////////////////////////////////
   Future<void> deleteReview(BuildContext context, String placeId, String reviewId) async {
