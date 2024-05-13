@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gp/helper/DayWidget.dart';
 import 'package:gp/helper/showBoolAttributes.dart';
-
 import 'package:gp/pages/placePage.dart';
 import 'package:intl/intl.dart';
 import 'package:gp/helper/ShowTextAttributesWidget.dart';
-
 import 'ShowINorOUtAttributesWidget.dart';
+import 'package:gp/language_constants.dart';
+
 
 class PlaceDetailsWidget extends StatelessWidget {
   final placePage place;
@@ -75,8 +75,8 @@ class PlaceDetailsWidget extends StatelessWidget {
               const SizedBox(
                 height: 5,
               ),
-              const Text(
-                ':رابط الموقع الالكتروني',
+             Text(
+                translation(context).webLINK,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -102,8 +102,8 @@ class PlaceDetailsWidget extends StatelessWidget {
                 const SizedBox(
                   height: 5,
                 ),
-                const Text(
-                  ':نوع الطعام',
+                Text(
+                  translation(context).foodTypee,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -129,8 +129,8 @@ class PlaceDetailsWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    const Text(
-                      ':نطاق السعر',
+                     Text(
+                      translation(context).priceRangee,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -153,8 +153,8 @@ class PlaceDetailsWidget extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                const Text(
-                  ':الجو العام',
+                Text(
+               translation(context).atmospheree,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -190,8 +190,8 @@ class PlaceDetailsWidget extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  const Text(
-                    ': أنواع المحلات',
+                  Text(
+                    translation(context).storeTypee,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -211,24 +211,24 @@ class PlaceDetailsWidget extends StatelessWidget {
               ),
             ],
             Divider(),
-            ShowBoolAttributesWidget(text: ' سينما', check: place.hasCinema),
+            ShowBoolAttributesWidget(text: translation(context).cinema, check: place.hasCinema),
             ShowBoolAttributesWidget(
-                text: 'منطقة مطاعم', check: place.hasFoodCourt),
+                text:translation(context).restaurant_area, check: place.hasFoodCourt),
             ShowINorOUtAttributesWidget(
               text: place.INorOUT == 'كلاهما'
-                  ? 'مركز داخلي وخارجي'
+                  ? translation(context).inANDout
                   : place.INorOUT == 'نعم'
-                  ? 'مركز خارجي'
-                  : 'مركز داخلي',
+                  ? translation(context).outdoor
+                  : translation(context).indoor,
 
             ),
 
             ShowBoolAttributesWidget(
-                text: 'منطقة ألعاب', check: place.hasPlayArea),
+                text: translation(context).play_area, check: place.hasPlayArea),
             ShowBoolAttributesWidget(
-                text: 'سوبرماركت', check: place.hasSupermarket),
+                text: translation(context).supermarket, check: place.hasSupermarket),
             ShowBoolAttributesWidget(
-                text: 'خدمة ركن السيارات', check: place.hasValetServiced),
+                text: translation(context).valet, check: place.hasValetServiced),
 
 
           ]),
@@ -240,16 +240,16 @@ class PlaceDetailsWidget extends StatelessWidget {
             spacing: 3, // Adjust the spacing between widgets
             children: [
               ShowBoolAttributesWidget(
-                text: 'السماح للأطفال',
+                text: translation(context).allowCHI,
                 check: place.allowChildren,
               ),
               ShowBoolAttributesWidget(
-                text: 'يتطلب حجز',
+                text: translation(context).needBooking,
                 check: place.hasReservation,
               ),
 
               ShowBoolAttributesWidget(
-                  text: 'خدمة ركن السيارات', check: place.hasValetServiced),
+                  text: translation(context).valet, check: place.hasValetServiced),
             ],
           ),
           Divider(),
@@ -266,22 +266,22 @@ class PlaceDetailsWidget extends StatelessWidget {
 
             children: [
               ShowBoolAttributesWidget(
-                text: 'يتطلب حجز',
+                text: translation(context).needBooking,
                 check: place.hasReservation,
               ),
               ShowBoolAttributesWidget(
-                  text: 'خدمة ركن السيارات', check: place.hasValetServiced),
+                  text: translation(context).valet, check: place.hasValetServiced),
 
               ShowINorOUtAttributesWidget(
                 text: place.INorOUT == 'كلاهما'
-                    ? 'مكان داخلي وخارجي'
+                    ? translation(context).inANDout
                     : place.INorOUT == 'نعم'
-                    ? 'مكان خارجي'
-                    : 'مكان داخلي',
+                    ? translation(context).outdoor
+                    : translation(context).indoor,
 
               ),
               ShowBoolAttributesWidget(
-                text: 'فعالية مؤقته',
+                text: translation(context).tempENt,
                 check: place.isTemporary,
               ),
 
@@ -313,8 +313,8 @@ class PlaceDetailsWidget extends StatelessWidget {
                 const SizedBox(
                   width: 4,
                 ),
-                const Text(
-                  ' :تاريخ البدء',
+               Text(
+                 translation(context).startdate,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -338,8 +338,8 @@ class PlaceDetailsWidget extends StatelessWidget {
                 const SizedBox(
                   width: 4,
                 ),
-                const Text(
-                  ' :تاريخ الانتهاء',
+             Text(
+               translation(context).enddate,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,

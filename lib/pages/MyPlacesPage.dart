@@ -100,34 +100,37 @@ class _myPlacesPage extends State<myPlacesPage> {
           appBar: AppBar(
             backgroundColor: Color.fromARGB(255, 109, 184, 129),
             automaticallyImplyLeading: false,
-            title: Center(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 50),
-                child: Text(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 10.0,right:10.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.white,
+                      size: 28,
+                    ),
+                  ),
+                ),
+                Text(
                   translation(context).addRequest,
                   style: TextStyle(
                     fontSize: 17,
                     fontFamily: "Tajawal-b",
-                    color: Color.fromARGB(255, 255, 255, 255),
                   ),
                 ),
-              ),
+                SizedBox(width: 40), // Adjust the width based on your preference
+              ],
             ),
-            actions: [
-              Padding(
-                padding: EdgeInsets.only(right: 20.0),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.white,
-                    size: 28,
-                  ),
-                ),
-              ),
-            ],
+            centerTitle: false,
+
+
+
+
             bottom: TabBar(
 
               labelStyle: TextStyle(

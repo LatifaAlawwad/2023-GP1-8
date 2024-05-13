@@ -33,20 +33,19 @@ class _FilterPageState extends State<FilterPage>  {
         backgroundColor: const Color.fromARGB(255, 109, 184, 129),
         elevation: 0.0,
         automaticallyImplyLeading: false,
-        title: Padding(
-          padding: const EdgeInsets.only(left: 150),
-          child: Text(
+        title: Text(
             translation(context).filter,
             style: TextStyle(
               fontSize: 22,
               fontFamily: "Tajawal-b",
             ),
           ),
-        ),
+
+        centerTitle: true,
         toolbarHeight: 60,
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 20.0),
+            padding: EdgeInsets.all( 20.0),
             child: GestureDetector(
               onTap: () {
 

@@ -21,9 +21,10 @@ class _SwitchLanguageState extends State<SwitchLanguage> {
     Locale currentLocale = await getLocale();
     Language selectedLanguage = Language.languageList().firstWhere(
           (language) => language.languageCode == currentLocale.languageCode,
-      // Default language if not found
-    );
 
+    );
+    print('hello');
+    print(currentLocale);
     setState(() {
       _selectedLanguage = selectedLanguage;
     });
@@ -45,34 +46,34 @@ class _SwitchLanguageState extends State<SwitchLanguage> {
         appBar: AppBar(
           backgroundColor: Color.fromARGB(255, 109, 184, 129),
           automaticallyImplyLeading: false,
-          title: Center(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 50),
-              child: Text(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0,right:10.0),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white,
+                    size: 28,
+                  ),
+                ),
+              ),
+              Text(
                 translation(context).lang,
                 style: TextStyle(
                   fontSize: 17,
                   fontFamily: "Tajawal-b",
-                  color: Color.fromARGB(255, 255, 255, 255),
                 ),
               ),
-            ),
+              SizedBox(width: 40),
+            ],
           ),
-          actions: [
-            Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.white,
-                  size: 28,
-                ),
-              ),
-            ),
-          ],
+          centerTitle: false,
+
         ),
         body: ListView.separated(
           itemCount: Language.languageList().length,

@@ -8,6 +8,8 @@ import 'package:gp/pages/NavigationBarPage.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:gp/language_constants.dart';
+
+import '../pages/citiesPage.dart';
 import '../pages/pref.dart';
 
 class SignUp extends StatefulWidget {
@@ -52,26 +54,27 @@ class _SignUpState extends State<SignUp> {
                           height: 50,
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              translation(context).signup,
-                              style: TextStyle(
-                                  fontSize: 26,
-                                  fontFamily: "Tajawal-b",
-                                  color: Color(0xFF6db881)),
-                            ),
-                            SizedBox(
-                              width: 80,
+                            Expanded(
+                              child: Container(
+                                padding: EdgeInsets.only(right:Localizations.localeOf(context).languageCode == 'ar' ? 133: 0, left: 60.0), // Adjust padding as needed
+                                child: Text(
+                                  translation(context).signup,
+                                  style: TextStyle(
+                                    fontSize: 26,
+                                    fontFamily: "Tajawal-b",
+                                    color: Color(0xFF6db881),
+                                  ),
+                                  textAlign: TextAlign.center, // Center the text
+                                ),
+                              ),
                             ),
                             Padding(
-                              padding: EdgeInsets.only(right: 20.0),
+                              padding: EdgeInsets.only(right: 20.0,left:20),
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => Welcome()),
-                                  );
+                                  Navigator.pushNamed(context, "/welcome");
                                 },
                                 child: Icon(
                                   Icons.arrow_forward_ios,
@@ -93,88 +96,90 @@ class _SignUpState extends State<SignUp> {
                           height: 25,
                         ),
                         Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 30),
-                            child: Directionality(
-                              textDirection: TextDirection.rtl,
-                              child: TextFormField(
-                                controller: _usernameController,
-                                autovalidateMode: AutovalidateMode.onUserInteraction,
-                                decoration: InputDecoration(
-                                  prefixIcon: Icon(
-                                    Icons.person,
-                                    color: Color(0xFF6db881),
-                                  ),
-                                  labelText: translation(context).name,
-                                  labelStyle: TextStyle(fontFamily: "Tajawal-m"),
-                                  fillColor: Color(0xFFdff1e0),
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(66.0),
-                                      borderSide:
-                                      const BorderSide(width: 0, style: BorderStyle.none)),
+                          padding: EdgeInsets.symmetric(horizontal: 30),
+                          child: Align(
+                            alignment: isArabic() ? Alignment.topRight : Alignment.topLeft,
+                            child: TextFormField(
+                              controller: _usernameController,
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.person,
+                                  color: Color(0xFF6db881),
                                 ),
-                                validator: (value) {
-                                  if (value!.isEmpty || _usernameController.text.trim() == "") {
-                                    return translation(context).reqName;
-                                  }
-                                  if (RegExp(r'[0-9]').hasMatch(value)) {
-                                    return translation(context).onlyletters;
-                                  }
-                                },
+                                labelText: translation(context).name,
+                                labelStyle: TextStyle(fontFamily: "Tajawal-m"),
+                                fillColor: Color(0xFFdff1e0),
+                                filled: true,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(66.0),
+                                  borderSide: const BorderSide(width: 0, style: BorderStyle.none),
+                                ),
                               ),
-                            )),
+                              textDirection: isArabic() ? TextDirection.rtl : TextDirection.ltr,
+                              validator: (value) {
+                                if (value!.isEmpty || _usernameController.text.trim() == "") {
+                                  return translation(context).reqName;
+                                }
+                                if (RegExp(r'[0-9]').hasMatch(value)) {
+                                  return translation(context).onlyletters;
+                                }
+                              },
+                            ),
+                          ),
+                        ),
                         SizedBox(
                           height: 23,
                         ),
                         Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 30),
-                            child: Directionality(
-                              textDirection: TextDirection.rtl,
-                              child: TextFormField(
-                                controller: _emailController,
-                                autovalidateMode: AutovalidateMode.onUserInteraction,
-                                decoration: InputDecoration(
-                                  prefixIcon: Icon(
-                                    Icons.mail,
-                                    color: Color(0xFF6db881),
-                                  ),
-                                  labelText: translation(context).email,
-                                  labelStyle: TextStyle(fontFamily: "Tajawal-m"),
-                                  hintText: "exampel@gmail.com",
-                                  hintStyle: TextStyle(fontSize: 10),
-                                  fillColor: Color(0xFFdff1e0),
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(66.0),
-                                      borderSide:
-                                      const BorderSide(width: 0, style: BorderStyle.none)),
+                          padding: EdgeInsets.symmetric(horizontal: 30),
+                          child: Align(
+                            alignment: isArabic() ? Alignment.topRight : Alignment.topLeft,
+                            child: TextFormField(
+                              controller: _emailController,
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.mail,
+                                  color: Color(0xFF6db881),
                                 ),
-                                  validator: (value) {
-                                    if (value!.isEmpty || _emailController.text.trim() == "") {
-                                      return translation(context).reqEmail;
-                                    }
-
-                                    final emailPattern = RegExp(r'^[a-z0-9A-Z_.-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,3}$');
-
-                                    if (!emailPattern.hasMatch(value)) {
-                                      return translation(context).correctEmail;
-                                    }
-
-                                    return null;
-                                  }
-
-
-
+                                labelText: translation(context).email,
+                                labelStyle: TextStyle(fontFamily: "Tajawal-m"),
+                                hintText: "example@gmail.com",
+                                hintStyle: TextStyle(fontSize: 10),
+                                fillColor: Color(0xFFdff1e0),
+                                filled: true,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(66.0),
+                                  borderSide: BorderSide.none,
+                                ),
                               ),
-                            )),
+                              validator: (value) {
+                                if (value!.isEmpty || _emailController.text.trim() == "") {
+                                  return translation(context).reqEmail;
+                                }
+
+                                final emailPattern =
+                                RegExp(r'^[a-z0-9A-Z_.-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,3}$');
+
+                                if (!emailPattern.hasMatch(value)) {
+                                  return translation(context).correctEmail;
+                                }
+
+                                return null;
+                              },
+                            ),
+
+                          ),
+                        ),
 
                         SizedBox(
                           height: 23,
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 30),
-                          child: Directionality(
-                            textDirection: TextDirection.rtl,
+                          child: Align(
+                            alignment: isArabic() ? Alignment.topRight : Alignment.topLeft,
                             child: TextFormField(
                               obscureText: true,
                               controller: _passwordController,
@@ -201,7 +206,7 @@ class _SignUpState extends State<SignUp> {
                                 RegExp uper = RegExp(r"(?=.*[A-Z])");
                                 RegExp numb = RegExp(r"[0-9]");
                                 RegExp small = RegExp(r"(?=.*[a-z])");
-                                RegExp special = RegExp(r"(?=.*[!@#%^&*(),.?\\:{}|<>])");
+                                RegExp special = RegExp(r"(?=.[!@#%^&(),.?\\:{}|<>])");
 
                                 if (value!.isEmpty || _passwordController.text.trim() == "") {
                                   return translation(context).reqPass;
@@ -246,8 +251,8 @@ class _SignUpState extends State<SignUp> {
                         ),
                         Padding(
                             padding: EdgeInsets.symmetric(horizontal: 30),
-                            child: Directionality(
-                              textDirection: TextDirection.rtl,
+                            child: Align(
+                              alignment: isArabic() ? Alignment.topRight : Alignment.topLeft,
                               child: TextFormField(
                                   obscureText: true,
                                   autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -282,7 +287,7 @@ class _SignUpState extends State<SignUp> {
                         SizedBox(
                           height: 25,
                         ),
-                       ElevatedButton(
+                        ElevatedButton(
                           onPressed: () async {
                             try {
                               if (signformkey.currentState!.validate()) {
@@ -304,12 +309,9 @@ class _SignUpState extends State<SignUp> {
                                     textColor: Color.fromARGB(255, 248, 249, 250),
                                     fontSize: 18.0,
                                   );
-                                  createSuhailuser(
-                                      suser, context); // Pass the context here
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => pref()));
+                                  createSuhailuser(suser);
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) => pref()));
                                 });
                               }
                             } on FirebaseAuthException catch (error) {
@@ -364,28 +366,31 @@ class _SignUpState extends State<SignUp> {
                           height: 25,
                         ),
                         Padding(
-                          padding: EdgeInsets.only(right: 20.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.pushNamed(context, "/login");
-                                },
-                                child: Text(
-                                  translation(context).login,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: "Tajawal-b",
-                                    color: Color(0xFF6db881),
+                          padding: EdgeInsets.only(right: 40.0,left:40.0),
+                          child: Align(
+                            alignment: isArabic() ? Alignment.topRight : Alignment.topLeft,
+                            child: Row(
+                              children: [
+                                Text(
+                                  translation(context).haveAccount,
+                                  style: TextStyle(fontSize: 14, fontFamily: "Tajawal-l"),
+                                ),
+                                SizedBox(width: 8),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(context, "/login");
+                                  },
+                                  child: Text(
+                                    translation(context).login,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontFamily: "Tajawal-b",
+                                      color: Color(0xFF6db881),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Text(
-                                translation(context).haveAccount,
-                                style: TextStyle(fontSize: 14, fontFamily: "Tajawal-l"),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                         SizedBox(
@@ -405,7 +410,7 @@ class _SignUpState extends State<SignUp> {
 }
 
 
-Future<void> createSuhailuser(SUser suser, BuildContext context) async {
+Future createSuhailuser(SUser suser) async {
   final FirebaseAuth auth = FirebaseAuth.instance;
   final User? user = auth.currentUser;
   final Uid = user!.uid;
@@ -413,7 +418,6 @@ Future<void> createSuhailuser(SUser suser, BuildContext context) async {
   final json = suser.toJson();
   final docsuser = FirebaseFirestore.instance.collection('users').doc(Uid);
   await docsuser.set(json);
-
 }
 
 
@@ -428,15 +432,17 @@ class SUser {
     required this.email,
   });
 
-  Map<String, dynamic> toJson() => {
-    'userId': userid,
-    'name': name,
-    'Email': email,
-  };
+  Map<String, dynamic> toJson() =>
+      {
+        'userId': userid,
+        'name': name,
+        'Email': email,
+      };
 
-  static SUser fromJson(Map<String, dynamic> json) => SUser(
-    userid: json['userId'],
-    name: json['name'],
-    email: json['Email'],
-  );
+  static SUser fromJson(Map<String, dynamic> json) =>
+      SUser(
+        userid: json['userId'],
+        name: json['name'],
+        email: json['Email'],
+      );
 }

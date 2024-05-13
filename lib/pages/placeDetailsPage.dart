@@ -197,665 +197,666 @@ void toggleFavorites()  {
 
     return Scaffold(
       body: SafeArea(
-        child: Stack(
-          children: [
-            Hero(
-              tag: '${widget.place.images.length}' == '0'
-                  ? 'https://www.guardanthealthamea.com/wp-content/uploads/2019/09/no-image.jpg'
-                  : widget.place.images[0],
-              child: Container(
-                height: size.height * 0.4,
-                decoration: '${widget.place.images.length}' == '0'
-                    ? const BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(
-                        'https://www.guardanthealthamea.com/wp-content/uploads/2019/09/no-image.jpg'),
-                  ),
-                )
-                    : BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage('${widget.place.images[0]}'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
+        child: Directionality(
+          textDirection: Localizations.localeOf(context).languageCode == 'ar' ? TextDirection.ltr : TextDirection.rtl,
+          child: Stack(
+            children: [
+              Hero(
+                tag: '${widget.place.images.length}' == '0'
+                    ? 'https://www.guardanthealthamea.com/wp-content/uploads/2019/09/no-image.jpg'
+                    : widget.place.images[0],
                 child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      stops: [0.4, 1.0],
-                      colors: [
-                        Colors.transparent,
-                        Colors.black.withOpacity(0.7),
-                      ],
+                  height: size.height * 0.4,
+                  decoration: '${widget.place.images.length}' == '0'
+                      ? const BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage('https://www.guardanthealthamea.com/wp-content/uploads/2019/09/no-image.jpg'),
+                    ),
+                  )
+                      : BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage('${widget.place.images[0]}'),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        stops: [0.4, 1.0],
+                        colors: [
+                          Colors.transparent,
+                          Colors.black.withOpacity(0.7),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-       SizedBox(
-              height: size.height * 0.35,
-         child: Column(
-           crossAxisAlignment: CrossAxisAlignment.end,
-           children: [
-             Padding(
-               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-               child: Row(
-                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                 children: [
-                   GestureDetector(
-                     onTap: () {
-                       toggleFavorites();
-                     },
-                     child: Container(
-                       height: 40,
-                       width: 40,
-                       decoration: BoxDecoration(
-                         color: Color.fromARGB(255, 234, 250, 236),
-                         shape: BoxShape.circle,
-                       ),
-                       child: Center(
-                         child: Icon(
-                           isFavorite ? Icons.favorite : Icons.favorite_border,
-                           color: isFavorite ? Colors.red : Color(0xFF6db881),
-                           size: 30,
-                         ),
-                       ),
-                     ),
-                   ),
-                   SizedBox(width: 180),
-                   GestureDetector(
-                     onTap: () {
-                       Navigator.pop(context);
-                     },
-                     child: Container(
-                       height: 40,
-                       width: 40,
-                       decoration: const BoxDecoration(
-                         color: Color(0xFF6db881),
-                         shape: BoxShape.circle,
-                       ),
-                       child: const Center(
-                         child: Icon(
-                           Icons.arrow_forward_ios,
-                           color: Colors.white,
-                           size: 20,
-                         ),
-                       ),
-                     ),
-                   ),
-                 ],
-               ),
-             ),
-
-             Row(
-               mainAxisAlignment: MainAxisAlignment.start,
-               children: [
-                 SizedBox(width: 23), // Add some space between the icons
-                 GestureDetector(
-                   onTap: () {
-                     Navigator.push(
-                       context,
-                       MaterialPageRoute(
-                         builder: (context) => TripPlanningPage(
-                           showConversation: true,
-                           place_id:widget.place.place_id,
-                           placeName:widget.place.placeName,
-                         ),
-                       ),
-                     );
-                   },
-                   child: Container(
-                     height: 40,
-                     width: 40,
-                     decoration: BoxDecoration(
-                       color: Color.fromARGB(255, 234, 250, 236),
-                       shape: BoxShape.circle,
-                     ),
-                     child: Center(
-                       child: Icon(
-                         Icons.calendar_month_outlined,
-                         color: Color(0xFF6db881),
-                         size: 30,
-                       ),
-
-                     ),
-                   ),
-                 ),
-               ],
-             ),
-
-             Expanded(
-               child: Container(),
-             ),
-             Padding(
-               padding: const EdgeInsets.symmetric(
-                 horizontal: 26,
-               ),
-               child: Row(
-                 mainAxisAlignment: MainAxisAlignment.end,
-                 children: [
-                   Text(
-                     ' ${widget.place.placeName}',
-                     style: const TextStyle(
-                       color: Colors.white,
-                       fontSize: 24,
-                       fontWeight: FontWeight.bold,
-                       fontFamily: "Tajawal-m",
-                     ),
-                   ),
-                 ],
-               ),
-             ),
-             const SizedBox(
-               height: 5,
-             ),
-             Padding(
-               padding: const EdgeInsets.symmetric(
-                 horizontal: 24,
-               ),
-               child: Row(
-                 mainAxisAlignment: MainAxisAlignment.end,
-                 children: [
-                   Text(
-                     '${widget.place.neighbourhood} ، ${widget.place.city}',
-                     style: const TextStyle(
-                       color: Colors.white,
-                       fontSize: 17,
-                       fontWeight: FontWeight.bold,
-                       fontFamily: "Tajawal-l",
-                     ),
-                   ),
-                   const SizedBox(
-                     width: 4,
-                   ),
-                   const Icon(
-                     Icons.location_pin,
-                     color: Colors.white,
-                     size: 18,
-                   ),
-                 ],
-               ),
-             ),
-             const SizedBox(
-               height: 5,
-             ),
-             Padding(
-               padding: const EdgeInsets.symmetric(
-                 horizontal: 24,
-               ),
-               child: StreamBuilder<QuerySnapshot>(
-                 stream: FirebaseFirestore.instance
-                     .collection('ApprovedPlaces')
-                     .doc(widget.place.place_id)
-                     .collection('Reviews')
-                     .snapshots(),
-                 builder: (context, snapshot) {
-                   if (snapshot.connectionState ==
-                       ConnectionState.waiting) {
-                     return const CircularProgressIndicator();
-                   }
-
-                   List<double> ratings = List<double>.from(
-                     snapshot.data!.docs.map((doc) {
-                       final commentData =
-                       doc.data() as Map<String, dynamic>;
-                       return commentData["rating"].toDouble() ?? 0.0;
-                     }),
-                   );
-
-                   // Calculate the average rating
-                   double averageRating = ratings.isNotEmpty
-                       ? ratings.reduce((a, b) => a + b) / ratings.length
-                       : 0.0;
-
-                   return Row(
-                     mainAxisAlignment: MainAxisAlignment.end,
-                     children: [
-                       for (int index = 0; index < 5; index++)
-                         Padding(
-                           padding:
-                           const EdgeInsets.symmetric(horizontal: 2.0),
-                           child: Icon(
-                             index < averageRating.floor()
-                                 ? Icons.star
-                                 : index + 0.5 == averageRating
-                                 ? Icons.star_half
-                                 : Icons.star_border,
-                             color:
-                             const Color.fromARGB(255, 109, 184, 129),
-                             size: 22.0,
-                           ),
-                         ),
-                       SizedBox(height:40),
-                     ],
-                   );
-
-                 },
-               ),
-             ),
-           ],
-         ),
-
-       ),
-
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                height: size.height * 0.60,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                  ),
-                ),
-    child: ScrollbarTheme(
-    data: ScrollbarThemeData(
-    thumbColor: MaterialStateProperty.all(Color.fromARGB(
-    255, 109, 184, 129), )// Set the color of the scrollbar thumb
-    //  trackColor: MaterialStateProperty.all( Color.fromARGB(255, 17, 99, 14)),// Set the color of the track
-    ),
-    child: Scrollbar(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.end,
+              SizedBox(
+                height: size.height * 0.35,
+                child: Column(
+                  crossAxisAlignment: isArabic() ?  CrossAxisAlignment.end: CrossAxisAlignment.start ,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              toggleFavorites();
+                            },
+                            child: Container(
+                              height: 40,
+                              width: 40,
+                              decoration: BoxDecoration(
+                                color: Color.fromARGB(255, 234, 250, 236),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  isFavorite ? Icons.favorite : Icons.favorite_border,
+                                  color: isFavorite ? Colors.red : Color(0xFF6db881),
+                                  size: 30,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 180),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              height: 40,
+                              width: 40,
+                              decoration: const BoxDecoration(
+                                color: Color(0xFF6db881),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: isArabic()? MainAxisAlignment.end:MainAxisAlignment.start,
                       children: [
-                         Text(
-                          translation(context).description,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: "Tajawal-m",
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          '${widget.place.description}',
-                          textDirection: TextDirection.rtl,
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: "Tajawal-l",
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        PlaceDetailsWidget(place: widget.place),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                         Text(
-                          translation(context).morePhotos,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: "Tajawal-m",
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        widget.place.images.length == 0
-                            ? Container(
-                          height: 50,
-                          alignment: Alignment.center,
-                          child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, bottom: 24, right: 20),
-                              child: Text(
-                                translation(context).noAVPhotos,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.grey[500],
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: "Tajawal-l",
+                        SizedBox(width: 23), // Add some space between the icons
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TripPlanningPage(
+                                  showConversation: true,
+                                  place_id:widget.place.place_id,
+                                  placeName:widget.place.placeName,
                                 ),
-                              )),
-                        )
-                            : Directionality(
-                          textDirection: TextDirection.rtl,
-                          child: SizedBox(
-                            height: 200,
-                            child: Stack(
-                              children: [
-                                RawScrollbar(
-                                  thumbColor: const Color.fromARGB(
-                                      255, 17, 99, 14),
-                                  radius: const Radius.circular(20),
-                                  thickness: 5,
-                                  child: Scrollbar(
-                                    thumbVisibility: true,
-                                    // Always show the scrollbar
-                                    controller: _scrollController,
-                                    child: ListView.builder(
-                                      controller: _scrollController,
-                                      physics:
-                                      const BouncingScrollPhysics(),
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount:
-                                      widget.place.images.length,
-                                      itemBuilder: (context, index) =>
-                                          InkWell(
-                                            onTap: () => openGallery(
-                                                widget.place.images, context),
-                                            borderRadius:
-                                            BorderRadius.circular(15),
-                                            child: Padding(
-                                              padding:
-                                              const EdgeInsets.all(2),
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                BorderRadius.circular(15),
-                                                child: Image.network(
-                                                  widget.place.images[index],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                              ),
+                            );
+                          },
+                          child: Container(
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                              color: Color.fromARGB(255, 234, 250, 236),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Center(
+                              child: Icon(
+                                Icons.calendar_month_outlined,
+                                color: Color(0xFF6db881),
+                                size: 30,
+                              ),
                             ),
                           ),
                         ),
-                        const SizedBox(height: 10),
-                        if (widget.place.latitude != 0 &&
-                            widget.place.longitude != 0)
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
+                      ],
+                    ),
+                    Expanded(
+                      child: Container(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 26,
+                      ),
+                      child: Row(
+
+                        mainAxisAlignment: isArabic()? MainAxisAlignment.start:MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            '${widget.place.placeName}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: "Tajawal-m",
+                            ),
+                          ),
+                        ],
+                      ),
+
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            '${widget.place.neighbourhood} ، ${widget.place.city}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: "Tajawal-l",
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 4,
+                          ),
+                          const Icon(
+                            Icons.location_pin,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                      ),
+                      child: StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('ApprovedPlaces')
+                            .doc(widget.place.place_id)
+                            .collection('Reviews')
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          }
+
+                          List<double> ratings = List<double>.from(
+                            snapshot.data!.docs.map((doc) {
+                              final commentData =
+                              doc.data() as Map<String, dynamic>;
+                              return commentData["rating"].toDouble() ?? 0.0;
+                            }),
+                          );
+
+                          // Calculate the average rating
+                          double averageRating = ratings.isNotEmpty
+                              ? ratings.reduce((a, b) => a + b) / ratings.length
+                              : 0.0;
+
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                               Text(
-                                translation(context).location,
+                              for (int index = 0; index < 5; index++)
+                                Padding(
+                                  padding:
+                                  const EdgeInsets.symmetric(horizontal: 2.0),
+                                  child: Icon(
+                                    index < averageRating.floor()
+                                        ? Icons.star
+                                        : index + 0.5 == averageRating
+                                        ? Icons.star_half
+                                        : Icons.star_border,
+                                    color:
+                                    const Color.fromARGB(255, 109, 184, 129),
+                                    size: 22.0,
+                                  ),
+                                ),
+                              SizedBox(height:40),
+                            ],
+                          );
+
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+
+              ),
+
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  height: size.height * 0.60,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
+                    ),
+                  ),
+                  child: ScrollbarTheme(
+                    data: ScrollbarThemeData(
+                        thumbColor: MaterialStateProperty.all(Color.fromARGB(
+                            255, 109, 184, 129), )// Set the color of the scrollbar thumb
+                      //  trackColor: MaterialStateProperty.all( Color.fromARGB(255, 17, 99, 14)),// Set the color of the track
+                    ),
+                    child: Scrollbar(
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment:  CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                translation(context).description,
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   fontFamily: "Tajawal-m",
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(10)),
-                                    color: Colors.white,
-                                    border: Border.all(
-                                      color: Colors.black54,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  height: 200,
-                                  child: ClipRRect(
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(10)),
-                                    child: GoogleMap(
-                                      initialCameraPosition: CameraPosition(
-                                        target: LatLng(widget.place.latitude,
-                                            widget.place.longitude),
-                                        zoom: 10.0,
-                                      ),
-                                      markers: this.myMarker(),
-                                      mapType: MapType.normal,
-                                      onMapCreated: (controller) {
-                                        setState(() {
-                                          myMapController = controller;
-                                        });
-                                      },
-                                    ),
-                                  ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                '${widget.place.description}',
+                                textDirection: TextDirection.rtl,
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: "Tajawal-l",
                                 ),
                               ),
-                            ],
-                          ),
-
-                        const Divider(),
-                        SizedBox(height: 5),
-
-                        Padding(
-                          padding: EdgeInsets.only(left: 235, bottom: 16),
-                          child: Text(
-                            translation(context).suggested,
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: "Tajawal-m",
-                            ),
-                          ),
-                        ),
-                        output.length != 0
-                            ? Directionality(
-                          textDirection: TextDirection.rtl,
-                          child: Container(
-                            height: 220,
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 2, bottom: 24, right: 2),
-                              child: ListView.separated(
-                                physics: BouncingScrollPhysics(),
-                                scrollDirection: Axis.horizontal,
-                                separatorBuilder: (context, index) => SizedBox(width: 15),
-                                itemCount: output.length,
-                                itemBuilder: (context, index) {
-                                  for (int i = 0; i < HomePageState.allData.length; i++) {
-                                    if (HomePageState.allData[i] is placePage) {
-                                      placePage place = HomePageState.allData[i] as placePage;
-                                      if (place.place_id == output[index]) {
-                                        return _buildPlacePageWidget(context, place);
-                                      }
-                                    }
-                                  }
-                                  return Container();
-                                },
+                              const SizedBox(height: 10),
+                              PlaceDetailsWidget(place: widget.place),
+                              const SizedBox(
+                                height: 10,
                               ),
-                            ),
-                          ),
-                        )
-                            : Container(
-                          padding: EdgeInsets.only(left: 70, bottom: 20),
-                          child:  Text(
-                            translation(context).noSugg,
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              fontFamily: "Tajawal-b",
-                              color: Color.fromARGB(255, 139, 139, 139),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Divider(),
-
-
-                        FutureBuilder<String>(
-                          future: checkPlaceStatus(widget.place.place_id),
-                          builder: (context, snapshot) {
-                            print('Snapshot Data: ${snapshot.data}');
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return CircularProgressIndicator();
-                            } else if (snapshot.hasError) {
-                              return Text('Error: ${snapshot.error}');
-                            } else if (snapshot.data == "yes" ) {
-                              print('Hiding content because snapshot data is "yes"');
-                             return Container();
-                                } else {
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.end,
-
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Expanded(
-                                        child: ElevatedButton(
-                                          onPressed: () async {
-                                            if (currentUser == null) {
-                                              showguestDialog(context);
-                                            } else {
-                                              // Check if the user has already submitted a review
-                                              bool hasPreviousReview = await checkPreviousReview(widget.place.place_id);
-
-                                              if (hasPreviousReview) {
-                                                // User has a previous review, show a message indicating they can update
-                                                ScaffoldMessenger.of(context).showSnackBar(
-                                                   SnackBar(
-                                                    content: Text(
-                                                      translation(context).existComment,
-                                                    ),
-                                                    duration: Duration(seconds: 5),
-                                                  ),
-                                                );
-                                              } else {
-                                                // User does not have a previous review, open the review dialog
-                                                showReviewDialog(context, widget.place.place_id);
-                                              }
-                                            }
-                                          },
-                                          style: ButtonStyle(
-                                            backgroundColor: MaterialStateProperty.all(Colors.white),
-                                            side: MaterialStateProperty.all(
-                                              const BorderSide(color: Color(0xFF6db881), width: 1.0),
-                                            ),
-                                            shape: MaterialStateProperty.all(
-                                              RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(10),
-                                              ),
-                                            ),
-                                          ),
-                                          child:  Text(
-                                            translation(context).rate,
-                                            style: TextStyle(
-                                              fontSize: 16.0,
-                                              fontFamily: "Tajawal-m",
-                                              color: Color(0xFF6db881),
-                                            ),
-                                          ),
-                                        ),
+                              Text(
+                                translation(context).morePhotos,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: "Tajawal-m",
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              widget.place.images.length == 0
+                                  ? Container(
+                                height: 50,
+                                alignment: Alignment.center,
+                                child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 20, bottom: 24, right: 20),
+                                    child: Text(
+                                      translation(context).noAVPhotos,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.grey[500],
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: "Tajawal-l",
                                       ),
-                                      const SizedBox(width: 10),
-                                       Text(
-                                        translation(context).comment,
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: "Tajawal-m",
+                                    )),
+                              )
+                                  : Directionality(
+                                textDirection: Localizations.localeOf(context).languageCode == 'ar' ?TextDirection.rtl:TextDirection.ltr ,
+                                child: SizedBox(
+                                  height: 200,
+                                  child: Stack(
+                                    children: [
+                                      RawScrollbar(
+                                        thumbColor: const Color.fromARGB(
+                                            255, 17, 99, 14),
+                                        radius: const Radius.circular(20),
+                                        thickness: 5,
+                                        child: Scrollbar(
+                                          thumbVisibility: true,
+                                          // Always show the scrollbar
+                                          controller: _scrollController,
+                                          child: ListView.builder(
+                                            controller: _scrollController,
+                                            physics:
+                                            const BouncingScrollPhysics(),
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount:
+                                            widget.place.images.length,
+                                            itemBuilder: (context, index) =>
+                                                InkWell(
+                                                  onTap: () => openGallery(
+                                                      widget.place.images, context),
+                                                  borderRadius:
+                                                  BorderRadius.circular(15),
+                                                  child: Padding(
+                                                    padding:
+                                                    const EdgeInsets.all(2),
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                      BorderRadius.circular(15),
+                                                      child: Image.network(
+                                                        widget.place.images[index],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                          ),
                                         ),
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 10),
-                                  StreamBuilder<QuerySnapshot>(
-                                    stream: FirebaseFirestore.instance
-                                        .collection('ApprovedPlaces')
-                                        .doc(widget.place.place_id)
-                                        .collection('Reviews')
-                                        .orderBy('timestamp', descending: true)
-                                        .snapshots(),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState == ConnectionState.waiting) {
-                                        return const Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                                        return  Center(
-                                          child: Padding(
-                                            padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
-                                            child: Text(
-                                              translation(context).noComment,
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontFamily: "Tajawal-m",
-                                                color: Colors.grey,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              if (widget.place.latitude != 0 &&
+                                  widget.place.longitude != 0)
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      translation(context).location,
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: "Tajawal-m",
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(10)),
+                                          color: Colors.white,
+                                          border: Border.all(
+                                            color: Colors.black54,
+                                            width: 1,
+                                          ),
+                                        ),
+                                        height: 200,
+                                        child: ClipRRect(
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(10)),
+                                          child: GoogleMap(
+                                            initialCameraPosition: CameraPosition(
+                                              target: LatLng(widget.place.latitude,
+                                                  widget.place.longitude),
+                                              zoom: 10.0,
+                                            ),
+                                            markers: this.myMarker(),
+                                            mapType: MapType.normal,
+                                            onMapCreated: (controller) {
+                                              setState(() {
+                                                myMapController = controller;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                              const Divider(),
+                              SizedBox(height: 5),
+
+                              Padding(
+                                padding: EdgeInsets.only(left: 0, bottom: 0),
+                                child: Text(
+                                  translation(context).suggested,
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: "Tajawal-m",
+                                  ),
+                                ),
+                              ),
+                              output.length != 0
+                                  ? Directionality(
+                                textDirection: TextDirection.rtl,
+                                child: Container(
+                                  height: 220,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(left: 2, bottom: 24, right: 2),
+                                    child: ListView.separated(
+                                      physics: BouncingScrollPhysics(),
+                                      scrollDirection: Axis.horizontal,
+                                      separatorBuilder: (context, index) => SizedBox(width: 15),
+                                      itemCount: output.length,
+                                      itemBuilder: (context, index) {
+                                        for (int i = 0; i < HomePageState.allData.length; i++) {
+                                          if (HomePageState.allData[i] is placePage) {
+                                            placePage place = HomePageState.allData[i] as placePage;
+                                            if (place.place_id == output[index]) {
+                                              return _buildPlacePageWidget(context, place);
+                                            }
+                                          }
+                                        }
+                                        return Container();
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              )
+                                  : Container(
+                                padding: EdgeInsets.only(left: 70, bottom: 20),
+                                child:  Text(
+                                  translation(context).noSugg,
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontFamily: "Tajawal-b",
+                                    color: Color.fromARGB(255, 139, 139, 139),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Divider(),
+
+                              FutureBuilder<String>(
+                                future: checkPlaceStatus(widget.place.place_id),
+                                builder: (context, snapshot) {
+                                  print('Snapshot Data: ${snapshot.data}');
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return CircularProgressIndicator();
+                                  } else if (snapshot.hasError) {
+                                    return Text('Error: ${snapshot.error}');
+                                  } else if (snapshot.data == "yes" ) {
+                                    print('Hiding content because snapshot data is "yes"');
+                                    return Container();
+                                  } else {
+                                    return Column(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Expanded(
+                                              child: ElevatedButton(
+                                                onPressed: () async {
+                                                  if (currentUser == null) {
+                                                    showguestDialog(context);
+                                                  } else {
+                                                    // Check if the user has already submitted a review
+                                                    bool hasPreviousReview = await checkPreviousReview(widget.place.place_id);
+
+                                                    if (hasPreviousReview) {
+                                                      // User has a previous review, show a message indicating they can update
+                                                      ScaffoldMessenger.of(context).showSnackBar(
+                                                        SnackBar(
+                                                          content: Text(
+                                                            translation(context).existComment,
+                                                          ),
+                                                          duration: Duration(seconds: 5),
+                                                        ),
+                                                      );
+                                                    } else {
+                                                      // User does not have a previous review, open the review dialog
+                                                      showReviewDialog(context, widget.place.place_id);
+                                                    }
+                                                  }
+                                                },
+                                                style: ButtonStyle(
+                                                  backgroundColor: MaterialStateProperty.all(Colors.white),
+                                                  side: MaterialStateProperty.all(
+                                                    const BorderSide(color: Color(0xFF6db881), width: 1.0),
+                                                  ),
+                                                  shape: MaterialStateProperty.all(
+                                                    RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(10),
+                                                    ),
+                                                  ),
+                                                ),
+                                                child:  Text(
+                                                  translation(context).rate,
+                                                  style: TextStyle(
+                                                    fontSize: 16.0,
+                                                    fontFamily: "Tajawal-m",
+                                                    color: Color(0xFF6db881),
+                                                  ),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        );
-                                      }
+                                            const SizedBox(width: 10),
+                                            Text(
+                                              translation(context).comment,
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: "Tajawal-m",
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 10),
+                                        StreamBuilder<QuerySnapshot>(
+                                          stream: FirebaseFirestore.instance
+                                              .collection('ApprovedPlaces')
+                                              .doc(widget.place.place_id)
+                                              .collection('Reviews')
+                                              .orderBy('timestamp', descending: true)
+                                              .snapshots(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState == ConnectionState.waiting) {
+                                              return const Center(
+                                                child: CircularProgressIndicator(),
+                                              );
+                                            } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                                              return  Center(
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
+                                                  child: Text(
+                                                    translation(context).noComment,
+                                                    style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontFamily: "Tajawal-m",
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            }
 
-                                      // Retrieve reviews from the snapshot
-                                      List<Review> reviews = snapshot.data!.docs.map((doc) {
-                                        final commentData = doc.data() as Map<String, dynamic>;
-                                        return Review(
-                                          id: commentData["id"] ?? "",
-                                          placeId: commentData["placeId"] ?? "",
-                                          userId: commentData["userId"] ?? "",
-                                          userName: commentData["userName"] ?? "anonymous",
-                                          rating: commentData["rating"].toDouble() ?? 0.0,
-                                          text: commentData["text"] ?? "",
-                                          timestamp: formatDate(commentData["timestamp"]),
-                                          currentUserReview: commentData["userId"] == getuserId(),
-                                          onDelete: () async {
-                                            // Handle delete action
-                                            await deleteReview(
-                                              context, // Pass the BuildContext
-                                              commentData["placeId"] ?? "", // Pass placeId
-                                              doc.id, // Pass reviewId
+                                            // Retrieve reviews from the snapshot
+                                            List<Review> reviews = snapshot.data!.docs.map((doc) {
+                                              final commentData = doc.data() as Map<String, dynamic>;
+                                              return Review(
+                                                id: commentData["id"] ?? "",
+                                                placeId: commentData["placeId"] ?? "",
+                                                userId: commentData["userId"] ?? "",
+                                                userName: commentData["userName"] ?? "anonymous",
+                                                rating: commentData["rating"].toDouble() ?? 0.0,
+                                                text: commentData["text"] ?? "",
+                                                timestamp: formatDate(commentData["timestamp"]),
+                                                currentUserReview: commentData["userId"] == getuserId(),
+                                                onDelete: () async {
+                                                  // Handle delete action
+                                                  await deleteReview(
+                                                    context, // Pass the BuildContext
+                                                    commentData["placeId"] ?? "", // Pass placeId
+                                                    doc.id, // Pass reviewId
+                                                  );
+                                                  // Pass placeId
+                                                  // Optionally, you can perform additional actions after deletion
+                                                },
+                                                onUpdate: () {
+                                                  // Show a dialog to enter the updated comment
+                                                  showReviewDialog(
+                                                    context,
+                                                    widget.place.place_id,
+                                                    initialRating: commentData["rating"].toDouble(),
+                                                    initialComment: commentData["text"],
+                                                  );
+                                                },
+                                              );
+                                            }).toList();
+
+                                            // Sort the reviews to have the user's review first
+                                            reviews.sort((a, b) {
+                                              if (a.currentUserReview) {
+                                                return -1; // User's review comes first
+                                              } else if (b.currentUserReview) {
+                                                return 1;
+                                              } else {
+                                                return b.timestamp.compareTo(a.timestamp);
+                                              }
+                                            });
+
+                                            return ListView(
+                                              shrinkWrap: true,
+                                              physics: const NeverScrollableScrollPhysics(),
+                                              children: reviews,
                                             );
-                                            // Pass placeId
-                                            // Optionally, you can perform additional actions after deletion
                                           },
-                                          onUpdate: () {
-                                            // Show a dialog to enter the updated comment
-                                            showReviewDialog(
-                                              context,
-                                              widget.place.place_id,
-                                              initialRating: commentData["rating"].toDouble(),
-                                              initialComment: commentData["text"],
-                                            );
-                                          },
-                                        );
-                                      }).toList();
+                                        ),
+                                      ],
+                                    );
+                                  }
+                                },
 
-                                      // Sort the reviews to have the user's review first
-                                      reviews.sort((a, b) {
-                                        if (a.currentUserReview) {
-                                          return -1; // User's review comes first
-                                        } else if (b.currentUserReview) {
-                                          return 1;
-                                        } else {
-                                          return b.timestamp.compareTo(a.timestamp);
-                                        }
-                                      });
-
-                                      return ListView(
-                                        shrinkWrap: true,
-                                        physics: const NeverScrollableScrollPhysics(),
-                                        children: reviews,
-                                      );
-                                    },
-                                  ),
-
-                                ],
-                                );
-                            }
-                          },
-
+                              ),
+                            ],
+                          ),
                         ),
-
-/////////////////////////////////////////////////////////////////////////////////////////rec////////
-
-
-
-
-                      ],
+                      ),
                     ),
                   ),
                 ),
-    ),
               ),
-            ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
+
 //---------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
 
 
   Widget _buildPlacePageWidget(BuildContext context, placePage place) {
@@ -1095,194 +1096,210 @@ print(placeId);
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(32.0)),
-          ),
-          contentPadding: const EdgeInsets.only(top: 10.0),
-          content: SizedBox(
-            width: 300.0,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                 Center(
-                  child: Text(
-                    translation(context).shareExp,
-                    style: TextStyle(
-                      fontSize: 24.0,
-                      fontFamily: "Tajawal-m",
+        return Directionality(
+          textDirection: isArabic() ? TextDirection.rtl : TextDirection.ltr,
+          child: AlertDialog(
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(32.0)),
+            ),
+            contentPadding: const EdgeInsets.only(top: 10.0),
+            content: SizedBox(
+              width: 300.0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Center(
+                    child: Text(
+                      translation(context).shareExp,
+                      style: TextStyle(
+                        fontSize: 24.0,
+                        fontFamily: "Tajawal-m",
+                      ),
                     ),
-                    textDirection: TextDirection.rtl,
-                    // Right-to-left text direction
                   ),
-                ),
-                const SizedBox(height: 20.0),
-                // Rating Bar and Text
-                SizedBox(
-                  height: 50.0,
-                  // Set the desired height for the RatingBar and text
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    mainAxisSize: MainAxisSize.min,
+                  SizedBox(
+                    height: 50.0,
+                    // Set the desired height for the RatingBar and text
+                    child: Row(
+                      mainAxisAlignment: isArabic() ? MainAxisAlignment.end : MainAxisAlignment.start,
+                      children: <Widget>[
+                        if ( (Localizations.localeOf(context).languageCode == 'en'))
+                          Padding(
+                            padding: EdgeInsets.only(left: 8.0),
+                            child: Text(
+                              translation(context).rateExp,
+                              style: TextStyle(
+                                fontFamily: "Tajawal-m",
+                                fontSize: 20.0,
+                              ),
+                            ),
+                          ),
+                        const SizedBox(width: 8.0), // Add spacing between the stars and text
+                        // Rating Bar
+                        RatingBar.builder(
+                          initialRating: initialRating,
+                          minRating: 1,
+                          direction: Axis.horizontal,
+                          allowHalfRating: false,
+                          itemCount: 5,
+                          itemSize: 30.0,
+                          itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                          unratedColor: const Color.fromARGB(255, 109, 184, 129),
+                          itemBuilder: (context, index) {
+                            if (index < rating) {
+                              return const Icon(
+                                Icons.star,
+                                color: Color.fromARGB(255, 109, 184, 129),
+                                // Filled star
+                                size: 30.0,
+                              );
+                            } else {
+                              return const Icon(
+                                Icons.star_border,
+                                color: Color.fromARGB(255, 109, 184, 129),
+                                // Outlined star with the same color
+                                size: 30.0,
+                              );
+                            }
+                          },
+                          onRatingUpdate: (newRating) {
+                            rating = newRating;
+                          },
+                        ),
+                        // Conditionally display Rating Bar or Text "rateExp" based on text direction
+                        if ((Localizations.localeOf(context).languageCode == 'ar'))
+                          Text(
+                            translation(context).rateExp,
+                            style: TextStyle(
+                              fontFamily: "Tajawal-m",
+                            ),
+                          ),
+
+                      ],
+                    ),
+                  ),
+
+
+
+
+
+
+
+                  // Text Field with Top Border and Radius
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(20.0),
+                        topRight: Radius.circular(20.0),
+                      ),
+                      color: Colors.white,
+                      boxShadow: [
+                        const BoxShadow(
+                          blurRadius: 5.0,
+                          offset: Offset(0, -1),
+                          color: Colors.grey,
+                        ),
+                      ],
+                      border: Border.all(
+                        color: const Color.fromARGB(255, 109, 184, 129),
+                        width: 1.0,
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 30.0, right: 30.0),
+                      child: TextField(
+                        onChanged: (text) {
+                          reviewText = text;
+                        },
+                        controller: TextEditingController(text: initialComment),
+                        decoration: InputDecoration(
+                          hintText: translation(context).writeComment,
+                          hintStyle: TextStyle(
+                            fontFamily: "Tajawal-m",
+                          ),
+                          border: InputBorder.none,
+                        ),
+                        maxLines: 8,
+                        textAlign: TextAlign.right,
+                      ),
+                    ),
+                  ),
+                  // Submit and Cancel Buttons
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      RatingBar.builder(
-                        initialRating: initialRating,
-                        minRating: 1,
-                        direction: Axis.horizontal,
-                        allowHalfRating: false,
-                        itemCount: 5,
-                        itemSize: 30.0,
-                        itemPadding:
-                        const EdgeInsets.symmetric(horizontal: 4.0),
-                        unratedColor: const Color.fromARGB(255, 109, 184, 129),
-                        itemBuilder: (context, index) {
-                          if (index < rating) {
-                            return const Icon(
-                              Icons.star,
+                      Expanded(
+                        child: InkWell(
+                          child: Container(
+                            padding:
+                            const EdgeInsets.only(top: 20.0, bottom: 20.0),
+                            decoration: const BoxDecoration(
                               color: Color.fromARGB(255, 109, 184, 129),
-                              // Filled star
-                              size: 30.0,
-                            );
-                          } else {
-                            return const Icon(
-                              Icons.star_border,
-                              color: Color.fromARGB(255, 109, 184, 129),
-                              // Outlined star with the same color
-                              size: 30.0,
-                            );
-                          }
-                        },
-                        onRatingUpdate: (newRating) {
-                          rating = newRating;
-                        },
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(32.0),
+                              ),
+                            ),
+                            child: Text(
+                              translation(context).sent,
+                              style: TextStyle(
+                                  color: Colors.white, fontFamily: "Tajawal-m"),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          onTap: () async {
+                            // Save the review and rating to the Firestore collection
+                            if (reviewText == '' && rating == 0.0) {
+                              // do nothing, don't save it in the collection
+                            } else {
+                              await makePostRequest(
+                                  reviewText, rating, userId, placeId, username);
+                            }
+
+                            // Close the dialog
+                            Navigator.of(context).pop();
+                          },
+                        ),
                       ),
-                      const SizedBox(width: 1.0),
-                      // Add spacing between the RatingBar and the text
-                       Text(
-                        translation(context).rateExp,
-                        style: TextStyle(
-                          fontFamily: "Tajawal-m",
+                      // Adjust the height to change the length
+                      const VerticalDivider(
+                        width: 1, // Width of the vertical line
+                        color: Colors.white, // Color of the vertical line
+                      ),
+                      Expanded(
+                        child: InkWell(
+                          child: Container(
+                            padding:
+                            const EdgeInsets.only(top: 20.0, bottom: 20.0),
+                            decoration: const BoxDecoration(
+                              color: Color.fromARGB(255, 109, 184, 129),
+                              borderRadius: BorderRadius.only(
+                                bottomRight: Radius.circular(32.0),
+                              ),
+                            ),
+                            child: Text(
+                              translation(context).cancel,
+                              style: TextStyle(
+                                  color: Colors.white, fontFamily: "Tajawal-m"),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          onTap: () {
+                            // Close the dialog without saving
+                            Navigator.of(context).pop();
+                          },
                         ),
                       ),
                     ],
                   ),
-                ),
-                // Text Field with Top Border and Radius
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(20.0),
-                      topRight: Radius.circular(20.0),
-                    ),
-                    color: Colors.white,
-                    boxShadow: [
-                      const BoxShadow(
-                        blurRadius: 5.0,
-                        offset: Offset(0, -1),
-                        color: Colors.grey,
-                      ),
-                    ],
-                    border: Border.all(
-                      color: const Color.fromARGB(255, 109, 184, 129),
-                      width: 1.0,
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 30.0, right: 30.0),
-                    child: TextField(
-                      onChanged: (text) {
-                        reviewText = text;
-                      },
-                      controller: TextEditingController(text: initialComment),
-                      decoration:  InputDecoration(
-                        hintText:  translation(context).writeComment,
-                        hintStyle: TextStyle(
-                          fontFamily: "Tajawal-m",
-                        ),
-                        border: InputBorder.none,
-                      ),
-                      maxLines: 8,
-                      textAlign: TextAlign.right,
-                    ),
-                  ),
-                ),
-                // Submit and Cancel Buttons
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Expanded(
-                      child: InkWell(
-                        child: Container(
-                          padding:
-                          const EdgeInsets.only(top: 20.0, bottom: 20.0),
-                          decoration: const BoxDecoration(
-                            color: Color.fromARGB(255, 109, 184, 129),
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(32.0),
-                            ),
-                          ),
-                          child:  Text(
-                            translation(context).sent,
-                            style: TextStyle(
-                                color: Colors.white, fontFamily: "Tajawal-m"),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        onTap: () async {
-                          // Save the review and rating to the Firestore collection
-                          if (reviewText == '' && rating == 0.0) {
-                            // do nothing, don't save it in the collection
-                          } else {
-                            await makePostRequest(
-                                reviewText, rating, userId, placeId, username);
-                          }
-
-                          // Close the dialog
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ),
-                    // Adjust the height to change the length
-                    const VerticalDivider(
-                      width: 1, // Width of the vertical line
-                      color: Colors.white, // Color of the vertical line
-                    ),
-
-                    Expanded(
-                      child: InkWell(
-                        child: Container(
-                          padding:
-                          const EdgeInsets.only(top: 20.0, bottom: 20.0),
-                          decoration: const BoxDecoration(
-                            color: Color.fromARGB(255, 109, 184, 129),
-                            borderRadius: BorderRadius.only(
-                              bottomRight: Radius.circular(32.0),
-                            ),
-                          ),
-                          child:  Text(
-                            translation(context).cancel,
-                            style: TextStyle(
-                                color: Colors.white, fontFamily: "Tajawal-m"),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        onTap: () {
-                          // Close the dialog without saving
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );
       },
     );
-
   }
 ////////////////////////////////////////////////////////////////////////////////////
   Future<void> deleteReview(BuildContext context, String placeId, String reviewId) async {

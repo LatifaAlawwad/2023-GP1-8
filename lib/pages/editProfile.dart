@@ -62,36 +62,40 @@ class _editProfileState extends State<editProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+     appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 109, 184, 129),
         automaticallyImplyLeading: false,
-        title: Padding(
-          padding: const EdgeInsets.only(left:0),
-          child: Text(
-            translation(context).modifyPerInfo,
-            style: TextStyle(
-              fontSize: 17,
-              fontFamily: "Tajawal-b",
-            ),
-          ),
-        ),
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 20.0),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Icon(
-                Icons.arrow_forward_ios,
-                color: Colors.white,
-                size: 28,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0,right:10.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
+                  size: 28,
+                ),
               ),
             ),
-          ),
-        ],
+            Text(
+              translation(context).modifyPerInfo,
+              style: TextStyle(
+                fontSize: 17,
+                fontFamily: "Tajawal-b",
+              ),
+            ),
+            SizedBox(width: 40), // Adjust the width based on your preference
+          ],
+        ),
+        centerTitle: false, // Ensure the title is aligned based on Row alignment
         toolbarHeight: 60,
       ),
+
+
       body:  SafeArea(
         child: SingleChildScrollView(
           child: SingleChildScrollView(
@@ -126,80 +130,106 @@ class _editProfileState extends State<editProfile> {
                                 SizedBox(
                                   height: 30,
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 16),
-                                  child: Text(
-                                    translation(context).personalInfo,
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      color: Color.fromARGB(255, 109, 184, 129),
-                                      fontFamily: "Tajawal-b",
+
+                                Center( // Wrap with Center widget
+
+                                    child: Text(
+                                      translation(context).personalInfo,
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color: Color.fromARGB(255, 109, 184, 129),
+                                        fontFamily: "Tajawal-b",
+                                      ),
                                     ),
                                   ),
-                                ),
+
                                 SizedBox(
                                   height: 10,
                                 ),
                                 Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 8),
-                                  child: Directionality(
-                                    textDirection: TextDirection.rtl,
-                                    child: TextFormField(
-                                      controller: nameControlar,
-                                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                                      decoration: InputDecoration(
-                                        prefixIcon: const Icon(
-                                          Icons.person,
-                                          color: Color.fromARGB(255, 109, 184, 129),
-                                        ),
-                                        suffixIcon: Icon(
-                                          Icons.edit,
-                                          color: Color.fromARGB(255, 109, 184, 129),
-                                        ),
-                                        fillColor: Color.fromARGB(255, 225, 225, 228),
-                                        filled: true,
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(66.0),
-                                          borderSide: const BorderSide(width: 0, style: BorderStyle.none),
-                                        ),
+                                  child: Row(
+                                    mainAxisAlignment: isArabic() ? MainAxisAlignment.start : MainAxisAlignment.end,
+                                    children: [
+                                      Expanded(
+
+                                          child: TextFormField(
+                                            controller: nameControlar,
+                                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                                            decoration: InputDecoration(
+                                              prefixIcon: const Icon(
+                                                Icons.person,
+                                                color: Color.fromARGB(255, 109, 184, 129),
+                                              ),
+                                              suffixIcon: Icon(
+                                                Icons.edit,
+                                                color: Color.fromARGB(255, 109, 184, 129),
+                                              ),
+                                              fillColor: Color.fromARGB(255, 225, 225, 228),
+                                              filled: true,
+                                              border: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(66.0),
+                                                borderSide: const BorderSide(width: 0, style: BorderStyle.none),
+                                              ),
+                                              errorStyle: TextStyle(
+                                                color: Color.fromARGB(255, 196, 51, 51),
+                                                fontSize: 14.0,
+                                              ),
+                                              contentPadding: EdgeInsets.symmetric(
+                                                horizontal: isArabic() ? 0 : 16,
+                                                vertical: 16,
+                                              ),
+                                            ),
+                                            validator: (value) {
+                                              if (value!.length < 2) {
+                                                return translation(context).nameCon;
+                                              }
+                                              if (RegExp(r'[0-9]').hasMatch(value)) {
+                                                return translation(context).onlyletters;
+                                              }
+                                            },
+                                          ),
+
                                       ),
-                                      validator: (value) {
-                                        if (value!.length < 2) {
-                                          return translation(context).nameCon;
-                                        }
-                                        if (RegExp(r'[0-9]').hasMatch(value)) {
-                                          return translation(context).onlyletters;
-                                        }
-                                      },
-                                    ),
+                                    ],
                                   ),
                                 ),
+
+
+
+
+
                                 SizedBox(
                                   height: 20,
                                 ),
                                 Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 8),
-                                  child: Directionality(
-                                    textDirection: TextDirection.rtl,
-                                    child: TextFormField(
-                                      readOnly: true,
-                                      controller: emailcontrolar,
-                                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                                      decoration: InputDecoration(
-                                        prefixIcon: Icon(
-                                          Icons.email,
-                                          color: Color.fromARGB(255, 109, 184, 129),
-                                        ),
-                                        fillColor: Color.fromARGB(255, 225, 225, 228),
-                                        filled: true,
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(66.0),
-                                          borderSide: const BorderSide(width: 0, style: BorderStyle.none),
+                                  child: Row(
+                                    mainAxisAlignment: isArabic() ? MainAxisAlignment.start : MainAxisAlignment.end,
+                                    children: [
+                                   Expanded(
+                                        child: TextFormField(
+                                          readOnly: true,
+                                          controller: emailcontrolar,
+                                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                                          decoration: InputDecoration(
+                                            prefixIcon: Icon(
+                                              Icons.email,
+                                              color: Color.fromARGB(255, 109, 184, 129),
+                                            ),
+                                            fillColor: Color.fromARGB(255, 225, 225, 228),
+                                            filled: true,
+                                            border: OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(66.0),
+                                              borderSide: const BorderSide(width: 0, style: BorderStyle.none),
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
+                                    ],
                                   ),
                                 ),
+
                                 // New Password Fields
                                 SizedBox(
                                   height: 20,
@@ -207,7 +237,7 @@ class _editProfileState extends State<editProfile> {
                                 Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 20),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    mainAxisAlignment: isArabic() ? MainAxisAlignment.end : MainAxisAlignment.start,
                                     children: [
                                       Text(
                                         translation(context).updatePass,
@@ -226,8 +256,10 @@ class _editProfileState extends State<editProfile> {
 
                                 Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 8),
-                                  child: Directionality(
-                                    textDirection: TextDirection.rtl,
+                                  child: Row(
+                                      mainAxisAlignment: isArabic() ? MainAxisAlignment.start : MainAxisAlignment.end,
+                                      children: [
+                                        Expanded(
                                     child: TextFormField(
                                       obscureText: true,
                                       controller: currentPasswordController,
@@ -250,28 +282,25 @@ class _editProfileState extends State<editProfile> {
                                           borderSide: const BorderSide(width: 0, style: BorderStyle.none),
                                         ),
                                       ),
-                                    ),
+                                    ),),]
                                   ),
                                 ),
 
                                 Container(
                                   width: double.infinity,
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    mainAxisAlignment: isArabic() ? MainAxisAlignment.end : MainAxisAlignment.start,
                                     children: [
                                       Visibility(
                                         visible: !isCurrentPasswordValid,
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal:30),
+                                          padding: const EdgeInsets.symmetric(horizontal: 30),
                                           child: Text(
                                             translation(context).wrongCurPass,
                                             style: TextStyle(
-                                              color: Color.fromARGB(
-                                                  255, 196, 51, 51),
+                                              color: Color.fromARGB(255, 196, 51, 51),
                                               fontSize: 14,
                                             ),
-
-
                                           ),
                                         ),
                                       ),
@@ -279,17 +308,21 @@ class _editProfileState extends State<editProfile> {
                                   ),
                                 ),
 
+
                                 SizedBox(
                                   height: 10,
                                 ),
                                 Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 8),
-                                  child: Directionality(
-                                    textDirection: TextDirection.rtl,
+                                  child: Row(
+                                      mainAxisAlignment: isArabic() ? MainAxisAlignment.start : MainAxisAlignment.end,
+                                      children: [
+                                        Expanded(
                                     child: TextFormField(
                                       obscureText: true,
                                       controller: newPasswordController,
                                       autovalidateMode: AutovalidateMode.onUserInteraction,
+
                                       decoration: InputDecoration(
                                         hintText: translation(context).newPass,
                                         prefixIcon: Icon(
@@ -307,15 +340,14 @@ class _editProfileState extends State<editProfile> {
                                           borderSide: const BorderSide(width: 0, style: BorderStyle.none),
                                         ),
                                         errorStyle: TextStyle(
-                                          color: Color.fromARGB(
-                                              255, 196, 51, 51),
+                                          color: Color.fromARGB(255, 196, 51, 51),
                                           fontSize: 14.0,
                                         ),
                                       ),
                                       validator: (value) {
-                                        RegExp uper = RegExp(r"(?=.*[A-Z])");
-                                        RegExp numb = RegExp(r"[0-9]");
-                                        RegExp small = RegExp(r"(?=.*[a-z])");
+                                        RegExp upper = RegExp(r"(?=.*[A-Z])");
+                                        RegExp number = RegExp(r"[0-9]");
+                                        RegExp lower = RegExp(r"(?=.*[a-z])");
                                         RegExp special = RegExp(r"(?=.*[!@#%^&*(),.?\\:{}|<>])");
 
                                         if (value!.isEmpty) {
@@ -328,15 +360,15 @@ class _editProfileState extends State<editProfile> {
                                           errorMessage += translation(context).eightchar;
                                         }
 
-                                        if (!uper.hasMatch(value)) {
+                                        if (!upper.hasMatch(value)) {
                                           errorMessage += translation(context).capletter;
                                         }
 
-                                        if (!small.hasMatch(value)) {
+                                        if (!lower.hasMatch(value)) {
                                           errorMessage += translation(context).smaletter;
                                         }
 
-                                        if (!numb.hasMatch(value)) {
+                                        if (!number.hasMatch(value)) {
                                           errorMessage += translation(context).conNum;
                                         }
 
@@ -352,8 +384,10 @@ class _editProfileState extends State<editProfile> {
                                         // If none of the above conditions are met, return null (no error message).
                                         return null;
                                       },
-                                    ),
+                                    ),),]
                                   ),
+
+
                                 ),
                                 SizedBox(
                                   height: 10,
@@ -362,8 +396,10 @@ class _editProfileState extends State<editProfile> {
 
                                 Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 8),
-                                  child: Directionality(
-                                    textDirection: TextDirection.rtl,
+                                  child: Row(
+                                      mainAxisAlignment: isArabic() ? MainAxisAlignment.start : MainAxisAlignment.end,
+                                      children: [
+                                        Expanded(
                                     child: TextFormField(
                                       obscureText: true,
                                       controller: confirmPasswordController,
@@ -386,7 +422,7 @@ class _editProfileState extends State<editProfile> {
                                           borderSide: const BorderSide(width: 0, style: BorderStyle.none),
                                         ),
                                       ),
-                                    ),
+                                    ),),]
                                   ),
                                 ),
 
@@ -395,7 +431,7 @@ class _editProfileState extends State<editProfile> {
                                 Container(
                                   width: double.infinity,
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    mainAxisAlignment: isArabic() ? MainAxisAlignment.end : MainAxisAlignment.start,
                                     children: [
                                       Visibility(
                                         visible: !isPasswordMatch,
@@ -633,7 +669,7 @@ class _editProfileState extends State<editProfile> {
                                           Color.fromARGB(255, 109, 184, 129),
                                         ),
                                         padding: MaterialStateProperty.all(
-                                          EdgeInsets.symmetric(horizontal: 40, vertical: 5),
+                                          EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                                         ),
                                         shape: MaterialStateProperty.all(
                                           RoundedRectangleBorder(
@@ -641,9 +677,11 @@ class _editProfileState extends State<editProfile> {
                                           ),
                                         ),
                                       ),
-                                      child: Text(
-                                        translation(context).saveChanges,
-                                        style: TextStyle(fontSize: 18, fontFamily: "Tajawal-m"),
+                                      child: Center(
+                                        child: Text(
+                                          translation(context).saveChanges,
+                                          style: TextStyle(fontSize: 18, fontFamily: "Tajawal-m"),
+                                        ),
                                       ),
                                     ),
                                   ),

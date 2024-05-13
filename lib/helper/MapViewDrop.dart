@@ -5,6 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gp/helper/convertLocationJson.dart';
+import 'package:gp/language_constants.dart';
 
 class MapView extends StatefulWidget {
   @override
@@ -16,17 +17,18 @@ class _MapViewState extends State<MapView> {
   String googleApikey = "AIzaSyCJ3yUvAXaEKXPoo5ngfht4se568rq3mBk";
   GoogleMapController? mapController; //contrller for Google map
   CameraPosition? cameraPosition;
-  String location = "Location Name:";
+  String location ="";
 
   @override
   Widget build(BuildContext context) {
+    location = translation(context).locatioName;
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'الخريطة',
+          translation(context).addMap,
         ),
         backgroundColor: const Color.fromARGB(255, 109, 184, 129),
-      ),
+        centerTitle: true,),
       body: Stack(children: [
         GoogleMap(
           //Map widget from google_maps_flutter package
@@ -111,8 +113,8 @@ class _MapViewState extends State<MapView> {
                           ),
                         ),
                       ),
-                      child: const Text(
-                        'حفظ',
+                      child:  Text(
+                        translation(context).save,
                         style: TextStyle(
                           fontSize: 18.0,
                           fontFamily: "Tajawal-m",

@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
-
 import 'package:bottom_picker/bottom_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csc_picker/csc_picker.dart';
@@ -39,34 +37,36 @@ class _AddPageState extends State<AddPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 109, 184, 129),
+        backgroundColor: Color.fromARGB(255, 109, 184, 129),
         automaticallyImplyLeading: false,
-        title: Padding(
-          padding: EdgeInsets.only(left: 150),
-          child: Text(
-            translation(context).addPlace,
-            style: TextStyle(
-              fontSize: 17,
-              fontFamily: "Tajawal-b",
-            ),
-          ),
-        ),
-        toolbarHeight: 60,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 20.0),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: const Icon(
-                Icons.arrow_forward_ios,
-                color: Colors.white,
-                size: 28,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0,right:10.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
+                  size: 28,
+                ),
               ),
             ),
-          ),
-        ],
+            Text(
+              translation(context).addPlace,
+              style: TextStyle(
+                fontSize: 17,
+                fontFamily: "Tajawal-b",
+              ),
+            ),
+            SizedBox(width: 40), // Adjust the width based on your preference
+          ],
+        ),
+        centerTitle: false,
+
       ),
       body: FirebaseAuth.instance.currentUser == null
           ? Center(
@@ -330,7 +330,7 @@ class CustomFormState extends State<CustomForm> {
                     ),
                     child: Column(
                         mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: isArabic()? CrossAxisAlignment.end :CrossAxisAlignment.start,
                         children: [
                           ListTile(
                               contentPadding: const EdgeInsets.all(0),
@@ -952,7 +952,6 @@ class CustomFormState extends State<CustomForm> {
       translation(context).riyadh,
       translation(context).jeddah,
       translation(context).abha,
-      translation(context).alula,
       translation(context).east,
     ];
 
@@ -1016,22 +1015,27 @@ class CustomFormState extends State<CustomForm> {
       translation(context).dinner,
     ];
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
+
+
+    return  Column(
+        children: [
         Padding(
           padding: EdgeInsets.only(top: 20),
           child: Text(
             translation(context).placeDetails,
             style: TextStyle(
                 fontSize: 20.0, fontFamily: "Tajawal-b", color: Colors.black),
-            // textDirection: TextDirection.rtl,
+
           ),
         ),
         Expanded(
+
           child: Container(
+            alignment: isArabic() ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
+
             margin: const EdgeInsets.only(top: 20, left: 15, right: 15),
             padding: const EdgeInsets.only(top: 15, left: 15, right: 15),
+
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: const BorderRadius.only(
@@ -1041,7 +1045,7 @@ class CustomFormState extends State<CustomForm> {
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment: isArabic()? CrossAxisAlignment.end:CrossAxisAlignment.start,
                 children: [
                   const SizedBox(
                     height: 10,
@@ -1074,7 +1078,7 @@ class CustomFormState extends State<CustomForm> {
                   ),
                   TextFormField(
                     controller: placeName,
-                    textAlign: TextAlign.end,
+                    textAlign: isArabic()? TextAlign.end: TextAlign.start,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     cursorColor: const Color(0xFF6db881),
                     decoration: InputDecoration(
@@ -1119,15 +1123,20 @@ class CustomFormState extends State<CustomForm> {
                     height: 20,
                   ),
                   RichText(
+
                     text: TextSpan(
+
                       style: TextStyle(
+
                         fontSize: 18.0,
                         fontFamily: "Tajawal-b",
                         color: Colors
                             .black, // Set the color for the non-red part of the text
                       ),
                       children: [
+
                         TextSpan(
+
                           text: translation(context).placeClass,
                         ),
                         TextSpan(
@@ -1142,8 +1151,8 @@ class CustomFormState extends State<CustomForm> {
                   ),
 
                   Container(
+                    alignment: isArabic() ? Alignment.centerRight : Alignment.centerLeft,
                     margin: const EdgeInsets.only(top: 10),
-                    // Adjust top and left values
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
                       color: Colors.white,
@@ -1154,82 +1163,87 @@ class CustomFormState extends State<CustomForm> {
                     ),
                     child: DropdownButtonFormField<int>(
                       value: null,
-                      // Set initial value to null
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         isDense: true,
                         border: InputBorder.none,
-                        prefixIcon: Icon(
-                          Icons.arrow_drop_down, // Set your desired icon
+                        prefixIcon: isArabic()
+                            ? Icon(
+                          Icons.arrow_drop_down,
                           color: Color(0xFF6db881),
-                        ),
-                        contentPadding: EdgeInsets.only(
-                            top: 15, bottom: 15, right: 10, left: 10),
+                        )
+                            : null,
+                        suffixIcon: !isArabic()
+                            ? Icon(
+                          Icons.arrow_drop_down,
+                          color: Color(0xFF6db881),
+                        )
+                            : null,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10,vertical:15),
                       ),
                       iconSize: 0,
-                      hint: Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
+                      hint:
+                         Text(
                           translation(context).category,
+                          textAlign: isArabic() ? TextAlign.right : TextAlign.left,
                         ),
-                      ),
+
                       isExpanded: true,
                       items: [
                         DropdownMenuItem<int>(
                           value: 1,
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Text(
+                          child:  Text(
                               translation(context).ent,
                               style: TextStyle(
                                 fontSize: 17.0,
                                 fontFamily: "Tajawal-m",
                                 color: Color(0xFF6db881),
                               ),
-                              textAlign: TextAlign.end,
+                              textAlign: isArabic() ? TextAlign.end : TextAlign.start,
                             ),
-                          ),
+
                         ),
                         DropdownMenuItem<int>(
                           value: 2,
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Text(
+                          child:  Text(
                               translation(context).rest,
                               style: TextStyle(
                                 fontSize: 17.0,
                                 fontFamily: "Tajawal-m",
                                 color: Color(0xFF6db881),
                               ),
-                              textAlign: TextAlign.end,
+                              textAlign: isArabic() ? TextAlign.end : TextAlign.start,
                             ),
-                          ),
+
                         ),
                         DropdownMenuItem<int>(
                           value: 3,
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Text(
+                          child:Text(
                               translation(context).mall,
                               style: TextStyle(
                                 fontSize: 17.0,
                                 fontFamily: "Tajawal-m",
                                 color: Color(0xFF6db881),
                               ),
-                              textAlign: TextAlign.end,
+                              textAlign: isArabic() ? TextAlign.end : TextAlign.start,
                             ),
-                          ),
+
                         ),
                       ],
                       onChanged: (int? value) {
                         setState(() {
                           type = value!;
-                          if (type == 1) type1 = 'فعاليات و ترفيه';
-                          if (type == 2) type1 = 'مطاعم';
-                          if (type == 3) type1 = 'مراكز تسوق';
+                          if (type == 1)
+                            type1 = 'فعاليات و ترفيه';
+                          if (type == 2)
+                            type1 = 'مطاعم';
+                          if (type == 3)
+                            type1 = 'مراكز تسوق';
                         });
                       },
                     ),
                   ),
+
+
 
                   const SizedBox(
                     height: 20,
@@ -1273,21 +1287,20 @@ class CustomFormState extends State<CustomForm> {
                       items: citiesList.map((value) {
                         return DropdownMenuItem(
                           value: value,
-                          child: Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(value)),
+                          child:  Text(value),
                         );
                       }).toList(),
                       onChanged: (_selectedValue) async {
                         var tempCity = await cities.where((element) =>
-                            (element['name_ar'] == _selectedValue));
+                            (element['name_ar'] == _selectedValue || element['name_en'] == _selectedValue ));
                         var tempArea = await areas.where((element) =>
                             (element['city_id'] == tempCity.first['city_id']));
                         _AddressKey.currentState?.reset();
                         areasList.clear();
                         areasList.addAll(tempArea);
                         setState(() {
-                          city = _selectedValue.toString();
+                          city = tempCity.first['name_ar'];
+                          print(tempCity);
                         });
                       },
                       validator: (value) {
@@ -1301,22 +1314,29 @@ class CustomFormState extends State<CustomForm> {
                         fontFamily: "Tajawal-m",
                         color: Color(0xFF6db881),
                       ),
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         isDense: true,
                         border: InputBorder.none,
-                        prefixIcon: Icon(
-                          Icons.arrow_drop_down, // Set your desired icon
+                        prefixIcon: isArabic()
+                            ? Icon(
+                          Icons.arrow_drop_down,
                           color: Color(0xFF6db881),
-                        ),
-                        contentPadding: EdgeInsets.only(
-                            top: 15, bottom: 15, right: 10, left: 10),
+                        )
+                            : null,
+                        suffixIcon: !isArabic()
+                            ? Icon(
+                          Icons.arrow_drop_down,
+                          color: Color(0xFF6db881),
+                        )
+                            : null,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10,vertical:15),
                       ),
                       iconSize: 0,
-                      hint: Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
+                      hint:  Text(
                             translation(context).selectCity,
-                          )),
+                            textAlign: isArabic() ? TextAlign.right : TextAlign.left,
+
+                          )
                     ),
                   ),
                   const SizedBox(
@@ -1362,9 +1382,7 @@ class CustomFormState extends State<CustomForm> {
                       items: areasList.map((value) {
                         return DropdownMenuItem(
                           value: value,
-                          child: Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(value['name_ar'])),
+                          child: Text(  Localizations.localeOf(context).languageCode == 'ar'  ? value['name_ar'] : value['name_en']),
                         );
                       }).toList(),
                       onChanged: (dynamic value) {
@@ -1383,22 +1401,29 @@ class CustomFormState extends State<CustomForm> {
                         fontFamily: "Tajawal-m",
                         color: Color(0xFF6db881),
                       ),
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         isDense: true,
                         border: InputBorder.none,
-                        prefixIcon: Icon(
-                          Icons.arrow_drop_down, // Set your desired icon
+                        prefixIcon: isArabic()
+                            ? Icon(
+                          Icons.arrow_drop_down,
                           color: Color(0xFF6db881),
-                        ),
-                        contentPadding: EdgeInsets.only(
-                            top: 15, bottom: 15, right: 10, left: 10),
+                        )
+                            : null,
+                        suffixIcon: !isArabic()
+                            ? Icon(
+                          Icons.arrow_drop_down,
+                          color: Color(0xFF6db881),
+                        )
+                            : null,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10,vertical:15),
                       ),
                       iconSize: 0,
-                      hint: Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
+                      hint:  Text(
                             translation(context).selectNeighbor,
-                          )),
+                            textAlign: isArabic() ? TextAlign.right : TextAlign.left,
+
+                          )
                     ),
                   ),
                   // City
@@ -1448,11 +1473,14 @@ class CustomFormState extends State<CustomForm> {
 
                   if (type == 1)
                     Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: isArabic()?MainAxisAlignment.end:MainAxisAlignment.start,
+                      crossAxisAlignment: isArabic()? CrossAxisAlignment.end:CrossAxisAlignment.start,
                       children: [
                         Text(
+                          textAlign: isArabic() ? TextAlign.right : TextAlign.left,
                           translation(context).entType,
+
+
                           style: TextStyle(
                             fontSize: 18.0,
                             fontFamily: "Tajawal-b",
@@ -1466,7 +1494,7 @@ class CustomFormState extends State<CustomForm> {
                             color: Colors.white,
                             border: Border.all(
                               color: Colors.black54,
-                              width: 2,
+                              width: 1,
                             ),
                           ),
                           child: DropdownButtonFormField<String>(
@@ -1475,23 +1503,30 @@ class CustomFormState extends State<CustomForm> {
                               fontFamily: "Tajawal-m",
                               color: Color(0xFF6db881),
                             ),
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               isDense: true,
                               border: InputBorder.none,
-                              prefixIcon: Icon(
-                                Icons.arrow_drop_down, // Set your desired icon
+                              prefixIcon: isArabic()
+                                  ? Icon(
+                                Icons.arrow_drop_down,
                                 color: Color(0xFF6db881),
-                              ),
-                              contentPadding: EdgeInsets.only(
-                                  top: 15, bottom: 15, right: 10, left: 10),
+                              )
+                                  : null,
+                              suffixIcon: !isArabic()
+                                  ? Icon(
+                                Icons.arrow_drop_down,
+                                color: Color(0xFF6db881),
+                              )
+                                  : null,
+                              contentPadding: EdgeInsets.symmetric(horizontal: 10,vertical:15),
                             ),
                             iconSize: 0,
                             isExpanded: true,
-                            hint: Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
+                            hint:  Text(
                                   translation(context).selectEntType,
-                                )),
+                              textAlign: isArabic() ? TextAlign.right : TextAlign.left,
+
+                            ),
                             onChanged: (String? newValue) {
                               setState(() {
                                 typeEnt = newValue ?? '';
@@ -1500,14 +1535,12 @@ class CustomFormState extends State<CustomForm> {
                             items: typeEntOptions.map((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
-                                child: Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Text(value,
+                                child:  Text(value,
                                       style: const TextStyle(
                                           fontSize: 16.0,
                                           color: Color(0xFF6db881),
                                           fontFamily: 'Tajawal-m')),
-                                ),
+
                               );
                             }).toList(),
                           ),
@@ -1515,7 +1548,7 @@ class CustomFormState extends State<CustomForm> {
                         const SizedBox(height: 20),
                         Column(
                           mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                          crossAxisAlignment: isArabic()?CrossAxisAlignment.end:CrossAxisAlignment.start,
                           children: [
                             Text(
                               translation(context).tempEvent,
@@ -1526,7 +1559,7 @@ class CustomFormState extends State<CustomForm> {
                             ),
                             const SizedBox(height: 10),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                              mainAxisAlignment: isArabic()? MainAxisAlignment.end:MainAxisAlignment.start ,
                               children: [
                                 CustomRadioButton(
                                     onTap: () {
@@ -1557,8 +1590,8 @@ class CustomFormState extends State<CustomForm> {
                               child: Padding(
                                 padding: const EdgeInsets.only(top: 8),
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment:isArabic()?
+                                      MainAxisAlignment.end:  MainAxisAlignment.start,
                                   children: [
                                     Expanded(
                                       child: GestureDetector(
@@ -1621,7 +1654,7 @@ class CustomFormState extends State<CustomForm> {
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(width: 10),
+                                    const SizedBox(width: 8),
                                     Expanded(
                                       child: GestureDetector(
                                         onTap: () {
@@ -1629,7 +1662,7 @@ class CustomFormState extends State<CustomForm> {
                                         },
                                         child: Container(
                                           padding: const EdgeInsets.symmetric(
-                                              vertical: 5, horizontal: 7),
+                                              vertical: 5, horizontal: 5),
                                           decoration: BoxDecoration(
                                             borderRadius:
                                                 const BorderRadius.all(
@@ -1697,7 +1730,7 @@ class CustomFormState extends State<CustomForm> {
                             ),
                             const SizedBox(height: 10),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                              mainAxisAlignment: isArabic()? MainAxisAlignment.end:MainAxisAlignment.start ,
                               children: [
                                 CustomRadioButton(
                                   onTap: () {
@@ -1743,7 +1776,7 @@ class CustomFormState extends State<CustomForm> {
                         ),
                         const SizedBox(height: 10),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: isArabic()? MainAxisAlignment.end: MainAxisAlignment.start,
                           children: [
                             CustomRadioButton(
                                 onTap: () {
@@ -1773,7 +1806,8 @@ class CustomFormState extends State<CustomForm> {
                           Padding(
                             padding: const EdgeInsets.only(top: 10),
                             child: TextFormField(
-                              textAlign: TextAlign.end,
+                              textAlign: isArabic()? TextAlign.end: TextAlign.start,
+
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
                               cursorColor: const Color(0xFF6db881),
@@ -1811,8 +1845,8 @@ class CustomFormState extends State<CustomForm> {
 
                   if (type == 2) // Check if the type is for مطاعم
                     Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: isArabic()? MainAxisAlignment.end: MainAxisAlignment.start,
+                      crossAxisAlignment: isArabic()? CrossAxisAlignment.end :CrossAxisAlignment.start,
                       children: [
                         // Add the DropdownButtonFormField for 'cuisine'
                         Text(
@@ -1830,7 +1864,7 @@ class CustomFormState extends State<CustomForm> {
                             color: Colors.white,
                             border: Border.all(
                               color: Colors.black54,
-                              width: 2,
+                              width: 1,
                             ),
                           ),
                           child: DropdownButtonFormField<String>(
@@ -1839,40 +1873,45 @@ class CustomFormState extends State<CustomForm> {
                               fontFamily: "Tajawal-m",
                               color: Color(0xFF6db881),
                             ),
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               isDense: true,
                               border: InputBorder.none,
-                              prefixIcon: Icon(
-                                Icons.arrow_drop_down, // Set your desired icon
+                              prefixIcon: isArabic()
+                                  ? Icon(
+                                Icons.arrow_drop_down,
                                 color: Color(0xFF6db881),
-                              ),
-                              contentPadding: EdgeInsets.only(
-                                  top: 15, bottom: 15, right: 10, left: 10),
+                              )
+                                  : null,
+                              suffixIcon: !isArabic()
+                                  ? Icon(
+                                Icons.arrow_drop_down,
+                                color: Color(0xFF6db881),
+                              )
+                                  : null,
+                              contentPadding: EdgeInsets.symmetric(horizontal: 10,vertical:15),
                             ),
                             iconSize: 0,
                             isExpanded: true,
                             onChanged: (String? newValue) {
                               setState(() {
                                 cuisine.add(
-                                    newValue!); // Add the selected cuisine to the list
+                                    newValue!);
                               });
                             },
-                            hint: Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
+                            hint: Text(
                                   translation(context).foodType,
-                                )),
+                                textAlign: isArabic() ? TextAlign.right : TextAlign.left,
+
+                                ),
                             items: cuisineOptions.map((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
-                                child: Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Text(value,
+                                child: Text(value,
                                       style: const TextStyle(
                                           fontSize: 16.0,
                                           fontFamily: 'Tajawal-m')),
-                                ),
-                              );
+                                );
+
                             }).toList(),
                           ),
                         ),
@@ -1887,12 +1926,11 @@ class CustomFormState extends State<CustomForm> {
                         Container(
                           margin: const EdgeInsets.only(top: 10),
                           decoration: BoxDecoration(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10)),
+                            borderRadius: const BorderRadius.all(Radius.circular(10)),
                             color: Colors.white,
                             border: Border.all(
-                              color: Colors.grey.shade300,
-                              width: 2,
+                              color: Colors.black54,
+                              width: 1,
                             ),
                           ),
                           child: DropdownButtonFormField<String>(
@@ -1901,44 +1939,71 @@ class CustomFormState extends State<CustomForm> {
                               fontFamily: "Tajawal-m",
                               color: Color(0xFF6db881),
                             ),
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               isDense: true,
                               border: InputBorder.none,
-                              prefixIcon: Icon(
-                                Icons.arrow_drop_down, // Set your desired icon
+                              prefixIcon: isArabic()
+                                  ? Icon(
+                                Icons.arrow_drop_down,
                                 color: Color(0xFF6db881),
-                              ),
-                              contentPadding: EdgeInsets.only(
-                                  top: 15, bottom: 15, right: 10, left: 10),
+                              )
+                                  : null,
+                              suffixIcon: !isArabic()
+                                  ? Icon(
+                                Icons.arrow_drop_down,
+                                color: Color(0xFF6db881),
+                              )
+                                  : null,
+                              contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
                             ),
                             iconSize: 0,
                             isExpanded: true,
-                            value: priceRange,
+                            value: null,
                             onChanged: (String? newValue) {
                               setState(() {
                                 priceRange = newValue!;
+                                print(priceRange);
                               });
                             },
-                            hint: Align(
-                                alignment: Alignment.centerRight,
+                            hint: Text(
+                              translation(context).choosePriceRange,
+                              textAlign: isArabic() ? TextAlign.right : TextAlign.left,
+                            ),
+                            items: [
+                              DropdownMenuItem<String>(
+                                value: 'مرتفع',
                                 child: Text(
-                                  translation(context).choosePriceRange,
-                                )),
-                            items:
-                                ['مرتفع', 'متوسط', 'منخفض'].map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Text(value,
-                                      style: const TextStyle(
-                                          fontSize: 16.0,
-                                          fontFamily: 'Tajawal-m')),
+                                translation(context).high,
+                                  style: const TextStyle(
+                                    fontSize: 16.0,
+                                    fontFamily: 'Tajawal-m',
+                                  ),
                                 ),
-                              );
-                            }).toList(),
+                              ),
+                              DropdownMenuItem<String>(
+                                value:'متوسط',
+                                child: Text(
+                                  translation(context).medium,
+                                  style: const TextStyle(
+                                    fontSize: 16.0,
+                                    fontFamily: 'Tajawal-m',
+                                  ),
+                                ),
+                              ),
+                              DropdownMenuItem<String>(
+                                value:   'منخفض',
+                                child: Text(
+                                  translation(context).low,
+                                  style: const TextStyle(
+                                    fontSize: 16.0,
+                                    fontFamily: 'Tajawal-m',
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
+
                         const SizedBox(height: 20),
                         Text(
                           translation(context).meals,
@@ -2023,7 +2088,7 @@ class CustomFormState extends State<CustomForm> {
                         Wrap(
                           spacing: 10,
                           runSpacing: 7,
-                          alignment: WrapAlignment.end,
+                          alignment: isArabic()?WrapAlignment.end:WrapAlignment.start,
                           children: atmosphereOptions.map((atmosphereOption) {
                             return GestureDetector(
                                 onTap: () {
@@ -2092,7 +2157,7 @@ class CustomFormState extends State<CustomForm> {
                         ),
                         const SizedBox(height: 10),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: isArabic()? MainAxisAlignment.end: MainAxisAlignment.start,
                           children: [
                             CustomRadioButton(
                                 onTap: () {
@@ -2123,7 +2188,8 @@ class CustomFormState extends State<CustomForm> {
                             Padding(
                               padding: const EdgeInsets.only(top: 10),
                               child: TextFormField(
-                                textAlign: TextAlign.end,
+                                textAlign: isArabic()? TextAlign.end: TextAlign.start,
+
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
                                 cursorColor: const Color(0xFF6db881),
@@ -2167,7 +2233,7 @@ class CustomFormState extends State<CustomForm> {
                         ),
                         const SizedBox(height: 10),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: isArabic()? MainAxisAlignment.end: MainAxisAlignment.start,
                           children: [
                             CustomRadioButton(
                                 onTap: () {
@@ -2198,8 +2264,8 @@ class CustomFormState extends State<CustomForm> {
 
                   if (type == 3)
                     Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: isArabic()? MainAxisAlignment.end: MainAxisAlignment.start,
+                      crossAxisAlignment: isArabic()? CrossAxisAlignment.end :CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 10),
                         Text(
@@ -2212,7 +2278,7 @@ class CustomFormState extends State<CustomForm> {
                         ),
                         const SizedBox(height: 10),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: isArabic()? MainAxisAlignment.end: MainAxisAlignment.start,
                           children: [
                             CustomRadioButton(
                               onTap: () {
@@ -2255,7 +2321,7 @@ class CustomFormState extends State<CustomForm> {
                         ),
                         const SizedBox(height: 10),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: isArabic()? MainAxisAlignment.end: MainAxisAlignment.start,
                           children: [
                             CustomRadioButton(
                                 onTap: () {
@@ -2291,7 +2357,7 @@ class CustomFormState extends State<CustomForm> {
                         ),
                         const SizedBox(height: 10),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: isArabic()? MainAxisAlignment.end: MainAxisAlignment.start,
                           children: [
                             CustomRadioButton(
                                 onTap: () {
@@ -2327,7 +2393,7 @@ class CustomFormState extends State<CustomForm> {
                         ),
                         const SizedBox(height: 10),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: isArabic()? MainAxisAlignment.end: MainAxisAlignment.start,
                           children: [
                             CustomRadioButton(
                                 onTap: () {
@@ -2363,7 +2429,7 @@ class CustomFormState extends State<CustomForm> {
                         ),
                         const SizedBox(height: 10),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: isArabic()? MainAxisAlignment.end: MainAxisAlignment.start,
                           children: [
                             CustomRadioButton(
                                 onTap: () {
@@ -2401,7 +2467,7 @@ class CustomFormState extends State<CustomForm> {
                         Wrap(
                           spacing: 10,
                           runSpacing: 7,
-                          alignment: WrapAlignment.end,
+                          alignment: isArabic()?WrapAlignment.end:WrapAlignment.start,
                           children: shopOptions.map((ShopType) {
                             return GestureDetector(
                                 onTap: () {
@@ -2470,7 +2536,7 @@ class CustomFormState extends State<CustomForm> {
                   ),
                   const SizedBox(height: 10),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment:isArabic()? MainAxisAlignment.end :MainAxisAlignment.start,
                     children: [
                       CustomRadioButton(
                           onTap: () {
@@ -2511,7 +2577,8 @@ class CustomFormState extends State<CustomForm> {
                   ),
                   TextFormField(
                     controller: WebLink,
-                    textAlign: TextAlign.end,
+                    textAlign: isArabic()? TextAlign.end: TextAlign.start,
+
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     cursorColor: const Color(0xFF6db881),
                     decoration: InputDecoration(
@@ -2569,7 +2636,8 @@ class CustomFormState extends State<CustomForm> {
                   const SizedBox(height: 10),
                   TextFormField(
                     controller: description,
-                    textAlign: TextAlign.end,
+                    textAlign: isArabic()? TextAlign.end: TextAlign.start,
+
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     cursorColor: const Color(0xFF6db881),
                     maxLines: null,
@@ -2641,57 +2709,91 @@ class CustomFormState extends State<CustomForm> {
                   const SizedBox(height: 10),
                   TextFormField(
                     controller: _startSearchFieldController,
-                    textAlign: TextAlign.end,
+                    textAlign: isArabic() ? TextAlign.end : TextAlign.start,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     cursorColor: const Color(0xFF6db881),
                     decoration: InputDecoration(
-                        filled: true,
-                        contentPadding: const EdgeInsets.only(
-                            top: 0, bottom: 0, right: 10, left: 10),
-                        fillColor: Colors.white,
-                        hintText: translation(context).location,
-                        hintStyle: const TextStyle(
-                          color: Colors.black45,
+                      filled: true,
+                      contentPadding: const EdgeInsets.only(
+                        top: 0,
+                        bottom: 0,
+                        right: 10,
+                        left: 10,
+                      ),
+                      fillColor: Colors.white,
+                      hintText: translation(context).location,
+                      hintStyle: const TextStyle(
+                        color: Colors.black45,
+                      ),
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderSide: BorderSide(color: Color(0xFF6db881), width: 1),
+                      ),
+                      focusedBorder: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderSide: BorderSide(
+                          color: Color(0xFF6db881),
                         ),
-                        border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            borderSide:
-                                BorderSide(color: Color(0xFF6db881), width: 1)),
-                        focusedBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          borderSide: BorderSide(
-                              color: Color(
-                                  0xFF6db881)), // Set the desired border color
-                        ),
-                        prefixIcon: _startSearchFieldController.text.isNotEmpty
-                            ? IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    predictions = [];
-                                    _startSearchFieldController.clear();
-                                  });
-                                },
-                                icon: const Icon(Icons.clear_outlined),
-                              )
-                            : GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => MapView()))
-                                      .then((value) => {
-                                            print(value),
-                                            setState(() {
-                                              startPosition = value;
-                                              _startSearchFieldController.text =
-                                                  value.name;
-                                              predictions = [];
-                                            })
-                                          });
-                                },
-                                child: const Icon(Icons.location_searching,
-                                    color: Color(0xFF6db881)),
-                              )),
+                      ),
+                      prefixIcon: isArabic()
+                          ? _startSearchFieldController.text.isNotEmpty
+                          ? IconButton(
+                        onPressed: () {
+                          setState(() {
+                            predictions = [];
+                            _startSearchFieldController.clear();
+                          });
+                        },
+                        icon: const Icon(Icons.clear_outlined),
+                      )
+                          : GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => MapView()),
+                          ).then((value) {
+                            print(value);
+                            setState(() {
+                              startPosition = value;
+                              _startSearchFieldController.text = value.name;
+                              predictions = [];
+                            });
+                          });
+                        },
+                        child: const Icon(Icons.location_searching,
+                            color: Color(0xFF6db881)),
+                      )
+                          : null,
+                      suffixIcon: !isArabic()
+                          ? _startSearchFieldController.text.isNotEmpty
+                          ? IconButton(
+                        onPressed: () {
+                          setState(() {
+                            predictions = [];
+                            _startSearchFieldController.clear();
+                          });
+                        },
+                        icon: const Icon(Icons.clear_outlined),
+                      )
+                          : GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => MapView()),
+                          ).then((value) {
+                            print(value);
+                            setState(() {
+                              startPosition = value;
+                              _startSearchFieldController.text = value.name;
+                              predictions = [];
+                            });
+                          });
+                        },
+                        child: const Icon(Icons.location_searching,
+                            color: Color(0xFF6db881)),
+                      )
+                          : null,
+                    ),
                     onChanged: (value) {
                       if (_debounce?.isActive ?? false) _debounce!.cancel();
                       _debounce = Timer(const Duration(milliseconds: 1000), () {
@@ -2708,6 +2810,7 @@ class CustomFormState extends State<CustomForm> {
                       return null;
                     },
                   ),
+
                   const SizedBox(height: 10),
                   if (_startSearchFieldController.text != '')
                     isLoadingPlaces
@@ -3052,4 +3155,5 @@ class CustomFormState extends State<CustomForm> {
     );
   }
 }
+
 

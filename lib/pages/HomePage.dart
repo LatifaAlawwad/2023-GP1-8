@@ -708,46 +708,33 @@ class HomePageState extends State<HomePage> {
                 automaticallyImplyLeading: false,
                 backgroundColor: Color(0xFF6db881),
                 title: Row(
+                  mainAxisAlignment: isArabic() ? MainAxisAlignment.start : MainAxisAlignment.end,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(right: 20.0),
-                      child: GestureDetector(
-                        onTap: () async {
-                          final result = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FilterPage(),
-                            ),
-                          );
-                          setState(() {
-                            if (result != null &&
-                                result is Map<String, dynamic>) {
-                              FilterValue = true;
-                              filters = result;
-
-                              dynamic filtertype = result["type"];
-                              if (filtertype == 1) {
-                                FilteredItems = FilterForAtt;
-                              } else if (filtertype == 2) {
-                                FilteredItems = FilterForRes;
-                              } else if (filtertype == 3) {
-                                FilteredItems = FilterForMall;
-                              }
-                            } else if (result == null) {
-                              FilterValue = false;
-                            }
-                          });
-                        },
-                        child: Icon(
-                          Icons.tune_rounded,
-                          color: Colors.white,
-                          size: 35,
+                    GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CitiesPage(),
                         ),
+                      );
+                    },
+                    child: Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.white,
+                      size: 28,
+                    ),
+                  ),
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: Icon(
+                        Icons.search,
+                        color: Colors.white,
                       ),
                     ),
                     Expanded(
                       child: TextField(
-                        textAlign: TextAlign.right,
                         onChanged: (value) {
                           setState(() {
                             name = value;
@@ -756,8 +743,7 @@ class HomePageState extends State<HomePage> {
                         },
                         decoration: InputDecoration(
                           focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color.fromARGB(255, 17, 99, 14)),
+                            borderSide: BorderSide(color: Color.fromARGB(255, 17, 99, 14)),
                           ),
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
@@ -772,36 +758,48 @@ class HomePageState extends State<HomePage> {
                         cursorColor: Colors.white,
                       ),
                     ),
-                  ],
-                ),
-                actions: [
-                  Padding(
-                    padding: EdgeInsets.only(right: 20.0),
-                    child: Icon(
-                      Icons.search,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(right: 20.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
+
+                    GestureDetector(
+                      onTap: () async {
+                        final result = await Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => CitiesPage(),
+                            builder: (context) => FilterPage(),
                           ),
                         );
+                        setState(() {
+                          if (result != null && result is Map<String, dynamic>) {
+                            FilterValue = true;
+                            filters = result;
+
+                            dynamic filtertype = result["type"];
+                            if (filtertype == 1) {
+                              FilteredItems = FilterForAtt;
+                            } else if (filtertype == 2) {
+                              FilteredItems = FilterForRes;
+                            } else if (filtertype == 3) {
+                              FilteredItems = FilterForMall;
+                            }
+                          } else if (result == null) {
+                            FilterValue = false;
+                          }
+                        });
                       },
                       child: Icon(
-                        Icons.arrow_forward_ios,
+                        Icons.tune_rounded,
                         color: Colors.white,
-                        size: 28,
+                        size: 35,
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
+                toolbarHeight: 60,
               ),
+
+
+
+
+
             ),
             Container(
               child: Visibility(
@@ -837,12 +835,11 @@ class HomePageState extends State<HomePage> {
                           }).toList(),
                         ),
                       ),
-                      Positioned(
-                        top: 10,
-                        right: 0,
-                        child: Container(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                      Row(
+                        mainAxisAlignment: isArabic() ? MainAxisAlignment.end : MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(20.0),
                             child: Text(
                               translation(context).like,
                               style: TextStyle(
@@ -852,8 +849,10 @@ class HomePageState extends State<HomePage> {
                               ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
+
+
                     ],
                   ),
                 ),

@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gp/pages/NavigationBarPage.dart';
@@ -48,21 +50,24 @@ class _LogInState extends State<LogIn> {
                           height: 50,
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              translation(context).login,
-                              style: TextStyle(
-                                fontSize: 26,
-                                fontFamily: "Tajawal-b",
-                                color: Color(0xFF6db881),
+                            Expanded(
+                              child: Container(
+                                padding: EdgeInsets.only(right:Localizations.localeOf(context).languageCode == 'ar' ? 113 :0, left: 60.0), // Adjust padding as needed
+                                child: Text(
+                                  translation(context).login,
+                                  style: TextStyle(
+                                    fontSize: 26,
+                                    fontFamily: "Tajawal-b",
+                                    color: Color(0xFF6db881),
+                                  ),
+                                  textAlign: TextAlign.center, // Center the text
+                                ),
                               ),
                             ),
-                            SizedBox(
-                              width: 70,
-                            ),
                             Padding(
-                              padding: EdgeInsets.only(right: 20.0),
+                              padding: EdgeInsets.only(right: 20.0,left:20),
                               child: GestureDetector(
                                 onTap: () {
                                   Navigator.pushNamed(context, "/welcome");
@@ -76,6 +81,12 @@ class _LogInState extends State<LogIn> {
                             ),
                           ],
                         ),
+
+
+
+
+
+
                         SizedBox(
                           height: 40,
                         ),
@@ -88,8 +99,8 @@ class _LogInState extends State<LogIn> {
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 30),
-                          child: Directionality(
-                            textDirection: TextDirection.rtl,
+                          child: Align(
+                            alignment: isArabic() ? Alignment.topRight : Alignment.topLeft,
                             child: TextFormField(
                               controller: email,
                               autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -133,8 +144,8 @@ class _LogInState extends State<LogIn> {
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 30),
-                          child: Directionality(
-                            textDirection: TextDirection.rtl,
+                          child: Align(
+                            alignment: isArabic() ? Alignment.topRight : Alignment.topLeft,
                             child: TextFormField(
                               obscureText: true,
                               controller: password,
@@ -164,7 +175,7 @@ class _LogInState extends State<LogIn> {
                                 RegExp upper = RegExp(r"(?=.*[A-Z])");
                                 RegExp numb = RegExp(r"[0-9]");
                                 RegExp small = RegExp(r"(?=.*[a-z])");
-                                RegExp special = RegExp(r"(?=.*[!@#%^&*(),.?\\:{}|<>])");
+                                RegExp special = RegExp(r"(?=.[!@#%^&(),.?\\:{}|<>])");
 
                                 if (value!.isEmpty || password.text.trim() == "") {
                                   return translation(context).reqPass;
@@ -208,24 +219,28 @@ class _LogInState extends State<LogIn> {
                           height: 15,
                         ),
                         Padding(
-                          padding: EdgeInsets.only(right: 40.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.pushNamed(context, "/RessetPassword");
-                                },
-                                child: Text(
-                                  translation(context).forgetPass,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: "Tajawal-b",
-                                    color: Color(0xFF6db881),
+                          padding: EdgeInsets.only(right: 40.0, left :40.0),
+                          child: Align(
+                            alignment: isArabic() ? Alignment.topRight : Alignment.topLeft,
+                            child: Row(
+                              children: [
+                                Align(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.pushNamed(context, "/ResetPassword");
+                                    },
+                                    child: Text(
+                                      translation(context).forgetPass,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontFamily: "Tajawal-b",
+                                        color: Color(0xFF6db881),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                         SizedBox(
@@ -303,28 +318,30 @@ class _LogInState extends State<LogIn> {
                           height: 25,
                         ),
                         Padding(
-                          padding: EdgeInsets.only(right: 40.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.pushNamed(context, "/signup");
-                                },
-                                child: Text(
-                                  translation(context).signup,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: "Tajawal-b",
-                                    color: Color(0xFF6db881),
+                          padding: EdgeInsets.only(right: 40.0,left:40.0),
+                          child: Align(
+                            alignment: isArabic() ? Alignment.topRight : Alignment.topLeft,
+                            child: Row(
+                              children: [
+                                Text(
+                                  translation(context).noAccount,
+                                  style: TextStyle(fontSize: 14, fontFamily: "Tajawal-l"),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(context, "/signup");
+                                  },
+                                  child: Text(
+                                    translation(context).signup,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontFamily: "Tajawal-b",
+                                      color: Color(0xFF6db881),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Text(
-                                translation(context).noAccount,
-                                style: TextStyle(fontSize: 14, fontFamily: "Tajawal-l"),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ],

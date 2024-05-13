@@ -359,7 +359,31 @@ class _SearchPlacesPageState extends State<SearchPlacesPage> {
         backgroundColor: Color.fromARGB(255, 109, 184, 129),
         automaticallyImplyLeading: false,
         title: Row(
+          mainAxisAlignment: isArabic() ? MainAxisAlignment.end : MainAxisAlignment.start,
           children: [
+
+
+              Padding(
+                padding: EdgeInsets.only(right: 20.0),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white,
+                    size: 28,
+                  ),
+                ),
+              ),
+
+            Icon(
+              Icons.search,
+              color: Colors.white,
+            ),
+            SizedBox(
+              width: 12,
+            ),
             Expanded(
               child: TextField(
                 controller: searchController,
@@ -383,30 +407,13 @@ class _SearchPlacesPageState extends State<SearchPlacesPage> {
                 style: TextStyle(color: Colors.white),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: Icon(
-                Icons.search,
-                color: Colors.white,
-              ),
-            ),
           ],
         ),
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 20.0),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Icon(
-                Icons.arrow_forward_ios,
-                color: Colors.white,
-                size: 28,
-              ),
-            ),
-          ),
-        ],
+
+        toolbarHeight: 60,
+
+
+
       ),
 
 

@@ -41,3 +41,8 @@ bool isArabic() {
   Locale currentLocale = ui.window.locale;
   return currentLocale.languageCode == ARABIC;
 }
+
+bool isEnglish() {
+  Locale currentLocale = ui.window.locale;
+  return currentLocale.languageCode == ENGLISH;
+}

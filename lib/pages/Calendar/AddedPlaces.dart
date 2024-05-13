@@ -46,32 +46,36 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 109, 184, 129),
         automaticallyImplyLeading: false,
-        title: Padding(
-          padding: const EdgeInsets.only(left: 50),
-          child: Text("${translation(context).placesADD} ${DateFormat('yyyy-MM-dd').format(dateOnly)}",
-            style: TextStyle(
-              fontSize: 17,
-              fontFamily: "Tajawal-b",
-            ),
-          ),
-        ),
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 20.0),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Icon(
-                Icons.arrow_forward_ios,
-                color: Colors.white,
-                size: 28,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0,right:10.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
+                  size: 28,
+                ),
               ),
             ),
-          ),
-        ],
+            Text("${translation(context).placesADD} ${DateFormat('yyyy-MM-dd').format(dateOnly)}",
+              style: TextStyle(
+                fontSize: 17,
+                fontFamily: "Tajawal-b",
+              ),
+            ),
+            SizedBox(width: 40), // Adjust the width based on your preference
+          ],
+        ),
+        centerTitle: false,
+
         toolbarHeight: 60,
       ),
+
       body: isTodayOrFuture
           ? StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
@@ -154,11 +158,17 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
                 children: [
                   Text(
                     translation(context).noADDplaces,
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(
+                      color: Color(0xFF6db881),
+                      fontSize: 16,
+                    ),
                   ),
                   Text(
                     translation(context).addWantedPlaces,
-                    style: TextStyle(fontSize: 18),
+                    style:  TextStyle(
+          color: Color(0xFF6db881),
+          fontSize: 16,
+          ),
                   ),
                   SizedBox(height: 20),
                 ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gp/language_constants.dart';
 class ShowTextAttributesWidget extends StatelessWidget {
   final String text;
 
@@ -14,8 +15,8 @@ class ShowTextAttributesWidget extends StatelessWidget {
         const SizedBox(
           height: 5,
         ),
-        const Text(
-          ': تفاصيل الحجز',
+      Text(
+          translation(context).resDetails,
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,

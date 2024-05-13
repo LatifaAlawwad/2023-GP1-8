@@ -12,7 +12,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gp/Registration/Welcome.dart';
 import 'package:gp/language_constants.dart';
 import 'SwitchLanguage.dart';
-
+import 'dart:math' as math;
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({Key? key}) : super(key: key);
 
@@ -34,29 +34,37 @@ class _UserProfilePageState extends State<UserProfilePage> {
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 109, 184, 129),
         automaticallyImplyLeading: false,
-        title: Padding(
-          padding: const EdgeInsets.only(left: 155),
-          child: Text(
-            translation(context).profilePage,
-            style: TextStyle(
-              fontSize: 17,
-              fontFamily: "Tajawal-b",
-            ),
+        title: Text(
+          translation(context).profilePage,
+          style: TextStyle(
+            fontSize: 17,
+            fontFamily: "Tajawal-b",
           ),
         ),
+        centerTitle: true, // Center the title regardless of language directionality
         actions: [
-          IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: () {
-              FirebaseAuth.instance.signOut().then((value) => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => LogIn()),
-              ));
-            },
+          Directionality(
+            textDirection: isArabic() ? TextDirection.rtl : TextDirection.ltr,
+            child: IconButton(
+              icon: Icon(Icons.logout),
+              onPressed: () {
+                FirebaseAuth.instance.signOut().then((value) => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LogIn()),
+                ));
+              },
+            ),
           ),
         ],
         toolbarHeight: 60,
       ),
+
+
+
+
+
+
+
       body: SafeArea(
         child: SingleChildScrollView(
           child: SingleChildScrollView(
@@ -187,7 +195,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                     title: translation(context).deleteAcc,
                                     icon: Icons.delete,
                                   ),
-                                  SizedBox(height: 40),
+                                  SizedBox(height: 25),
                                   buildProfileOption(
                                     onPressed: () {
                                       Navigator.push(
@@ -272,74 +280,78 @@ class _UserProfilePageState extends State<UserProfilePage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Directionality(
-          textDirection: TextDirection.rtl,
-          child: AlertDialog(
-            title: Text(
-              translation(context).eneterInfo,
-              style: TextStyle(
-                fontSize: 20, // Adjust the font size as needed
+        return AlertDialog(
+          title: Text(
+            translation(context).eneterInfo,
+            style: TextStyle(
+              fontSize: 20, // Adjust the font size as needed
+            ),
+            textDirection: isArabic() ? TextDirection.rtl : TextDirection.ltr,
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              TextField(
+                onChanged: (value) => email = value,
+                decoration: InputDecoration(
+                  labelText: translation(context).email,
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xff11630e)), // Change color of underline without focus
+                  ),
+                ),
+                textDirection: isArabic() ? TextDirection.rtl : TextDirection.ltr,
               ),
-            ),
-
-
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                TextField(
-                  onChanged: (value) => email = value,
-                  decoration: InputDecoration(
-                    labelText: translation(context).email,
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xff11630e)), // Change color of underline without focus
-                    ),
+              TextField(
+                onChanged: (value) => password = value,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: translation(context).password,
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xff11630e)), // Change color of underline without focus
                   ),
                 ),
-                TextField(
-                  onChanged: (value) => password = value,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: translation(context).password,
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xff11630e)), // Change color of underline without focus
+                textDirection: isArabic() ? TextDirection.rtl : TextDirection.ltr,
+              ),
+              SizedBox(height: 10), // Add some space between text fields and buttons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context); // Close the confirmation dialog
+                      _deleteAccount(email, password); // Call method to delete account
+                    },
+                    style: TextButton.styleFrom(
+                      primary: Color(0xff11630e), // Change text color
+                    ),
+                    child: Text(
+                      translation(context).delete,
+                      textDirection: isArabic() ? TextDirection.rtl : TextDirection.ltr,
                     ),
                   ),
-                ),
-                SizedBox(height: 10), // Add some space between text fields and buttons
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context); // Close the confirmation dialog
-                        _deleteAccount(email, password); // Call method to delete account
-                      },
-                      style: TextButton.styleFrom(
-                        primary: Color(0xff11630e), // Change text color
-                      ),
-                      child: Text(translation(context).delete),
+                  SizedBox(width: 20), // Add some space between buttons
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context); // Close the dialog
+                    },
+                    style: TextButton.styleFrom(
+                      primary: Color(0xff11630e), // Change text color
                     ),
-
-                    SizedBox(width: 20), // Add some space between buttons
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context); // Close the dialog
-                      },
-                      style: TextButton.styleFrom(
-                        primary: Color(0xff11630e), // Change text color
-                      ),
-                      child: Text(translation(context).cancel),
+                    child: Text(
+                      translation(context).cancel,
+                      textDirection: isArabic() ? TextDirection.rtl : TextDirection.ltr,
                     ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         );
       },
     );
   }
+
 
 
   void _deleteAccount(String email, String password) async {
@@ -403,38 +415,34 @@ class _UserProfilePageState extends State<UserProfilePage> {
         borderRadius: BorderRadius.circular(15),
       ),
       child: Row(
+        mainAxisAlignment: isArabic() ? MainAxisAlignment.end : MainAxisAlignment.start,
+
         children: [
+          SizedBox(width: 8),
+          Icon(
+            icon,
+            size: 20,
+            color: Color.fromARGB(255, 137, 139, 145),
+          ),
+          TextButton(
+            onPressed: onPressed,
+            child: Text(
+              title,
+              style: TextStyle(
+                fontSize: 18,
+                color: Color.fromARGB(255, 109, 184, 129),
+                fontFamily: "Tajawal-b",
+              ),
+            ),
+          ),
+          Spacer(), // Add a spacer to push the IconButton to the end of the row
           IconButton(
             onPressed: () {
               Navigator.pop(context); // Navigate back if needed
             },
-            icon: const Icon(Icons.keyboard_arrow_left),
+            icon: const Icon(Icons.arrow_forward_ios),
             color: Colors.grey,
-            iconSize: 30,
-          ),
-          SizedBox(width: 30),
-          Expanded(
-            child: TextButton(
-              onPressed: onPressed,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Color.fromARGB(255, 109, 184, 129),
-                      fontFamily: "Tajawal-b",
-                    ),
-                  ),
-                  Icon(
-                    icon,
-                    size: 20,
-                    color: Color.fromARGB(255, 137, 139, 145),
-                  ),
-                ],
-              ),
-            ),
+            iconSize: 20,
           ),
         ],
       ),

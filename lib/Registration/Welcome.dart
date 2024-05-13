@@ -148,41 +148,43 @@ class _WelcomeState extends State<Welcome> {
                 ),
               ),
 
-              Container(
-                alignment: Alignment.topLeft,
+              Align(
+                alignment: Alignment.topRight,
                 child: Padding(
-                  padding: const EdgeInsets.all(80.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Icon(Icons.language, color: Color(0xFF6db881)),
-                      SizedBox(width: 16.0),
-                      DropdownButtonHideUnderline(
-                        child: DropdownButton<Language>(
-                          onChanged: (Language? language) async {
-                            if(language != null){
-                              Locale _locale = await setLocale(language.languageCode);
-                              MyApp.setLocale(context, _locale);
-                            }
-
-                          },
-                          items: Language.languageList().map<DropdownMenuItem<Language>>(
-                                (e) => DropdownMenuItem<Language>(
-                              value: e,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: <Widget>[
-                                  Text(
-                                    e.name,
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ).toList(),
-                        ),
+                  padding: EdgeInsets.all(16.0),
+                  child: Container(
+                    child: PopupMenuButton<Language>(
+                      icon: Transform.scale(
+                        scale: 1.2, // Adjust the scale factor as needed
+                        child: Icon(Icons.language, color: Color(0xFF6db881)),
                       ),
-                    ],
+                      itemBuilder: (BuildContext context) {
+                        return Language.languageList().map((Language e) {
+                          return PopupMenuItem<Language>(
+                            value: e,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Text(
+                                  e.flag,
+                                  style: const TextStyle(fontSize: 20),
+                                ),
+                                Text(
+                                  e.name,
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList();
+                      },
+                      onSelected: (Language? language) async {
+                        if (language != null) {
+                          Locale _locale = await setLocale(language.languageCode);
+                          MyApp.setLocale(context, _locale);
+                        }
+                      },
+                    ),
                   ),
                 ),
               ),

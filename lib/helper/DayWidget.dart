@@ -1,11 +1,11 @@
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:gp/pages/placePage.dart';
-
+import 'package:gp/language_constants.dart';
 class DayWidget extends StatelessWidget {
   final Map<String, dynamic> dayData;
-
-  DayWidget(this.dayData);
+final String day;
+  DayWidget(this.dayData, this.day);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class DayWidget extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'يوم:${dayData["day"]}',
+               day ,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontFamily: "Tajawal-m",
@@ -29,8 +29,8 @@ class DayWidget extends StatelessWidget {
                 height: 5,
               ),
               dayData["وقت الإغلاق"] == '0'
-                  ? const Text(
-                'مغلق',
+                  ?  Text(
+                translation(context).close,
                 style: TextStyle(
                   fontSize: 20,
                   fontFamily: "Tajawal-m",
@@ -38,8 +38,8 @@ class DayWidget extends StatelessWidget {
               )
                   : dayData["وقت الإغلاق"] == '12:59 PM' &&
                   dayData["وقت الإفتتاح"] == '00:00 AM'
-                  ? const Text(
-                'مفتوحة 24 ساعة',
+                  ?  Text(
+                translation(context).twentyfourHRS,
                 style: TextStyle(
                   fontSize: 20,
                   fontFamily: "Tajawal-m",
@@ -52,7 +52,7 @@ class DayWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "وقت الإغلاق",
+                         translation(context).closeHRS,
                           style: TextStyle(
                             color: Colors.grey[700],
                             fontWeight: FontWeight.w700,
@@ -74,7 +74,7 @@ class DayWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "وقت الإفتتاح",
+                          translation(context).openHRS,
                           style: TextStyle(
                             color: Colors.grey[700],
                             fontWeight: FontWeight.w700,
@@ -113,6 +113,17 @@ class PlaceDays extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> dayWidgets = [];
     List<String> days = [
+      translation(context).sunday,
+      translation(context).monday,
+      translation(context).tuesday,
+      translation(context).wednesday,
+      translation(context).thursday,
+      translation(context).friday,
+      translation(context).saturday,
+    ];
+
+
+    List<String> dayss = [
       'الأحد',
       'الإثنين',
       'الثلاثاء',
@@ -122,20 +133,23 @@ class PlaceDays extends StatelessWidget {
       'السبت'
     ];
 
-    for (var day in days) {
+
+    for (var i = 0; i < dayss.length; i++)  {
+      var day=dayss[i];
       if (place.workedDays
           .where((element) => element['day'] == day)
           .isNotEmpty) {
         DayWidget dayWidget = DayWidget(place.workedDays[
         place.workedDays.indexWhere((element) => element['day'] == day)]
-        as Map<String, dynamic>);
+        as Map<String, dynamic>, days[i]);
+
         dayWidgets.add(dayWidget);
       } else {
         DayWidget dayWidget = DayWidget({
           "day": day,
           "وقت الإغلاق": '0',
           "وقت الإفتتاح": '0'
-        } as Map<String, dynamic>);
+        } as Map<String, dynamic>, days[i]);
         dayWidgets.add(dayWidget);
       }
     }
@@ -152,15 +166,15 @@ class PlaceDays extends StatelessWidget {
       ),
       child: ExpandablePanel(
           collapsed: const SizedBox(),
-          header: const Padding(
+          header:  Padding(
             padding: EdgeInsets.all(10),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                'ساعات العمل ',
+            child: Text(
+                  translation(context).workingHRS,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
+              textAlign: Localizations.localeOf(context).languageCode == 'ar' ? TextAlign.right : TextAlign.left,
+
             ),
+
           ),
           theme: const ExpandableThemeData(
               tapBodyToCollapse: true,

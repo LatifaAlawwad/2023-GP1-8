@@ -141,16 +141,14 @@ class _FavoritePage extends State<FavoritePage> {
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 109, 184, 129),
         automaticallyImplyLeading: false,
-        title: Padding(
-          padding: const EdgeInsets.only(left: 155),
-          child: Text(
+        title:  Text(
             translation(context).favPage,
             style: TextStyle(
               fontSize: 17,
               fontFamily: "Tajawal-b",
             ),
           ),
-        ),
+        centerTitle: true,
         toolbarHeight: 60,
       ),
       body: Center(
