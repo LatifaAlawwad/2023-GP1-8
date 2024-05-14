@@ -20,7 +20,7 @@ List cities = [
   {
     "city_id": 15,
     "region_id": 6,
-    "name_ar": "ابها",
+    "name_ar": "أبها",
     "name_en": "Abha",
   },
 ];

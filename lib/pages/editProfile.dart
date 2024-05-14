@@ -88,10 +88,10 @@ class _editProfileState extends State<editProfile> {
                 fontFamily: "Tajawal-b",
               ),
             ),
-            SizedBox(width: 40), // Adjust the width based on your preference
+            SizedBox(width: 40),
           ],
         ),
-        centerTitle: false, // Ensure the title is aligned based on Row alignment
+        centerTitle: false,
         toolbarHeight: 60,
       ),
 

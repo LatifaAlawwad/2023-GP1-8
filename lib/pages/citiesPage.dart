@@ -45,27 +45,32 @@ class CitiesPage extends StatelessWidget {
           children: [
             CityButton(
               cityName: translation(context).riyadh,
+              cityArabic:"الرياض",
               imageLink: 'https://omrania.com/wp-content/uploads/Kingdom-Centre-Riyadh-KSA-Bin-Mahdi-cover.jpg',
               cityId: 3,
             ),
             CityButton(
               cityName: translation(context).jeddah,
+              cityArabic:"جدة",
               imageLink: 'https://preview.redd.it/ckmkqajqdf161.jpg?auto=webp&s=441bbb3504fb1dd698371b74b1b1e8033bdec3ec',
               cityId: 18,
             ),
             CityButton(
               cityName: translation(context).abha,
+              cityArabic:"أبها",
               imageLink: 'https://sa.aqar.fm/blog/wp-content/uploads/2023/02/%D8%B1%D8%AC%D8%A7%D9%84-%D8%A3%D9%84%D9%85%D8%B9-950x500.jpg',
               cityId: 15,
             ),
             CityButton(
               cityName: translation(context).alula,
+              cityArabic:"العلا",
               imageLink: 'https://www.vision2030.gov.sa/media/mtukxauc/elephant-rock.jpg?width=1920&format=webp',
               cityId: 13,
             ),
 
             CityButton(
               cityName: translation(context).east,
+              cityArabic:"المنطقة الشرقية",
               imageLink: 'https://welcomesaudi.com/uploads/0000/1/2021/07/23/85-dammam-corniche-eastern-province-900.jpg',
               cityId: 3,
             ),
@@ -79,10 +84,12 @@ class CitiesPage extends StatelessWidget {
 
 class CityButton extends StatelessWidget {
   final String cityName;
+  final String cityArabic;
   final String imageLink;
   final int cityId;
 
-  CityButton({required this.cityName, required this.imageLink, required this.cityId});
+
+  CityButton({required this.cityName, required this.cityArabic ,required this.imageLink, required this.cityId});
 
   @override
   Widget build(BuildContext context) {
@@ -92,12 +99,11 @@ class CityButton extends StatelessWidget {
         children: [
           InkWell(
             onTap: () {
-              // Determine which city was selected and pass it to NavigationBarPage.
-              String selectedCity = cityName;
+
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                   builder: (context) {
-                    return NavigationBarPage(selectedCity: selectedCity);
+                    return NavigationBarPage(selectedCity: cityArabic);
                   },
                 ),
               );

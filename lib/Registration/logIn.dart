@@ -280,7 +280,7 @@ class _LogInState extends State<LogIn> {
                                 // Handle any other exceptions that may occur during login
                                 print("Error: $e");
                                 Fluttertoast.showToast(
-                                  msg: translation(context).incorrect,
+                                  msg: translation(context).network,
                                   toastLength: Toast.LENGTH_SHORT,
                                   gravity: ToastGravity.CENTER,
                                   timeInSecForIosWeb: 2,

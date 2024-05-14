@@ -32,15 +32,16 @@ class _WelcomeState extends State<Welcome> {
                 width: double.infinity,
                 child: Column(
                   children: [
-                    SizedBox(
-                      height: 130,
-                    ),
-                    Text(
-                      translation(context).title,
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontFamily: "Tajawal-b",
-                        color: Color(0xFF06520d),
+
+                    Padding(
+                      padding: EdgeInsets.only(top:150.0), // Add padding of 8.0 pixels only to the top
+                      child: Text(
+                        translation(context).title,
+                        style: TextStyle(
+                          fontSize: 30,
+                          fontFamily: "Tajawal-b",
+                          color: Color(0xFF06520d),
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -61,17 +62,20 @@ class _WelcomeState extends State<Welcome> {
                         backgroundColor:
                         MaterialStateProperty.all(Color(0xFF6db881)),
                         padding: MaterialStateProperty.all(
-                          EdgeInsets.symmetric(horizontal: 40, vertical: 9),
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 9),
                         ),
                         shape: MaterialStateProperty.all(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(27),
                           ),
                         ),
-                      ),
+                        fixedSize: MaterialStateProperty.all(Size(180, 45)),                       ),
+
                       child: Text(
                         translation(context).signup,
-                        style: TextStyle(fontFamily: "Tajawal-l", fontSize: 20),
+                        style: TextStyle(fontFamily: "Tajawal-l",fontWeight: Localizations.localeOf(context).languageCode == 'ar'
+                            ?FontWeight.w600 // For Arabic text, use normal weight
+                            : FontWeight.w900, fontSize: 20),
                       ),
                     ),
                     SizedBox(
@@ -85,7 +89,7 @@ class _WelcomeState extends State<Welcome> {
                         backgroundColor: MaterialStateProperty.all(
                             Color.fromARGB(255, 255, 255, 255)),
                         padding: MaterialStateProperty.all(
-                          EdgeInsets.symmetric(horizontal: 35, vertical: 9),
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 9),
                         ),
                         shape: MaterialStateProperty.all(
                           RoundedRectangleBorder(
@@ -99,12 +103,16 @@ class _WelcomeState extends State<Welcome> {
                             style: BorderStyle.solid,
                           ),
                         ),
-                      ),
+                        fixedSize: MaterialStateProperty.all(Size(180, 45)),                       ),
+
+
                       child: Text(
                         translation(context).login,
                         style: TextStyle(
                           fontSize: 20,
-                          fontFamily: "Tajawal-l",
+                          fontFamily: "Tajawal-l",fontWeight: Localizations.localeOf(context).languageCode == 'ar'
+                            ?  FontWeight.w600
+                            : FontWeight.w900,
                           color: Color(0xFF06520d),
                         ),
                       ),
@@ -120,7 +128,7 @@ class _WelcomeState extends State<Welcome> {
                         backgroundColor: MaterialStateProperty.all(
                             Color.fromARGB(255, 255, 255, 255)),
                         padding: MaterialStateProperty.all(
-                          EdgeInsets.symmetric(horizontal: 40, vertical: 9),
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 9),
                         ),
                         shape: MaterialStateProperty.all(
                           RoundedRectangleBorder(
@@ -134,12 +142,14 @@ class _WelcomeState extends State<Welcome> {
                             style: BorderStyle.solid,
                           ),
                         ),
-                      ),
+                        fixedSize: MaterialStateProperty.all(Size(180, 45)),                       ),
                       child: Text(
                         translation(context).continueAsGuest,
                         style: TextStyle(
                           fontSize: 20,
-                          fontFamily: "Tajawal-l",
+                          fontFamily: "Tajawal-l",fontWeight: Localizations.localeOf(context).languageCode == 'ar'
+                            ? FontWeight.w600
+                            : FontWeight.w900,
                           color: Color(0xFF06520d),
                         ),
                       ),
@@ -149,7 +159,7 @@ class _WelcomeState extends State<Welcome> {
               ),
 
               Align(
-                alignment: Alignment.topRight,
+                alignment: Localizations.localeOf(context).languageCode == 'ar' ? Alignment.topRight: Alignment.topLeft,
                 child: Padding(
                   padding: EdgeInsets.all(16.0),
                   child: Container(

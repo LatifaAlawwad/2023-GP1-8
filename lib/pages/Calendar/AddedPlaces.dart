@@ -183,7 +183,8 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
           children: [
             Text(
               translation(context).noADDplaces,
-              style: TextStyle(fontSize: 18),
+              style: TextStyle( color: Color(0xFF6db881),
+                fontSize: 16),
             ),
           ],
         ),
@@ -249,7 +250,7 @@ Widget _buildItem(placePage place, BuildContext context) {
                 ),
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: isArabic()? CrossAxisAlignment.start: CrossAxisAlignment.end,
                 children: [
                   Positioned(
                     top: 10,
@@ -281,7 +282,7 @@ Widget _buildItem(placePage place, BuildContext context) {
                                     ),
                                   ),
                                   content: Container(
-                                    constraints: BoxConstraints(maxHeight: 30),
+                                    constraints: BoxConstraints(maxHeight: 50),
                                     alignment: Alignment.center,
                                     child: Text(
                                       translation(context).removeList,
@@ -349,117 +350,91 @@ Widget _buildItem(placePage place, BuildContext context) {
 
                   Expanded(child: Container()),
                   // Existing code for displaying place details
-                  Column(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    '${place.placeName}',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: "Tajawal-l",
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Row(
+                    mainAxisAlignment: isArabic()
+                        ? MainAxisAlignment.end
+                        : MainAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              '${place.placeName}',
-                              textAlign: TextAlign.right,
-                              style: TextStyle(
-                                height: 2,
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: "Tajawal-l",
-                              ),
-                            ),
-                          ),
-                        ],
+                      Icon(
+                        Icons.location_pin,
+                        color: Colors.white,
+                        size: 18,
                       ),
-                      SizedBox(
-                        height: 4,
+                      SizedBox(width: 4),
+                      Text(
+                        '${place.neighbourhood} ، ${place.city}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: "Tajawal-l",
+                        ),
                       ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Row(
-                              children: [
+                      Spacer(),
+                      StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('ApprovedPlaces')
+                            .doc(place.place_id)
+                            .collection('Reviews')
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          }
+
+                          List<double> ratings = List<double>.from(
+                            snapshot.data!.docs.map((doc) {
+                              final commentData = doc.data()
+                              as Map<String, dynamic>;
+                              return commentData["rating"].toDouble() ?? 0.0;
+                            }),
+                          );
+
+                          double averageRating = ratings.isNotEmpty
+                              ? ratings.reduce((a, b) => a + b) /
+                              ratings.length
+                              : 0.0;
+
+                          return Row(
+                            children: [
+                              for (int index = 0; index < 5; index++)
                                 Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: StreamBuilder<QuerySnapshot>(
-                                    stream: FirebaseFirestore.instance
-                                        .collection('ApprovedPlaces')
-                                        .doc(place.place_id)
-                                        .collection('Reviews')
-                                        .snapshots(),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return CircularProgressIndicator();
-                                      }
-
-                                      List<double> ratings =
-                                      List<double>.from(snapshot.data!.docs
-                                          .map((doc) {
-                                        final commentData =
-                                        doc.data() as Map<String, dynamic>;
-                                        return commentData["rating"]
-                                            .toDouble() ?? 0.0;
-                                      }));
-
-                                      double averageRating = ratings.isNotEmpty
-                                          ? ratings.reduce((a, b) => a + b) /
-                                          ratings.length
-                                          : 0.0;
-
-                                      return Row(
-                                        children: [
-                                          for (int index = 0; index <
-                                              5; index++)
-                                            Padding(
-                                              padding:
-                                              const EdgeInsets.symmetric(
-                                                  horizontal: 2.0),
-                                              child: Icon(
-                                                index < averageRating.floor()
-                                                    ? Icons.star
-                                                    : index + 0.5 ==
-                                                    averageRating
-                                                    ? Icons.star_half
-                                                    : Icons.star_border,
-                                                color: const Color.fromARGB(
-                                                    255, 109, 184, 129),
-                                                size: 20.0,
-                                              ),
-                                            ),
-                                        ],
-                                      );
-                                    },
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 2.0),
+                                  child: Icon(
+                                    index < averageRating.floor()
+                                        ? Icons.star
+                                        : index + 0.5 == averageRating
+                                        ? Icons.star_half
+                                        : Icons.star_border,
+                                    color: const Color.fromARGB(
+                                        255, 109, 184, 129),
+                                    size: 20.0,
                                   ),
                                 ),
-                                SizedBox(width: 10),
-                              ],
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text(
-                                '${place.neighbourhood} ، ${place.city}',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: "Tajawal-l",
-                                ),
-                              ),
-                              SizedBox(
-                                width: 4,
-                              ),
-                              Icon(
-                                Icons.location_pin,
-                                color: Colors.white,
-                                size: 18,
-                              ),
                             ],
-                          ),
-                        ],
+                          );
+                        },
                       ),
                     ],
                   ),
+                ],
+              ),
                 ],
               ),
             ),

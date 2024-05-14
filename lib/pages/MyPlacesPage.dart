@@ -39,6 +39,7 @@ class _myPlacesPage extends State<myPlacesPage> {
 
   Future<void> _fetchDataFromFirestore() async {
     try {
+
       accepted.clear();
       rejected.clear();
       pending.clear();
@@ -56,14 +57,16 @@ class _myPlacesPage extends State<myPlacesPage> {
         });
       }
 
+
       QuerySnapshot<Map<String, dynamic>> snapshot2 =
       await FirebaseFirestore.instance.collection('RejectedPlaces').get();
-
       if (snapshot2.docs.isNotEmpty) {
         snapshot2.docs.forEach((element) {
+          print(element.data()["User_id"]);
           final id = element.data()["User_id"];
+          print("helooooooooooooooo");
+          print(element.data()["User_id"]);
           placePage place = placePage.fromMap(element.data());
-
           if (id == userid) {
             rejected.add(place);
           }
@@ -82,6 +85,7 @@ class _myPlacesPage extends State<myPlacesPage> {
             pending.add(place);
           }
         });
+
       }
 
       setState(() {});
@@ -185,6 +189,7 @@ class _myPlacesPage extends State<myPlacesPage> {
   }
 
   Widget handleListItems(List<placePage> listItem) {
+
     return listItem.isNotEmpty
         ? ListView.separated(
       itemCount: listItem.length,
@@ -265,128 +270,103 @@ class _myPlacesPage extends State<myPlacesPage> {
                     ],
                   ),
                 ),
+
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: isArabic()? CrossAxisAlignment.start: CrossAxisAlignment.end,
                   children: [
+
+                    if (selectedCategory == 'طلبات بانتظار الاعتماد') // Show the delete icon only in this category
+                      GestureDetector(
+                        onTap: () {
+                          showDeleteConfirmationDialog(place, selectedCategory);
+                        },
+                        child: Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        ),
+                      ),
                     Expanded(child: Container()),
                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                ' ${place.placeName}',
-                                textAlign: TextAlign.right,
-                                style: TextStyle(
-                                  height: 2,
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: "Tajawal-l",
-                                ),
-                              ),
-                            ),
-                            if (selectedCategory == 'طلبات بانتظار الاعتماد') // Show the delete icon only in this category
-                              GestureDetector(
-                                onTap: () {
-                                  showDeleteConfirmationDialog(place, selectedCategory);
-                                },
-                                child: Icon(
-                                  Icons.delete,
-                                  color: Colors.red,
-                                ),
-                              ),
-                          ],
+                        Text(
+                          '${place.placeName}',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: "Tajawal-l",
+                          ),
                         ),
-                        SizedBox(
-                          height: 4,
-                        ),
+                        SizedBox(height: 4),
                         Row(
-                          //mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: isArabic()
+                              ? MainAxisAlignment.end
+                              : MainAxisAlignment.start,
                           children: [
-                            Expanded(
-                              child:Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 10),
-                                    child: StreamBuilder<QuerySnapshot>(
-                                      stream: FirebaseFirestore.instance
-                                          .collection('ApprovedPlaces')
-                                          .doc(place.place_id)
-                                          .collection('Reviews')
-                                          .snapshots(),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState == ConnectionState.waiting) {
-                                          return CircularProgressIndicator();
-                                        }
-
-                                        List<double> ratings = List<double>.from(
-                                          snapshot.data!.docs.map((doc) {
-                                            final commentData = doc.data() as Map<String, dynamic>;
-                                            return commentData["rating"].toDouble() ?? 0.0;
-                                          }),
-                                        );
-
-                                        // Calculate the average rating
-                                        double averageRating =
-                                        ratings.isNotEmpty ? ratings.reduce((a, b) => a + b) / ratings.length : 0.0;
-
-                                        return Row(
-                                          children: [
-                                            for (int index = 0; index < 5; index++)
-                                              Padding(
-                                                padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                                                child: Icon(
-                                                  index < averageRating.floor()
-                                                      ? Icons.star
-                                                      : index + 0.5 == averageRating
-                                                      ? Icons.star_half
-                                                      : Icons.star_border,
-                                                  color: const Color.fromARGB(255, 109, 184, 129),
-                                                  size: 20.0,
-                                                ),
-                                              ),
-                                          ],
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                ],
+                            Icon(
+                              Icons.location_pin,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                            SizedBox(width: 4),
+                            Text(
+                              '${place.neighbourhood} ، ${place.city}',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: "Tajawal-l",
                               ),
-
-
-
-
-
-
-
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  '${place.neighbourhood} ، ${place.city}',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: "Tajawal-l",
+                            Spacer(),
+                            StreamBuilder<QuerySnapshot>(
+                              stream: FirebaseFirestore.instance
+                                  .collection('ApprovedPlaces')
+                                  .doc(place.place_id)
+                                  .collection('Reviews')
+                                  .snapshots(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
+                                }
 
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 4,
-                                ),
-                                Icon(
-                                  Icons.location_pin,
-                                  color: Colors.white,
-                                  size: 18,
-                                ),
-                              ],
+                                List<double> ratings = List<double>.from(
+                                  snapshot.data!.docs.map((doc) {
+                                    final commentData = doc.data()
+                                    as Map<String, dynamic>;
+                                    return commentData["rating"].toDouble() ?? 0.0;
+                                  }),
+                                );
+
+                                double averageRating = ratings.isNotEmpty
+                                    ? ratings.reduce((a, b) => a + b) /
+                                    ratings.length
+                                    : 0.0;
+
+                                return Row(
+                                  children: [
+                                    for (int index = 0; index < 5; index++)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 2.0),
+                                        child: Icon(
+                                          index < averageRating.floor()
+                                              ? Icons.star
+                                              : index + 0.5 == averageRating
+                                              ? Icons.star_half
+                                              : Icons.star_border,
+                                          color: const Color.fromARGB(
+                                              255, 109, 184, 129),
+                                          size: 20.0,
+                                        ),
+                                      ),
+                                  ],
+                                );
+                              },
                             ),
-                            // SizedBox(width: 10),
                           ],
                         ),
                       ],
@@ -414,29 +394,42 @@ class _myPlacesPage extends State<myPlacesPage> {
     showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(translation(context).conDelete),
-          content: Text("${translation(context).deletePlace}\n\n${place.placeName}"),
 
-          actions: <Widget>[
-            TextButton(
-              child: Text(translation(context).cancel),
-              style: buttonStyle,
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-            ),
-            if (selectedCategory == 'طلبات بانتظار الاعتماد')
-              TextButton(
-                child: Text(translation(context).delete),
-                style: buttonStyle,
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                  deletePlace(place.place_id);
-                },
+
+        return  AlertDialog(
+
+
+          title: Text(translation(context).conDelete, textAlign: TextAlign.center,),
+            content: Text("${translation(context).deletePlace}\n\n${place.placeName}", textAlign: TextAlign.center,),
+            actions: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      primary: Color(0xff11630e),
+                    ),
+                    child: Text(translation(context).cancel),
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                  ),
+                  if (selectedCategory == 'طلبات بانتظار الاعتماد')
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        primary: Color(0xff11630e),
+                      ),
+                      child: Text(translation(context).delete),
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                        deletePlace(place.place_id);
+                      },
+                    ),
+                ],
               ),
-          ],
-        );
+            ],
+          );
+
       },
     ).then((result) {
       if (result != null && result && selectedCategory == 'طلبات بانتظار الاعتماد') {

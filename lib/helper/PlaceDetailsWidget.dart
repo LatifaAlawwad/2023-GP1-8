@@ -29,6 +29,153 @@ class PlaceDetailsWidget extends StatelessWidget {
     }
   }
 
+
+
+
+
+
+
+  List<String> originalAtmosphereOptions = [
+    'يوجد موسيقى',
+    'بدون موسيقى',
+    'على البحر',
+    'داخلي',
+    'خارجي'
+  ];
+  List<String> EnglishAtmosphereOptions = [
+    'music',
+    'no music',
+    'by the sea',
+    'indoor',
+    'outdoor'
+  ];
+
+
+
+  List<String> _generateAtmosphereOptions(BuildContext context) {
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    final selectedOptions = place.atmosphere;
+    final atmosphereOptions = isArabic ? originalAtmosphereOptions : EnglishAtmosphereOptions;
+
+    return selectedOptions.map((option) {
+      final index = originalAtmosphereOptions.indexOf(option);
+      return index != -1 ? atmosphereOptions[index] : option;
+    }).toList();
+  }
+
+
+
+
+
+
+
+
+
+  List<String> originalShopOptions = [
+    'ملابس',
+    'أحذية',
+    'حقائب',
+    'أثاث',
+    'الكترونيات',
+    'أواني',
+    'عطور',
+    'عبايات',
+    'مجوهرات',
+    'ملابس أطفال',
+    'مستحضرات تجميل',
+    'صيدليات',
+    'أخرى'
+  ];
+  List<String> EnglishShopOptions = [
+    "Clothing",
+    "Shoes",
+    "Bags",
+    "Furniture",
+    "Electronics",
+    "Utensils",
+    "Perfumes",
+    "Abayas",
+    "Jewelry",
+    "Children's Clothing",
+    "Cosmetics",
+    "Pharmacies",
+    "Other",
+  ];
+
+
+
+  List<String> _generateShopOptions(BuildContext context) {
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    final selectedOptions = place.shopType;
+    final shopeOptions = isArabic ? originalShopOptions : EnglishShopOptions;
+
+    return selectedOptions.map((option) {
+      final index = originalShopOptions.indexOf(option);
+      return index != -1 ? shopeOptions[index] : option;
+    }).toList();
+  }
+
+
+
+
+  String _generatePrice(BuildContext context) {
+    final selectedOption = place.priceRange;
+
+    // Define a map for translating price options
+    final priceTranslations = {
+      'مرتفع': translation(context).high,
+      'متوسط': translation(context).medium,
+      'منخفض': translation(context).low,
+    };
+
+    // Return the translated price based on the selected option
+    return priceTranslations[selectedOption] ?? '';
+  }
+
+
+
+
+
+  String _generateFoodType(BuildContext context) {
+    final selectedOptions = place.cuisine;
+
+    // Check if selectedOptions is an array and get the first element
+    final selectedOption = selectedOptions != null && selectedOptions.isNotEmpty
+        ? selectedOptions[0]
+        : null;
+
+
+    final FoodTypeTranslations = {
+      "سعودي": translation(context).saudi,
+      "إيطالي": translation(context).italian,
+      "أمريكي": translation(context).american,
+      "آسيوي": translation(context).asian,
+      "هندي": translation(context).indian,
+      "مكسيكي": translation(context).mexican,
+      "تركي": translation(context).turkish,
+      "بحري": translation(context).seafood,
+      "إسباني": translation(context).spanish,
+      "شرقي": translation(context).middle_eastern,
+      "يوناني": translation(context).greek,
+      "مخبوزات": translation(context).bakery,
+      "عالمي": translation(context).international,
+      "صحي": translation(context).healthy,
+      "قهوة وحلى": translation(context).coffee_and_desserts,
+    };
+
+    // Return the translated price based on the selected option
+    return selectedOption != null
+        ? FoodTypeTranslations[selectedOption] ?? ''
+        : '';
+  }
+
+
+
+
+
+
+
+
   Widget _buildCard(String value) {
     return Container(
       margin: const EdgeInsets.only(top: 2, bottom: 2),
@@ -113,11 +260,7 @@ class PlaceDetailsWidget extends StatelessWidget {
                 const SizedBox(
                   height: 4,
                 ),
-                Wrap(
-                  alignment: WrapAlignment.end,
-                  spacing: 3,
-                  children: place.cuisine.map((e) => _buildCard(e)).toList(),
-                )
+                _buildTextCard(_generateFoodType(context)),
               ],
             ),
           if (place.priceRange != '')
@@ -139,7 +282,7 @@ class PlaceDetailsWidget extends StatelessWidget {
                       textAlign: TextAlign.right,
                     ),
                     const SizedBox(width: 4),
-                    _buildTextCard('${place.priceRange}'),
+                    _buildTextCard(_generatePrice(context)),
                   ],
                 ),
               ],
@@ -168,7 +311,7 @@ class PlaceDetailsWidget extends StatelessWidget {
                 Wrap(
                   alignment: WrapAlignment.end,
                   spacing: 3,
-                  children: place.atmosphere.map((e) => _buildCard(e)).toList(),
+                  children: _generateAtmosphereOptions(context).map((e) => _buildCard(e)).toList(),
                 )
               ],
             ),
@@ -205,7 +348,7 @@ class PlaceDetailsWidget extends StatelessWidget {
                   Wrap(
                     alignment: WrapAlignment.end,
                     spacing: 3,
-                    children: place.shopType.map((e) => _buildCard(e)).toList(),
+                    children: _generateShopOptions(context).map((e) => _buildCard(e)).toList(),
                   )
                 ],
               ),

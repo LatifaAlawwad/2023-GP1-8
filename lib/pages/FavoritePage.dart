@@ -263,14 +263,16 @@ class _FavoritePage extends State<FavoritePage> {
                   ),
                 ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: isArabic()? CrossAxisAlignment.start: CrossAxisAlignment.end,
                   children: [
-                    // Favorite icon at the top left corner
+
                     Positioned(
+
                       top: 10,
-                      left: 10,
+                      left:  10,
+
                       child: Container(
-                        height: 40,
+                        height:40,
                         width: 40,
                         decoration: BoxDecoration(
                           color: Color.fromARGB(255, 234, 250, 236),
@@ -306,40 +308,45 @@ class _FavoritePage extends State<FavoritePage> {
                                         ),
                                       ),
                                     ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        style: TextButton.styleFrom(
-                                          primary: Color(0xff11630e),
-                                        ),
-                                        child: Text(translation(context).no),
-                                      ),
-                                      TextButton(
-                                        onPressed: () async {
-                                          Navigator.of(context).pop();
-                                          setState(() {
-                                            favoriteList.remove(place);
-                                          });
+                                    actions: <Widget>[
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            style: TextButton.styleFrom(
+                                              primary: Color(0xff11630e),
+                                            ),
+                                            child: Text(translation(context).no),
+                                          ),
+                                          TextButton(
+                                            onPressed: () async {
+                                              Navigator.of(context).pop();
+                                              setState(() {
+                                                favoriteList.remove(place);
+                                              });
 
-                                          try {
-                                            // Delete from Firestore
-                                            await FirebaseFirestore.instance
-                                                .collection('users')
-                                                .doc(userId)
-                                                .collection('Favorite')
-                                                .doc(place.place_id)
-                                                .delete();
-                                          } catch (e) {
-                                            // Handle any errors
-                                            debugPrint(e.toString());
-                                          }
-                                        },
-                                        style: TextButton.styleFrom(
-                                          primary: Color(0xff11630e),
-                                        ),
-                                        child: Text(translation(context).yes),
+                                              try {
+                                                // Delete from Firestore
+                                                await FirebaseFirestore.instance
+                                                    .collection('users')
+                                                    .doc(userId)
+                                                    .collection('Favorite')
+                                                    .doc(place.place_id)
+                                                    .delete();
+                                              } catch (e) {
+                                                // Handle any errors
+                                                debugPrint(e.toString());
+                                              }
+                                            },
+                                            style: TextButton.styleFrom(
+                                              primary: Color(0xff11630e),
+                                            ),
+                                            child: Text(translation(context).yes),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   );
@@ -353,115 +360,85 @@ class _FavoritePage extends State<FavoritePage> {
 
                     Expanded(child: Container()),
                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
+                        Text(
+                          '${place.placeName}',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: "Tajawal-l",
+                          ),
+                        ),
+                        SizedBox(height: 4),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: isArabic()
+                              ? MainAxisAlignment.end
+                              : MainAxisAlignment.start,
                           children: [
-                            Expanded(
-                              child: Text(
-                                ' ${place.placeName}',
-                                textAlign: TextAlign.right,
-                                style: TextStyle(
-                                  height: 2,
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: "Tajawal-l",
-                                ),
+                            Icon(
+                              Icons.location_pin,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                            SizedBox(width: 4),
+                            Text(
+                              '${place.neighbourhood} ، ${place.city}',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: "Tajawal-l",
                               ),
                             ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 4,
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 10),
-                                    child: StreamBuilder<QuerySnapshot>(
-                                      stream: FirebaseFirestore.instance
-                                          .collection('ApprovedPlaces')
-                                          .doc(place.place_id)
-                                          .collection('Reviews')
-                                          .snapshots(),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return CircularProgressIndicator();
-                                        }
+                            Spacer(),
+                            StreamBuilder<QuerySnapshot>(
+                              stream: FirebaseFirestore.instance
+                                  .collection('ApprovedPlaces')
+                                  .doc(place.place_id)
+                                  .collection('Reviews')
+                                  .snapshots(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
+                                }
 
-                                        List<double> ratings =
-                                            List<double>.from(
-                                          snapshot.data!.docs.map((doc) {
-                                            final commentData = doc.data()
-                                                as Map<String, dynamic>;
-                                            return commentData["rating"]
-                                                    .toDouble() ??
-                                                0.0;
-                                          }),
-                                        );
+                                List<double> ratings = List<double>.from(
+                                  snapshot.data!.docs.map((doc) {
+                                    final commentData = doc.data()
+                                    as Map<String, dynamic>;
+                                    return commentData["rating"].toDouble() ?? 0.0;
+                                  }),
+                                );
 
-                                        double averageRating = ratings
-                                                .isNotEmpty
-                                            ? ratings.reduce((a, b) => a + b) /
-                                                ratings.length
-                                            : 0.0;
+                                double averageRating = ratings.isNotEmpty
+                                    ? ratings.reduce((a, b) => a + b) /
+                                    ratings.length
+                                    : 0.0;
 
-                                        return Row(
-                                          children: [
-                                            for (int index = 0;
-                                                index < 5;
-                                                index++)
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 2.0),
-                                                child: Icon(
-                                                  index < averageRating.floor()
-                                                      ? Icons.star
-                                                      : index + 0.5 ==
-                                                              averageRating
-                                                          ? Icons.star_half
-                                                          : Icons.star_border,
-                                                  color: const Color.fromARGB(
-                                                      255, 109, 184, 129),
-                                                  size: 20.0,
-                                                ),
-                                              ),
-                                          ],
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                ],
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  '${place.neighbourhood} ، ${place.city}',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: "Tajawal-l",
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 4,
-                                ),
-                                Icon(
-                                  Icons.location_pin,
-                                  color: Colors.white,
-                                  size: 18,
-                                ),
-                              ],
+                                return Row(
+                                  children: [
+                                    for (int index = 0; index < 5; index++)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 2.0),
+                                        child: Icon(
+                                          index < averageRating.floor()
+                                              ? Icons.star
+                                              : index + 0.5 == averageRating
+                                              ? Icons.star_half
+                                              : Icons.star_border,
+                                          color: const Color.fromARGB(
+                                              255, 109, 184, 129),
+                                          size: 20.0,
+                                        ),
+                                      ),
+                                  ],
+                                );
+                              },
                             ),
                           ],
                         ),

@@ -113,7 +113,7 @@ class CustomForm extends StatefulWidget {
 class CustomFormState extends State<CustomForm> {
 
   final _formKey = GlobalKey<FormState>();
-   int type = 0;
+   int? type = null;
   String? type1;
 
   late SharedPreferences prefs;
@@ -239,11 +239,19 @@ void initState() {
 
 
   void saveFilterState() {
+  var typee;
+if(type == null){ typee=0; }
+  if(type == 1){ typee=1; }
+  if(type == 2){ typee=2; }
+  if(type == 3){ typee=3; }
 
-    prefs.setInt('type', type);
+
+   prefs.setInt('type', typee);
 
 
-      switch (type) {
+print("inside save state");
+print(typee);
+      switch (typee) {
 
         case 0 :
         case 1:// فعاليات و ترفيه
@@ -260,7 +268,7 @@ void initState() {
         }
 
         break;
-        case 0 :
+      case 0 :
       case 2: // مطاعم
         prefs.setStringList('checkedOptionsres', checkedOptionsres.map((value) => value.toString()).toList());
         prefs.setStringList('price', price.toList());
@@ -276,8 +284,8 @@ void initState() {
 
 
         break;
-     case 0 :
-      case 3: // المراكز التجارية
+       case 0 :
+       case 3: // المراكز التجارية
         if (INorOUT != '') {
           prefs.setString('INorOUT', INorOUT!);
         } else {
@@ -305,14 +313,15 @@ void initState() {
   void loadFilterState() {
 
     setState(() {
-    int savedType = prefs.getInt('type') ?? 0;
-    type = savedType;
+  int savedType = prefs.getInt('type') ?? 0;
+  if (savedType==0) type=null;
+  else  type = savedType;
 
 
 
       switch (type) {
 
-        case 0: type=0;
+        case null: type=null;
             break;
 
         case 1:// فعاليات و ترفيه
@@ -346,20 +355,10 @@ void initState() {
 
 
 
-
-
- void resetFilterState() {
-   List<String> isThereInMalls = [
-     translation(context).cinema,
-     translation(context).play_area,
-     translation(context).restaurant_area,
-     translation(context).supermarket,
-   ];
-   print("insiiiideee reset");
+  void resetFilterState() {
     setState(() {
       switch (type) {
         case 1:
-
           checkedOptionsatt = List.from(ocheckedOptionsatt);
           INorOUT = originalINorOUT;
           hasReservation = originalHasReservation;
@@ -379,11 +378,12 @@ void initState() {
           break;
       }
 
-      type=0;
+      // Reset type to 0
+      type = null;
+
+      // Save the reset state
       saveFilterState();
-
     });
-
   }
 
 
@@ -403,6 +403,8 @@ void initState() {
 
 
 
+
+int? DropDown=null;
 
 
   @override
@@ -476,6 +478,7 @@ void initState() {
 
 
     return Column(
+
       mainAxisSize: MainAxisSize.min,
       children: [
 
@@ -494,7 +497,7 @@ void initState() {
                 key: _formKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment: isArabic()? CrossAxisAlignment.end:CrossAxisAlignment.start,
                 children: [
 
 
@@ -517,9 +520,8 @@ void initState() {
 
 
                   Container(
+                    alignment: isArabic() ? Alignment.centerRight : Alignment.centerLeft,
                     margin: const EdgeInsets.only(top: 10),
-
-                    // Adjust top and left values
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
                       color: Colors.white,
@@ -529,70 +531,72 @@ void initState() {
                       ),
                     ),
                     child: DropdownButtonFormField<int>(
-                      value: null, // Set initial value to null
-                      decoration: const InputDecoration(
+                      value:type,
+                      decoration: InputDecoration(
                         isDense: true,
                         border: InputBorder.none,
-                        prefixIcon: Icon(
+                        prefixIcon: isArabic()
+                            ? Icon(
                           Icons.arrow_drop_down,
                           color: Color(0xFF6db881),
-                        ),
-                        contentPadding: EdgeInsets.only(top: 15, bottom: 15, right: 10, left: 10),
+                        )
+                            : null,
+                        suffixIcon: !isArabic()
+                            ? Icon(
+                          Icons.arrow_drop_down,
+                          color: Color(0xFF6db881),
+                        )
+                            : null,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10,vertical:15),
                       ),
                       iconSize: 0,
-                      hint:  Align(
-                        alignment: Alignment.centerRight,
-
-                        child: Text(
-                          translation(context).category,
-                        ),
+                      hint:
+                      Text(
+                        translation(context).category,
+                        textAlign: isArabic() ? TextAlign.right : TextAlign.left,
                       ),
+
                       isExpanded: true,
                       items: [
+
                         DropdownMenuItem<int>(
                           value: 1,
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Text(
-                              translation(context).ent,
-                              style: TextStyle(
-                                fontSize: 17.0,
-                                fontFamily: "Tajawal-m",
-                                color: Color(0xFF6db881),
-                              ),
-                              textAlign: TextAlign.end,
+                          child:  Text(
+                            translation(context).ent,
+                            style: TextStyle(
+                              fontSize: 17.0,
+                              fontFamily: "Tajawal-m",
+                              color: Color(0xFF6db881),
                             ),
+                            textAlign: isArabic() ? TextAlign.end : TextAlign.start,
                           ),
+
                         ),
                         DropdownMenuItem<int>(
                           value: 2,
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Text(
-                              translation(context).rest,
-                              style: TextStyle(
-                                fontSize: 17.0,
-                                fontFamily: "Tajawal-m",
-                                color: Color(0xFF6db881),
-                              ),
-                              textAlign: TextAlign.end,
+                          child:  Text(
+                            translation(context).rest,
+                            style: TextStyle(
+                              fontSize: 17.0,
+                              fontFamily: "Tajawal-m",
+                              color: Color(0xFF6db881),
                             ),
+                            textAlign: isArabic() ? TextAlign.end : TextAlign.start,
                           ),
+
                         ),
                         DropdownMenuItem<int>(
                           value: 3,
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Text(
-                              translation(context).mall,
-                              style: TextStyle(
-                                fontSize: 17.0,
-                                fontFamily: "Tajawal-m",
-                                color: Color(0xFF6db881),
-                              ),
-                              textAlign: TextAlign.end,
+                          child:Text(
+                            translation(context).mall,
+                            style: TextStyle(
+                              fontSize: 17.0,
+                              fontFamily: "Tajawal-m",
+                              color: Color(0xFF6db881),
                             ),
+                            textAlign: isArabic() ? TextAlign.end : TextAlign.start,
                           ),
+
                         ),
                       ],
                       onChanged: (int? value) {
@@ -601,6 +605,7 @@ void initState() {
                           if (type == 1) type1 = 'فعاليات و ترفيه';
                           if (type == 2) type1 = 'مطاعم';
                           if (type == 3) type1 = 'مراكز تسوق';
+
                         });
                       },
                     ),
@@ -621,8 +626,8 @@ void initState() {
 
 
                     mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
+                    mainAxisAlignment: isArabic()?MainAxisAlignment.end:MainAxisAlignment.start,
+                    crossAxisAlignment: isArabic()? CrossAxisAlignment.end:CrossAxisAlignment.start,                      children: [
 
                         const SizedBox(height: 10),
                          Text(
@@ -643,9 +648,7 @@ void initState() {
                             itemCount: typeEntOptions.length,
                             itemBuilder: (BuildContext context, int index) {
                               return CheckboxListTile(
-                                title: Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Text(
+                                title: Text(
                                     typeEntOptions[index],
                                     style: TextStyle(
                                       fontSize: 16.0,
@@ -653,10 +656,10 @@ void initState() {
                                       color: Color(0xFF6db881),
                                     ),
                                   ),
-                                ),
+
                                 activeColor: const Color.fromARGB(
                                     255, 70, 147, 90),
-                                controlAffinity: ListTileControlAffinity.trailing,
+                                controlAffinity: ListTileControlAffinity.leading,
                                 value: checkedOptionsatt[index],
                                 onChanged: (bool? value) {
                                   setState(() {
@@ -686,7 +689,7 @@ void initState() {
                         ),
                         const SizedBox(height: 10),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: isArabic()? MainAxisAlignment.end:MainAxisAlignment.start ,
                           children: [
                             CustomRadioButton(
                               onTap: () {
@@ -732,33 +735,34 @@ void initState() {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            CustomRadioButton(
-                                onTap: () {
-                                  setState(() {
-                                    hasReservation = false;
-                                  });
-                                },
-                                text: translation(context).noBook,
-                                value: !(hasReservation ?? true)),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            CustomRadioButton(
-                                onTap: () {
-                                  setState(() {
-                                    hasReservation = true;
-                                  });
-                                },
-                                text: translation(context).needBook,
-                                value: hasReservation ?? false),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                          ],
-                        ),
+                    Row(
+                      mainAxisAlignment: isArabic()? MainAxisAlignment.end:MainAxisAlignment.start ,                        children: [
+                      CustomRadioButton(
+                          onTap: () {
+                            setState(() {
+
+                              hasReservation =  (hasReservation == false) ? null : false;
+                            });
+                          },
+                          text: translation(context).noBook,
+                          value: hasReservation== false ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      CustomRadioButton(
+                          onTap: () {
+                            setState(() {
+
+                              hasReservation =   (hasReservation == true) ? null : true;
+                            });
+                          },
+                          text: translation(context).needBook,
+                          value: hasReservation==true),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                    ],
+                    ),
 
 
 
@@ -769,8 +773,8 @@ void initState() {
                   if (type == 2) // Check if the type is for مطاعم
                     Column(
                       mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
+                      mainAxisAlignment: isArabic()?MainAxisAlignment.end:MainAxisAlignment.start,
+                      crossAxisAlignment: isArabic()? CrossAxisAlignment.end:CrossAxisAlignment.start,                      children: [
                         const SizedBox(height: 10),
                          Text(
                            translation(context).cuisine,
@@ -790,9 +794,7 @@ void initState() {
                             itemCount: cuisineOptions.length,
                             itemBuilder: (BuildContext context, int index) {
                               return CheckboxListTile(
-                                title: Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Text(
+                                title: Text(
                                     cuisineOptions[index],
                                     style: TextStyle(
                                       fontSize: 16.0,
@@ -800,10 +802,10 @@ void initState() {
                                       color: Color(0xFF6db881),
                                     ),
                                   ),
-                                ),
+
                                 activeColor: const Color.fromARGB(
                                     255, 70, 147, 90),
-                                controlAffinity: ListTileControlAffinity.trailing,
+                                controlAffinity: ListTileControlAffinity.leading,
                                 value: checkedOptionsres[index],
                                 onChanged: (bool? value) {
                                   setState(() {
@@ -861,6 +863,8 @@ void initState() {
                                   ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: isArabic()? MainAxisAlignment.end:MainAxisAlignment.start ,
+
                                     children: [
                                       const SizedBox(
                                         width: 25,
@@ -933,6 +937,8 @@ void initState() {
                                   ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: isArabic()? MainAxisAlignment.end:MainAxisAlignment.start ,
+
                                     children: [
                                       const SizedBox(
                                         width: 25,
@@ -981,7 +987,7 @@ void initState() {
                         Wrap(
                           spacing: 10,
                           runSpacing: 7,
-                          alignment: WrapAlignment.end,
+                          alignment: isArabic()? WrapAlignment.end: WrapAlignment.start,
                           children: atmosphereOptions.map((atmosphereOption) {
                             return GestureDetector(
                                 onTap: () {
@@ -1053,33 +1059,35 @@ void initState() {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            CustomRadioButton(
-                                onTap: () {
-                                  setState(() {
-                                    hasReservation = false;
-                                  });
-                                },
-                                text: translation(context).noBook,
-                                value: !(hasReservation ?? true)),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            CustomRadioButton(
-                                onTap: () {
-                                  setState(() {
-                                    hasReservation = true;
-                                  });
-                                },
-                                text: translation(context).needBook,
-                                value: hasReservation ?? false),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                          ],
-                        ),
+                      Row(
+                        mainAxisAlignment: isArabic()? MainAxisAlignment.end:MainAxisAlignment.start ,                        children: [
+                          CustomRadioButton(
+                              onTap: () {
+                                setState(() {
+
+                                  hasReservation =  (hasReservation == false) ? null : false;
+                                });
+                              },
+                               text: translation(context).noBook,
+                              value: hasReservation== false ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          CustomRadioButton(
+                              onTap: () {
+                                setState(() {
+
+                                  hasReservation =   (hasReservation == true) ? null : true;
+                                });
+                              },
+                              text: translation(context).needBook,
+                              value: hasReservation==true),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                        ],
+                      ),
+
 
 
 
@@ -1091,8 +1099,8 @@ void initState() {
                   if (type == 3)
                     Column(
                       mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
+                      mainAxisAlignment: isArabic()?MainAxisAlignment.end:MainAxisAlignment.start,
+                      crossAxisAlignment: isArabic()? CrossAxisAlignment.end:CrossAxisAlignment.start,                      children: [
 
                         const SizedBox(height: 10),
 
@@ -1107,7 +1115,7 @@ void initState() {
                         ),
                         const SizedBox(height: 10),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: isArabic()? MainAxisAlignment.end:MainAxisAlignment.start ,
                           children: [
                             CustomRadioButton(
                               onTap: () {
@@ -1162,9 +1170,7 @@ void initState() {
                             itemCount: isThereInMalls.length,
                             itemBuilder: (BuildContext context, int index) {
                               return CheckboxListTile(
-                                title: Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Text(
+                                title: Text(
                                     isThereInMalls[index],
                                     style: TextStyle(
                                       fontSize: 16.0,
@@ -1172,10 +1178,10 @@ void initState() {
                                       color: Color(0xFF6db881),
                                     ),
                                   ),
-                                ),
+
                                 activeColor: const Color.fromARGB(
                                     255, 70, 147, 90),
-                                controlAffinity: ListTileControlAffinity.trailing,
+                                controlAffinity: ListTileControlAffinity.leading,
                                 value: checkedOptionsmalls[index],
                                 onChanged: (bool? value) {
                                   setState(() {
@@ -1208,7 +1214,7 @@ void initState() {
                         Wrap(
                           spacing: 10,
                           runSpacing: 7,
-                          alignment: WrapAlignment.end,
+                          alignment: isArabic()? WrapAlignment.end: WrapAlignment.start,
                           children: shopOptions.map((ShopType) {
                             return GestureDetector(
                                 onTap: () {
@@ -1282,6 +1288,7 @@ void initState() {
                         children: [
                           ElevatedButton(
                             onPressed: (){
+
                               resetFilterState();
 
                             },

@@ -380,14 +380,14 @@ class HomePageState extends State<HomePage> {
                 boxShadow: [],
               ),
               child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.end, // Align text to the right
+                crossAxisAlignment:isArabic()? CrossAxisAlignment.end:
+                    CrossAxisAlignment.start, // Align text to the right
                 children: [
                   Expanded(
                     child: Container(),
                   ),
                   Align(
-                    alignment: Alignment.centerRight, // Align text to the right
+                    alignment:Localizations.localeOf(context).languageCode == 'ar' ? Alignment.centerRight : Alignment.centerLeft, // Align text to the right
                     child: Text(
                       '${place.placeName}',
                       style: TextStyle(
@@ -400,9 +400,9 @@ class HomePageState extends State<HomePage> {
                   ),
                   SizedBox(height: 2),
                   Align(
-                    alignment: Alignment.centerRight, // Align text to the right
+                    alignment: isArabic()?Alignment.centerRight :Alignment.centerLeft, // Align text to the right
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: isArabic()?MainAxisAlignment.end:MainAxisAlignment.start,
                       children: [
                         Icon(
                           Icons.location_pin,
@@ -426,9 +426,9 @@ class HomePageState extends State<HomePage> {
                   ),
                   SizedBox(height: 2),
                   Align(
-                    alignment: Alignment.centerRight, // Align text to the right
+                    alignment: isArabic()?Alignment.centerRight :Alignment.centerLeft, // Align text to the right
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: isArabic()?MainAxisAlignment.end:MainAxisAlignment.start,
                       children: [
                         StreamBuilder<QuerySnapshot>(
                           stream: FirebaseFirestore.instance
@@ -491,7 +491,12 @@ class HomePageState extends State<HomePage> {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
   Widget _buildItem(
-      void Function()? onTap, placePage place, BuildContext context) {
+      void Function()? onTap,
+      placePage place,
+      BuildContext context
+      ) {
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+
     if (selectedCategory == 'الكل' || place.category == selectedCategory) {
       return GestureDetector(
         onTap: onTap,
@@ -499,162 +504,129 @@ class HomePageState extends State<HomePage> {
           margin: EdgeInsets.fromLTRB(12, 12, 12, 6),
           clipBehavior: Clip.antiAlias,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(15),
-            ),
+            borderRadius: BorderRadius.circular(15),
           ),
           child: Container(
             height: 210,
-            decoration: BoxDecoration(
-              image: place.images.isEmpty
-                  ? DecorationImage(
-                      image: NetworkImage(
-                          'https://www.guardanthealthamea.com/wp-content/uploads/2019/09/no-image.jpg'),
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: place.images.isNotEmpty
+                        ? Image.network(
+                      place.images[0],
                       fit: BoxFit.cover,
                     )
-                  : DecorationImage(
-                      image: NetworkImage(place.images[0]),
+                        : Image.network(
+                      'https://www.guardanthealthamea.com/wp-content/uploads/2019/09/no-image.jpg',
                       fit: BoxFit.cover,
                     ),
-            ),
-            child: Container(
-              padding: EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: [0.5, 1.0],
-                  colors: [
-                    Colors.transparent,
-                    Colors.black.withOpacity(0.7),
-                  ],
+                  ),
                 ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Container(),
-                  ),
-                  Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Container(),
+                Positioned.fill(
+                  child: Container(
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        stops: [0.5, 1.0],
+                        colors: [
+                          Colors.transparent,
+                          Colors.black.withOpacity(0.7),
+                        ],
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          '${place.placeName}',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: "Tajawal-l",
                           ),
-                          Text(
-                            '${place.placeName}',
-                            style: TextStyle(
-                              height: 2,
+                        ),
+                        SizedBox(height: 4),
+                        Row(
+                          mainAxisAlignment: isArabic
+                              ? MainAxisAlignment.end
+                              : MainAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.location_pin,
                               color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: "Tajawal-l",
+                              size: 18,
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 4,
-                      ),
-                      Row(
-                        //mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Expanded(
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: StreamBuilder<QuerySnapshot>(
-                                    stream: FirebaseFirestore.instance
-                                        .collection('ApprovedPlaces')
-                                        .doc(place.place_id)
-                                        .collection('Reviews')
-                                        .snapshots(),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return CircularProgressIndicator();
-                                      }
-
-                                      List<double> ratings = List<double>.from(
-                                        snapshot.data!.docs.map((doc) {
-                                          final commentData = doc.data()
-                                              as Map<String, dynamic>;
-                                          return commentData["rating"]
-                                                  .toDouble() ??
-                                              0.0;
-                                        }),
-                                      );
-
-                                      // Calculate the average rating
-                                      double averageRating = ratings.isNotEmpty
-                                          ? ratings.reduce((a, b) => a + b) /
-                                              ratings.length
-                                          : 0.0;
-
-                                      return Row(
-                                        children: [
-                                          for (int index = 0;
-                                              index < 5;
-                                              index++)
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 2.0),
-                                              child: Icon(
-                                                index < averageRating.floor()
-                                                    ? Icons.star
-                                                    : index + 0.5 ==
-                                                            averageRating
-                                                        ? Icons.star_half
-                                                        : Icons.star_border,
-                                                color: const Color.fromARGB(
-                                                    255, 109, 184, 129),
-                                                size: 20.0,
-                                              ),
-                                            ),
-                                        ],
-                                      );
-                                    },
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                              ],
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text(
-                                '${place.neighbourhood} ، ${place.city}',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: "Tajawal-l",
-                                ),
-                              ),
-                              SizedBox(
-                                width: 4,
-                              ),
-                              Icon(
-                                Icons.location_pin,
+                            SizedBox(width: 4),
+                            Text(
+                              '${place.neighbourhood} ، ${place.city}',
+                              style: TextStyle(
                                 color: Colors.white,
-                                size: 18,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: "Tajawal-l",
                               ),
-                            ],
-                          ),
-                          // SizedBox(width: 10),
-                        ],
-                      ),
-                    ],
+                            ),
+                           Spacer(),
+                            StreamBuilder<QuerySnapshot>(
+                              stream: FirebaseFirestore.instance
+                                  .collection('ApprovedPlaces')
+                                  .doc(place.place_id)
+                                  .collection('Reviews')
+                                  .snapshots(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
+                                }
+
+                                List<double> ratings = List<double>.from(
+                                  snapshot.data!.docs.map((doc) {
+                                    final commentData = doc.data()
+                                    as Map<String, dynamic>;
+                                    return commentData["rating"].toDouble() ?? 0.0;
+                                  }),
+                                );
+
+                                double averageRating = ratings.isNotEmpty
+                                    ? ratings.reduce((a, b) => a + b) /
+                                    ratings.length
+                                    : 0.0;
+
+                                return Row(
+                                  children: [
+                                    for (int index = 0; index < 5; index++)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 2.0),
+                                        child: Icon(
+                                          index < averageRating.floor()
+                                              ? Icons.star
+                                              : index + 0.5 == averageRating
+                                              ? Icons.star_half
+                                              : Icons.star_border,
+                                          color: const Color.fromARGB(
+                                              255, 109, 184, 129),
+                                          size: 20.0,
+                                        ),
+                                      ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -663,6 +635,8 @@ class HomePageState extends State<HomePage> {
       return Container();
     }
   }
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////
   void performSearch(String query) {
     searchResults.clear();
@@ -955,166 +929,5 @@ class HomePageState extends State<HomePage> {
 
 
   /////////////////////////////////////////////////////////////////////////////
-  Widget _buildPlacePageWidget(BuildContext context, placePage place) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => placeDetailsPage(place: place),
-          ),
-        );
-      },
-      child: Card(
-        margin: EdgeInsets.all(0), // Adjust the margin to reduce space
-        clipBehavior: Clip.antiAlias,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(15),
-          ),
-        ),
-        child: Container(
-          height: 200,
-          width: 180,
-          decoration: BoxDecoration(
-            image: place.images.isEmpty
-                ? DecorationImage(
-                    image: NetworkImage(
-                      'https://www.guardanthealthamea.com/wp-content/uploads/2019/09/no-image.jpg',
-                    ),
-                    fit: BoxFit.fill,
-                  )
-                : DecorationImage(
-                    image: NetworkImage(place.images[0]),
-                    fit: BoxFit.fill,
-                  ),
-          ),
-          child: Container(
-            padding: EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: [0.5, 1.0],
-                colors: [
-                  Colors.transparent,
-                  Colors.black.withOpacity(0.7),
-                ],
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Container(),
-                ),
-                Column(
-                  children: [
-                    Text(
-                      '${place.placeName}',
-                      style: TextStyle(
-                        height: 2,
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: "Tajawal-l",
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Row(
-                      //mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: StreamBuilder<QuerySnapshot>(
-                                  stream: FirebaseFirestore.instance
-                                      .collection('ApprovedPlaces')
-                                      .doc(place.place_id)
-                                      .collection('Reviews')
-                                      .snapshots(),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return CircularProgressIndicator();
-                                    }
 
-                                    List<double> ratings = List<double>.from(
-                                      snapshot.data!.docs.map((doc) {
-                                        final commentData =
-                                            doc.data() as Map<String, dynamic>;
-                                        return commentData["rating"]
-                                                .toDouble() ??
-                                            0.0;
-                                      }),
-                                    );
-
-                                    // Calculate the average rating
-                                    double averageRating = ratings.isNotEmpty
-                                        ? ratings.reduce((a, b) => a + b) /
-                                            ratings.length
-                                        : 0.0;
-
-                                    return Row(
-                                      children: [
-                                        for (int index = 0; index < 5; index++)
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 2.0),
-                                            child: Icon(
-                                              index < averageRating.floor()
-                                                  ? Icons.star
-                                                  : index + 0.5 == averageRating
-                                                      ? Icons.star_half
-                                                      : Icons.star_border,
-                                              color: const Color.fromARGB(
-                                                  255, 109, 184, 129),
-                                              size: 20.0,
-                                            ),
-                                          ),
-                                      ],
-                                    );
-                                  },
-                                ),
-                              ),
-                              SizedBox(width: 10),
-                            ],
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              '${place.neighbourhood} ، ${place.city}',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: "Tajawal-l",
-                              ),
-                            ),
-                            SizedBox(
-                              width: 4,
-                            ),
-                            Icon(
-                              Icons.location_pin,
-                              color: Colors.white,
-                              size: 18,
-                            ),
-                          ],
-                        ),
-                        // SizedBox(width: 10),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 }

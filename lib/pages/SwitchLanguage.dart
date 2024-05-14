@@ -1,7 +1,10 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:gp/language_constants.dart';
 import '../main.dart';
 import '../Language.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SwitchLanguage extends StatefulWidget {
   @override
@@ -18,22 +21,29 @@ class _SwitchLanguageState extends State<SwitchLanguage> {
   }
 
   void _loadSelectedLanguage() async {
-    Locale currentLocale = await getLocale();
-    Language selectedLanguage = Language.languageList().firstWhere(
-          (language) => language.languageCode == currentLocale.languageCode,
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? selectedLanguageCode = prefs.getString('selectedLanguageCode');
 
-    );
-    print('hello');
-    print(currentLocale);
-    setState(() {
-      _selectedLanguage = selectedLanguage;
-    });
+    if (selectedLanguageCode != null) {
+      Language selectedLanguage = Language.languageList().firstWhere(
+            (language) => language.languageCode == selectedLanguageCode,
+        // Default language if not found
+      );
+
+      setState(() {
+        _selectedLanguage = selectedLanguage;
+      });
+    }
   }
 
-  void _selectLanguage(Language language) {
+  void _selectLanguage(Language language) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('selectedLanguageCode', language.languageCode);
+
     setState(() {
       _selectedLanguage = language;
     });
+
     Locale selectedLocale = Locale(language.languageCode);
     MyApp.setLocale(context, selectedLocale);
   }
@@ -89,7 +99,13 @@ class _SwitchLanguageState extends State<SwitchLanguage> {
               onTap: () {
                 _selectLanguage(language);
               },
-              title: Text(language.name),
+              title: Row(
+                children: [
+                  Text(language.flag),
+                  SizedBox(width: 10), // Add some spacing between the flag and the name
+                  Text(language.name),
+                ],
+              ),
               trailing: isSelected ? Icon(Icons.check) : null,
             );
           },

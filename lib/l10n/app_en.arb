@@ -278,7 +278,7 @@
   "allowCHI": "children allowed",
   "enddate": ":Start Date",
   "startdate": ":End Date",
-  "needBooking": "required reservation",
+  "needBooking": "require reservation",
   "addMap": "Map",
   "locatioName": "Location name:",
   "close": "closed",
@@ -331,7 +331,8 @@
   "quietEM": "🔇 Without Music",
   "beachsideEM": "⛱ Beachside",
   "indoorEM": "🏠 Indoor",
-  "outdoorEM": "🏞 Outdoor"
+  "outdoorEM": "🏞 Outdoor",
+  "network": "Network error , try to reconnect"
 }
 
 

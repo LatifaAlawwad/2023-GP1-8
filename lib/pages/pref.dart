@@ -31,36 +31,37 @@ class _pref extends State<pref> {
     @override
     Widget build(BuildContext context) {
         return Scaffold(
-            appBar: AppBar(
-                backgroundColor: const Color.fromARGB(255, 109, 184, 129),
+            appBar:AppBar(
+                backgroundColor: Color.fromARGB(255, 109, 184, 129),
                 automaticallyImplyLeading: false,
-                title:  Padding(
-                    padding: EdgeInsets.only(left: 150),
-                    child: Text(
-                        translation(context).chooseFav,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 17,
-                            fontFamily: "Tajawal-b",
-                        ),
-                    ),
-                ),
-                toolbarHeight: 60,
-                actions: [
-                    Padding(
-                        padding: const EdgeInsets.only(right: 20.0),
-                        child: GestureDetector(
-                            onTap: () {
-                                Navigator.pop(context);
-                            },
-                            child: const Icon(
-                                Icons.arrow_forward_ios,
-                                color: Colors.white,
-                                size: 28,
+                title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                        Padding(
+                            padding: const EdgeInsets.only(left: 10.0,right:10.0),
+                            child: GestureDetector(
+                                onTap: () {
+                                    Navigator.pop(context);
+                                },
+                                child: Icon(
+                                    Icons.arrow_back_ios,
+                                    color: Colors.white,
+                                    size: 28,
+                                ),
                             ),
                         ),
-                    ),
-                ],
+                        Text(
+                            translation(context).chooseFav,
+                            style: TextStyle(
+                                fontSize: 17,
+                                fontFamily: "Tajawal-b",
+                            ),
+                        ),
+                        SizedBox(width: 40),
+                    ],
+                ),
+                centerTitle: false,
+
             ),
             body: FirebaseAuth.instance.currentUser == null
                 ? Center(
@@ -236,7 +237,7 @@ class CustomFormState extends State<CustomForm> {
             ),
             actions: [
                 cancelButton,
-                // Set the "تأكيد" button's onPressed callback
+
                 continueButton = TextButton(
                     onPressed: () async {
                         Navigator.of(context).pop();
@@ -490,54 +491,54 @@ class CustomFormState extends State<CustomForm> {
             translation(context).outdoorEM,
         ];
 
-        return Column(mainAxisSize: MainAxisSize.min, children: [
-            Expanded(
-                child: Container(
-                    margin: const EdgeInsets.only(top: 20, left: 15, right: 15),
-                    padding: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            topRight: Radius.circular(30)),
-                        border: Border.all(color: Colors.grey.shade300, width: 1),
-                    ),
-                    child: SingleChildScrollView(
-                        child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                                const SizedBox(
-                                    height: 20,
-                                ),
-                                RichText(
-                                    text: TextSpan(
-                                        style: TextStyle(
-                                            fontSize: 18.0,
-                                            fontFamily: "Tajawal-b",
-                                            color: Colors
-                                                .black, // Set the color for the non-red part of the text
-                                        ),
-                                        children: [
-                                            TextSpan(
-                                                text: translation(context).categ,
-                                            ),
-                                            TextSpan(
-                                                text: ' *', // Added red asterisk
-                                                style: TextStyle(
-                                                    color: Colors
-                                                        .red, // Set the color for the red asterisk
-                                                ),
-                                            ),
-                                        ],
+        return Column(
+            children: [
+
+                Expanded(
+
+                    child: Container(
+
+                        margin: const EdgeInsets.only(top: 20, left: 15, right: 15),
+                        padding: const EdgeInsets.only(top: 15, left: 15, right: 15),
+
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                            border: Border.all(color: Colors.grey.shade300, width: 1),
+                        ),
+                        child: SingleChildScrollView(
+                            child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: isArabic()? CrossAxisAlignment.end:CrossAxisAlignment.start,
+                                children: [
+                                    const SizedBox(
+                                        height: 10,
                                     ),
-                                ),
+
+                               RichText(
+                                            text: TextSpan(
+                                                style: TextStyle(
+                                                    fontSize: 18.0,
+                                                    fontFamily: "Tajawal-b",
+                                                    color: Colors.black,
+                                                ),
+                                                children: [
+                                                    TextSpan(
+                                                        text: translation(context).categ,
+                                                    ),
+
+                                                ],
+                                            ),
+                                        ),
+
+
                                 Container(
                                     margin: const EdgeInsets.only(top: 10),
                                     child: Wrap(
-                                        spacing: 5,
+                                        spacing:5,
                                         runSpacing: 7,
-                                        alignment: WrapAlignment.end,
+                                        alignment: isArabic()? WrapAlignment.end: WrapAlignment.start,
                                         children: [
                                             _buildPlaceTypeBox(
                                                 title: translation(context).entEmoji,
@@ -558,52 +559,50 @@ class CustomFormState extends State<CustomForm> {
                                 const SizedBox(
                                     height: 20,
                                 ),
-                                RichText(
-                                    text: TextSpan(
-                                        style: TextStyle(
-                                            fontSize: 18.0,
-                                            fontFamily: "Tajawal-b",
-                                            color: Colors
-                                                .black, // Set the color for the non-red part of the text
-                                        ),
-                                        children: [
-                                            TextSpan(
-                                                text: translation(context).city,
-                                            ),
-                                            TextSpan(
-                                                text: ' *', // Added red asterisk
+                               RichText(
+                                            text: TextSpan(
                                                 style: TextStyle(
-                                                    color: Colors
-                                                        .red, // Set the color for the red asterisk
+                                                    fontSize: 18.0,
+                                                    fontFamily: "Tajawal-b",
+                                                    color: Colors.black, // Set the color for the non-red part of the text
                                                 ),
+                                                children: [
+                                                    TextSpan(
+                                                        text: translation(context).city,
+                                                    ),
+
+                                                ],
                                             ),
-                                        ],
+
                                     ),
-                                ),
+
                                 Container(
                                     margin: const EdgeInsets.only(top: 10),
                                     child: Wrap(
                                         spacing: 10,
                                         runSpacing: 7,
-                                        alignment: WrapAlignment.end,
+                                        alignment: isArabic() ? WrapAlignment.end :WrapAlignment.start,
                                         children: citiesList.map((value) {
-                                            bool isSelected = city == value;
-                                            bool isSelectable =
-                                            !['العلا', 'الشرقية'].contains(value);
+                                           var temp;
+                                            if (value == "Riyadh"|| value == "الرياض")
+                                                temp="الرياض";
+                                            else  if (value == "Jeddah" || value == "جدة")
+                                                temp="جدة";
+
+
+                                            bool isSelected= city== temp;
+                                            bool isSelectable = !['العلا', 'الشرقية'].contains(value);
                                             return GestureDetector(
                                                 onTap: isSelectable
                                                     ? () async {
                                                     var tempCity = await cities.where(
-                                                            (element) =>
-                                                        (element['name_ar'] == value));
-                                                    var tempArea = await areas.where(
-                                                            (element) => (element['city_id'] ==
-                                                            tempCity.first['city_id']));
-                                                    areasList.clear();
-                                                    areasList.addAll(tempArea);
+                                                            (element) => (element['name_ar'] == value || element['name_en'] == value)  );
+
+
                                                     setState(() {
-                                                        city = value;
+                                                        city =tempCity.first['name_ar'];
                                                     });
+
                                                 }
                                                     : null,
                                                 child: Container(
@@ -611,18 +610,12 @@ class CustomFormState extends State<CustomForm> {
                                                         vertical: 10,
                                                         horizontal: 15,
                                                     ),
-                                                    margin: const EdgeInsets.only(
-                                                        bottom: 10,
-                                                        right: 10,
-                                                    ),
+
                                                     decoration: BoxDecoration(
-                                                        borderRadius:
-                                                        BorderRadius.all(Radius.circular(10)),
+                                                        borderRadius: BorderRadius.all(Radius.circular(10)),
                                                         color: Colors.white, // Set the color to white
                                                         border: Border.all(
-                                                            color: isSelected
-                                                                ? const Color(0xFF6db881)
-                                                                : Colors.black54,
+                                                            color: isSelected ? const Color(0xFF6db881) : Colors.black54,
                                                             width: 1,
                                                         ),
                                                     ),
@@ -634,9 +627,7 @@ class CustomFormState extends State<CustomForm> {
                                                                 style: TextStyle(
                                                                     fontSize: 16.0,
                                                                     fontFamily: 'Tajawal-m',
-                                                                    color: isSelected
-                                                                        ? const Color(0xFF6db881)
-                                                                        : Color(0xFF6db881),
+                                                                    color: isSelected ? const Color(0xFF6db881) : Color(0xFF6db881),
                                                                 ),
                                                             ),
                                                             const SizedBox(width: 10),
@@ -654,20 +645,33 @@ class CustomFormState extends State<CustomForm> {
                                     ),
                                 ),
 
-// Text('ساعات العمل في أيام الأسبوع: $weekdaysWorkingHr'),
 
 /////////////////////////////////new attr////////////////////////////////////////////////
 
                                 if (type == 1)
                                     Column(
                                         mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        crossAxisAlignment: isArabic()? CrossAxisAlignment.end:CrossAxisAlignment.start,
+
                                         children: [
-                                            Text(
-                                                translation(context).entType,
-                                                style: TextStyle(
-                                                    fontSize: 18.0,
-                                                    fontFamily: "Tajawal-b",
+                                            const SizedBox(
+                                                height: 20,
+                                            ),
+                                            RichText(
+                                                text: TextSpan(
+                                                    style: TextStyle(
+                                                        fontSize: 18.0,
+                                                        fontFamily: "Tajawal-b",
+                                                        color: Colors
+                                                            .black, // Set the color for the non-red part of the text
+                                                    ),
+                                                    children: [
+
+                                                        TextSpan(
+                                                            text: translation(context).entType,
+                                                        ),
+
+                                                    ],
                                                 ),
                                             ),
                                             Container(
@@ -675,7 +679,7 @@ class CustomFormState extends State<CustomForm> {
                                                 child: Wrap(
                                                     spacing: 10,
                                                     runSpacing: 7,
-                                                    alignment: WrapAlignment.end,
+                                                    alignment: isArabic() ? WrapAlignment.end : WrapAlignment.start,
                                                     children: typeEntOptions.map((value) {
                                                         bool isSelected = typeEnt == value;
                                                         return GestureDetector(
@@ -685,34 +689,26 @@ class CustomFormState extends State<CustomForm> {
                                                                 });
                                                             },
                                                             child: Container(
-                                                                padding: const EdgeInsets.symmetric(
-                                                                    vertical: 10, horizontal: 15),
+                                                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                                                                 decoration: BoxDecoration(
-                                                                    borderRadius: const BorderRadius.all(
-                                                                        Radius.circular(10)),
+                                                                    borderRadius: const BorderRadius.all(Radius.circular(10)),
                                                                     color: Colors.white,
                                                                     border: Border.all(
-                                                                        color: isSelected
-                                                                            ? const Color(0xFF6db881)
-                                                                            : Colors.black,
-                                                                        width: 1, // Adjust border width
+                                                                        color: isSelected ? const Color(0xFF6db881) : Colors.black,
+                                                                        width: 1,
                                                                     ),
                                                                 ),
                                                                 child: Row(
                                                                     mainAxisSize: MainAxisSize.min,
-                                                                    mainAxisAlignment:
-                                                                    MainAxisAlignment.spaceBetween,
-                                                                    crossAxisAlignment:
-                                                                    CrossAxisAlignment.center,
+                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                    crossAxisAlignment: CrossAxisAlignment.center,
                                                                     children: [
                                                                         Text(
                                                                             value,
                                                                             style: TextStyle(
                                                                                 fontSize: 16.0,
                                                                                 fontFamily: 'Tajawal-m',
-                                                                                color: isSelected
-                                                                                    ? const Color(0xFF6db881)
-                                                                                    : Colors.black,
+                                                                                color: isSelected ? const Color(0xFF6db881) : Colors.black,
                                                                             ),
                                                                         ),
                                                                         if (isSelected)
@@ -739,17 +735,31 @@ class CustomFormState extends State<CustomForm> {
                                 if (type == 2) // Check if the type is for مطاعم
                                     Column(
                                         mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        crossAxisAlignment: isArabic()? CrossAxisAlignment.end:CrossAxisAlignment.start,
                                         children: [
-                                            // Add the DropdownButtonFormField for 'cuisine'
-                                            Text(
-                                                translation(context).cuisine,
-                                                style: TextStyle(
-                                                    fontSize: 20.0,
-                                                    fontFamily: "Tajawal-b",
+                                            const SizedBox(
+                                                height: 20,
+                                            ),
+                                            RichText(
+                                                text: TextSpan(
+                                                    style: TextStyle(
+                                                        fontSize: 18.0,
+                                                        fontFamily: "Tajawal-b",
+                                                        color: Colors
+                                                            .black, // Set the color for the non-red part of the text
+                                                    ),
+                                                    children: [
+
+                                                        TextSpan(
+                                                            text: translation(context).cuisine,
+                                                        ),
+
+                                                    ],
                                                 ),
                                             ),
                                             Container(
+                                                alignment: isArabic() ? Alignment.centerRight : Alignment.centerLeft,
+
                                                 margin: const EdgeInsets.only(top: 10),
                                                 decoration: BoxDecoration(
                                                     borderRadius:
@@ -766,16 +776,22 @@ class CustomFormState extends State<CustomForm> {
                                                         fontFamily: "Tajawal-m",
                                                         color: Color(0xFF6db881),
                                                     ),
-                                                    decoration: const InputDecoration(
+                                                    decoration: InputDecoration(
                                                         isDense: true,
                                                         border: InputBorder.none,
-                                                        prefixIcon: Icon(
-                                                            Icons
-                                                                .arrow_drop_down, // Set your desired icon
+                                                        prefixIcon: isArabic()
+                                                            ? Icon(
+                                                            Icons.arrow_drop_down,
                                                             color: Color(0xFF6db881),
-                                                        ),
-                                                        contentPadding: EdgeInsets.only(
-                                                            top: 15, bottom: 15, right: 10, left: 10),
+                                                        )
+                                                            : null,
+                                                        suffixIcon: !isArabic()
+                                                            ? Icon(
+                                                            Icons.arrow_drop_down,
+                                                            color: Color(0xFF6db881),
+                                                        )
+                                                            : null,
+                                                        contentPadding: EdgeInsets.symmetric(horizontal: 10,vertical:15),
                                                     ),
                                                     iconSize: 0,
                                                     isExpanded: true,
@@ -785,41 +801,38 @@ class CustomFormState extends State<CustomForm> {
                                                                 newValue!); // Add the selected cuisine to the list
                                                         });
                                                     },
-                                                    hint:  Align(
-                                                        alignment: Alignment.centerRight,
-                                                        child: Text(
+                                                    hint:   Text(
                                                             translation(context).foodType,
-                                                        )),
+                                                        ),
                                                     items: cuisineOptions.map((String value) {
                                                         return DropdownMenuItem<String>(
                                                             value: value,
-                                                            child: Align(
-                                                                alignment: Alignment.centerRight,
-                                                                child: Text(value,
+                                                            child:  Text(value,
                                                                     style: const TextStyle(
                                                                         fontSize: 16.0,
                                                                         fontFamily: 'Tajawal-m')),
-                                                            ),
+
                                                         );
                                                     }).toList(),
                                                 ),
                                             ),
 
                                             const SizedBox(height: 20),
-                                            Text(
-                                                translation(context).meals,
-                                                style: TextStyle(
-                                                    fontSize: 18.0,
-                                                    fontFamily: "Tajawal-b",
-                                                    color:
-                                                    Colors.black, // Set the text color to black
+                                           Text(
+                                                    translation(context).meals,
+                                                    style: TextStyle(
+                                                        fontSize: 18.0,
+                                                        fontFamily: "Tajawal-b",
+                                                        color:
+                                                        Colors.black, // Set the text color to black
+                                                    ),
                                                 ),
-                                            ),
+
                                             const SizedBox(height: 10),
                                             Wrap(
                                                 spacing: 10,
                                                 runSpacing: 7,
-                                                alignment: WrapAlignment.end,
+                                                alignment: isArabic() ? WrapAlignment.end : WrapAlignment.start,
                                                 children: servesOptions.map((serve) {
                                                     return GestureDetector(
                                                         onTap: () {
@@ -832,66 +845,57 @@ class CustomFormState extends State<CustomForm> {
                                                             });
                                                         },
                                                         child: Container(
-                                                            padding: const EdgeInsets.only(
-                                                                top: 10, bottom: 10),
+                                                            padding: const EdgeInsets.only(top: 10, bottom: 10),
                                                             decoration: BoxDecoration(
-                                                                borderRadius: const BorderRadius.all(
-                                                                    Radius.circular(10)),
+                                                                borderRadius: const BorderRadius.all(Radius.circular(10)),
                                                                 color: Colors.white,
                                                                 border: Border.all(
-                                                                    color: serves.contains(serve)
-                                                                        ? const Color(0xFF6db881)
-                                                                        : Colors.black,
+                                                                    color: serves.contains(serve) ? const Color(0xFF6db881) : Colors.black,
                                                                     width: 1,
                                                                 ),
                                                             ),
                                                             child: Row(
                                                                 mainAxisSize: MainAxisSize.min,
+                                                                mainAxisAlignment: isArabic()? MainAxisAlignment.end: MainAxisAlignment.start,
                                                                 children: [
-                                                                    const SizedBox(
-                                                                        width: 25,
+                                                                    const SizedBox(width: 25),
+                                                                    Text(
+                                                                        serve,
+                                                                        style: const TextStyle(fontSize: 16.0, fontFamily: 'Tajawal-m'),
                                                                     ),
-                                                                    Text(serve,
-                                                                        style: const TextStyle(
-                                                                            fontSize: 16.0,
-                                                                            fontFamily: 'Tajawal-m')),
-                                                                    const SizedBox(
-                                                                        width: 5,
-                                                                    ),
+                                                                    const SizedBox(width: 5),
                                                                     serves.contains(serve)
                                                                         ? const Icon(
                                                                         Icons.check_rounded,
                                                                         size: 16,
                                                                         color: Color(0xFF6db881),
                                                                     )
-                                                                        : const SizedBox(
-                                                                        width: 16,
-                                                                    ),
-                                                                    const SizedBox(
-                                                                        width: 5,
-                                                                    ),
+                                                                        : const SizedBox(width: 16),
+                                                                    const SizedBox(width: 5),
                                                                 ],
                                                             ),
-                                                        ));
+                                                        ),
+                                                    );
                                                 }).toList(),
                                             ),
                                             const SizedBox(height: 20),
 
-// Add the CheckBoxes for 'atmosphere'
+//  the CheckBoxes for 'atmosphere'
                                             Text(
-                                                translation(context).atmosphere,
-                                                style: TextStyle(
-                                                    fontSize: 18.0,
-                                                    fontFamily: "Tajawal-b",
-                                                    color:
-                                                    Colors.black, // Set the text color to black
+                                                    translation(context).atmosphere,
+                                                    style: TextStyle(
+                                                        fontSize: 18.0,
+                                                        fontFamily: "Tajawal-b",
+                                                        color:
+                                                        Colors.black, // Set the text color to black
+                                                    ),
                                                 ),
-                                            ),
+
                                             const SizedBox(height: 10),
                                             Wrap(
                                                 spacing: 10,
                                                 runSpacing: 7,
-                                                alignment: WrapAlignment.end,
+                                                alignment: isArabic() ? WrapAlignment.end : WrapAlignment.start,
                                                 children: atmosphereOptions
                                                     .map((atmosphereOptionsWithIcons) {
                                                     return GestureDetector(
@@ -959,21 +963,22 @@ class CustomFormState extends State<CustomForm> {
                                 if (type == 3)
                                     Column(
                                         mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        crossAxisAlignment: isArabic()? CrossAxisAlignment.end:CrossAxisAlignment.start,
                                         children: [
                                             const SizedBox(height: 20),
-                                            Text(
-                                                translation(context).storeType,
-                                                style: TextStyle(
-                                                    fontSize: 20.0,
-                                                    fontFamily: "Tajawal-b",
+                                           Text(
+                                                    translation(context).storeType,
+                                                    style: TextStyle(
+                                                        fontSize: 18.0,
+                                                        fontFamily: "Tajawal-b",
+                                                    ),
                                                 ),
-                                            ),
+
                                             const SizedBox(height: 10),
                                             Wrap(
                                                 spacing: 10,
                                                 runSpacing: 7,
-                                                alignment: WrapAlignment.end,
+                                                alignment: isArabic() ? WrapAlignment.end : WrapAlignment.start,
                                                 children: shopOptions.map((ShopType) {
                                                     return GestureDetector(
                                                         onTap: () {
@@ -1031,10 +1036,13 @@ class CustomFormState extends State<CustomForm> {
                                             ),
                                         ],
                                     ),
+                                    const SizedBox(
+                                        height: 20,
+                                    ),
                             ])))),
             Center(
                 child: Padding(
-                    padding: const EdgeInsets.only(top: 20, bottom: 20),
+                    padding: const EdgeInsets.only(top: 5, bottom: 10),
                     child: ElevatedButton(
                         onPressed: () async {
                             showAlertDialog(context);
