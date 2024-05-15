@@ -58,7 +58,7 @@ class _SignUpState extends State<SignUp> {
                           children: [
                             Expanded(
                               child: Container(
-                                padding: EdgeInsets.only(right:Localizations.localeOf(context).languageCode == 'ar' ? 133: 0, left: 60.0), // Adjust padding as needed
+                                padding: EdgeInsets.only(right:Localizations.localeOf(context).languageCode == 'ar' ? 130: 0, left: 60.0), // Adjust padding as needed
                                 child: Text(
                                   translation(context).signup,
                                   style: TextStyle(
