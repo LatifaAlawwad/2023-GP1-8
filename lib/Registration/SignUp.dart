@@ -116,7 +116,6 @@ class _SignUpState extends State<SignUp> {
                                   borderSide: const BorderSide(width: 0, style: BorderStyle.none),
                                 ),
                               ),
-                              textDirection: isArabic() ? TextDirection.rtl : TextDirection.ltr,
                               validator: (value) {
                                 if (value!.isEmpty || _usernameController.text.trim() == "") {
                                   return translation(context).reqName;
