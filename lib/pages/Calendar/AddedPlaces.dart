@@ -80,10 +80,9 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
           ? StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('users')
-            .doc(FirebaseAuth.instance.currentUser?.uid)
+            .doc(userId)
             .collection('calendar')
-            .where('SelectedDay',
-            isEqualTo: DateFormat('yyyy-MM-dd').format(dateOnly))
+            .where('SelectedDay', isEqualTo: DateFormat('yyyy-MM-dd').format(widget.selectedDay)) // Compare formatted dates, // Compare formatted dates
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -99,9 +98,20 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
           }
 
           if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
-            selectedPlaces = snapshot.data!.docs
-                .map((doc) => doc['place_id'].toString())
-                .toList();
+            // Clear the existing selectedPlaces list
+            selectedPlaces.clear();
+
+            // Loop through each document in the snapshot
+            for (var doc in snapshot.data!.docs) {
+              // Check if the document contains the 'places' array
+              if (doc['places'] != null) {
+                // Get the 'places' array from the document
+                List<dynamic> placesArray = doc['places'];
+
+                // Add each place ID from the array to selectedPlaces list
+                selectedPlaces.addAll(placesArray.map((placeId) => placeId.toString()));
+              }
+            }
 
             return ListView.builder(
               itemCount: selectedPlaces.length,
@@ -109,12 +119,10 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
                 return FutureBuilder<QuerySnapshot>(
                   future: FirebaseFirestore.instance
                       .collection('ApprovedPlaces')
-                      .where('place_id',
-                      isEqualTo: selectedPlaces[index])
+                      .where('place_id', isEqualTo: selectedPlaces[index])
                       .get(),
                   builder: (context, placeSnapshot) {
-                    if (placeSnapshot.connectionState ==
-                        ConnectionState.waiting) {
+                    if (placeSnapshot.connectionState == ConnectionState.waiting) {
                       return CircularProgressIndicator();
                     }
 
@@ -122,8 +130,7 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
                       return Text('Error fetching place details');
                     }
 
-                    if (placeSnapshot.hasData &&
-                        placeSnapshot.data!.docs.isNotEmpty) {
+                    if (placeSnapshot.hasData && placeSnapshot.data!.docs.isNotEmpty) {
                       var document = placeSnapshot.data!.docs.first;
 
                       return InkWell(
@@ -148,6 +155,7 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
 
                     return Text('Place details not found');
                   },
+
                 );
               },
             );
@@ -165,10 +173,10 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
                   ),
                   Text(
                     translation(context).addWantedPlaces,
-                    style:  TextStyle(
-          color: Color(0xFF6db881),
-          fontSize: 16,
-          ),
+                    style: TextStyle(
+                      color: Color(0xFF6db881),
+                      fontSize: 16,
+                    ),
                   ),
                   SizedBox(height: 20),
                 ],
@@ -177,6 +185,7 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
           }
         },
       )
+
           : Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -310,26 +319,7 @@ Widget _buildItem(placePage place, BuildContext context) {
                                             Navigator.of(context).pop();
                                             setState(() {});
 
-                                            try {
-                                              await FirebaseFirestore.instance
-                                                  .collection('users')
-                                                  .doc(userId)
-                                                  .collection('calendar')
-                                                  .doc(place.place_id)
-                                                  .delete();
-
-                                              Fluttertoast.showToast(
-                                                msg: translation(context).succDeletePlace,
-                                                toastLength: Toast.LENGTH_SHORT,
-                                                gravity: ToastGravity.BOTTOM,
-                                                timeInSecForIosWeb: 1,
-                                                backgroundColor: Colors.green,
-                                                textColor: Colors.white,
-                                                fontSize: 16.0,
-                                              );
-                                            } catch (e) {
-                                              debugPrint(e.toString());
-                                            }
+                                            await deletePlaceFromCalendar(place.place_id, widget.selectedDay);
                                           },
                                           style: TextButton.styleFrom(
                                             primary: Color(0xff11630e),
@@ -444,6 +434,32 @@ Widget _buildItem(placePage place, BuildContext context) {
     );
 
   }
+   deletePlaceFromCalendar(String placeId, DateTime selectedDay) async {
+    try {
+      String userId = getuser();
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('calendar')
+          .doc(DateFormat('yyyy-MM-dd').format(selectedDay))
+          .update({
+        'places': FieldValue.arrayRemove([placeId]),
+      });
+
+      Fluttertoast.showToast(
+        msg: translation(context).succDeletePlace,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } catch (e) {
+      debugPrint('Error deleting place: $e');
+    }
+  }
+
 }
 
 String getuser() {
