@@ -52,9 +52,27 @@ class _LogInState extends State<LogIn> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+
+
+                            Padding(
+                              padding: EdgeInsets.only(right: 20.0,left:20),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(context, "/welcome");
+                                },
+                                child: Icon(
+                                  Icons.arrow_back_ios,
+                                  color: Color(0xFF6db881),
+                                  size: 28,
+                                ),
+                              ),
+                            ),
+
                             Expanded(
+
+
                               child: Container(
-                                padding: EdgeInsets.only(right:Localizations.localeOf(context).languageCode == 'ar' ? 113 :0, left: 60.0), // Adjust padding as needed
+                                padding: EdgeInsets.only(right:Localizations.localeOf(context).languageCode == 'ar' ? 0:135, left: 60.0), // Adjust padding as needed
                                 child: Text(
                                   translation(context).login,
                                   style: TextStyle(
@@ -66,19 +84,7 @@ class _LogInState extends State<LogIn> {
                                 ),
                               ),
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(right: 20.0,left:20),
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.pushNamed(context, "/welcome");
-                                },
-                                child: Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: Color(0xFF6db881),
-                                  size: 28,
-                                ),
-                              ),
-                            ),
+
                           ],
                         ),
 
@@ -227,7 +233,7 @@ class _LogInState extends State<LogIn> {
                                 Align(
                                   child: GestureDetector(
                                     onTap: () {
-                                      Navigator.pushNamed(context, "/ResetPassword");
+                                      Navigator.pushNamed(context, "/RessetPassword");
                                     },
                                     child: Text(
                                       translation(context).forgetPass,
@@ -259,7 +265,6 @@ class _LogInState extends State<LogIn> {
                                   password: password.text,
                                 );
 
-                                // Check if login is successful
                                 if (userCredential.user != null) {
                                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
                                     return CitiesPage();
@@ -276,19 +281,45 @@ class _LogInState extends State<LogIn> {
                                     fontSize: 18.0,
                                   );
                                 }
+                              } on FirebaseAuthException catch (e) {
+                                if (e.code == 'network-request-failed') {
+                                  // Handle network error
+                                  Fluttertoast.showToast(
+                                    msg: translation(context).network,                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.CENTER,
+                                    timeInSecForIosWeb: 2,
+                                    backgroundColor: Color.fromARGB(255, 109, 184, 129),
+                                    textColor: Color.fromARGB(255, 248, 249, 250),
+                                    fontSize: 18.0,
+                                  );
+                                } else {
+                                  // Handle other authentication errors
+                                  print("Error: $e");
+                                  Fluttertoast.showToast(
+                                    msg: translation(context).incorrect,
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.CENTER,
+                                    timeInSecForIosWeb: 2,
+                                    backgroundColor: Color.fromARGB(255, 109, 184, 129),
+                                    textColor: Color.fromARGB(255, 248, 249, 250),
+                                    fontSize: 18.0,
+                                  );
+                                }
                               } catch (e) {
                                 // Handle any other exceptions that may occur during login
                                 print("Error: $e");
                                 Fluttertoast.showToast(
-                                  msg: translation(context).network,
+                                  msg: translation(context).incorrect,
                                   toastLength: Toast.LENGTH_SHORT,
                                   gravity: ToastGravity.CENTER,
                                   timeInSecForIosWeb: 2,
                                   backgroundColor: Color.fromARGB(255, 109, 184, 129),
                                   textColor: Color.fromARGB(255, 248, 249, 250),
                                   fontSize: 18.0,
-                                );                              }
+                                );
+                              }
                             }
+
                           },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(Color(0xFF6db881)),

@@ -25,34 +25,36 @@ class _RessetPasswordState extends State<RessetPassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF6db881),
+        backgroundColor: Color.fromARGB(255, 109, 184, 129),
         automaticallyImplyLeading: false,
-        elevation: 0,
-        title: Padding(
-          padding: const EdgeInsets.only(left: 115),
-          child: Text(
-            translation(context).restorePass,
-            style: TextStyle(
-              fontSize: 16,
-              fontFamily: "Tajawal-b",
-            ),
-          ),
-        ),
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 20.0),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Icon(
-                Icons.arrow_forward_ios,
-                color: Colors.white,
-                size: 28,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0,right:10.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
+                  size: 28,
+                ),
               ),
             ),
-          ),
-        ],
+            Text(
+              translation(context).restorePass,
+              style: TextStyle(
+                fontSize: 17,
+                fontFamily: "Tajawal-b",
+              ),
+            ),
+            SizedBox(width: 40),
+          ],
+        ),
+        centerTitle: false,
+
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -74,8 +76,8 @@ class _RessetPasswordState extends State<RessetPassword> {
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 30),
-            child: Directionality(
-              textDirection: TextDirection.rtl,
+            child: Align(
+              alignment: isArabic() ? Alignment.topRight : Alignment.topLeft,
               child: TextFormField(
                 controller: email,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -88,25 +90,17 @@ class _RessetPasswordState extends State<RessetPassword> {
                   labelStyle: TextStyle(fontFamily: "Tajawal-m"),
                   hintText: "example@gmail.com",
                   hintStyle: TextStyle(fontSize: 10),
-                  fillColor: Color(0xFFe1e1e4),
+                  fillColor: Color(0xFFdff1e0),
                   filled: true,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(66.0),
-                    borderSide: BorderSide(
+                    borderSide: const BorderSide(
                       width: 0,
                       style: BorderStyle.none,
                     ),
                   ),
                 ),
-                validator: (value) {
-                  if (value!.isEmpty || email.text.trim() == "") {
-                    return translation(context).reqEmail;
-                  } else if (!RegExp(
-                      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
-                      .hasMatch(value)) {
-                    return translation(context).correctEmail;
-                  }
-                },
+
               ),
             ),
           ),
@@ -155,7 +149,7 @@ class _RessetPasswordState extends State<RessetPassword> {
             ),
             child: Text(
               translation(context).sent,
-              style: TextStyle(fontSize: 20, fontFamily: "Tajawal-l"),
+              style: TextStyle(fontSize: 18, fontFamily: "Tajawal-m"),
             ),
           ),
         ],

@@ -39,16 +39,7 @@ class _pref extends State<pref> {
                     children: [
                         Padding(
                             padding: const EdgeInsets.only(left: 10.0,right:10.0),
-                            child: GestureDetector(
-                                onTap: () {
-                                    Navigator.pop(context);
-                                },
-                                child: Icon(
-                                    Icons.arrow_back_ios,
-                                    color: Colors.white,
-                                    size: 28,
-                                ),
-                            ),
+
                         ),
                         Text(
                             translation(context).chooseFav,

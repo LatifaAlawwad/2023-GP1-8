@@ -56,9 +56,26 @@ class _SignUpState extends State<SignUp> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+
+                            Padding(
+                              padding: EdgeInsets.only(right: 20.0,left:20),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(context, "/welcome");
+                                },
+                                child: Icon(
+                                  Icons.arrow_back_ios,
+                                  color: Color(0xFF6db881),
+                                  size: 28,
+                                ),
+                              ),
+                            ),
+
+
+
                             Expanded(
                               child: Container(
-                                padding: EdgeInsets.only(right:Localizations.localeOf(context).languageCode == 'ar' ? 130: 0, left: 60.0), // Adjust padding as needed
+                                padding: EdgeInsets.only(right:Localizations.localeOf(context).languageCode == 'ar' ? 0:135, left: 60.0), // Adjust padding as needed
                                 child: Text(
                                   translation(context).signup,
                                   style: TextStyle(
@@ -70,19 +87,7 @@ class _SignUpState extends State<SignUp> {
                                 ),
                               ),
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(right: 20.0,left:20),
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.pushNamed(context, "/welcome");
-                                },
-                                child: Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: Color(0xFF6db881),
-                                  size: 28,
-                                ),
-                              ),
-                            ),
+
                           ],
                         ),
                         SizedBox(

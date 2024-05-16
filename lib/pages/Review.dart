@@ -45,10 +45,10 @@ class Review extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 10),
       padding: EdgeInsets.all(15),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
             children: [
               Expanded(
                 child: Text(
@@ -71,7 +71,8 @@ class Review extends StatelessWidget {
           ),
           SizedBox(height: 4),
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,                        mainAxisAlignment: isArabic()? MainAxisAlignment.start:MainAxisAlignment.end,
+
             children: [
               Row(
                 children: List.generate(
