@@ -14,8 +14,10 @@ class TripPlanningPage extends StatefulWidget {
   final bool showConversation;
   final String? place_id;
   final String? placeName;
+  final String? cityName;
 
-  const TripPlanningPage({Key? key, this.selectedDay, this.showConversation = false, this.place_id, this.placeName}) : super(key: key);
+
+  const TripPlanningPage({Key? key, this.selectedDay, this.showConversation = false, this.place_id, this.placeName,  this.cityName}) : super(key: key);
 
   @override
   State<TripPlanningPage> createState() => _TripPlanningPageState();
@@ -35,6 +37,7 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
     super.initState();
     _selectedDay = widget.selectedDay ?? DateTime.now();
     getUser();
+    print('City Name in TripPlanningPage: ${widget.cityName}');
   }
 
   @override
@@ -253,9 +256,17 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
                     actions: [
                       TextButton(
                         onPressed: () async {
-                          Navigator.of(context).pop(); // Close the dialog
-                          final currentDate = DateTime.now();
-                          if (_selectedDay!.isBefore(currentDate)) {
+                          Navigator.of(context).pop();
+                          String formattedDate = DateFormat('yyyy-MM-dd').format(_selectedDay!);
+                          String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+                          DateTime parsedFormattedDate = DateFormat('yyyy-MM-dd').parse(formattedDate); // Convert formattedDate to DateTime
+                          DateTime currentDatee = DateFormat('yyyy-MM-dd').parse(currentDate);
+                          print(parsedFormattedDate);
+                          print(currentDatee);
+
+                          if (parsedFormattedDate.isBefore(currentDatee)) {
+                            print(parsedFormattedDate.isBefore(currentDatee));
                             Fluttertoast.showToast(
                               msg: translation(context).cantAdd,
                               toastLength: Toast.LENGTH_SHORT,
@@ -266,10 +277,10 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
                               fontSize: 16.0,
                             );
                           } else {
-                            String formattedDate = DateFormat('yyyy-MM-dd').format(_selectedDay!);
-                            bool placeAlreadyAdded = await checkIfPlaceAlreadyAdded(formattedDate,widget.place_id!);
+                            bool placeAlreadyAdded = await checkIfPlaceAlreadyAdded(formattedDate, widget.place_id!);
                           }
                         },
+
                         child: Text(translation(context).add),
                         style: TextButton.styleFrom(
                           primary: Color(0xff11630e),
@@ -291,7 +302,7 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
               } else {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AddPlacesMessagePage(selectedDay: _selectedDay!)),
+                  MaterialPageRoute(builder: (context) => AddPlacesMessagePage(selectedDay: _selectedDay!, cityName: widget.cityName)),
                 );
               }
             },

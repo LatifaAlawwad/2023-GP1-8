@@ -10,8 +10,9 @@ import 'package:gp/language_constants.dart';
 
 class SearchPlacesPage extends StatefulWidget {
   final DateTime dateonly;
+  final String? cityName;
 
-  const SearchPlacesPage({Key? key, required this.dateonly}) : super(key: key);
+  const SearchPlacesPage({Key? key, required this.dateonly,this.cityName}) : super(key: key);
 
   @override
   _SearchPlacesPageState createState() => _SearchPlacesPageState();
@@ -27,10 +28,10 @@ class _SearchPlacesPageState extends State<SearchPlacesPage> {
     super.initState();
     _getAllPlaces();
   }
-
   void _getAllPlaces() {
     FirebaseFirestore.instance
         .collection('ApprovedPlaces')
+        .where('city', isEqualTo: widget.cityName) // Filter by cityName
         .get()
         .then((snapshot) {
       setState(() {
@@ -40,6 +41,8 @@ class _SearchPlacesPageState extends State<SearchPlacesPage> {
       });
     });
   }
+
+
 
   Widget _buildItem(
       void Function()? onTap,
