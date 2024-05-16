@@ -365,6 +365,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         await user.delete();
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).delete();
         // Account deleted successfully
         Navigator.pushReplacement(
           context,

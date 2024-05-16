@@ -4,15 +4,9 @@ import 'FilterPage.dart';
 import 'citiesPage.dart';
 import 'placePage.dart';
 import 'placeDetailsPage.dart';
-import 'AddPage.dart';
-import 'neighbourhood.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:uuid/uuid.dart';
-import 'package:photo_view/photo_view.dart';
-import 'package:photo_view/photo_view_gallery.dart';
-import 'Review.dart';
 import 'package:gp/language_constants.dart';
 
 class HomePage extends StatefulWidget {
@@ -38,7 +32,6 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   bool showRecommendations = true;
-
   static bool FilterValue = false;
   static String noResults = "";
 
@@ -95,7 +88,7 @@ class HomePageState extends State<HomePage> {
       }
 
       var url =
-          'https://secure-forest-12037-50540c959691.herokuapp.com/api?user_id=$userId&city_name=$cityName';
+          'https://arcane-everglades-69652-26a0add2c8af.herokuapp.com/api?user_id=$userId&city_name=$cityName';
       print('Fetching recommendations for user ID: $userId');
       var response = await http.get(Uri.parse(url));
 
@@ -493,7 +486,7 @@ class HomePageState extends State<HomePage> {
   Widget _buildItem(
       void Function()? onTap,
       placePage place,
-      BuildContext context
+      BuildContext context,
       ) {
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
 
@@ -573,7 +566,7 @@ class HomePageState extends State<HomePage> {
                                 fontFamily: "Tajawal-l",
                               ),
                             ),
-                           Spacer(),
+                            Spacer(),
                             StreamBuilder<QuerySnapshot>(
                               stream: FirebaseFirestore.instance
                                   .collection('ApprovedPlaces')
@@ -588,8 +581,8 @@ class HomePageState extends State<HomePage> {
 
                                 List<double> ratings = List<double>.from(
                                   snapshot.data!.docs.map((doc) {
-                                    final commentData = doc.data()
-                                    as Map<String, dynamic>;
+                                    final commentData =
+                                    doc.data() as Map<String, dynamic>;
                                     return commentData["rating"].toDouble() ?? 0.0;
                                   }),
                                 );
@@ -635,6 +628,7 @@ class HomePageState extends State<HomePage> {
       return Container();
     }
   }
+
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -769,10 +763,6 @@ class HomePageState extends State<HomePage> {
                 ),
                 toolbarHeight: 60,
               ),
-
-
-
-
 
             ),
             Container(
@@ -925,9 +915,5 @@ class HomePageState extends State<HomePage> {
       ),
     );
   }
-
-
-
-  /////////////////////////////////////////////////////////////////////////////
 
 }

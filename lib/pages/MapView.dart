@@ -52,7 +52,7 @@ class MapSampleState extends State<MapSample> {
     _loadCustomMarkerIcons();
     _goToCurrentLocation();
     selectedCategory = 'الكل';
-    String apiKey = 'AIzaSyCJ3yUvAXaEKXPoo5ngfht4se568rq3mBk';
+    String apiKey = 'AIzaSyAY5y2lAjy540-gxIA3ylP9M0IjUHEc_hc';
     googlePlace = GooglePlace(apiKey);
     getMarkers();
   }

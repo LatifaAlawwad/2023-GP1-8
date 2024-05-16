@@ -129,7 +129,7 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
     DateTime today = DateTime.now();
     DateTime yesterday = today.subtract(Duration(days: 365));
     // Determine the first day based on showConversation condition
-   DateTime firstDay = widget.showConversation ? today : yesterday;
+    DateTime firstDay = widget.showConversation ? today : yesterday;
 
     return Directionality(
       textDirection: ui.TextDirection.rtl,
@@ -164,10 +164,7 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
               titleCentered: true,
               formatButtonVisible: false,
               titleTextStyle: TextStyle(fontSize: 20),
-              leftChevronIcon: Icon(
-                Icons.chevron_left,
-                color: widget.showConversation ? Colors.transparent : Colors.black, // Grey color for the previous arrow based on showConversation
-              ),
+              leftChevronIcon: Icon(Icons.chevron_left),
               rightChevronIcon: Icon(Icons.chevron_right),
               titleTextFormatter: (date, locale) {
                 final arabicMonthNames = [
@@ -245,7 +242,7 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
                               text: ('${widget.placeName} ${translation(context).wantToAdd} \n')
                           ),
                           TextSpan(
-                              text:('${DateFormat('yyyy-MM-dd').format(_selectedDay!)} ${translation(context).yourTrip} '),
+                            text:('${DateFormat('yyyy-MM-dd').format(_selectedDay!)} ${translation(context).yourTrip} '),
                             style: TextStyle(
                               color: Color(0xff424242),
                             ),
@@ -270,37 +267,7 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
                             );
                           } else {
                             String formattedDate = DateFormat('yyyy-MM-dd').format(_selectedDay!);
-                            bool placeAlreadyAdded = await checkIfPlaceAlreadyAdded(formattedDate);
-                            if (placeAlreadyAdded) {
-                              Fluttertoast.showToast(
-                                msg: translation(context).existedPlace,
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.BOTTOM,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor: const Color.fromARGB(255, 109, 184, 129),
-                                textColor: Colors.white,
-                                fontSize: 16.0,
-                              );
-                            } else {
-                              await FirebaseFirestore.instance
-                                  .collection('users')
-                                  .doc(userId)
-                                  .collection('calendar')
-                                  .doc(widget.place_id!)
-                                  .set({
-                                'SelectedDay': formattedDate,
-                                'place_id': widget.place_id,
-                              });
-                              Fluttertoast.showToast(
-                                msg: translation(context).succAdded,
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.BOTTOM,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor: Colors.green,
-                                textColor: Colors.white,
-                                fontSize: 16.0,
-                              );
-                            }
+                            bool placeAlreadyAdded = await checkIfPlaceAlreadyAdded(formattedDate,widget.place_id!);
                           }
                         },
                         child: Text(translation(context).add),
@@ -346,15 +313,61 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
 
 
 
-  Future<bool> checkIfPlaceAlreadyAdded(String formattedDate) async {
+  Future<bool> checkIfPlaceAlreadyAdded(String formattedDate, String placeId) async {
     var snapshot = await FirebaseFirestore.instance
         .collection('users')
         .doc(userId)
         .collection('calendar')
-        .where('SelectedDay', isEqualTo: formattedDate)
+        .doc(formattedDate)
         .get();
 
-    return snapshot.docs.isNotEmpty;
+    if (snapshot.exists && snapshot.data()!.containsKey('places') && snapshot.data()!['places'].contains(placeId)) {
+      Fluttertoast.showToast(
+        msg: translation(context).existedPlace,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: const Color.fromARGB(255, 109, 184, 129),
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return true; // Place already added
+    } else {
+      // Add the place to the database
+      var calendarDocRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('calendar')
+          .doc(formattedDate);
+
+      // Get the existing data from the document
+      var docSnapshot = await calendarDocRef.get();
+
+      // Check if the document already exists
+      if (docSnapshot.exists) {
+        // Update the existing document by adding the new place ID to the 'places' array
+        await calendarDocRef.update({
+          'places': FieldValue.arrayUnion([widget.place_id]),
+          // Add other relevant data
+        });
+      } else {
+        // Create a new document with the 'places' array containing the new place ID
+        await calendarDocRef.set({
+          'SelectedDay': formattedDate,
+          'places': [widget.place_id],
+          // Add other relevant data
+        }
+        );
+      }
+      Fluttertoast.showToast(
+        msg: translation(context).succAdded,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: const Color.fromARGB(255, 109, 184, 129),
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return false; // Place not added
+    }
   }
 
   Future<void> getUser() async {
@@ -366,4 +379,3 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
   }
 
 }
-

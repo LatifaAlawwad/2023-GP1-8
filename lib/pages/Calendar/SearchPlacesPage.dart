@@ -107,13 +107,16 @@ class _SearchPlacesPageState extends State<SearchPlacesPage> {
                             ),
                             onPressed: () async {
                               String userId = getuser();
+                              print('User ID: $userId'); // Check if the user ID is retrieved correctly
+
                               if (userId.isNotEmpty) {
-                                // Convert dateonly to Firestore date format
                                 DateTime selectedDate = widget.dateonly;
                                 String formattedDate = selectedDate.toIso8601String().split('T')[0];
+                                print('Formatted Date: $formattedDate'); // Check the formatted date
 
                                 // Check if the place is already added for the selected day
                                 bool placeExists = await checkIfPlaceExists(userId, place.place_id, formattedDate);
+                                print('Place Exists: $placeExists'); // Check the result of placeExists
 
                                 if (placeExists) {
                                   // Show toast message indicating that the place is already added
@@ -127,31 +130,52 @@ class _SearchPlacesPageState extends State<SearchPlacesPage> {
                                     fontSize: 16.0,
                                   );
                                 } else {
-                                  // Add place to calendar collection with formatted date
-                                  await FirebaseFirestore.instance
-                                      .collection('users')
-                                      .doc(userId)
-                                      .collection('calendar')
-                                      .doc(place.place_id)
-                                      .set({
-                                    'SelectedDay': formattedDate,
-                                    'place_id': place.place_id,
-                                    // Add other relevant data
-                                  });
+                                  try {
+                                    // Add the place to the database
+                                    var calendarDocRef = FirebaseFirestore.instance
+                                        .collection('users')
+                                        .doc(userId)
+                                        .collection('calendar')
+                                        .doc(formattedDate);
 
-                                  // Show toast message indicating successful addition
-                                  Fluttertoast.showToast(
-                                    msg: translation(context).succAdded,
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.green,
-                                    textColor: Colors.white,
-                                    fontSize: 16.0,
-                                  );
+                                    // Get the existing data from the document
+                                    var docSnapshot = await calendarDocRef.get();
+
+                                    // Check if the document already exists
+                                    if (docSnapshot.exists) {
+                                      // Update the existing document by adding the new place ID to the 'places' array
+                                      await calendarDocRef.update({
+                                        'places': FieldValue.arrayUnion([place.place_id]),
+                                        // Add other relevant data
+                                      });
+                                    } else {
+                                      // Create a new document with the 'places' array containing the new place ID
+                                      await calendarDocRef.set({
+                                        'SelectedDay': formattedDate,
+                                        'places': [place.place_id],
+                                        // Add other relevant data
+                                      }
+                                      );
+                                    }
+
+                                    // Show toast message indicating successful addition
+                                    Fluttertoast.showToast(
+                                      msg: translation(context).succAdded,
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.green,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0,
+                                    );
+                                  } catch (e) {
+                                    print('Error adding place to calendar: $e');
+                                  }
                                 }
                               }
                             },
+
+
                           ),
                         ),
                       ),
@@ -296,24 +320,25 @@ class _SearchPlacesPageState extends State<SearchPlacesPage> {
 
 
 
-
   Future<bool> checkIfPlaceExists(
       String userId, String placeId, String selectedDate) async {
     bool placeExists = false;
     try {
-      // Check if the place document exists for the selected day
-      var docSnapshot = await FirebaseFirestore.instance
+      // Get the document reference for the user's calendar on the selected date
+      var calendarDocRef = FirebaseFirestore.instance
           .collection('users')
           .doc(userId)
           .collection('calendar')
-          .doc(placeId)
-          .get();
+          .doc(selectedDate);
+
+      var docSnapshot = await calendarDocRef.get();
 
       if (docSnapshot.exists) {
         var data = docSnapshot.data();
-        // Check if the SelectedDay field matches the selected date
-        if (data != null && data['SelectedDay'] == selectedDate) {
-          placeExists = true;
+        // Check if the 'places' array contains the placeId
+        if (data != null && data['places'] != null) {
+          List<dynamic> places = data['places'];
+          placeExists = places.contains(placeId);
         }
       }
     } catch (e) {
@@ -321,6 +346,8 @@ class _SearchPlacesPageState extends State<SearchPlacesPage> {
     }
     return placeExists;
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -333,19 +360,19 @@ class _SearchPlacesPageState extends State<SearchPlacesPage> {
           children: [
 
 
-              Padding(
-                padding: EdgeInsets.only(right: 20.0),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Icon(
-                    Icons.arrow_back_ios,
-                    color: Colors.white,
-                    size: 28,
-                  ),
+            Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
+                  size: 28,
                 ),
               ),
+            ),
 
             Icon(
               Icons.search,
@@ -431,4 +458,3 @@ class _SearchPlacesPageState extends State<SearchPlacesPage> {
     );
   }
 }
-
