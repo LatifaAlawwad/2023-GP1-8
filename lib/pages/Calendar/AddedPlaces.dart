@@ -10,8 +10,9 @@ import 'package:gp/language_constants.dart';
 
 class AddPlacesMessagePage extends StatefulWidget {
   final DateTime selectedDay;
+  final String? cityName;
 
-  const AddPlacesMessagePage({Key? key, required this.selectedDay}) : super(key: key);
+  const AddPlacesMessagePage({Key? key, required this.selectedDay,this.cityName}) : super(key: key);
 
   @override
   _AddPlacesMessagePageState createState() => _AddPlacesMessagePageState();
@@ -205,7 +206,7 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
             context,
             MaterialPageRoute(
               builder: (context) =>
-                  SearchPlacesPage(dateonly: widget.selectedDay),
+                  SearchPlacesPage(dateonly: widget.selectedDay,cityName: widget.cityName),
             ),
           );
         },

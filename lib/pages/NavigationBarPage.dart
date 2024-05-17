@@ -107,7 +107,7 @@ class _NavigationBarPageState extends State<NavigationBarPage> {
       case 2:
         return FavoritePage();
       case 3:
-        return UserProfilePage();
+        return UserProfilePage(cityName: widget.selectedCity);
       default:
         return HomePage(cityName: '', cityId: 18);
     }

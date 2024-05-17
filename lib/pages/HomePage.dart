@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:gp/language_constants.dart';
 
 class HomePage extends StatefulWidget {
-  final String cityName;
+ final String cityName;
 
   HomePage({required this.cityName, required int cityId});
 

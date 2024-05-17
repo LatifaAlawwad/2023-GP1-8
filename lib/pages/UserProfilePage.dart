@@ -14,7 +14,9 @@ import 'package:gp/language_constants.dart';
 import 'SwitchLanguage.dart';
 import 'dart:math' as math;
 class UserProfilePage extends StatefulWidget {
-  const UserProfilePage({Key? key}) : super(key: key);
+  final String? cityName;
+
+  const UserProfilePage({Key? key,this.cityName}) : super(key: key);
 
   @override
   State<UserProfilePage> createState() => _UserProfilePageState();
@@ -27,8 +29,10 @@ late String curentId = user!.uid;
 class _UserProfilePageState extends State<UserProfilePage> {
   final profileformkey = GlobalKey<FormState>();
 
+
   @override
   Widget build(BuildContext context) {
+
     final currentUser = FirebaseAuth.instance.currentUser;
     return Scaffold(
       appBar: AppBar(
@@ -115,16 +119,18 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                   SizedBox(height: 25),
                                   buildProfileOption(
                                     onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => TripPlanningPage(),
-                                        ),
-                                      );
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => TripPlanningPage(cityName: widget.cityName), // Pass cityName if not null
+                                          ),
+                                        );
+
                                     },
                                     title: translation(context).plans,
-                                    icon: Icons.calendar_month_sharp,
+                                    icon: Icons.calendar_month_sharp, // Pass cityName here
                                   ),
+
                                   SizedBox(height: 25),
                                   buildProfileOption(
                                     onPressed: () {
@@ -404,7 +410,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   }
 
 
-  Widget buildProfileOption({required VoidCallback onPressed, required String title, required IconData icon}) {
+  Widget buildProfileOption({required VoidCallback onPressed, required String title, required IconData icon,String? cityName,}) {
     return Container(
       width: 350,
       height: 62,
