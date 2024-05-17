@@ -27,7 +27,6 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
     super.initState();
     userId = getuser(); // Initialize the userId using the getuser method
   }
-
   @override
   Widget build(BuildContext context) {
     DateTime dateOnly = DateTime(
@@ -51,7 +50,7 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 10.0,right:10.0),
+              padding: const EdgeInsets.only(left: 10.0, right: 10.0),
               child: GestureDetector(
                 onTap: () {
                   Navigator.pop(context);
@@ -63,7 +62,8 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
                 ),
               ),
             ),
-            Text("${translation(context).placesADD} ${DateFormat('yyyy-MM-dd').format(dateOnly)}",
+            Text(
+              "${translation(context).placesADD} ${DateFormat('yyyy-MM-dd').format(dateOnly)}",
               style: TextStyle(
                 fontSize: 17,
                 fontFamily: "Tajawal-b",
@@ -73,17 +73,15 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
           ],
         ),
         centerTitle: false,
-
         toolbarHeight: 60,
       ),
-
-      body: isTodayOrFuture
-          ? StreamBuilder<QuerySnapshot>(
+      body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('users')
             .doc(userId)
             .collection('calendar')
-            .where('SelectedDay', isEqualTo: DateFormat('yyyy-MM-dd').format(widget.selectedDay)) // Compare formatted dates, // Compare formatted dates
+            .where('SelectedDay',
+            isEqualTo: DateFormat('yyyy-MM-dd').format(widget.selectedDay)) // Compare formatted dates
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -114,6 +112,27 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
               }
             }
 
+            if (selectedPlaces.isEmpty) {
+              // If no added places for any date
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      isTodayOrFuture
+                          ? translation(context).addWantedPlaces
+                          : translation(context).noADDplaces,
+                      style: TextStyle(
+                        color: Color(0xFF6db881),
+                        fontSize: 16,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                  ],
+                ),
+              );
+            }
+
             return ListView.builder(
               itemCount: selectedPlaces.length,
               itemBuilder: (context, index) {
@@ -123,15 +142,19 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
                       .where('place_id', isEqualTo: selectedPlaces[index])
                       .get(),
                   builder: (context, placeSnapshot) {
-                    if (placeSnapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
+                    if (placeSnapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
                     }
 
                     if (placeSnapshot.hasError) {
                       return Text('Error fetching place details');
                     }
 
-                    if (placeSnapshot.hasData && placeSnapshot.data!.docs.isNotEmpty) {
+                    if (placeSnapshot.hasData &&
+                        placeSnapshot.data!.docs.isNotEmpty) {
                       var document = placeSnapshot.data!.docs.first;
 
                       return InkWell(
@@ -154,26 +177,21 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
                       );
                     }
 
-                    return Text('Place details not found');
+                    return Text('');
                   },
-
                 );
               },
             );
           } else {
+            // If no added places for any date
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    translation(context).noADDplaces,
-                    style: TextStyle(
-                      color: Color(0xFF6db881),
-                      fontSize: 16,
-                    ),
-                  ),
-                  Text(
-                    translation(context).addWantedPlaces,
+                    isTodayOrFuture
+                        ?  translation(context).addWantedPlaces
+                        : translation(context).noADDplaces,
                     style: TextStyle(
                       color: Color(0xFF6db881),
                       fontSize: 16,
@@ -185,19 +203,6 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
             );
           }
         },
-      )
-
-          : Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              translation(context).noADDplaces,
-              style: TextStyle( color: Color(0xFF6db881),
-                fontSize: 16),
-            ),
-          ],
-        ),
       ),
       floatingActionButton: isTodayOrFuture
           ? FloatingActionButton(
@@ -205,8 +210,10 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  SearchPlacesPage(dateonly: widget.selectedDay,cityName: widget.cityName),
+              builder: (context) => SearchPlacesPage(
+                dateonly: widget.selectedDay,
+                cityName: widget.cityName,
+              ),
             ),
           );
         },
@@ -218,6 +225,7 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
+
 
 
 

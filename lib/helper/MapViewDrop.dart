@@ -14,7 +14,7 @@ class MapView extends StatefulWidget {
 
 class _MapViewState extends State<MapView> {
   LatLng startLocation = LatLng(24.7136, 46.6753); // Riyadh, Saudi Arabia
-  String googleApikey = "AIzaSyAY5y2lAjy540-gxIA3ylP9M0IjUHEc_hc";
+  String googleApikey = "AIzaSyAMZ84MvLuQMMAQBSVFYZ8fGgb5oYqqCn4";
   GoogleMapController? mapController; //contrller for Google map
   CameraPosition? cameraPosition;
   String location ="";

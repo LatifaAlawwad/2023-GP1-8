@@ -236,7 +236,7 @@
   "removeFavList": "Do you want to remove the place from your favorites list?",
   "placesADD": "Places added in",
   "noADDplaces": "There are no places added",
-  "addWantedPlaces": "You can add the places you want",
+  "addWantedPlaces": "     There are no places added \n You can add the places you want ",
   "removeList": "Do you want to remove the place from the list?",
   "succDeletePlace": "The place has been successfully deleted",
   "alreadyAdded": "The place is already added to this date",
