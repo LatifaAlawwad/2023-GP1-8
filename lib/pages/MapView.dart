@@ -6,11 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_place/google_place.dart';
+import 'package:gp/pages/placeDetailsPage.dart';
 
 import 'package:gp/pages/placePage.dart';
 import 'dart:math';
 import 'package:gp/language_constants.dart';
-import 'package:gp/pages/mapdetailspage.dart';
+
 import 'package:flutter/services.dart';
 import 'dart:async';
 import 'dart:typed_data';
@@ -134,7 +135,7 @@ class MapSampleState extends State<MapSample> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => mapdetailspage(
+                        builder: (context) => placeDetailsPage(
                           place: placePage(
                             place_id: place['place_id'] ?? '',
                             userId: place['User_id'] ?? '',

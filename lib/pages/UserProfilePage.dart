@@ -286,7 +286,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
             style: TextStyle(
               fontSize: 20, // Adjust the font size as needed
             ),
-            textDirection: isArabic() ? TextDirection.rtl : TextDirection.ltr,
+            textDirection:  Localizations.localeOf(context).languageCode == 'ar'? TextDirection.rtl : TextDirection.ltr,
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -300,7 +300,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     borderSide: BorderSide(color: Color(0xff11630e)), // Change color of underline without focus
                   ),
                 ),
-                textDirection: isArabic() ? TextDirection.rtl : TextDirection.ltr,
+                textDirection: Localizations.localeOf(context).languageCode == 'ar' ? TextDirection.rtl : TextDirection.ltr,
               ),
               TextField(
                 onChanged: (value) => password = value,
@@ -311,26 +311,12 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     borderSide: BorderSide(color: Color(0xff11630e)), // Change color of underline without focus
                   ),
                 ),
-                textDirection: isArabic() ? TextDirection.rtl : TextDirection.ltr,
+                textDirection: Localizations.localeOf(context).languageCode == 'ar' ? TextDirection.rtl : TextDirection.ltr,
               ),
               SizedBox(height: 10), // Add some space between text fields and buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context); // Close the confirmation dialog
-                      _deleteAccount(email, password); // Call method to delete account
-                    },
-                    style: TextButton.styleFrom(
-                      primary: Color(0xff11630e), // Change text color
-                    ),
-                    child: Text(
-                      translation(context).delete,
-                      textDirection: isArabic() ? TextDirection.rtl : TextDirection.ltr,
-                    ),
-                  ),
-                  SizedBox(width: 20), // Add some space between buttons
                   TextButton(
                     onPressed: () {
                       Navigator.pop(context); // Close the dialog
@@ -343,6 +329,21 @@ class _UserProfilePageState extends State<UserProfilePage> {
                       textDirection: isArabic() ? TextDirection.rtl : TextDirection.ltr,
                     ),
                   ),
+                  SizedBox(width: 20),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context); // Close the confirmation dialog
+                      _deleteAccount(email, password); // Call method to delete account
+                    },
+                    style: TextButton.styleFrom(
+                      primary: Color(0xff11630e), // Change text color
+                    ),
+                    child: Text(
+                      translation(context).delete,
+                      textDirection: isArabic() ? TextDirection.rtl : TextDirection.ltr,
+                    ),
+                  ),// Add some space between buttons
+
                 ],
               ),
             ],
