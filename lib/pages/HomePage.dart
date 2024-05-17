@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'FilterPage.dart';
+import 'cities.dart';
 import 'citiesPage.dart';
+import 'neighbourhood.dart';
 import 'placePage.dart';
 import 'placeDetailsPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -124,6 +126,27 @@ class HomePageState extends State<HomePage> {
     }
   }
 
+
+  String getNeighbourhoodEnName(String arabicName) {
+    for (var area in areas) {
+      if (area["name_ar"] == arabicName) {
+        return area["name_en"];
+      }
+    }
+    return "Name not found"; // Or handle the case where name is not found
+  }
+
+
+
+
+  String getCityEnName(String arabicName) {
+    for (var city in cities) {
+      if (city["name_ar"] == arabicName) {
+        return city["name_en"];
+      }
+    }
+    return "Name not found"; // Or handle the case where name is not found
+  }
   Future<void> _fetchDataFromFirestore() async {
     try {
       QuerySnapshot<Map<String, dynamic>> snapshot =
@@ -406,7 +429,8 @@ class HomePageState extends State<HomePage> {
                           width: 2,
                         ),
                         Text(
-                          '${place.neighbourhood} ، ${place.city}',
+                          Localizations.localeOf(context).languageCode == 'ar'?'${place.neighbourhood} ، ${place.city}' :' ${getNeighbourhoodEnName(place.neighbourhood)}, ${getCityEnName(place.city)} ',
+
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 12,
@@ -558,7 +582,8 @@ class HomePageState extends State<HomePage> {
                             ),
                             SizedBox(width: 4),
                             Text(
-                              '${place.neighbourhood} ، ${place.city}',
+                              Localizations.localeOf(context).languageCode == 'ar'?'${place.neighbourhood} ، ${place.city}' :' ${getNeighbourhoodEnName(place.neighbourhood)}, ${getCityEnName(place.city)} ',
+
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 15,

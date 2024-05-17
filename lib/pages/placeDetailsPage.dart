@@ -10,7 +10,8 @@ import 'placePage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
+import "package:gp/pages/neighbourhood.dart";
+import "package:gp/pages/cities.dart";
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'Review.dart';
@@ -102,6 +103,53 @@ class _placeDetailsState extends State<placeDetailsPage> {
     });
     _isFav();
   }
+
+
+
+
+
+  String getNeighbourhoodEnName(String arabicName) {
+    for (var area in areas) {
+      if (area["name_ar"] == arabicName) {
+        return area["name_en"];
+      }
+    }
+    return "Name not found"; // Or handle the case where name is not found
+  }
+
+
+
+
+  String getCityEnName(String arabicName) {
+    for (var city in cities) {
+      if (city["name_ar"] == arabicName) {
+        return city["name_en"];
+      }
+    }
+    return "Name not found"; // Or handle the case where name is not found
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   void toggleCalendar() {
     if (FirebaseAuth.instance.currentUser == null) {
@@ -358,7 +406,7 @@ void toggleFavorites()  {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text(
-                            '${widget.place.neighbourhood} ، ${widget.place.city}',
+                            Localizations.localeOf(context).languageCode == 'ar'?'${widget.place.neighbourhood} ، ${widget.place.city}' :' ${getNeighbourhoodEnName(widget.place.neighbourhood)}, ${getCityEnName(widget.place.city)} ',
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 17,
@@ -941,7 +989,8 @@ void toggleFavorites()  {
                         width: 2,
                       ),
                       Text(
-                        '${place.neighbourhood} ، ${place.city}',
+                        Localizations.localeOf(context).languageCode == 'ar'?'${widget.place.neighbourhood} ، ${widget.place.city}' :' ${getNeighbourhoodEnName(widget.place.neighbourhood)}, ${getCityEnName(widget.place.city)} ',
+
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 14,

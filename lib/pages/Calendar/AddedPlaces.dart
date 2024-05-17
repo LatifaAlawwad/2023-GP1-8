@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import '../cities.dart';
+import '../neighbourhood.dart';
 import 'SearchPlacesPage.dart';
 import '../placePage.dart';
 import '../placeDetailsPage.dart';
@@ -229,6 +231,27 @@ class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
 
 
 
+  String getNeighbourhoodEnName(String arabicName) {
+    for (var area in areas) {
+      if (area["name_ar"] == arabicName) {
+        return area["name_en"];
+      }
+    }
+    return "Name not found"; // Or handle the case where name is not found
+  }
+
+
+
+
+  String getCityEnName(String arabicName) {
+    for (var city in cities) {
+      if (city["name_ar"] == arabicName) {
+        return city["name_en"];
+      }
+    }
+    return "Name not found"; // Or handle the case where name is not found
+  }
+
 Widget _buildItem(placePage place, BuildContext context) {
     return Card(
       margin: EdgeInsets.fromLTRB(12, 12, 12, 6),
@@ -375,7 +398,8 @@ Widget _buildItem(placePage place, BuildContext context) {
                       ),
                       SizedBox(width: 4),
                       Text(
-                        '${place.neighbourhood} ، ${place.city}',
+                        Localizations.localeOf(context).languageCode == 'ar'?'${place.neighbourhood} ، ${place.city}' :' ${getNeighbourhoodEnName(place.neighbourhood)}, ${getCityEnName(place.city)} ',
+
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 15,

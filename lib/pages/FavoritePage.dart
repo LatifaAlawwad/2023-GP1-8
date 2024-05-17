@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../Registration/logIn.dart';
+import 'cities.dart';
+import 'neighbourhood.dart';
 import 'placePage.dart';
 import 'placeDetailsPage.dart';
 import 'package:gp/language_constants.dart';
@@ -218,6 +220,41 @@ class _FavoritePage extends State<FavoritePage> {
     );
   }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  String getNeighbourhoodEnName(String arabicName) {
+    for (var area in areas) {
+      if (area["name_ar"] == arabicName) {
+        return area["name_en"];
+      }
+    }
+    return "Name not found"; // Or handle the case where name is not found
+  }
+
+
+
+
+  String getCityEnName(String arabicName) {
+    for (var city in cities) {
+      if (city["name_ar"] == arabicName) {
+        return city["name_en"];
+      }
+    }
+    return "Name not found"; // Or handle the case where name is not found
+  }
+
   Widget _buildItem(
     void Function()? onTap,
     placePage place,
@@ -385,7 +422,8 @@ class _FavoritePage extends State<FavoritePage> {
                             ),
                             SizedBox(width: 4),
                             Text(
-                              '${place.neighbourhood} ، ${place.city}',
+                              Localizations.localeOf(context).languageCode == 'ar'?'${place.neighbourhood} ، ${place.city}' :' ${getNeighbourhoodEnName(place.neighbourhood)}, ${getCityEnName(place.city)} ',
+
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 15,

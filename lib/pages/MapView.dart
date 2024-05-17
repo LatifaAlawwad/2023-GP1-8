@@ -17,6 +17,9 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'cities.dart';
+import 'neighbourhood.dart';
+
 class MapSample extends StatefulWidget {
   @override
   State<MapSample> createState() => MapSampleState();
@@ -424,6 +427,27 @@ class MapSampleState extends State<MapSample> {
     );
   }
 
+
+  String getNeighbourhoodEnName(String arabicName) {
+    for (var area in areas) {
+      if (area["name_ar"] == arabicName) {
+        return area["name_en"];
+      }
+    }
+    return "Name not found"; // Or handle the case where name is not found
+  }
+
+
+
+
+  String getCityEnName(String arabicName) {
+    for (var city in cities) {
+      if (city["name_ar"] == arabicName) {
+        return city["name_en"];
+      }
+    }
+    return "Name not found"; // Or handle the case where name is not found
+  }
   void displayFilteredPlacesList() {
     showModalBottomSheet(
       context: context,
@@ -516,7 +540,8 @@ class MapSampleState extends State<MapSample> {
                                     ),
                                     SizedBox(width: 4),
                                     Text(
-                                      '${place.neighbourhood}, ${place.city}',
+                                      Localizations.localeOf(context).languageCode == 'ar'?'${place.neighbourhood} ، ${place.city}' :' ${getNeighbourhoodEnName(place.neighbourhood)}, ${getCityEnName(place.city)} ',
+
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 14,
