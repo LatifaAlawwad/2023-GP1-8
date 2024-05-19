@@ -51,7 +51,15 @@ To run the S'hail application, follow these steps:
 6. Click on File > Open > Navigate to the location of the saved unzipped file and click "Ok."
 7. Turn on an Android Emulator or connect an Android mobile device to your computer using USB.
 8. Run the S'hail application.
+### Admin Credentials
+Email: admin5@shail.com  
+Password: Admin5@shail
 
+---
+
+### Admin Website and GitHub Repository
+Admin Website: [S'hail Admin Website](https://shail-admin.netlify.app/)  
+GitHub Repository: [S'hail GitHub Repository](https://github.com/LatifaAlawwad/2023-GP1-8)
 
 
 - ---
