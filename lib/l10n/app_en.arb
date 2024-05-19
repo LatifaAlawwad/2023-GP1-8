@@ -333,7 +333,8 @@
   "indoorEM": "🏠 Indoor",
   "outdoorEM": "🏞 Outdoor",
   "network": "Network error , try to reconnect",
-  "prefHeader": "Navigate between the categories and choose your preferences"
+  "prefHeader": "Navigate between the categories and choose your preferences",
+  "deleteSuccessful": "The account deleted successfully "
 }
 
 

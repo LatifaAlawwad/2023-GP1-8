@@ -180,7 +180,7 @@ class _FavoritePage extends State<FavoritePage> {
                         translation(context).reqLogin,
                         style: TextStyle(
                           fontSize: 18,
-
+                          fontFamily: "Tajawal-b",
                           color: Color(0xFF6db881),
                         ),
                         textAlign: TextAlign.center,

@@ -322,6 +322,7 @@ class _SearchPlacesPageState extends State<SearchPlacesPage> {
     } else {
       FirebaseFirestore.instance
           .collection('ApprovedPlaces')
+          .where('city', isEqualTo: widget.cityName)
           .get()
           .then((snapshot) {
         setState(() {

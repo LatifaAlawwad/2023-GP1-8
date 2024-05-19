@@ -373,6 +373,15 @@ class _UserProfilePageState extends State<UserProfilePage> {
       if (user != null) {
         await user.delete();
         await FirebaseFirestore.instance.collection('users').doc(user.uid).delete();
+        Fluttertoast.showToast(
+          msg: translation(context).deleteSuccessful,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM_LEFT,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Color(0xFF6db881),
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
         // Account deleted successfully
         Navigator.pushReplacement(
           context,

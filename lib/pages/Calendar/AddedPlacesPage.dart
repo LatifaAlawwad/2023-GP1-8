@@ -10,17 +10,17 @@ import '../placeDetailsPage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gp/language_constants.dart';
 
-class AddPlacesMessagePage extends StatefulWidget {
+class AddedPlacesPage extends StatefulWidget {
   final DateTime selectedDay;
   final String? cityName;
 
-  const AddPlacesMessagePage({Key? key, required this.selectedDay,this.cityName}) : super(key: key);
+  const AddedPlacesPage({Key? key, required this.selectedDay,this.cityName}) : super(key: key);
 
   @override
-  _AddPlacesMessagePageState createState() => _AddPlacesMessagePageState();
+  _AddedPlacesPageState createState() => _AddedPlacesPageState();
 }
 
-class _AddPlacesMessagePageState extends State<AddPlacesMessagePage> {
+class _AddedPlacesPageState extends State<AddedPlacesPage> {
   List<String> selectedPlaces = [];
   late String userId; // Declare the userId variable
 

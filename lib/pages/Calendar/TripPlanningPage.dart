@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gp/language_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
-import 'AddedPlaces.dart'; // Import the AddPlacesMessagePage
+import 'AddedPlacesPage.dart'; // Import the AddPlacesMessagePage
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:ui' as ui;
 import 'package:gp/Registration/logIn.dart';
@@ -302,7 +302,7 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
               } else {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AddPlacesMessagePage(selectedDay: _selectedDay!, cityName: widget.cityName)),
+                  MaterialPageRoute(builder: (context) => AddedPlacesPage(selectedDay: _selectedDay!, cityName: widget.cityName)),
                 );
               }
             },
