@@ -332,7 +332,8 @@
   "beachsideEM": "⛱ Beachside",
   "indoorEM": "🏠 Indoor",
   "outdoorEM": "🏞 Outdoor",
-  "network": "Network error , try to reconnect"
+  "network": "Network error , try to reconnect",
+  "prefHeader": "Navigate between the categories and choose your preferences"
 }
 
 
