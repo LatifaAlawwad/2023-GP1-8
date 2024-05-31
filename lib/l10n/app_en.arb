@@ -228,7 +228,7 @@
   "updateComm": "Rating updated successfully",
   "addComm": "Rating added successfully",
   "suggested": ":Suggested Places",
-  "noSugg": " We currently have no suggested places!",
+  "noSugg": "!We currently have no suggested places",
   "shareExp": "Share your experience",
   "rateExp": "Rate it",
   "update": "Update",
@@ -334,7 +334,10 @@
   "outdoorEM": "🏞 Outdoor",
   "network": "Network error , try to reconnect",
   "prefHeader": "Navigate between the categories and choose your preferences",
-  "deleteSuccessful": "The account deleted successfully "
+  "deleteSuccessful": "The account deleted successfully ",
+  "translatedby": "Translated by ",
+  "seeOriginal": "See original",
+  "hideOriginal": "Hide Original"
 }
 
 

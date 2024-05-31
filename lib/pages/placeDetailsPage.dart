@@ -4,6 +4,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gp/helper/PlaceDetailsWidget.dart';
 import 'package:gp/pages/HomePage.dart';
+import 'package:translator/translator.dart';
 import 'package:uuid/uuid.dart';
 import '../Registration/logIn.dart';
 import 'placePage.dart';
@@ -76,8 +77,8 @@ class _placeDetailsState extends State<placeDetailsPage> {
   double thumbWidth = 0.0;
   double thumbPosition = 0.0;
   final _formKey = GlobalKey<FormState>();
-
-
+  GoogleTranslator translator= GoogleTranslator();
+  bool _showOriginal = false;
   List<Review> reviews = [];
 
   @override
@@ -116,6 +117,39 @@ class _placeDetailsState extends State<placeDetailsPage> {
     }
     return "Name not found"; // Or handle the case where name is not found
   }
+
+
+  Future<String> translate(String des, String lang) {
+    print("before description English");
+    if (lang == "ar") {
+      print("inside description Arabic");
+
+      return translator.translate(des, to: "ar").then((output) {
+        return output.text;
+      });
+    } else if (lang == "en") {
+      print("inside description English");
+
+      return translator.translate(des, to: "en").then((output) {
+        return output.text;
+      });
+    }
+
+    // Return the original text if no translation is needed
+    return Future.value(des);
+  }
+
+
+
+
+  bool CheckIfOriginal(String text) {
+    final arabicRegex = RegExp(r'[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]');
+    return arabicRegex.hasMatch(text);
+  }
+
+
+
+
 
 
 
@@ -523,15 +557,119 @@ void toggleFavorites()  {
                               const SizedBox(
                                 height: 5,
                               ),
-                              Text(
-                                '${widget.place.description}',
-                                textDirection: TextDirection.rtl,
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: "Tajawal-l",
-                                ),
+                              FutureBuilder<String>(
+                                future: translate(widget.place.description, Localizations.localeOf(context).languageCode),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return SizedBox.shrink();
+                                  } else if (snapshot.hasError) {
+                                    return Text('Error: ${snapshot.error}');
+                                  } else {
+                                    String translatedDescription = snapshot.data ?? widget.place.description;
+                                    return Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                text: translatedDescription,
+                                                style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontFamily: "Tajawal-l",
+                                                ),
+                                              ),
+                                              if (CheckIfOriginal(widget.place.description) &&
+                                                  Localizations.localeOf(context).languageCode != "ar" ||
+                                                  !CheckIfOriginal(widget.place.description) &&
+                                                      Localizations.localeOf(context).languageCode == "ar")
+                                                TextSpan(
+                                                  text: ' ${translation(context).translatedby} Google Translate',
+                                                  style: TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                              if (CheckIfOriginal(widget.place.description) &&
+                                                  Localizations.localeOf(context).languageCode != "ar" ||
+                                                  !CheckIfOriginal(widget.place.description) &&
+                                                      Localizations.localeOf(context).languageCode == "ar")
+                                                WidgetSpan(
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                                                    child: Image.asset(
+                                                      'assets/images/translate.png', // Update this path to your icon
+                                                      width: 16,
+                                                      height: 16,
+                                                    ),
+                                                  ),
+                                                ),
+                                            ],
+                                          ),
+                                          textDirection: Localizations.localeOf(context).languageCode == "ar"
+                                              ? TextDirection.rtl
+                                              : TextDirection.ltr,
+                                        ),
+
+                                        if (CheckIfOriginal(widget.place.description) &&
+                                            Localizations.localeOf(context).languageCode != "ar" ||
+                                            !CheckIfOriginal(widget.place.description) &&
+                                                Localizations.localeOf(context).languageCode == "ar")
+
+                                        Align(
+                                          alignment: Localizations.localeOf(context).languageCode == "ar"
+                                              ? Alignment.centerRight
+                                              : Alignment.centerLeft,
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                _showOriginal = !_showOriginal;
+                                              });
+                                            },
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(top: 10.0),
+                                              child: Text(
+                                              _showOriginal ? translation(context).hideOriginal : translation(context).seeOriginal,
+                                              style: TextStyle(
+                                                color: Colors.blue,
+                                                fontSize: 13,
+                                              ),
+                                            ),
+
+
+
+                                  ),
+                                          ),
+                                        ),
+
+
+
+
+                                        Visibility(
+                                          visible: _showOriginal,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 10.0), // Add padding on top
+                                            child: Text(
+                                              widget.place.description,
+                                              style: const TextStyle(
+                                                color: Color.fromARGB(255, 40, 40, 40),
+                                                fontSize: 14,
+                                                fontFamily: "Tajawal-l",
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                      textDirection: Localizations.localeOf(context).languageCode == "ar"
+                                          ? TextDirection.rtl
+                                          : TextDirection.ltr,
+                                    );
+                                  }
+                                },
                               ),
+
+
                               const SizedBox(height: 10),
                               PlaceDetailsWidget(place: widget.place),
                               const SizedBox(
